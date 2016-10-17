@@ -6,37 +6,29 @@
 # fit a competing risk model to imputed active TB data
 
 
-## variable used in competing risk calculation:
-# age on entry - age_at_entry
-# country of origin - iso_a3_country or iso_n3_country
-# who prevalence in that country - who_prev_cat or who_prevalence
-# date of arrival in UK - issdt (we assumed they travel on day they are issued the certificate,
-#   which is a bit unrealistic, but we didn't have anything better to make an estimate on)
-# date of death or time to death from arrival - We don't actually save the date of death as a variable as we never need to,
-#   but you can easily create one by editing the code slightly in do file 7 and taking the date of death from the variable date_death within the macro there.
-#   For them to actually die within the cohort date_death would have to be less than: 1) end of the cohort (variable is cohort_end); or 2)
-#   before they left the uk on their visa (variable is date_exit_uk)
-# data of active TB or time to active TB from arrival - rNotificationDate
-# date of leaving country or time to leaving country - again we don't save this variable but it is also within do file 7 under the variable date_exit_uk.
-#   For this to be valid it would have to be less than: 1) end of the cohort (variable is cohort_end); or 2) date of death date_death
-
-
 library(survival)
 library(mstate)
 source("scripts/ggsurv.R")
 
 
-data("IMPUTED_sample")
 
+###############
+## DATA PREP ##
+###############
 
+##TODO##
+# use these times from modified STATA code...
 # cr.colnames <- c("date_exit_uk", "date_death", "rNotificationDate", "issdt", "age_at_entry")
-cr.colnames <- c("_9_fup", "length_uk_stay", "time_screen_case", "uk_tb", "rNotificationDate", "issdt", "age_at_entry")
+
+cr.colnames <- c("X_9_fup", "length_uk_stay", "time_screen_case", "uk_tb", "rNotificationDate", "issdt", "age_at_entry")
+
 IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
 
 
 # convert follow-up columns to date format ---------------------------------
 
 cols_fup <- grepl(pattern = "_fup", x = names(IMPUTED_sample))
+
 # initialise
 fup_asDate <- data.frame(matrix(vector(), ncol = sum(cols_fup), nrow = nrow(IMPUTED_sample)))
 
@@ -68,45 +60,43 @@ IMPUTED_sample <- data.frame(IMPUTED_sample, x)
 rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
 
 
-# other events as censored (active TB) times -------------------------------
+
+
+####################
+## COMPETING RISK ##
+####################
+
+# simple approach: other events as censored (active TB) times ----------
 
 res_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
 res_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
 res_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
 
 plot(survfit(res_coxph1), xlab="days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_1_fup_issdt, na.rm = T)))
+     xlim=c(0, max(IMPUTED_sample$X_1_fup_issdt, na.rm = T)), main="1_fup")
+
 plot(survfit(res_coxph2), xlab="days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_2_fup_issdt, na.rm = T)))
+     xlim=c(0, max(IMPUTED_sample$X_2_fup_issdt, na.rm = T)), main="2_fup")
+
 plot(survfit(res_coxph3), xlab="days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)))
+     xlim=c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), main="3_fup")
 
 
-# cumulative incidence
+# cohort size at arrival to uk
 pop <- 1000
-plot(survfit(res_coxph3)$time, pop*(1-exp(-survfit(res_coxph3)$cumhaz)),
+
+# scaled 1-survival
+cum_activeTB <- pop * (1 - exp(-survfit(formula = res_coxph3)$cumhaz))
+
+plot(survfit(res_coxph3)$time, cum_activeTB,
      xlab = "days from uk entry", ylab="Number active TB",
-     xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), ylim = c(0,1*pop), type="l")
+     xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), ylim = c(0,1*pop), type="l",
+     main="3_fup")
 
 # stratified by age
 res_survfit <- survfit(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 ggsurv(res_survfit) + ylim(0,1)
 
-
-#  competing risk -----------------------------------------------------
-
-event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
-event <- rep(1, nrow(IMPUTED_LTBI)) #death
-event[IMPUTED_LTBI$length_uk_stay<=IMPUTED_LTBI$`X_9_fup`] <- 2  #emmigrate
-event[IMPUTED_LTBI$uk_tb=="1"] <- 3
-
-times <- IMPUTED_LTBI$`X_9_fup`
-times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
-times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
-
-
-
-#  regression models ---------------------------------------------------
 
 # cmprsk::
 # z <- cmprsk::crr(times, event, IMPUTED_LTBI$age_group2)
@@ -122,6 +112,20 @@ s_emmig <- survfit(c_emmig)
 
 plot(s_emmig, col=2, xlab="time", ylab="survival", xlim=c(0,5000), main="")
 lines(s_tb, col=3)
+
+
+
+# multistate model --------------------------------------------------------
+
+event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
+event <- rep(1, nrow(IMPUTED_LTBI)) #death
+event[IMPUTED_LTBI$length_uk_stay<=IMPUTED_LTBI$`X_9_fup`] <- 2  #emmigrate
+event[IMPUTED_LTBI$uk_tb=="1"] <- 3
+
+times <- IMPUTED_LTBI$`X_9_fup`
+times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
+times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
+
 
 # mstate::
 # https://cran.r-project.org/web/packages/mstate/vignettes/Tutorial.pdf

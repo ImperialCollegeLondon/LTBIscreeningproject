@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# screening pathway decision tree model
+# screening and treatment pathway decision tree model
 
 
 library(data.tree)
@@ -14,12 +14,14 @@ library(treeSimR)
 osNode <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-cost-entry2012.yaml")
 print(osNode, "type", "p", "distn", "mean", "sd")
 
+# calculate the expected value for each node
 osNode <- treeSimR::calc_expectedValues(osNode)
 print(osNode, "type", "p", "distn", "mean", "sd", "payoff")
 
+# for defined nodes, return sample of expected value realisations
 treeSimR::MonteCarlo_expectedValues(osNode, n=100)
 
-# calculate probabilitites alond each branch, from root to leaf
+# calculate probabilitites along each branch, from root to leaf
 path_probs <- treeSimR::calc_pathway_probs(osNode)
 osNode$Set(path_probs = path_probs)
 
@@ -35,11 +37,16 @@ healthstatus <- NA
 healthstatus[startstate.nonLTBI] <- "nonLTBI"
 healthstatus[startstate.LTBI] <- "LTBI"
 
-#
-aggregate(terminal_states$path_probs, by=list(healthstatus), FUN=sum)
+# proportion of individuals in LTBI or non-LTBI states after screening pathway
+setNames(object = aggregate(terminal_states$path_probs, by=list(healthstatus), FUN=sum), nm = c("state", "prob"))
 
-#
-treeSimR::get_start_state_proportions(terminal_states$path_probs, healthstatus, samplesize, numsamples)
+# sample the subpopulation sizes at each terminal node and
+# aggregate to competing risk model start states
+treeSimR::get_start_state_proportions(path_probs = terminal_states$path_probs,
+                                      startstateid = healthstatus,
+                                      samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year=="2012"],
+                                      numsamples = 2)
+
 
 ##TODO##
 
