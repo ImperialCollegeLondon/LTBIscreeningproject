@@ -33,12 +33,20 @@ for (i in seq_along(who_levels)){
                     filterFun = function(x) x$name==who_levels[i])
 }
 
+osNode.noscreen <- osNode.cost
+
 
 # intervention scenarios --------------------------------------------------
+
+# no screening
+osNode.noscreen$Set(p = 0, filterFun = function(x) x$name=="Screening")
+osNode.noscreen$Set(p = 1, filterFun = function(x) x$name=="No Screening")
 
 # screen everyone
 osNode.cost$Set(p = 1, filterFun = function(x) x$name=="Screening")
 osNode.cost$Set(p = 0, filterFun = function(x) x$name=="No Screening")
+osNode.health$Set(p = 1, filterFun = function(x) x$name=="Screening")
+osNode.health$Set(p = 0, filterFun = function(x) x$name=="No Screening")
 
 # # screen >350/100,000 incidence only
 # osNode.cost$Set(p = 0, filterFun = function(x) x$name=="Screening")
@@ -51,12 +59,18 @@ osNode.cost$Set(p = 0, filterFun = function(x) x$name=="No Screening")
 # pathway probabilities ---------------------------------------------------
 
 # calculate probabilitites along each branch, from root to leaf
+## screening
 path_probs <- treeSimR::calc_pathway_probs(osNode.cost)
 osNode.cost$Set(path_probs = path_probs)
-
 terminal_states <- data.frame(pathname = osNode.cost$Get('pathString', filterFun = isLeaf),
                               path_probs = osNode.cost$Get('path_probs', filterFun = isLeaf))
-terminal_states
+
+## no screening
+path_probs.noscreen <- treeSimR::calc_pathway_probs(osNode.noscreen)
+osNode.noscreen$Set(path_probs = path_probs.noscreen)
+terminal_states.noscreen <- data.frame(pathname = osNode.noscreen$Get('pathString', filterFun = isLeaf),
+                                       path_probs = osNode.noscreen$Get('path_probs', filterFun = isLeaf))
+
 
 # collect final decision tree states in to
 # competing risks model starting state groups
@@ -68,15 +82,20 @@ healthstatus <- NA
 healthstatus[startstate.nonLTBI] <- "nonLTBI"
 healthstatus[startstate.LTBI] <- "LTBI"
 
-# proportion of individuals in LTBI or non-LTBI states after screening pathway
-# setNames(object = aggregate(terminal_states$path_probs, by=list(healthstatus), FUN=sum), nm = c("state", "prob"))
-
 # sample the subpopulation sizes at each terminal node and
 # aggregate to competing risk model start states
-start_state_proportions <- treeSimR::get_start_state_proportions(path_probs = terminal_states$path_probs,
-                                                                 startstateid = healthstatus,
-                                                                 samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year==year_cohort],
-                                                                 numsamples = 2)
+
+n.startstate <- 2
+
+start_state_proportions.screen <- treeSimR::get_start_state_proportions(path_probs = terminal_states$path_probs,
+                                                                        startstateid = healthstatus,
+                                                                        samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year==year_cohort],
+                                                                        numsamples = n.startstate)
+
+start_state_proportions.noscreen <- treeSimR::get_start_state_proportions(path_probs = terminal_states.noscreen$path_probs,
+                                                                          startstateid = healthstatus,
+                                                                          samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year==year_cohort],
+                                                                          numsamples = n.startstate)
 
 
 # expected values ---------------------------------------------------------

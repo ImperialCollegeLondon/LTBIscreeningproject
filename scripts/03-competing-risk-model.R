@@ -8,8 +8,6 @@
 
 library(survival)
 library(mstate)
-source("scripts/ggsurv.R")
-
 
 
 ###############
@@ -68,18 +66,9 @@ rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Da
 
 # simple approach: other events as censored (active TB) times ----------
 
-res_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-res_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-res_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-
-plot(survfit(res_coxph1), xlab="Days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_1_fup_issdt, na.rm = T)), main="1_fup")
-
-plot(survfit(res_coxph2), xlab="Days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_2_fup_issdt, na.rm = T)), main="2_fup")
-
-plot(survfit(res_coxph3), xlab="Days from uk entry", ylab="Proportion non-active TB",
-     xlim=c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), main="3_fup")
+cens_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 
 ##TODO## what is this number?
@@ -87,24 +76,16 @@ plot(survfit(res_coxph3), xlab="Days from uk entry", ylab="Proportion non-active
 pop <- 1000
 
 # scaled F = 1-S
-cum_activeTB <- pop * (1 - exp(-survfit(formula = res_coxph3)$cumhaz))
-
-plot(survfit(res_coxph3)$time, cum_activeTB,
-     xlab = "Days from uk entry", ylab="Number active TB",
-     xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), ylim = c(0,1*pop), type="l",
-     main="3_fup")
+cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
 # stratified by age
-res_survfit <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-ggsurv(res_survfit) + ylim(0,1)
-
+cens_survfit_byage <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 
 # multistate model --------------------------------------------------------
 
 ##TODO##
 # need leave_uk and death times from STATA model...
-
 
 IMPUTED_LTBI <- transform(IMPUTED_LTBI,
                           leave_uk = length_uk_stay <= `X_9_fup` & uk_tb==0)
@@ -121,10 +102,7 @@ times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
 
 
 ci <- mstate::Cuminc(time = times, status = event)
-plot(ci, xlab = "Days from uk entry", ylab="cumulative incidence probability", xlim = c(0, 5000), col = 2:10)
-
-ci <- mstate::Cuminc(time = times, status = event, group = IMPUTED_LTBI$age_at_entry)
-plot(ci, xlab = "Days from uk entry", ylab="cumulative incidence probability", xlim = c(0, 5000), col = 2:10, main="split by age")
+ci.age <- mstate::Cuminc(time = times, status = event, group = IMPUTED_LTBI$age_at_entry)
 
 
 # transition matrix
