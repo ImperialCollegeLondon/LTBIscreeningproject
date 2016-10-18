@@ -7,6 +7,10 @@
 # define entry cohort in terms of LTBI prevalence and size by year
 
 
+# eligible screening age range only
+IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%18:35)
+
+
 # LTBI probability from country of origin  --------------------------------
 
 # match prevalence groups in dataset to paper

@@ -68,58 +68,67 @@ rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Da
 
 # simple approach: other events as censored (active TB) times ----------
 
-res_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
-res_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
-res_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data=IMPUTED_sample)
+res_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+res_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+res_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
-plot(survfit(res_coxph1), xlab="days from uk entry", ylab="Proportion non-active TB",
+plot(survfit(res_coxph1), xlab="Days from uk entry", ylab="Proportion non-active TB",
      xlim=c(0, max(IMPUTED_sample$X_1_fup_issdt, na.rm = T)), main="1_fup")
 
-plot(survfit(res_coxph2), xlab="days from uk entry", ylab="Proportion non-active TB",
+plot(survfit(res_coxph2), xlab="Days from uk entry", ylab="Proportion non-active TB",
      xlim=c(0, max(IMPUTED_sample$X_2_fup_issdt, na.rm = T)), main="2_fup")
 
-plot(survfit(res_coxph3), xlab="days from uk entry", ylab="Proportion non-active TB",
+plot(survfit(res_coxph3), xlab="Days from uk entry", ylab="Proportion non-active TB",
      xlim=c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), main="3_fup")
 
 
+##TODO## what is this number?
 # cohort size at arrival to uk
 pop <- 1000
 
-# scaled 1-survival
+# scaled F = 1-S
 cum_activeTB <- pop * (1 - exp(-survfit(formula = res_coxph3)$cumhaz))
 
 plot(survfit(res_coxph3)$time, cum_activeTB,
-     xlab = "days from uk entry", ylab="Number active TB",
+     xlab = "Days from uk entry", ylab="Number active TB",
      xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), ylim = c(0,1*pop), type="l",
      main="3_fup")
 
 # stratified by age
-res_survfit <- survfit(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+res_survfit <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 ggsurv(res_survfit) + ylim(0,1)
 
 
-# cmprsk::
+## cmprsk::
 # z <- cmprsk::crr(times, event, IMPUTED_LTBI$age_group2)
 # z.p <- predict(z, 2)
 # plot(z.p)
 
-# naive censoring (bias?)
-c_tb <- coxph(Surv(times, event == 3) ~ IMPUTED_LTBI$ager) #tb
-c_emmig <- coxph(Surv(times, event == 2) ~ IMPUTED_LTBI$ager) #emmigrate
-
-s_tb <- survfit(c_tb)
-s_emmig <- survfit(c_emmig)
-
-plot(s_emmig, col=2, xlab="time", ylab="survival", xlim=c(0,5000), main="")
-lines(s_tb, col=3)
+## investigate censoring assumption
+# c_tb <- coxph(Surv(times, event == 3) ~ age_at_entry, data = IMPUTED_sample) #tb
+# c_emmig <- coxph(Surv(times, event == 2) ~ age_at_entry, data = IMPUTED_sample) #leave uk
+#
+# s_tb <- survfit(c_tb)
+# s_emmig <- survfit(c_emmig)
+#
+# plot(s_emmig, col=2, xlab="Days from uk entry", ylab="survival", xlim=c(0,5000), main="TB activation or leaving Uk as event time")
+# lines(s_tb, col=3)
 
 
 
 # multistate model --------------------------------------------------------
 
+##TODO##
+# need leave_uk and death times from STATA model...
+
+
+IMPUTED_LTBI <- transform(IMPUTED_LTBI,
+                          leave_uk = length_uk_stay <= `X_9_fup` & uk_tb==0)
+
+# create final state vector
 event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
-event <- rep(1, nrow(IMPUTED_LTBI)) #death
-event[IMPUTED_LTBI$length_uk_stay<=IMPUTED_LTBI$`X_9_fup`] <- 2  #emmigrate
+# event <- rep(1, nrow(IMPUTED_LTBI)) #death
+event[IMPUTED_LTBI$leave_uk] <- 2
 event[IMPUTED_LTBI$uk_tb=="1"] <- 3
 
 times <- IMPUTED_LTBI$`X_9_fup`
@@ -127,21 +136,27 @@ times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
 times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
 
 
-# mstate::
 # https://cran.r-project.org/web/packages/mstate/vignettes/Tutorial.pdf
 # http://ac.els-cdn.com/S0169260710000027/1-s2.0-S0169260710000027-main.pdf?_tid=7f7ba4f8-897d-11e6-9905-00000aacb361&acdnat=1475508458_40cc7e1da75d2650bd432f8337eb448a
+
+ci <- mstate::Cuminc(time = times, status = event)
+plot(ci, xlab = "Days from uk entry", ylab="cumulative incidence probability", xlim = c(0, 5000), col = 2:10)
+
 ci <- mstate::Cuminc(time = times, status = event, group = IMPUTED_LTBI$age_at_entry)
-plot(ci, xlab="time", ylab="cumulative incidence probability", xlim=c(0,5000), col=2:10)
+plot(ci, xlab = "Days from uk entry", ylab="cumulative incidence probability", xlim = c(0, 5000), col = 2:10, main="split by age")
 
 
+# transition matrix
 tmat <- trans.comprisk(3, c("event-free", "emmigrate", "dead", "active_TB"))
 
 dat <- data.frame(times)
-dat$event1 <- as.numeric(event == 1)
-dat$event2 <- as.numeric(event == 2)
-dat$event3 <- as.numeric(event == 3)
 dat$age_at_entry <- IMPUTED_LTBI$age_at_entry
 
+dat$event1 <- as.numeric(event == 1) #death
+dat$event2 <- as.numeric(event == 2) #leave_uk
+dat$event3 <- as.numeric(event == 3) #uk_tb
+
+# transform to mstate format array
 mslong <- msprep(time = c(NA, "times", "times", "times"),
                  status = c(NA, "event1", "event2", "event3"),
                  data = dat, keep = "age_at_entry", trans = tmat)
@@ -150,11 +165,15 @@ mslong <- msprep(time = c(NA, "times", "times", "times"),
 # check frequencies
 events(mslong)
 
+# append age to mstate formatted array
 mslong <- expand.covs(mslong, "age_at_entry")
 
-cx <- coxph(Surv(Tstart, Tstop,status)~age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
+cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
             data = mslong, method = "breslow")
+cx
 
+
+##TODO##
 # HvH <- msfit(cx, newdate=, trans=tmat)
 # pt <- probtrans(HvH,predt=0)
 # pt[[1]] # predictions from state 1
