@@ -99,22 +99,6 @@ res_survfit <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED
 ggsurv(res_survfit) + ylim(0,1)
 
 
-## cmprsk::
-# z <- cmprsk::crr(times, event, IMPUTED_LTBI$age_group2)
-# z.p <- predict(z, 2)
-# plot(z.p)
-
-## investigate censoring assumption
-# c_tb <- coxph(Surv(times, event == 3) ~ age_at_entry, data = IMPUTED_sample) #tb
-# c_emmig <- coxph(Surv(times, event == 2) ~ age_at_entry, data = IMPUTED_sample) #leave uk
-#
-# s_tb <- survfit(c_tb)
-# s_emmig <- survfit(c_emmig)
-#
-# plot(s_emmig, col=2, xlab="Days from uk entry", ylab="survival", xlim=c(0,5000), main="TB activation or leaving Uk as event time")
-# lines(s_tb, col=3)
-
-
 
 # multistate model --------------------------------------------------------
 
@@ -135,9 +119,6 @@ times <- IMPUTED_LTBI$`X_9_fup`
 times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
 times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
 
-
-# https://cran.r-project.org/web/packages/mstate/vignettes/Tutorial.pdf
-# http://ac.els-cdn.com/S0169260710000027/1-s2.0-S0169260710000027-main.pdf?_tid=7f7ba4f8-897d-11e6-9905-00000aacb361&acdnat=1475508458_40cc7e1da75d2650bd432f8337eb448a
 
 ci <- mstate::Cuminc(time = times, status = event)
 plot(ci, xlab = "Days from uk entry", ylab="cumulative incidence probability", xlim = c(0, 5000), col = 2:10)

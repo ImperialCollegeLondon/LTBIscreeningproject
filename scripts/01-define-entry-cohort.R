@@ -7,8 +7,14 @@
 # define entry cohort in terms of LTBI prevalence and size by year
 
 
+
+# global constants --------------------------------------------------------
+
+screen_age_range <- 18:35
+year_cohort <- '2012'
+
 # eligible screening age range only
-IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%18:35)
+IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
 
 # LTBI probability from country of origin  --------------------------------
@@ -40,12 +46,15 @@ IMPUTED_sample$LTBI <- (runif(n = length(prob)) < prob)
 # if active TB then assume LTBI
 IMPUTED_sample$LTBI[IMPUTED_sample$uk_tb=="1"] <- TRUE
 
+rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
-# yearly entry cohort by age and prevalence -------------------------------
+
+# yearly entry cohort size by age and prevalence ---------------------------
 
 # extract year only
 tmp <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
 IMPUTED_sample$issdt_year <- format(tmp, '%Y')
+rm(tmp)
 
 # age by active TB prevalence WHO classification tables split for each year cohort
 IMPUTED_sample_split <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
