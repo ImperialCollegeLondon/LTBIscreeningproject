@@ -18,10 +18,10 @@ osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-cos
 ## health
 osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-health.yaml")
 
-# print(osNode.cost, "type", "p", "distn", "mean", "sd")
+# print(osNode.cost, "type", "p", "distn", "mean", "sd", limit = NULL)
 
 
-# assign cohort WHO group proportions for given year
+# assign cohort WHO group branching proportions, for given year
 who_levels <- names(entryCohort_who_prop[[year_cohort]])
 
 for (i in seq_along(who_levels)){
@@ -33,7 +33,9 @@ for (i in seq_along(who_levels)){
                     filterFun = function(x) x$name==who_levels[i])
 }
 
-osNode.noscreen <- osNode.cost
+# only used for probability calc
+# cost and health == 0
+osNode.noscreen <- Clone(osNode.cost)
 
 
 # intervention scenarios --------------------------------------------------
@@ -53,17 +55,20 @@ osNode.health$Set(p = 0, filterFun = function(x) x$name=="No Screening")
 # osNode.cost$Set(p = 1, filterFun = function(x) x$name=="No Screening")
 # osNode.cost$Set(p = 1, filterFun = function(x) x$pathString=="LTBI screening cost/(350, 1e+05]/Screening")
 # osNode.cost$Set(p = 0, filterFun = function(x) x$pathString=="LTBI screening cost/(350, 1e+05]/No Screening")
-
+# osNode.health$Set(p = 0, filterFun = function(x) x$name=="Screening")
+# osNode.health$Set(p = 1, filterFun = function(x) x$name=="No Screening")
+# osNode.health$Set(p = 1, filterFun = function(x) x$pathString=="LTBI screening cost/(350, 1e+05]/Screening")
+# osNode.health$Set(p = 0, filterFun = function(x) x$pathString=="LTBI screening cost/(350, 1e+05]/No Screening")
 
 
 # pathway probabilities ---------------------------------------------------
 
-# calculate probabilitites along each branch, from root to leaf
+# calculate total probabilitites along each branch, from root to leaf
 ## screening
-path_probs <- treeSimR::calc_pathway_probs(osNode.cost)
-osNode.cost$Set(path_probs = path_probs)
-terminal_states <- data.frame(pathname = osNode.cost$Get('pathString', filterFun = isLeaf),
-                              path_probs = osNode.cost$Get('path_probs', filterFun = isLeaf))
+path_probs.screen <- treeSimR::calc_pathway_probs(osNode.cost)
+osNode.cost$Set(path_probs = path_probs.screen)
+terminal_states.screen <- data.frame(pathname = osNode.cost$Get('pathString', filterFun = isLeaf),
+                                     path_probs = osNode.cost$Get('path_probs', filterFun = isLeaf))
 
 ## no screening
 path_probs.noscreen <- treeSimR::calc_pathway_probs(osNode.noscreen)
@@ -71,41 +76,51 @@ osNode.noscreen$Set(path_probs = path_probs.noscreen)
 terminal_states.noscreen <- data.frame(pathname = osNode.noscreen$Get('pathString', filterFun = isLeaf),
                                        path_probs = osNode.noscreen$Get('path_probs', filterFun = isLeaf))
 
-
 # collect final decision tree states in to
 # competing risks model starting state groups
 
-startstate.nonLTBI <- grepl("/Complete Treatment", x = terminal_states$pathname) | grepl("nonLTBI", x = terminal_states$pathname)
+startstate.nonLTBI <- grepl("/Complete Treatment", x = terminal_states.screen$pathname) | grepl("non-LTBI", x = terminal_states.screen$pathname)
 startstate.LTBI <- !startstate.nonLTBI
 
-healthstatus <- NA
-healthstatus[startstate.nonLTBI] <- "nonLTBI"
-healthstatus[startstate.LTBI] <- "LTBI"
+terminal_states.noscreen$healthstatus <- terminal_states.screen$healthstatus <- NA
+terminal_states.noscreen$healthstatus[startstate.nonLTBI] <- terminal_states.screen$healthstatus[startstate.nonLTBI] <- "non-LTBI"
+terminal_states.noscreen$healthstatus[startstate.LTBI] <- terminal_states.screen$healthstatus[startstate.LTBI] <- "LTBI"
 
 # sample the subpopulation sizes at each terminal node and
 # aggregate to competing risk model start states
 
 n.startstate <- 2
 
-start_state_proportions.screen <- treeSimR::get_start_state_proportions(path_probs = terminal_states$path_probs,
-                                                                        startstateid = healthstatus,
+start_state_proportions.screen <- treeSimR::get_start_state_proportions(path_probs = terminal_states.screen$path_probs,
+                                                                        startstateid = terminal_states.screen$healthstatus,
                                                                         samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year==year_cohort],
                                                                         numsamples = n.startstate)
 
 start_state_proportions.noscreen <- treeSimR::get_start_state_proportions(path_probs = terminal_states.noscreen$path_probs,
-                                                                          startstateid = healthstatus,
+                                                                          startstateid = terminal_states$healthstatus,
                                                                           samplesize = entryCohort_poptotal$pop[entryCohort_poptotal$year==year_cohort],
                                                                           numsamples = n.startstate)
+
+start_state_proportions.noscreen.mean <- setNames(aggregate(x = terminal_states.noscreen$path_probs,
+                                                            by = list(terminal_states.noscreen$healthstatus), FUN = sum), nm = c("state", "prob"))
+
+start_state_proportions.screen.mean <- setNames(aggregate(x = terminal_states.screen$path_probs,
+                                                          by = list(terminal_states.screen$healthstatus), FUN = sum), nm = c("state", "prob"))
+
+
+# successfully completing treatment of LTBI
+p.LTBI_to_nonLTBI <- round(osNode.cost$Get('path_probs', filterFun = function(x) x$name=="Complete Treatment")/osNode.cost$Get('path_probs', filterFun = function(x) x$name=="LTBI"), digits = 4)
+p.LTBI_to_nonLTBI <- unique(p.LTBI_to_nonLTBI[!p.LTBI_to_nonLTBI%in%c(NA,NaN,Inf)])
 
 
 # expected values ---------------------------------------------------------
 
 N.mc <- 10
 
-# for defined nodes, sample of expected cost realisations
+# for defined nodes, sample expected cost
 mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode.cost, n = N.mc)
 
-# for defined nodes, sample of expected health realisations
+# for defined nodes, sample expected health
 mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
 
 

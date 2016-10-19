@@ -49,6 +49,36 @@ IMPUTED_sample$LTBI[IMPUTED_sample$uk_tb=="1"] <- TRUE
 rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
 
+
+# convert follow-up columns to date format ---------------------------------
+
+cols_fup <- grepl(pattern = "_fup", x = names(IMPUTED_sample))
+
+# date of arrival to uk
+issdt.asnumeric <- as.Date(IMPUTED_sample$issdt) - as.Date("1960-01-01")
+
+x <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
+colnames(x) <- paste(colnames(x), "_issdt", sep="")
+
+
+# time from uk entry to active tb
+rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
+rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
+
+
+IMPUTED_sample <- data.frame(IMPUTED_sample, x, rNotificationDate.asnumeric, rNotificationDate_issdt)
+
+
+##TODO##
+# use these times from modified STATA code...
+# cr.colnames <- c("date_exit_uk", "date_death", "rNotificationDate", "issdt", "age_at_entry", "LTBI")
+
+cr.colnames <- c("X_9_fup", "length_uk_stay", "time_screen_case", "uk_tb", "rNotificationDate", "issdt", "age_at_entry", "LTBI")
+
+IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
+
+
+
 # yearly entry cohort size by age and prevalence ---------------------------
 
 # extract year only
@@ -57,12 +87,12 @@ IMPUTED_sample$issdt_year <- format(tmp, '%Y')
 rm(tmp)
 
 # age by active TB prevalence WHO classification tables split for each year cohort
-IMPUTED_sample_split <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
+IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
 
-entryCohort_age <- lapply(IMPUTED_sample_split, function(x) table(x$age_at_entry))
-entryCohort_who <- lapply(IMPUTED_sample_split, function(x) table(x$who_prev_cat_Pareek2011))
-entryCohort_who_prop <- lapply(IMPUTED_sample_split, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
-entryCohort_age_who  <- lapply(IMPUTED_sample_split, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
+entryCohort_age <- lapply(IMPUTED_sample_splityear, function(x) table(x$age_at_entry))
+entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011))
+entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
+entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
 
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(rep(1, nrow(IMPUTED_sample)), by = list(IMPUTED_sample$issdt_year), sum)

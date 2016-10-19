@@ -10,56 +10,6 @@ library(survival)
 library(mstate)
 
 
-###############
-## DATA PREP ##
-###############
-
-##TODO##
-# use these times from modified STATA code...
-# cr.colnames <- c("date_exit_uk", "date_death", "rNotificationDate", "issdt", "age_at_entry")
-
-cr.colnames <- c("X_9_fup", "length_uk_stay", "time_screen_case", "uk_tb", "rNotificationDate", "issdt", "age_at_entry")
-
-IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
-
-
-# convert follow-up columns to date format ---------------------------------
-
-cols_fup <- grepl(pattern = "_fup", x = names(IMPUTED_sample))
-
-# initialise
-fup_asDate <- data.frame(matrix(vector(), ncol = sum(cols_fup), nrow = nrow(IMPUTED_sample)))
-
-
-##TODO##
-# why does it not want to stay as date format??
-for (j in seq_len(length.out = sum(cols_fup))){
-  for (i in seq_len(length.out = nrow(IMPUTED_sample))){
-
-    fup_asDate[i,j] <-  as.Date(IMPUTED_sample[,cols_fup][i,j], origin="1960-01-01")
-  }
-}
-
-
-# _fup has lots of individuals at 19723 = 31st Dec 2013 (last ETS date)
-# as.Date("2013/12/31") - 19723
-# [1] "1960-01-01"
-# is this a censoring time? should we include event=0?
-
-# date of arrival
-issdt.asnumeric <- as.Date(IMPUTED_sample$issdt) - as.Date("1960-01-01")
-
-x <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
-colnames(x) <- paste(colnames(x), "_issdt", sep="")
-
-IMPUTED_sample <- data.frame(IMPUTED_sample, x)
-
-# time from uk entry to active tb
-rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
-
-
-
-
 ####################
 ## COMPETING RISK ##
 ####################
@@ -71,11 +21,10 @@ cens_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_s
 cens_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 
-##TODO## what is this number?
 # cohort size at arrival to uk
-pop <- 1000
+pop <- with(entryCohort_poptotal, pop[year==year_cohort])
 
-# scaled F = 1-S
+# scaled F=1-S
 cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
 # stratified by age
@@ -88,7 +37,7 @@ cens_survfit_byage <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = 
 # need leave_uk and death times from STATA model...
 
 IMPUTED_LTBI <- transform(IMPUTED_LTBI,
-                          leave_uk = length_uk_stay <= `X_9_fup` & uk_tb==0)
+                          leave_uk = length_uk_stay <= `X_9_fup_issdt` & uk_tb==0)
 
 # create final state vector
 event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
@@ -96,7 +45,7 @@ event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
 event[IMPUTED_LTBI$leave_uk] <- 2
 event[IMPUTED_LTBI$uk_tb=="1"] <- 3
 
-times <- IMPUTED_LTBI$`X_9_fup`
+times <- IMPUTED_LTBI$`X_9_fup_issdt`
 times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
 times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
 
@@ -136,4 +85,42 @@ cx
 # HvH <- msfit(cx, newdate=, trans=tmat)
 # pt <- probtrans(HvH,predt=0)
 # pt[[1]] # predictions from state 1
+
+
+#  ------------------------------------------------------------------------
+# can fit to all data with LTBI covariate (so population size stays the same)
+# or fit only to LTBI individuals (so will need to adjust sample sizes)
+
+
+# resample_tb_status_after_screening
+n.tb <- sum(IMPUTED_sample$uk_tb)
+IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(!(p.LTBI_to_nonLTBI > runif(n.tb)))
+
+
+# fit a Kaplan-Meier to screened data
+fit <- survfit(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample_splityear[[year_cohort]])
+
+plot(fit, lty = 2:3, ylab = "survival", xlab = "Days since UK entry", main = "Active TB progression")
+legend(100, 0.8, c("", ""), lty = 2:3)
+
+
+
+# fit Cox proportional hazards model to original data
+# then screened data predict with adjusted cohort
+
+fit <- coxph(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+
+plot(survfit(fit, newdata = IMPUTED_sample_splityear[[year_cohort]]),
+     xlab = "Days since UK entry", ylab = "Survival")
+
+
+
+
+
+
+
+
+
+
+
 
