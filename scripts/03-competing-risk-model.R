@@ -27,8 +27,28 @@ pop <- with(entryCohort_poptotal, pop[year==year_cohort])
 # scaled F=1-S
 cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
-# stratified by age
+# fit stratified by age
 cens_survfit_byage <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+
+
+# after screening ---------------------------------------------------------
+
+# resample_tb_status_after_screening
+n.tb <- sum(IMPUTED_sample$uk_tb)
+IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(!(p.LTBI_to_nonLTBI > runif(n.tb)))
+
+
+# fit Kaplan-Meier to screened data
+IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
+KM_screened <- survfit(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry,
+                       data = IMPUTED_sample_splityear[[year_cohort]])
+
+
+# fit Cox proportional hazards model to original data
+# then predict with screened data
+cens_coxph1_predict_screened <- survfit(cens_coxph1,
+                                        newdata = IMPUTED_sample_splityear[[year_cohort]])
 
 
 # multistate model --------------------------------------------------------
@@ -85,42 +105,6 @@ cx
 # HvH <- msfit(cx, newdate=, trans=tmat)
 # pt <- probtrans(HvH,predt=0)
 # pt[[1]] # predictions from state 1
-
-
-#  ------------------------------------------------------------------------
-# can fit to all data with LTBI covariate (so population size stays the same)
-# or fit only to LTBI individuals (so will need to adjust sample sizes)
-
-
-# resample_tb_status_after_screening
-n.tb <- sum(IMPUTED_sample$uk_tb)
-IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(!(p.LTBI_to_nonLTBI > runif(n.tb)))
-
-
-# fit a Kaplan-Meier to screened data
-fit <- survfit(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample_splityear[[year_cohort]])
-
-plot(fit, lty = 2:3, ylab = "survival", xlab = "Days since UK entry", main = "Active TB progression")
-legend(100, 0.8, c("", ""), lty = 2:3)
-
-
-
-# fit Cox proportional hazards model to original data
-# then screened data predict with adjusted cohort
-
-fit <- coxph(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-
-plot(survfit(fit, newdata = IMPUTED_sample_splityear[[year_cohort]]),
-     xlab = "Days since UK entry", ylab = "Survival")
-
-
-
-
-
-
-
-
-
 
 
 

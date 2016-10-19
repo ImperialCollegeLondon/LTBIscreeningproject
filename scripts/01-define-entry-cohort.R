@@ -86,9 +86,7 @@ tmp <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
 IMPUTED_sample$issdt_year <- format(tmp, '%Y')
 rm(tmp)
 
-# age by active TB prevalence WHO classification tables split for each year cohort
-IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
-
+# age and active TB prevalence WHO classification tables split for each year cohort
 entryCohort_age <- lapply(IMPUTED_sample_splityear, function(x) table(x$age_at_entry))
 entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011))
 entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))

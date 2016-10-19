@@ -108,8 +108,10 @@ start_state_proportions.screen.mean <- setNames(aggregate(x = terminal_states.sc
                                                           by = list(terminal_states.screen$healthstatus), FUN = sum), nm = c("state", "prob"))
 
 
-# successfully completing treatment of LTBI
-p.LTBI_to_nonLTBI <- round(osNode.cost$Get('path_probs', filterFun = function(x) x$name=="Complete Treatment")/osNode.cost$Get('path_probs', filterFun = function(x) x$name=="LTBI"), digits = 4)
+# probability successfully complete treatment of LTBI
+p.LTBI_to_nonLTBI <- round(osNode.cost$Get('path_probs', filterFun = function(x) x$name=="Complete Treatment")/
+                           osNode.cost$Get('path_probs', filterFun = function(x) x$name=="LTBI"),
+                           digits = 4)
 p.LTBI_to_nonLTBI <- unique(p.LTBI_to_nonLTBI[!p.LTBI_to_nonLTBI%in%c(NA,NaN,Inf)])
 
 
