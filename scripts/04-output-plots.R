@@ -20,7 +20,7 @@ ceplane.plot(screen.bcea)
 
 
 ##TODO##
-#have number of active TB cases as health detriment?
+# have number of active TB cases as health detriment instead?
 
 
 # active TB competing risks ---------------------------------------------------------
@@ -74,4 +74,6 @@ plot(cens_coxph1_predict_screened,
 #   take difference of status quo and screening active TB cases
 
 # probability cost-effective for adherence vs uptake, for given costs per test
+
+# case fatality ratio: at the moment dont have this in the model. we stop at TB activation.
 
