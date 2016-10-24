@@ -19,9 +19,9 @@ library(mstate)
 
 # simple approach: other events as censored (active TB) times ----------
 
-cens_coxph1 <- coxph(Surv(X_1_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-cens_coxph2 <- coxph(Surv(X_2_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-cens_coxph3 <- coxph(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph1 <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph3 <- coxph(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 
 # cohort size at arrival to uk
@@ -31,7 +31,7 @@ pop <- with(entryCohort_poptotal, pop[year==year_cohort])
 cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
 # fit stratified by age
-cens_survfit_byage <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_survfit_byage <- survfit(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 
 # after screening ---------------------------------------------------------
@@ -39,16 +39,23 @@ cens_survfit_byage <- survfit(Surv(X_3_fup_issdt, uk_tb) ~ age_at_entry, data = 
 # resample_tb_status_after_screening
 n.tb <- sum(IMPUTED_sample$uk_tb)
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(!(p.LTBI_to_nonLTBI > runif(n.tb)))
 
 
-# fit Kaplan-Meier to screened data
+# probability of successfully completing LTBI treatment for future active TB cases
+IMPUTED_sample$p.complete_treat_given_LTBI_by_who <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
+
+# randomly prevent progression
+IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(IMPUTED_sample$p.complete_treat_given_LTBI_by_who[IMPUTED_sample$uk_tb==1] < runif(n.tb))
+
+
+# fit Kaplan-Meier to _screened_ data directly
 IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
-KM_screened <- survfit(Surv(X_9_fup_issdt, uk_tb) ~ age_at_entry,
+KM_screened <- survfit(Surv(fup9_issdt, uk_tb) ~ age_at_entry,
                        data = IMPUTED_sample_splityear[[year_cohort]])
 
 
-# fit Cox proportional hazards model to original data
+# alternatively...
+# fit Cox proportional hazards model to _original_ data
 # then predict with screened data
 cens_coxph1_predict_screened <- survfit(cens_coxph1,
                                         newdata = IMPUTED_sample_splityear[[year_cohort]])

@@ -17,7 +17,8 @@ year_cohort <- '2012'
 IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
 
-# LTBI probability from country of origin  --------------------------------
+
+# impute LTBI probability from country of origin  --------------------------
 
 # match prevalence groups in dataset to paper
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
@@ -50,30 +51,36 @@ rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
 
 
-# convert follow-up columns to date format ---------------------------------
+# from event dates create time-to-events in days --------------------------
 
-cols_fup <- grepl(pattern = "_fup", x = names(IMPUTED_sample))
+cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
+cols_eventdate <- grepl(pattern = "date_exit_uk|date_death", x = names(IMPUTED_sample))
 
-# date of arrival to uk
-issdt.asnumeric <- as.Date(IMPUTED_sample$issdt) - as.Date("1960-01-01")
+IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
 
-x <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
-colnames(x) <- paste(colnames(x), "_issdt", sep="")
+# days to arrival in uk from time origin
+issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
 
 
-# time from uk entry to active tb
+# days from arrival in uk to end of follow-up 
+issdt_fup <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
+colnames(issdt_fup) <- paste(colnames(issdt_fup), "_issdt", sep = "")
+
+# death & uk exit
+issdt_event <- apply(IMPUTED_sample[ ,cols_eventdate], 2, FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
+colnames(issdt_event) <- paste(colnames(issdt_event), "_issdt", sep = "")
+
+# days from uk entry to active tb
 rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
 rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
 
 
-IMPUTED_sample <- data.frame(IMPUTED_sample, x, rNotificationDate.asnumeric, rNotificationDate_issdt)
+IMPUTED_sample <- data.frame(IMPUTED_sample,
+                             issdt_fup, issdt_event,
+                             rNotificationDate_issdt)
 
 
-##TODO##
-# use these times from modified STATA code...
-# cr.colnames <- c("date_exit_uk", "date_death", "rNotificationDate", "issdt", "age_at_entry", "LTBI")
-
-cr.colnames <- c("X_9_fup", "length_uk_stay", "time_screen_case", "uk_tb", "rNotificationDate", "issdt", "age_at_entry", "LTBI")
+cr.colnames <- c(colnames(issdt_fup), colnames(issdt_event), "rNotificationDate_issdt", "uk_tb", "issdt", "age_at_entry", "LTBI")
 
 IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
 
@@ -82,9 +89,7 @@ IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
 # yearly entry cohort size by age and prevalence ---------------------------
 
 # extract year only
-tmp <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
-IMPUTED_sample$issdt_year <- format(tmp, '%Y')
-rm(tmp)
+IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
 

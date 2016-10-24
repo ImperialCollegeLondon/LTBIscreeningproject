@@ -652,7 +652,7 @@
           distn: gamma
           mean: 1
           sd: 1
-    (350, 1e+05]:
+    (350,1e+05]:
       p: 0.20
       distn: gamma
       mean: 1
