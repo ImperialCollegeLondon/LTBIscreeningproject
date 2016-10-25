@@ -13,6 +13,11 @@
 screen_age_range <- 18:35
 year_cohort <- '2012'
 
+##TODO##
+# why are there missing issdt uk entry dates?
+# for now just remove them...
+IMPUTED_sample <- subset(IMPUTED_sample, !is.na(issdt))
+
 # eligible screening age range only
 IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
@@ -82,10 +87,15 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
                              rNotificationDate_issdt)
 
 
-cr.colnames <- c(colnames(issdt_fup), colnames(issdt_event), "rNotificationDate_issdt", "uk_tb", "issdt", "age_at_entry", "LTBI")
+cr.colnames <- c(colnames(issdt_fup), colnames(issdt_event),
+                 "rNotificationDate_issdt", "uk_tb", "issdt", "age_at_entry", "LTBI")
 
 # LTBI cases only
 IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
+
+rm(cols_eventdate, cols_fup, issdt.asnumeric, issdt_fup, issdt_event,
+   rNotificationDate.asnumeric, rNotificationDate_issdt, cr.colnames,
+   screen_age_range)
 
 
 # create event-type indicators --------------------------------------------

@@ -42,7 +42,7 @@ for (i in seq_along(who_levels)){
   osNode.health$Set(p = p.who[i],
                     filterFun = function(x) x$name==who_levels[i])
 }
-
+rm(i)
 
 # sensitivity analysis ----------------------------------------------------
 
@@ -107,14 +107,17 @@ osNode.cost$Set(path_probs = path_probs.screen)
 
 # total probability successfully complete treatment of LTBI
 # use when know active TB cases in advance
-p.complete_treatment <- osNode.cost$Get('path_probs', filterFun = function(x) x$name=="Complete Treatment" & !grepl(pattern = "non-LTBI", x$pathString))
+p.complete_treatment <- osNode.cost$Get('path_probs',
+                                        filterFun = function(x) x$name=="Complete Treatment" & !grepl(pattern = "non-LTBI", x$pathString))
 
 # branch probabilities for LTBI
-p.LTBI <- osNode.cost$Get('p', filterFun = function(x) x$name=="LTBI" & !grepl(pattern = "No Screening", x$pathString))
+p.LTBI <- osNode.cost$Get('p',
+                          filterFun = function(x) x$name=="LTBI" & !grepl(pattern = "No Screening", x$pathString))
 
 # prob of completing treatment for LTBI individuals in each WHO category
 p.complete_treat_given_LTBI_by_who <- setNames(p.complete_treatment/(p.LTBI * p.who), who_levels)
 
+rm(p.who, p.LTBI, p.complete_treatment)
 
 
 # expected values ---------------------------------------------------------
