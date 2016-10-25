@@ -74,7 +74,8 @@ issdt_fup <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.as
 colnames(issdt_fup) <- paste(colnames(issdt_fup), "_issdt", sep = "")
 
 # days from uk arrival to death & uk exit
-issdt_event <- apply(IMPUTED_sample[ ,cols_eventdate], 2, FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
+issdt_event <- apply(IMPUTED_sample[ ,cols_eventdate], 2,
+                     FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
 colnames(issdt_event) <- paste(colnames(issdt_event), "_issdt", sep = "")
 
 # days from uk entry to active tb
@@ -103,27 +104,41 @@ rm(cols_eventdate, cols_fup, issdt.asnumeric, issdt_fup, issdt_event,
 ##TODO##
 # tidy this up! prone to typos
 
+fup_limit <- 19723  #days from 1960-01-01
+
 IMPUTED_sample <- transform(IMPUTED_sample,
-                            death1 = (date_death1<=date_exit_uk1 & uk_tb==0),
-                            death2 = (date_death2<=date_exit_uk2 & uk_tb==0),
-                            death3 = (date_death3<=date_exit_uk3 & uk_tb==0),
-                            death4 = (date_death4<=date_exit_uk4 & uk_tb==0),
-                            death5 = (date_death5<=date_exit_uk5 & uk_tb==0),
-                            death6 = (date_death6<=date_exit_uk6 & uk_tb==0),
-                            death7 = (date_death7<=date_exit_uk7 & uk_tb==0),
-                            death8 = (date_death8<=date_exit_uk8 & uk_tb==0),
-                            death9 = (date_death9<=date_exit_uk9 & uk_tb==0),
-                            death10 = (date_death10<=date_exit_uk10 & uk_tb==0),
-                            exit_uk1 = (date_death1>date_exit_uk1 & uk_tb==0),
-                            exit_uk2 = (date_death2>date_exit_uk2 & uk_tb==0),
-                            exit_uk3 = (date_death3>date_exit_uk3 & uk_tb==0),
-                            exit_uk4 = (date_death4>date_exit_uk4 & uk_tb==0),
-                            exit_uk5 = (date_death5>date_exit_uk5 & uk_tb==0),
-                            exit_uk6 = (date_death6>date_exit_uk6 & uk_tb==0),
-                            exit_uk7 = (date_death7>date_exit_uk7 & uk_tb==0),
-                            exit_uk8 = (date_death8>date_exit_uk8 & uk_tb==0),
-                            exit_uk9 = (date_death9>date_exit_uk9 & uk_tb==0),
-                            exit_uk10 = (date_death10>date_exit_uk10 & uk_tb==0))
+                            cens1  = fup1==fup_limit,
+                            cens2  = fup2==fup_limit,
+                            cens3  = fup3==fup_limit,
+                            cens4  = fup4==fup_limit,
+                            cens5  = fup5==fup_limit,
+                            cens6  = fup6==fup_limit,
+                            cens7  = fup7==fup_limit,
+                            cens8  = fup8==fup_limit,
+                            cens9  = fup9==fup_limit,
+                            cens10 = fup10==fup_limit,
+
+                            death1  = (date_death1<=date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
+                            death2  = (date_death2<=date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
+                            death3  = (date_death3<=date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
+                            death4  = (date_death4<=date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
+                            death5  = (date_death5<=date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
+                            death6  = (date_death6<=date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
+                            death7  = (date_death7<=date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
+                            death8  = (date_death8<=date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
+                            death9  = (date_death9<=date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
+                            death10 = (date_death10<=date_exit_uk10 & uk_tb==0 & fup10!=fup_limit),
+
+                            exit_uk1  = (date_death1>date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
+                            exit_uk2  = (date_death2>date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
+                            exit_uk3  = (date_death3>date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
+                            exit_uk4  = (date_death4>date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
+                            exit_uk5  = (date_death5>date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
+                            exit_uk6  = (date_death6>date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
+                            exit_uk7  = (date_death7>date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
+                            exit_uk8  = (date_death8>date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
+                            exit_uk9  = (date_death9>date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
+                            exit_uk10 = (date_death10>date_exit_uk10 & uk_tb==0 & fup10!=fup_limit))
 
 
 # yearly entry cohort size by age and prevalence ---------------------------
@@ -132,6 +147,9 @@ IMPUTED_sample <- transform(IMPUTED_sample,
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
+
+# single year sample
+IMPUTED_sample_year_cohort <- IMPUTED_sample_splityear[[year_cohort]]
 
 # age and active TB prevalence WHO classification tables split for each year cohort
 entryCohort_age <- lapply(IMPUTED_sample_splityear, function(x) table(x$age_at_entry))
@@ -142,4 +160,21 @@ entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(rep(1, nrow(IMPUTED_sample)), by = list(IMPUTED_sample$issdt_year), sum)
 names(entryCohort_poptotal) <- c("year", "pop")
+
+
+# keep pre-screened status
+IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+
+
+# summary statistics ------------------------------------------------------
+
+# cohort size at arrival to uk
+pop <- sum(entryCohort_poptotal$pop)
+pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
+
+# number of active TB cases _before_ screening
+n.tb <- sum(IMPUTED_sample$uk_tb)
+n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
+
+
 

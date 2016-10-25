@@ -63,7 +63,8 @@
 "CumIncidence" <- function(ftime, fstatus, group, t, strata, rho = 0,
                            cencode = 0, subset, na.action = na.omit, level,
                            xlab = "Time", ylab = "Probability",
-                           col, lty, lwd, digits = 4, XLIM=c(0,1000))
+                           col, lty, lwd, digits = 4,
+                           XLIM = c(0,1000), YLIM = c(0,0.01))
 {
   # check for the required package
   if(!require("cmprsk"))
@@ -110,7 +111,7 @@
     col <- if(missing(col)) rep(1:(s-1), rep(g,(s-1))) else col
     lty <- if(missing(lty)) rep(1:g, s-1) else lty
     lwd <- if(missing(lwd)) rep(1, g*(s-1)) else lwd
-    matplot(time, base::t(x$est), type="s", ylim = c(0,1), xlim=XLIM,
+    matplot(time, base::t(x$est), type="s", ylim = YLIM, xlim=XLIM,
             xlab = xlab, ylab = ylab, xaxs="i", yaxs="i",
             col = col, lty = lty, lwd = lwd)
     legend("topleft", legend =  rownames(x$est), x.intersp = 2,

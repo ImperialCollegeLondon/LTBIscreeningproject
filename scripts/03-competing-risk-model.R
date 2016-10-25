@@ -14,20 +14,6 @@ library(mstate)
 library(cmprsk) # http://www.stat.unipg.it/luca/R
 
 
-# single year sample
-IMPUTED_sample_year_cohort <- IMPUTED_sample_splityear[[year_cohort]]
-
-# cohort size at arrival to uk
-pop <- sum(entryCohort_poptotal$pop)
-pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
-
-# number of active TB cases _before_ screening
-n.tb <- sum(IMPUTED_sample$uk_tb)
-n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
-
-# keep pre-screened status
-IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-
 
 ######################################
 ## simple approach: other events as ##
@@ -46,10 +32,6 @@ cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_samp
 cens_coxph3 <- coxph(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
 cens_coxph1_year <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample_year_cohort)
-
-
-# scaled F=1-S
-# cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
 
 # fit K-M to original _full_ data
@@ -71,10 +53,10 @@ KM_original_year_age <- survfit(formula = imputed_age.form,
 # after screening ---------------------------------------------------------
 
 # from decision tree create probability of successfully completing LTBI treatment
-IMPUTED_sample$p.complete_treat_given_LTBI_by_who <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
+p.comp_treat <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
 
 # resample tb status after screening
-IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(IMPUTED_sample$p.complete_treat_given_LTBI_by_who[IMPUTED_sample$uk_tb==1] < runif(n.tb))
+IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(p.comp_treat[IMPUTED_sample$uk_tb==1] < runif(n.tb))
 
 # number of active TB cases _after_ screening
 n.tb_screen <- sum(IMPUTED_sample$uk_tb)
@@ -143,13 +125,13 @@ dat$event1 <- as.numeric(event == 1) #uk_tb
 # transform to mstate format array
 mslong <- msprep(time = c(NA, "times", "times", "times"),
                  status = c(NA, "event1", "event2", "event3"),
-                 data = dat[1:1000,], keep = "age_at_entry", trans = tmat)
+                 data = dat, keep = "age_at_entry", trans = tmat)
 ##TODO## could include other (latent) times (not just first) cos we unusually do know these?
 
 # check frequencies
 events(mslong)
 
-# append age to mstate formatted array
+# append age to mstate format array
 mslong <- expand.covs(mslong, "age_at_entry")
 
 cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
@@ -181,13 +163,11 @@ dat_screen$event1 <- as.numeric(event_screen == 1) #uk_tb
 mslong_screen <- msprep(time = c(NA, "times", "times", "times"),
                         status = c(NA, "event1", "event2", "event3"),
                         data = dat_screen, keep = "age_at_entry", trans = tmat)
-##TODO## could include other (latent) times (not just first) cos we unusually do know these?
 
-# check frequencies
 events(mslong_screen)
 
-# append age to mstate formatted array
-mslong_screen <- expand.covs(mslong, "age_at_entry")
+# append age to mstate format array
+mslong_screen <- expand.covs(mslong_screen, "age_at_entry")
 
 cx_screen <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
                    data = mslong_screen, method = "breslow")

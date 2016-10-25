@@ -5,7 +5,7 @@
 #
 # output plots screening decision tree
 
-
+library(ggplot2)
 library(BCEA)
 
 
@@ -14,6 +14,10 @@ screen.bcea <- bcea(e = cbind('donothing'=0, 'interv'=mc.health$`expected values
                     ref = 1)
 
 ceplane.plot(screen.bcea)
+contour(screen.bcea)
+contour2(screen.bcea, graph="ggplot2")
+eib.plot(screen.bcea)
+ceac.plot(screen.bcea)
 
 
 ##TODO##

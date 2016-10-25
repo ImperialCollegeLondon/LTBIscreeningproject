@@ -122,7 +122,7 @@ rm(p.who, p.LTBI, p.complete_treatment)
 
 # expected values ---------------------------------------------------------
 
-N.mc <- 10
+N.mc <- 100
 
 # for defined nodes, sample expected cost
 mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode.cost, n = N.mc)
@@ -130,4 +130,5 @@ mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode.cost, n = N.mc)
 # for defined nodes, sample expected health
 mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
 
+rm(N.mc)
 

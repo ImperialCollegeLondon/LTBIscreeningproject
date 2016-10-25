@@ -17,18 +17,6 @@ scale <- 100000  #pop_year
 ## status quo ##
 ################
 
-# plot(ci, xlab = "Days from UK entry", ylab = "Cumulative incidence probability", main = "Multistate model",
-#      xlim = c(0, 5000), col = 2:10)
-#
-# plot(ci.age, xlab = "Days from UK entry", ylab = "Cumulative incidence probability", main = "Multistate model: split by age",
-#      xlim = c(0, 5000), col = 2:10)
-
-# plot(survfit(cens_coxph3)$time, cum_activeTB,
-#      xlab = "Days from UK entry", ylab = "Number active TB cases",
-#      xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), ylim = c(0, pop), type = "l",
-#      main = "3_fup censored for non-active TB events")
-
-
 # compare different imputations
 plot(survfit(cens_coxph1), xlab = "Days from UK entry", ylab = "Proportion non-active TB cases",
      xlim = c(0, max(IMPUTED_sample$X_1_fup_issdt, na.rm = T)), main="1_fup")
@@ -49,14 +37,22 @@ ggsurv(KM_original_year_age) + ylim(0.99,1) + xlim(0,1000) +
 
 
 # KM cumulative incidence
+#   probably bias
 plot(KM_original_full$time, scale * (1-KM_original_full$surv),
-     xlim = c(0,800), type = "l")
+     xlab = "Days from UK entry", ylab = "Active TB cases per 100,000",
+     xlim = c(0,3000), type = "l")
+
 plot(KM_original_full_age$time, scale * (1-KM_original_full_age$surv),
-     xlim = c(0,800), type = "l")
+     xlab = "Days from UK entry", ylab = "Active TB cases per 100,000",
+     xlim = c(0,3000), type = "l")
+
 plot(KM_original_year$time, scale * (1-KM_original_year$surv),
-     xlim = c(0,800), type = "l")
+     xlab = "Days from UK entry", ylab = "Active TB cases per 100,000",
+     xlim = c(0,3000), type = "l")
+
 plot(KM_original_year_age$time, scale * (1-KM_original_year_age$surv),
-     xlim = c(0,800), type = "l")
+     xlab = "Days from UK entry", ylab = "Active TB cases per 100,000",
+     xlim = c(0,3000), type = "l")
 
 
 # multistate models
@@ -69,8 +65,8 @@ legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1,
 detach(cmprsk)
 
 attach(cmprsk_age)
-fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
-legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK")
+# legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
 detach(cmprsk_age)
 
 

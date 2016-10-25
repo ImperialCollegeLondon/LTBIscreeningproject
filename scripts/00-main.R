@@ -31,6 +31,6 @@ source("scripts/03-competing-risk-model.R")
 
 # output plots ------------------------------------------------------------
 
-source("scripts/04-output-plots.R")
-
+source("scripts/04a-output-plots.R")
+source("scripts/04b-output-plots.R")
 
