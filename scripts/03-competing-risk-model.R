@@ -11,6 +11,7 @@
 
 library(survival)
 library(mstate)
+library(cmprsk) # http://www.stat.unipg.it/luca/R
 
 
 # single year sample
@@ -87,25 +88,25 @@ IMPUTED_sample_splityear_screen <- split(IMPUTED_sample, IMPUTED_sample$issdt_ye
 IMPUTED_sample_year_cohort_screen <- IMPUTED_sample_splityear_screen[[year_cohort]]
 
 # fit K-M to screened _full_ data
-KM_screened_full <- survfit(formula = imputed.form,
-                            data = IMPUTED_sample)
+KM_screen_full <- survfit(formula = imputed.form,
+                          data = IMPUTED_sample)
 #   stratified by age
-KM_screened_full_age <- survfit(formula = imputed_age.form,
-                                data = IMPUTED_sample)
+KM_screen_full_age <- survfit(formula = imputed_age.form,
+                              data = IMPUTED_sample)
 
 # fit K-M to screened _year_ data
-KM_screened_year <- survfit(formula = imputed.form,
-                            data = IMPUTED_sample_year_cohort_screen)
+KM_screen_year <- survfit(formula = imputed.form,
+                          data = IMPUTED_sample_year_cohort_screen)
 #   stratified by age
-KM_screened_year_age <- survfit(formula = imputed_age.form,
-                                data = IMPUTED_sample_year_cohort_screen)
+KM_screen_year_age <- survfit(formula = imputed_age.form,
+                              data = IMPUTED_sample_year_cohort_screen)
 
 
 
 # # alternatively...
 # # fit Cox proportional hazards model to _original_ data
 # # then predict with _screened_ data
-# cens_coxph1_predict_screened <- survfit(formula = cens_coxph1,
+# cens_coxph1_predict_screen <- survfit(formula = cens_coxph1,
 #                                         newdata = IMPUTED_sample_year_cohort_screen)
 
 
@@ -156,6 +157,12 @@ cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_
 cx
 
 
+
+cmprsk_age <- data.frame(dis=dat$age_at_entry, ftime=times, status=event)
+cmprsk <- data.frame(dis=1, ftime=times, status=event) # without age
+
+
+
 # screened ----------------------------------------------------------------
 
 event_screen <- rep(0, nrow(IMPUTED_sample)) #event-free i.e. censored event time
@@ -188,6 +195,13 @@ cx_screen
 
 
 
+cmprsk_age_screen <- data.frame(dis=dat_screen$age_at_entry, ftime=times, status=event_screen)
+cmprsk_screen <- data.frame(dis=1, ftime=times, status=event_screen) # without age
+
+
+
+
+
 
 
 ##TODO##
@@ -195,6 +209,9 @@ cx_screen
 # HvH <- msfit(cx, newdata=mslong, trans=tmat)
 # pt <- probtrans(HvH,predt=0)
 # pt[[1]] # predictions from state 1
+
+
+
 
 
 

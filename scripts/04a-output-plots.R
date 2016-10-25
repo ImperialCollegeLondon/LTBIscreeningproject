@@ -9,6 +9,9 @@
 source("scripts/ggsurv.R")
 
 
+# x-axis population scaling
+scale <- 100000  #pop_year
+
 
 ################
 ## status quo ##
@@ -37,15 +40,15 @@ plot(survfit(cens_coxph3), xlab = "Days from UK entry", ylab = "Proportion non-a
      xlim = c(0, max(IMPUTED_sample$X_3_fup_issdt, na.rm = T)), main="3_fup")
 
 
+# Kaplan-Meier (non-parametric)
+ggsurv(KM_original_year) + ylim(0.99,1) + xlim(0,1000) +
+  ggtitle("Time to active TB split\n, censoring on death and leaving UK")
 
-ggsurv(KM_original_year_age) + ylim(0,1) +
+ggsurv(KM_original_year_age) + ylim(0.99,1) + xlim(0,1000) +
   ggtitle("Time to active TB split\n by age, censoring on death and leaving UK")
 
-# x-axis population scaling
-scale <- 100000  #pop_year
 
-# Kaplan-Meier (non-parametric) cumulative incidence
-
+# KM cumulative incidence
 plot(KM_original_full$time, scale * (1-KM_original_full$surv),
      xlim = c(0,800), type = "l")
 plot(KM_original_full_age$time, scale * (1-KM_original_full_age$surv),
@@ -56,8 +59,19 @@ plot(KM_original_year_age$time, scale * (1-KM_original_year_age$surv),
      xlim = c(0,800), type = "l")
 
 
+# multistate models
 plot(survfit(cx), col=2:4, xlab = "Days", ylab = "Survival probability")
 legend("bottomleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1)
+
+attach(cmprsk)
+fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
+legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+detach(cmprsk)
+
+attach(cmprsk_age)
+fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
+legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+detach(cmprsk_age)
 
 
 
@@ -66,30 +80,50 @@ legend("bottomleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty =
 ###############
 
 
-plot(KM_screened_year$time, pop_year * (1-KM_screened_year$surv), xlim = c(0,800), type = "l")
-
-plot(KM_screened_full, lty = 2:3,
-     ylab = "survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
-legend(100, 0.8, c("", ""), lty = 2:3)
-
 plot(cens_coxph1_predict_screened,
      xlab = "Days since UK entry", ylab = "Survival", main = "Cohort active TB progression prediction\n using all years fit")
 
+# Kaplan-Meier (non-parametric)
 
-# Kaplan-Meier (non-parametric) cumulative incidence
+ggsurv(KM_screen_year) + ylim(0.99,1) + xlim(0,1000) +
+  ggtitle("Time to active TB split\n, censoring on death and leaving UK")
+
+ggsurv(KM_screen_year_age) + ylim(0.99,1) + xlim(0,1000) +
+  ggtitle("Time to active TB split\n by age, censoring on death and leaving UK")
+
+# KM cumulative incidence
 
 plot(KM_screen_full$time, scale * (1-KM_screen_full$surv),
-     xlim = c(0,800), type = "l")
+     xlim = c(0,800), type = "l",
+     ylab = "Survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
+
 plot(KM_screen_full_age$time, scale * (1-KM_screen_full_age$surv),
-     xlim = c(0,800), type = "l")
+     xlim = c(0,800), type = "l",
+     ylab = "Survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
+
 plot(KM_screen_year$time, scale * (1-KM_screen_year$surv),
-     xlim = c(0,800), type = "l")
+     xlim = c(0,800), type = "l",
+     ylab = "Survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
+
 plot(KM_screen_year_age$time, scale * (1-KM_screen_year_age$surv),
-     xlim = c(0,800), type = "l")
+     xlim = c(0,800), type = "l",
+     ylab = "Survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
 
 
+# multistate model
 plot(survfit(cx_screen), col=2:4, xlab = "Days", ylab = "Survival probability")
 legend("bottomleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1)
+
+attach(cmprsk_screen)
+fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
+legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+detach(cmprsk_screen)
+
+attach(cmprsk_age_screen)
+fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
+legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+detach(cmprsk_age_screen)
+
 
 
 
