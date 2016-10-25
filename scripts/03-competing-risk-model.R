@@ -13,86 +13,124 @@ library(survival)
 library(mstate)
 
 
+IMPUTED_sample_year_cohort <- IMPUTED_sample_splityear[[year_cohort]]
+
+# cohort size at arrival to uk
+pop <- sum(entryCohort_poptotal$pop)
+pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
+
+# number of active TB cases _before_ screening
+n.tb <- sum(IMPUTED_sample$uk_tb)
+n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
+
+# keep pre-screened status
+IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+
+
 ####################
 ## COMPETING RISK ##
 ####################
 
-# simple approach: other events as censored (active TB) times ----------
+# simple approach: other events as censored (active TB) times ------------
+
+imputed.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ 1)
+imputed_age.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ age_at_entry)
+
 
 cens_coxph1 <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 cens_coxph3 <- coxph(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 
-
-# cohort size at arrival to uk
-pop <- with(entryCohort_poptotal, pop[year==year_cohort])
-
 # scaled F=1-S
 cum_activeTB <- pop * (1 - exp(-survfit(formula = cens_coxph3)$cumhaz))
 
-# fit stratified by age
-cens_survfit_byage <- survfit(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+# fit K-M to original full data
+
+KM_original_full <- survfit(formula = imputed.form,
+                            data = IMPUTED_sample)
+#   stratified by age
+KM_original_full_age <- survfit(formula = imputed_age.form,
+                                data = IMPUTED_sample)
+
+# fit K-M to original year data
+
+KM_original_year <- survfit(formula = imputed.form,
+                            data = IMPUTED_sample_year_cohort)
+#   stratified by age
+KM_original_year_age <- survfit(formula = imputed_age.form,
+                                data = IMPUTED_sample_year_cohort)
+
+
+
 
 
 # after screening ---------------------------------------------------------
 
-# resample_tb_status_after_screening
-n.tb <- sum(IMPUTED_sample$uk_tb)
-IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-
-
-# probability of successfully completing LTBI treatment for future active TB cases
+# from decision tree create probability of successfully completing LTBI treatment
 IMPUTED_sample$p.complete_treat_given_LTBI_by_who <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
 
-# randomly prevent progression
+# resample tb status after screening
 IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(IMPUTED_sample$p.complete_treat_given_LTBI_by_who[IMPUTED_sample$uk_tb==1] < runif(n.tb))
+
+# number of active TB cases _after_ screening
+n.tb_screen <- sum(IMPUTED_sample$uk_tb)
+
 
 
 # fit Kaplan-Meier to _screened_ data directly
-IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
-KM_screened <- survfit(Surv(fup9_issdt, uk_tb) ~ age_at_entry,
-                       data = IMPUTED_sample_splityear[[year_cohort]])
+
+# redo split with new tb events
+IMPUTED_sample_splityear_screen <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
+IMPUTED_sample_year_cohort_screen <- IMPUTED_sample_splityear_screen[[year_cohort]]
+
+
+KM_screened_full <- survfit(formula = imputed.form,
+                            data = IMPUTED_sample)
+#   stratified by age
+KM_screened_full_age <- survfit(formula = imputed_age.form,
+                                data = IMPUTED_sample)
+
+# fit K-M to screened year data
+
+KM_screened_year <- survfit(formula = imputed.form,
+                            data = IMPUTED_sample_year_cohort_screen)
+#   stratified by age
+KM_screened_year_age <- survfit(formula = imputed_age.form,
+                                data = IMPUTED_sample_year_cohort_screen)
+
 
 
 # alternatively...
 # fit Cox proportional hazards model to _original_ data
 # then predict with screened data
-cens_coxph1_predict_screened <- survfit(cens_coxph1,
-                                        newdata = IMPUTED_sample_splityear[[year_cohort]])
+cens_coxph1_predict_screened <- survfit(formula = cens_coxph1,
+                                        newdata = IMPUTED_sample_year_cohort)
 
 
 # multistate model --------------------------------------------------------
 
-##TODO##
-# need leave_uk and death times from STATA model...
+# create final state vectors
+event <- rep(0, nrow(IMPUTED_sample)) #event-free i.e. censored event time
+event[IMPUTED_sample$death1] <- 3
+event[IMPUTED_sample$exit_uk1] <- 2
+event[IMPUTED_sample$uk_tb=="1"] <- 1
 
-IMPUTED_LTBI <- transform(IMPUTED_LTBI,
-                          leave_uk = length_uk_stay <= `X_9_fup_issdt` & uk_tb==0)
+times <- IMPUTED_sample$fup1_issdt
 
-# create final state vector
-event <- rep(0, nrow(IMPUTED_LTBI)) #event-free i.e. censored event time
-# event <- rep(1, nrow(IMPUTED_LTBI)) #death
-event[IMPUTED_LTBI$leave_uk] <- 2
-event[IMPUTED_LTBI$uk_tb=="1"] <- 3
-
-times <- IMPUTED_LTBI$`X_9_fup_issdt`
-times[event==2] <- IMPUTED_LTBI$length_uk_stay[event==2]
-times[event==3] <- IMPUTED_LTBI$time_screen_case[event==3]
-
-
+#warning: slow for large sample
 ci <- mstate::Cuminc(time = times, status = event)
-ci.age <- mstate::Cuminc(time = times, status = event, group = IMPUTED_LTBI$age_at_entry)
+ci.age <- mstate::Cuminc(time = times, status = event, group = IMPUTED_sample$age_at_entry)
 
 
 # transition matrix
-tmat <- trans.comprisk(3, c("event-free", "emmigrate", "dead", "active_TB"))
+tmat <- trans.comprisk(3, c("event-free", "exit_uk", "dead", "active_TB"))
 
 dat <- data.frame(times)
-dat$age_at_entry <- IMPUTED_LTBI$age_at_entry
+dat$age_at_entry <- IMPUTED_sample$age_at_entry
 
-dat$event1 <- as.numeric(event == 1) #death
-dat$event2 <- as.numeric(event == 2) #leave_uk
-dat$event3 <- as.numeric(event == 3) #uk_tb
+dat$event3 <- as.numeric(event == 3) #death
+dat$event2 <- as.numeric(event == 2) #exit_uk
+dat$event1 <- as.numeric(event == 1) #uk_tb
 
 # transform to mstate format array
 mslong <- msprep(time = c(NA, "times", "times", "times"),

@@ -52,20 +52,35 @@ plot(survfit(cens_coxph3)$time, cum_activeTB,
      main = "3_fup censored for non-active TB events")
 
 
-ggsurv(cens_survfit_byage) + ylim(0,1) +
+ggsurv(KM_original_year_age) + ylim(0,1) +
   ggtitle("Time to active TB split\n by age, censoring on death and leaving UK")
+
+
+scale <- 100000  #pop_year
+
+plot(KM_original_full$time, scale * (1-KM_original_full$surv),
+     xlim = c(0,800), type = "l")
+plot(KM_original_full_age$time, scale * (1-KM_original_full_age$surv),
+     xlim = c(0,800), type = "l")
+plot(KM_original_year$time, scale * (1-KM_original_year$surv),
+     xlim = c(0,800), type = "l")
+plot(KM_original_year_age$time, scale * (1-KM_original_year_age$surv),
+     xlim = c(0,800), type = "l")
 
 
 ###############
 ## screening ##
 ###############
 
-plot(KM_screened, lty = 2:3,
-     ylab = "survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier using cohort year fit")
+
+plot(KM_screened_year$time, pop_year * (1-KM_screened_year$surv), xlim = c(0,800), type = "l")
+
+plot(KM_screened_full, lty = 2:3,
+     ylab = "survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
 legend(100, 0.8, c("", ""), lty = 2:3)
 
 plot(cens_coxph1_predict_screened,
-     xlab = "Days since UK entry", ylab = "Survival", main = "Cohort active TB progression prediction using all years fit")
+     xlab = "Days since UK entry", ylab = "Survival", main = "Cohort active TB progression prediction\n using all years fit")
 
 
 ##TODO##

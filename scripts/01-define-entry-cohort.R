@@ -53,7 +53,10 @@ rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
 # from event dates create time-to-events in days --------------------------
 
+# find all columns with follow-up time imputations
 cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
+
+# find all columns with either exit uk or death event time imputations
 cols_eventdate <- grepl(pattern = "date_exit_uk|date_death", x = names(IMPUTED_sample))
 
 IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
@@ -61,12 +64,11 @@ IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
 # days to arrival in uk from time origin
 issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
 
-
-# days from arrival in uk to end of follow-up 
+# days from arrival in uk to end of follow-up
 issdt_fup <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
 colnames(issdt_fup) <- paste(colnames(issdt_fup), "_issdt", sep = "")
 
-# death & uk exit
+# days from uk arrival to death & uk exit
 issdt_event <- apply(IMPUTED_sample[ ,cols_eventdate], 2, FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
 colnames(issdt_event) <- paste(colnames(issdt_event), "_issdt", sep = "")
 
@@ -82,8 +84,36 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
 
 cr.colnames <- c(colnames(issdt_fup), colnames(issdt_event), "rNotificationDate_issdt", "uk_tb", "issdt", "age_at_entry", "LTBI")
 
+# LTBI cases only
 IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
 
+
+# create event-type indicators --------------------------------------------
+
+##TODO##
+# tidy this up! prone to typos
+
+IMPUTED_sample <- transform(IMPUTED_sample,
+                            death1 = (date_death1<=date_exit_uk1 & uk_tb==0),
+                            death2 = (date_death2<=date_exit_uk2 & uk_tb==0),
+                            death3 = (date_death3<=date_exit_uk3 & uk_tb==0),
+                            death4 = (date_death4<=date_exit_uk4 & uk_tb==0),
+                            death5 = (date_death5<=date_exit_uk5 & uk_tb==0),
+                            death6 = (date_death6<=date_exit_uk6 & uk_tb==0),
+                            death7 = (date_death7<=date_exit_uk7 & uk_tb==0),
+                            death8 = (date_death8<=date_exit_uk8 & uk_tb==0),
+                            death9 = (date_death9<=date_exit_uk9 & uk_tb==0),
+                            death10 = (date_death10<=date_exit_uk10 & uk_tb==0),
+                            exit_uk1 = (date_death1>date_exit_uk1 & uk_tb==0),
+                            exit_uk2 = (date_death2>date_exit_uk2 & uk_tb==0),
+                            exit_uk3 = (date_death3>date_exit_uk3 & uk_tb==0),
+                            exit_uk4 = (date_death4>date_exit_uk4 & uk_tb==0),
+                            exit_uk5 = (date_death5>date_exit_uk5 & uk_tb==0),
+                            exit_uk6 = (date_death6>date_exit_uk6 & uk_tb==0),
+                            exit_uk7 = (date_death7>date_exit_uk7 & uk_tb==0),
+                            exit_uk8 = (date_death8>date_exit_uk8 & uk_tb==0),
+                            exit_uk9 = (date_death9>date_exit_uk9 & uk_tb==0),
+                            exit_uk10 = (date_death10>date_exit_uk10 & uk_tb==0))
 
 
 # yearly entry cohort size by age and prevalence ---------------------------

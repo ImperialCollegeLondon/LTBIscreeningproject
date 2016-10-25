@@ -48,7 +48,7 @@ for (i in seq_along(who_levels)){
 
 j <- 1
 
-# probabilities of events
+# assign branching _probabilities_
 osNode.cost$Set(p = scenario_parameter_p[j, "Screening"],
                 filterFun = function(x) x$name=="Screening")
 osNode.cost$Set(p = scenario_parameter_p[j, "No Screening"],
@@ -79,7 +79,7 @@ osNode.health$Set(p = scenario_parameter_p[j, "Complete Treatment"],
 osNode.health$Set(p = scenario_parameter_p[j, "Not Complete Treatment"],
                 filterFun = function(x) x$name=="Not Complete Treatment")
 
-# costs
+# assign branching _costs_
 osNode.cost$Set(distn = "unif",
                 filterFun = function(x) x$name=="Agree to Screen")
 osNode.cost$Set(min = scenario_parameter_cost[j, "Agree to Screen"],
@@ -95,17 +95,21 @@ osNode.cost$Set(max = scenario_parameter_cost[j, "Agree to Screen"],
 path_probs.screen <- treeSimR::calc_pathway_probs(osNode.cost)
 osNode.cost$Set(path_probs = path_probs.screen)
 
-# print(osNode.cost, "type", "p", "distn", "mean", "sd", "path_probs", limit = NULL)
+# print(osNode.cost, "type", "p", "distn", "mean", "sd", "path_probs", "max", "min", limit = NULL)
 
-# probability successfully complete treatment of LTBI
-# use when know active TB cases in advance
 
 ##TODO##
-## this is a bit messy because the screening (uncertain) event is in between the WHO and LTBI events
-## there probably a better way to do this (with data.tree operations?)
-## re-order tree structure?
+## this is a bit messy because the screening (uncertain) event is in between the WHO and LTBI events on the tree
+## and this may be different for different groups
+## theres probably a better way to do this:
+##    with data.tree operations?
+##    re-order tree structure?
+
+# total probability successfully complete treatment of LTBI
+# use when know active TB cases in advance
 p.complete_treatment <- osNode.cost$Get('path_probs', filterFun = function(x) x$name=="Complete Treatment" & !grepl(pattern = "non-LTBI", x$pathString))
 
+# branch probabilities for LTBI
 p.LTBI <- osNode.cost$Get('p', filterFun = function(x) x$name=="LTBI" & !grepl(pattern = "No Screening", x$pathString))
 
 # prob of completing treatment for LTBI individuals in each WHO category
