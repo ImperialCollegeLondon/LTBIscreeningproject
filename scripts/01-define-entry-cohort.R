@@ -88,12 +88,6 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
                              rNotificationDate_issdt)
 
 
-cr.colnames <- c(colnames(issdt_fup), colnames(issdt_event),
-                 "rNotificationDate_issdt", "uk_tb", "issdt", "age_at_entry", "LTBI")
-
-# LTBI cases only
-IMPUTED_LTBI <- IMPUTED_sample[IMPUTED_sample$LTBI, cr.colnames]
-
 rm(cols_eventdate, cols_fup, issdt.asnumeric, issdt_fup, issdt_event,
    rNotificationDate.asnumeric, rNotificationDate_issdt, cr.colnames,
    screen_age_range)
@@ -158,7 +152,8 @@ entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(
 entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
 
 # total sample sizes for each yearly cohort
-entryCohort_poptotal <- aggregate(rep(1, nrow(IMPUTED_sample)), by = list(IMPUTED_sample$issdt_year), sum)
+entryCohort_poptotal <- aggregate(rep(1, nrow(IMPUTED_sample)),
+                                  by = list(IMPUTED_sample$issdt_year), sum)
 names(entryCohort_poptotal) <- c("year", "pop")
 
 

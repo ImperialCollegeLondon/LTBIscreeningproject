@@ -36,8 +36,8 @@ ggsurv(KM_original_year_age) + ylim(0.99,1) + xlim(0,1000) +
   ggtitle("Time to active TB split\n by age, censoring on death and leaving UK")
 
 
-# KM cumulative incidence
-#   probably bias
+# KM cumulative incidence naive
+
 plot(KM_original_full$time, scale * (1-KM_original_full$surv),
      xlab = "Days from UK entry", ylab = "Active TB cases per 100,000",
      xlim = c(0,3000), type = "l")
@@ -87,7 +87,7 @@ ggsurv(KM_screen_year) + ylim(0.99,1) + xlim(0,1000) +
 ggsurv(KM_screen_year_age) + ylim(0.99,1) + xlim(0,1000) +
   ggtitle("Time to active TB split\n by age, censoring on death and leaving UK")
 
-# KM cumulative incidence
+# KM cumulative incidence naive
 
 plot(KM_screen_full$time, scale * (1-KM_screen_full$surv),
      xlim = c(0,800), type = "l",
