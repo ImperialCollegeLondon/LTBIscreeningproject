@@ -64,7 +64,7 @@
                            cencode = 0, subset, na.action = na.omit, level,
                            xlab = "Time", ylab = "Probability",
                            col, lty, lwd, digits = 4,
-                           XLIM = c(0,1000), YLIM = c(0,0.01))
+                           XLIM = c(0,3000), YLIM = c(0,0.02))
 {
   # check for the required package
   if(!require("cmprsk"))

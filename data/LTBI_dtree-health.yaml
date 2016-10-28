@@ -23,19 +23,19 @@
           sd: 1
           type: chance
           Not GP registered:
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
             type: terminal
           GP registered:
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             type: chance
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               distn: gamma
               mean: 1
               sd: 1
@@ -47,13 +47,13 @@
               sd: 1
               type: chance
               Test Negative:
-                p: 0.7
+                p: 0.4085
                 distn: gamma
                 mean: 1
                 sd: 1
                 type: terminal
               Test Positive:
-                p: 0.7
+                p: 0.5915
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -65,19 +65,19 @@
                   sd: 1
                   type: terminal
                 Start Treatment:
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   type: chance
                   Complete Treatment:
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                     type: terminal
                   Not Complete Treatment:
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -89,19 +89,19 @@
           sd: 1
           type: chance
           Not GP registered:
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
             type: terminal
           GP registered:
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             type: chance
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               distn: gamma
               mean: 1
               sd: 1
@@ -113,13 +113,13 @@
               sd: 1
               type: chance
               Test Negative:
-                p: 0.7
+                p: 0.7929
                 distn: gamma
                 mean: 1
                 sd: 1
                 type: terminal
               Test Positive:
-                p: 0.7
+                p: 0.2071
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -131,20 +131,20 @@
                   sd: 1
                   type: terminal
                 Start Treatment:
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   type: chance
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -185,19 +185,19 @@
           sd: 1
           type: chance
           Not GP registered:
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
             type: terminal
           GP registered:
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             type: chance
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               distn: gamma
               mean: 1
               sd: 1
@@ -209,13 +209,13 @@
               sd: 1
               type: chance
               Test Negative:
-                p: 0.7
+                p: 0.4085
                 distn: gamma
                 mean: 1
                 sd: 1
                 type: terminal
               Test Positive:
-                p: 0.7
+                p: 0.5915
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -227,19 +227,19 @@
                   sd: 1
                   type: terminal
                 Start Treatment:
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   type: chance
                   Complete Treatment:
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                     type: terminal
                   Not Complete Treatment:
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -251,19 +251,19 @@
           sd: 1
           type: chance
           Not GP registered:
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
             type: terminal
           GP registered:
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             type: chance
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               distn: gamma
               mean: 1
               sd: 1
@@ -275,13 +275,13 @@
               sd: 1
               type: chance
               Test Negative:
-                p: 0.7
+                p: 0.7929
                 distn: gamma
                 mean: 1
                 sd: 1
                 type: terminal
               Test Positive:
-                p: 0.7
+                p: 0.2071
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -293,20 +293,20 @@
                   sd: 1
                   type: terminal
                 Start Treatment:
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   type: chance
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -348,18 +348,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               distn: gamma
               mean: 1
               sd: 1
@@ -372,13 +372,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.4085
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.5915
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -390,19 +390,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -414,18 +414,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               type: terminal
               distn: gamma
               mean: 1
@@ -438,13 +438,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.7929
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.2071
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -456,19 +456,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -510,18 +510,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               type: terminal
               distn: gamma
               mean: 1
@@ -534,13 +534,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.4085
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.5915
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -552,19 +552,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -576,18 +576,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               type: terminal
               distn: gamma
               mean: 1
@@ -600,13 +600,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.7929
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.2071
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -618,19 +618,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -672,18 +672,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               type: terminal
               distn: gamma
               mean: 1
@@ -696,13 +696,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.4085
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.5915
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -714,19 +714,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1
@@ -738,18 +738,18 @@
           type: chance
           Not GP registered:
             type: terminal
-            p: 0.4
+            p: 0.688
             distn: gamma
             mean: 1
             sd: 1
           GP registered:
             type: chance
-            p: 0.4
+            p: 0.322
             distn: gamma
             mean: 1
             sd: 1
             Not Agree to Screen:
-              p: 0.6
+              p: 0.4
               type: terminal
               distn: gamma
               mean: 1
@@ -762,13 +762,13 @@
               sd: 1
               Test Negative:
                 type: terminal
-                p: 0.7
+                p: 0.7929
                 distn: gamma
                 mean: 1
                 sd: 1
               Test Positive:
                 type: chance
-                p: 0.7
+                p: 0.2071
                 distn: gamma
                 mean: 1
                 sd: 1
@@ -780,19 +780,19 @@
                   sd: 1
                 Start Treatment:
                   type: chance
-                  p: 0.3
+                  p: 0.7
                   distn: gamma
                   mean: 1
                   sd: 1
                   Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.8
                     distn: gamma
                     mean: 1
                     sd: 1
                   Not Complete Treatment:
                     type: terminal
-                    p: 0.75
+                    p: 0.2
                     distn: gamma
                     mean: 1
                     sd: 1

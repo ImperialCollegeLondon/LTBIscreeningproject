@@ -88,8 +88,9 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
                              rNotificationDate_issdt)
 
 
-rm(cols_eventdate, cols_fup, issdt.asnumeric, issdt_fup, issdt_event,
-   rNotificationDate.asnumeric, rNotificationDate_issdt, cr.colnames,
+rm(cols_eventdate, cols_fup,
+   issdt.asnumeric, issdt_fup, issdt_event,
+   rNotificationDate.asnumeric, rNotificationDate_issdt,
    screen_age_range)
 
 
@@ -171,5 +172,7 @@ pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
+p.who <- entryCohort_who_prop[[year_cohort]]
+who_levels <- names(p.who)
 
 
