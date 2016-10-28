@@ -31,9 +31,6 @@ scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx", sheet 
 
 
 # assign cohort WHO group branching proportions, for given year
-p.who <- entryCohort_who_prop[[year_cohort]]
-who_levels <- names(p.who)
-
 for (i in seq_along(who_levels)){
 
   osNode.cost$Set(p = p.who[i],
