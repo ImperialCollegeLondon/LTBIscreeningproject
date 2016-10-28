@@ -140,8 +140,12 @@ cx
 
 
 
-cmprsk_age <- data.frame(dis=dat$age_at_entry, ftime=times, status=event)
-cmprsk <- data.frame(dis=1, ftime=times, status=event) # without age
+cmprsk_age <- data.frame(dis = dat$age_at_entry,
+                         ftime = times,
+                         status = event)
+cmprsk <- data.frame(dis = 1,
+                     ftime = times,
+                     status = event) # without age
 
 
 
