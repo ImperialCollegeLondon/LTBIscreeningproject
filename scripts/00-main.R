@@ -6,6 +6,8 @@
 # main high-level script
 
 
+# memory.size(max = 8000)
+
 # data("IMPUTED_sample")
 
 # total data set

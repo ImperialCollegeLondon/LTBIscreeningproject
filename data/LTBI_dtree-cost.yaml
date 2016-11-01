@@ -1,13 +1,13 @@
 
     name: LTBI screening cost
-    distn: gamma
-    mean: 1
-    sd: 1
+    distn: unif
+    min: 0
+    max: 0
     type: logical
     (0,50]:
-      distn: gamma
-      mean: 1
-      sd: 1
+      distn: unif
+      min: 0
+      max: 0
       p: 0.0
       type: chance
       Screening:
@@ -18,15 +18,15 @@
         type: chance
         LTBI:
           p: 0.03
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
             type: terminal
           GP registered:
             p: 0.322
@@ -48,15 +48,15 @@
               type: chance
               Test Negative:
                 p: 0.4185
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: terminal
               Test Positive:
                 p: 0.5915
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: chance
                 Not Start Treatment:
                   p: 0.3
@@ -67,38 +67,50 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                    type: terminal
-                  Not Complete Treatment:
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                    type: terminal
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
         non-LTBI:
           p: 0.97
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
             type: terminal
           GP registered:
             p: 0.322
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
             type: chance
             Not Agree to Screen:
               p: 0.4
@@ -114,15 +126,15 @@
               type: chance
               Test Negative:
                 p: 0.7929
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: terminal
               Test Positive:
                 p: 0.2071
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: chance
                 Not Start Treatment:
                   p: 0.3
@@ -133,43 +145,55 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
       No Screening:
         p: 0.25
-        distn: gamma
-        mean: 1
-        sd: 1
+        distn: unif
+        min: 0
+        max: 0
         type: chance
         LTBI:
           type: terminal
           p: 0.03
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
         non-LTBI:
           p: 0.97
           type: terminal
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
     (50,150]:
-      distn: gamma
-      mean: 1
-      sd: 1
+      distn: unif
+      min: 0
+      max: 0
       p: 0.04
       type: chance
       Screening:
@@ -180,15 +204,15 @@
         type: chance
         LTBI:
           p: 0.13
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
             type: terminal
           GP registered:
             p: 0.322
@@ -210,15 +234,15 @@
               type: chance
               Test Negative:
                 p: 0.4185
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: terminal
               Test Positive:
                 p: 0.5915
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: chance
                 Not Start Treatment:
                   p: 0.3
@@ -229,32 +253,44 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                    type: terminal
-                  Not Complete Treatment:
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                    type: terminal
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
         non-LTBI:
           p: 0.87
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
             type: terminal
           GP registered:
             p: 0.322
@@ -276,15 +312,15 @@
               type: chance
               Test Negative:
                 p: 0.7929
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: terminal
               Test Positive:
                 p: 0.2071
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 type: chance
                 Not Start Treatment:
                   p: 0.3
@@ -295,44 +331,56 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
       No Screening:
         p: 0.25
-        distn: gamma
-        mean: 1
-        sd: 1
+        distn: unif
+        min: 0
+        max: 0
         type: chance
         LTBI:
           type: terminal
           p: 0.13
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
         non-LTBI:
           p: 0.87
           type: terminal
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
     (150,250]:
       p: 0.16
-      distn: gamma
-      mean: 1
-      sd: 1
+      distn: unif
+      min: 0
+      max: 0
       type: chance
       Screening:
         p: 0.25
@@ -342,16 +390,16 @@
         type: chance
         LTBI:
           p: 0.2
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -373,15 +421,15 @@
               Test Negative:
                 type: terminal
                 p: 0.4185
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.5915
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -391,33 +439,45 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
         non-LTBI:
           p: 0.8
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -439,15 +499,15 @@
               Test Negative:
                 type: terminal
                 p: 0.7929
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.2071
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -457,44 +517,56 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
       No Screening:
         p: 0.25
-        distn: gamma
-        mean: 1
-        sd: 1
+        distn: unif
+        min: 0
+        max: 0
         type: chance
         LTBI:
           type: terminal
           p: 0.2
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
         non-LTBI:
           p: 0.8
           type: terminal
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
     (250,350]:
       p: 0.60
-      distn: gamma
-      mean: 1
-      sd: 1
+      distn: unif
+      min: 0
+      max: 0
       type: chance
       Screening:
         distn: gamma
@@ -504,16 +576,16 @@
         p: 0.25
         LTBI:
           p: 0.3
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -535,15 +607,15 @@
               Test Negative:
                 type: terminal
                 p: 0.4185
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.5915
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -553,33 +625,45 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
         non-LTBI:
           p: 0.7
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -601,15 +685,15 @@
               Test Negative:
                 type: terminal
                 p: 0.7929
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.2071
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -619,44 +703,56 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
       No Screening:
         p: 0.25
-        distn: gamma
-        mean: 1
-        sd: 1
+        distn: unif
+        min: 0
+        max: 0
         type: chance
         LTBI:
           type: terminal
           p: 0.3
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
         non-LTBI:
           p: 0.7
           type: terminal
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
     (350,1e+05]:
       p: 0.20
-      distn: gamma
-      mean: 1
-      sd: 1
+      distn: unif
+      min: 0
+      max: 0
       type: chance
       Screening:
         distn: gamma
@@ -666,16 +762,16 @@
         p: 0.25
         LTBI:
           p: 0.3
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -697,15 +793,15 @@
               Test Negative:
                 type: terminal
                 p: 0.4185
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.5915
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -715,33 +811,45 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
         non-LTBI:
           p: 0.7
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
           type: chance
           Not GP registered:
             type: terminal
             p: 0.688
-            distn: gamma
-            mean: 1
-            sd: 1
+            distn: unif
+            min: 0
+            max: 0
           GP registered:
             type: chance
             p: 0.322
@@ -763,15 +871,15 @@
               Test Negative:
                 type: terminal
                 p: 0.7929
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
               Test Positive:
                 type: chance
                 p: 0.2071
-                distn: gamma
-                mean: 1
-                sd: 1
+                distn: unif
+                min: 0
+                max: 0
                 Not Start Treatment:
                   p: 0.3
                   distn: unif
@@ -781,36 +889,48 @@
                 Start Treatment:
                   p: 0.7
                   distn: gamma
-                  mean: 1483.74
+                  mean: 483.74
                   sd: 1
                   type: chance
-                  Complete Treatment:
-                    type: terminal
-                    p: 0.8
-                    distn: gamma
-                    mean: 1
-                    sd: 1
-                  Not Complete Treatment:
-                    type: terminal
-                    p: 0.2
-                    distn: gamma
-                    mean: 1
-                    sd: 1
+                  Symptoms hepatotoxicity:
+                    p: 1
+                    distn: beta
+                    a: 6.679
+                    b: 87.889
+                    type: chance
+                    Symptoms nausea:
+                      p: 1
+                      distn: unif
+                      min: 63
+                      max: 63
+                      type: chance
+                      Complete Treatment:
+                        p: 0.8
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
+                      Not Complete Treatment:
+                        p: 0.2
+                        distn: unif
+                        min: 0
+                        max: 0
+                        type: terminal
       No Screening:
         p: 0.25
-        distn: gamma
-        mean: 1
-        sd: 1
+        distn: unif
+        min: 0
+        max: 0
         type: chance
         LTBI:
           type: terminal
           p: 0.3
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0
         non-LTBI:
           p: 0.7
           type: terminal
-          distn: gamma
-          mean: 1
-          sd: 1
+          distn: unif
+          min: 0
+          max: 0

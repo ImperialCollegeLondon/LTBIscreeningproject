@@ -10,8 +10,8 @@ library(ggplot2)
 library(BCEA)
 
 
-screen.bcea <- bcea(e = cbind('donothing'=0, 'interv'=mc.health$`expected values`),
-                    c = cbind('donothing'=0, 'interv'=mc.cost$`expected values`),
+screen.bcea <- bcea(e = matrix(c(rep(0,N.mc), mc.health$`expected values`)), ncol=2, dimnames = list(,c("hjk;","hjk")),
+                    c = cbind("donothing"=rep(0,N.mc), "interv"=mc.cost$`expected values`),
                     ref = 1)
 
 ceplane.plot(screen.bcea)

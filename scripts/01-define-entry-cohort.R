@@ -54,6 +54,9 @@ IMPUTED_sample$LTBI[IMPUTED_sample$uk_tb=="1"] <- TRUE
 
 rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
+# test
+# prop.table(table(IMPUTED_sample$LTBI, IMPUTED_sample$who_prev_cat_Pareek2011), margin = 2)
+
 
 
 # from event dates create time-to-events in days --------------------------
@@ -102,6 +105,7 @@ rm(cols_eventdate, cols_fup,
 fup_limit <- 19723  #days from 1960-01-01
 
 IMPUTED_sample <- transform(IMPUTED_sample,
+
                             cens1  = fup1==fup_limit,
                             cens2  = fup2==fup_limit,
                             cens3  = fup3==fup_limit,

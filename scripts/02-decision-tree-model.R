@@ -19,11 +19,12 @@ library(treeSimR)
 # create decision tree
 ## cost
 osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-cost.yaml")
+
 ## health
 osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-health.yaml")
 
-# print(osNode.cost, "type", "p", "distn", "mean", "sd", "min", "max", limit = NULL)
-
+# print(osNode.cost, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
+# print(osNode.health, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
 # grid of parameter values for deterministic sensitivity analysis
 scenario_parameter_cost <- read_excel("data/scenario-parameter-values.xlsx", sheet = "cost")
@@ -40,6 +41,7 @@ for (i in seq_along(who_levels)){
                     filterFun = function(x) x$name==who_levels[i])
 }
 rm(i)
+
 
 # sensitivity analysis ----------------------------------------------------
 
@@ -92,7 +94,8 @@ osNode.cost$Set(max = scenario_parameter_cost[j, "Agree to Screen"],
 path_probs.screen <- treeSimR::calc_pathway_probs(osNode.cost)
 osNode.cost$Set(path_probs = path_probs.screen)
 
-# print(osNode.cost, "type", "p", "distn", "mean", "sd", "path_probs", "max", "min", limit = NULL)
+# print(osNode.cost, "type", "p", "path_probs", "distn",
+#       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
 
 ##TODO##
@@ -119,13 +122,13 @@ rm(p.who, p.LTBI, p.complete_treatment)
 
 # expected values ---------------------------------------------------------
 
-N.mc <- 100
+N.mc <- 10
 
 # for defined nodes, sample expected cost
-mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode.cost, n = N.mc)
+mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
 
 # for defined nodes, sample expected health
 mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
 
-rm(N.mc)
+# rm(N.mc)
 
