@@ -6,7 +6,9 @@
 # output plots active TB competing risks
 
 
-source("scripts/ggsurv.R")
+library("ggplot2")
+library("GGally")
+# source("scripts/ggsurv.R")
 
 
 # x-axis population scaling
@@ -106,7 +108,13 @@ plot(KM_screen_year_age$time, scale * (1-KM_screen_year_age$surv),
      ylab = "Survival", xlab = "Days since UK entry", main = "Cohort active TB progression Kaplan-Meier\n using cohort year fit")
 
 
-# multistate model
+# plot all realisations of active TB cases after screening survival curves
+ggsurv(KM_screen_full_uk_tbX)
+
+
+
+## multistate model ##
+
 plot(survfit(cx_screen), col=2:4, xlab = "Days", ylab = "Survival probability")
 legend("bottomleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1)
 
@@ -129,6 +137,13 @@ plot(CDF, yaxt='n', xlab="Days", main="Raw cumulative counts of active TB cases"
 axis(side = 2, at = 1, tck = 0.01, labels = sum(IMPUTED_sample$uk_tb), las="2")
 
 
+
+
+# barplots ----------------------------------------------------------------
+
+# see Robs Lancet (2016)
+counts <- table(floor(IMPUTED_sample$fup2_issdt[IMPUTED_sample$uk_tb_orig==1]/365))
+barplot(counts, ylim=c(0,600), xlab=("Years since migration"), ylab="Number of cases")
 
 
 

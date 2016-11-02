@@ -58,7 +58,7 @@ p.complete_treat <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_c
 
 # resample active TB status _after_ screening
 # create multiple samples of screened cohort
-n.uk_tbX <- 10
+n.uk_tbX <- 2
 x <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
                           nrow = nrow(IMPUTED_sample),
                           ncol = n.uk_tbX, byrow = FALSE))
@@ -80,7 +80,6 @@ uk_tb_after_screen <- function(uk_tb_TRUE,
 for (nm in names(x)){
   x[uk_tb_TRUE, nm] <- uk_tb_after_screen(uk_tb_TRUE, p.complete_treat)
 }
-# apply(x, 2, table)
 
 IMPUTED_sample <- data.frame(IMPUTED_sample, x)
 
@@ -139,6 +138,15 @@ KM_screen_year_age <- survfit(formula = imputed_age.form_uk_tb1,
 # # then predict with _screened_ data
 # cens_coxph1_predict_screen <- survfit(formula = cens_coxph1,
 #                                         newdata = IMPUTED_sample_year_cohort_screen)
+
+
+
+# combine all TB status realisations adding id column
+xx <- data.frame(reshape2::melt(x), fup1_issdt = IMPUTED_sample$fup1_issdt)
+
+# survival fit as a function of each active TB set realisation
+KM_screen_full_uk_tbX <- survfit(Surv(fup1_issdt, value) ~ variable, data = xx)
+
 
 
 
