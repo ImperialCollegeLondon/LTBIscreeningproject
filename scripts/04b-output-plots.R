@@ -9,9 +9,12 @@
 library(ggplot2)
 library(BCEA)
 
+e.total <- matrix(c(rep(0,N.mc), mc.health$`expected values` + aTB_QALYloss[1]),
+                  ncol=2, dimnames = list(NULL, c("donothing","interv")))
+c.total <- cbind("donothing"=rep(0,N.mc), "interv"=mc.cost$`expected values` + aTB_cost[1])
 
-screen.bcea <- bcea(e = matrix(c(rep(0,N.mc), mc.health$`expected values`)), ncol=2, dimnames = list(,c("hjk;","hjk")),
-                    c = cbind("donothing"=rep(0,N.mc), "interv"=mc.cost$`expected values`),
+screen.bcea <- bcea(e = e.total,
+                    c = c.total,
                     ref = 1)
 
 ceplane.plot(screen.bcea)

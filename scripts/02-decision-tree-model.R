@@ -31,7 +31,9 @@ scenario_parameter_cost <- read_excel("data/scenario-parameter-values.xlsx", she
 scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx", sheet = "p")
 
 
-# assign cohort WHO group branching proportions, for given year
+
+# assign cohort WHO group branching proportions, for given year -----------
+
 for (i in seq_along(who_levels)){
 
   osNode.cost$Set(p = p.who[i],
@@ -97,6 +99,8 @@ osNode.cost$Set(path_probs = path_probs.screen)
 # print(osNode.cost, "type", "p", "path_probs", "distn",
 #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
+# test sum to 1
+sum(osNode.cost$Get("path_probs", filterFun = isLeaf))
 
 ##TODO##
 ## this is a bit messy because the screening (uncertain) event is in between the WHO and LTBI events on the tree
@@ -115,9 +119,10 @@ p.LTBI <- osNode.cost$Get('p',
                           filterFun = function(x) x$name=="LTBI" & !grepl(pattern = "No Screening", x$pathString))
 
 # prob of completing treatment for LTBI individuals in each WHO category
-p.complete_treat_given_LTBI_by_who <- setNames(p.complete_treatment/(p.LTBI * p.who), who_levels)
+p.complete_treat_given_LTBI_by_who <- setNames(p.complete_treatment/(p.LTBI * p.who), nm = who_levels)
 
-rm(p.who, p.LTBI, p.complete_treatment)
+
+rm(p.LTBI, p.complete_treatment)
 
 
 # expected values ---------------------------------------------------------

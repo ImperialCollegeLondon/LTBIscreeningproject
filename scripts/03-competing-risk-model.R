@@ -29,9 +29,9 @@ imputed_age.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ age_at_entry)
 # Cox proportion hazard fits
 cens_coxph1 <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-cens_coxph3 <- coxph(Surv(fup3_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
+cens_coxph3 <- coxph(imputed_age.form, data = IMPUTED_sample)
 
-cens_coxph1_year <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample_year_cohort)
+cens_coxph1_year <- coxph(imputed_age.form, data = IMPUTED_sample_year_cohort)
 
 
 # fit K-M to original _full_ data
@@ -52,14 +52,57 @@ KM_original_year_age <- survfit(formula = imputed_age.form,
 
 # after screening ---------------------------------------------------------
 
-# from decision tree create probability of successfully completing LTBI treatment
-p.comp_treat <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
+# from decision tree get probability of successfully completing LTBI treatment
+# for each cohort individual
+p.complete_treat <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_cat_Pareek2011]
 
-# resample tb status after screening
-IMPUTED_sample$uk_tb[IMPUTED_sample$uk_tb==1] <- as.numeric(p.comp_treat[IMPUTED_sample$uk_tb==1] < runif(n.tb))
+# resample active TB status _after_ screening
+# create multiple samples of screened cohort
+n.uk_tbX <- 10
+x <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
+                          nrow = nrow(IMPUTED_sample),
+                          ncol = n.uk_tbX, byrow = FALSE))
+
+names(x) = paste("uk_tb", seq_len(n.uk_tbX), sep="")
+
+uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
+
+
+# sample updated active TB status for each active TB case
+# after screening
+
+uk_tb_after_screen <- function(uk_tb_TRUE,
+                               p.complete_treat){
+  n.tb <- sum(uk_tb_TRUE)
+  as.numeric(p.complete_treat[uk_tb_TRUE] < runif(n.tb))
+}
+
+for (nm in names(x)){
+  x[uk_tb_TRUE, nm] <- uk_tb_after_screen(uk_tb_TRUE, p.complete_treat)
+}
+# apply(x, 2, table)
+
+IMPUTED_sample <- data.frame(IMPUTED_sample, x)
 
 # number of active TB cases _after_ screening
-n.tb_screen <- sum(IMPUTED_sample$uk_tb)
+n.tb_screen <- apply(x, 2, table)
+
+
+# individuals who have changed from tb to non-tb
+# are now censored times
+IMPUTED_sample <- transform(IMPUTED_sample,
+                            cens1_screen  = cens1  | (uk_tb==0 & uk_tb_orig==1),
+                            cens2_screen  = cens2  | (uk_tb==0 & uk_tb_orig==1),
+                            cens3_screen  = cens3  | (uk_tb==0 & uk_tb_orig==1),
+                            cens4_screen  = cens4  | (uk_tb==0 & uk_tb_orig==1),
+                            cens5_screen  = cens5  | (uk_tb==0 & uk_tb_orig==1),
+                            cens6_screen  = cens6  | (uk_tb==0 & uk_tb_orig==1),
+                            cens7_screen  = cens7  | (uk_tb==0 & uk_tb_orig==1),
+                            cens8_screen  = cens8  | (uk_tb==0 & uk_tb_orig==1),
+                            cens9_screen  = cens9  | (uk_tb==0 & uk_tb_orig==1),
+                            cens10_screen = cens10 | (uk_tb==0 & uk_tb_orig==1))
+##TODO##
+# use followup and imputed death, leave uk times
 
 
 
@@ -69,18 +112,24 @@ n.tb_screen <- sum(IMPUTED_sample$uk_tb)
 IMPUTED_sample_splityear_screen <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
 IMPUTED_sample_year_cohort_screen <- IMPUTED_sample_splityear_screen[[year_cohort]]
 
+
+# screened sample formulas
+imputed.form_uk_tb1 <- as.formula(Surv(fup3_issdt, uk_tb1) ~ 1)
+imputed_age.form_uk_tb1 <- as.formula(Surv(fup3_issdt, uk_tb1) ~ age_at_entry)
+
+
 # fit K-M to screened _full_ data
-KM_screen_full <- survfit(formula = imputed.form,
+KM_screen_full <- survfit(formula = imputed.form_uk_tb1,
                           data = IMPUTED_sample)
 #   stratified by age
-KM_screen_full_age <- survfit(formula = imputed_age.form,
+KM_screen_full_age <- survfit(formula = imputed_age.form_uk_tb1,
                               data = IMPUTED_sample)
 
 # fit K-M to screened _year_ data
-KM_screen_year <- survfit(formula = imputed.form,
+KM_screen_year <- survfit(formula = imputed.form_uk_tb1,
                           data = IMPUTED_sample_year_cohort_screen)
 #   stratified by age
-KM_screen_year_age <- survfit(formula = imputed_age.form,
+KM_screen_year_age <- survfit(formula = imputed_age.form_uk_tb1,
                               data = IMPUTED_sample_year_cohort_screen)
 
 
@@ -185,17 +234,53 @@ cmprsk_screen <- data.frame(dis=1, ftime=times, status=event_screen) # without a
 
 
 
+# calculate cost-effectiveness active TB values ---------------------------
 
+# 12 month case fatality rate
+cfr_age_lookup <- data.frame(age = c("[15,45)", "[45,65)", "[65,200)"),
+                             cfr = c(0.0018, 0.0476, 0.1755),
+                             a = c(1,125,413),
+                             b = c(564,2500,1940))
+rownames(cfr_age_lookup) <- c("[15,45)", "[45,65)", "[65,200)")
 
-
+QALYloss_TB_death <- 19.96
 ##TODO##
-# # prediction
-# HvH <- msfit(cx, newdata=mslong, trans=tmat)
-# pt <- probtrans(HvH,predt=0)
-# pt[[1]] # predictions from state 1
+# could use expected death to calculate each QALY loss
+
+lifetime_QALYsloss <- 0.054
+
+# treatment:
+aTB_Tx_cost <- 5329
+# gamma(8.333, 639.435)
+
+# adverse effects?
+# test: cost?
+
+# create matching age bins in data
+cfr_age <- cut(IMPUTED_sample$age_at_entry,
+               breaks = c(15, 45, 65, 200), right = FALSE)
 
 
+uk_tb_sample_names <- c("uk_tb1", "uk_tb2", "uk_tb3", "uk_tb4", "uk_tb5")
 
+for (i in uk_tb_sample_names){
 
+  whos_aTB <- IMPUTED_sample[,i]==1
+
+  # expected QALY loss due to active TB in total cohort
+  E.lifetime_QALYsloss_cohort <- mean(lifetime_QALYsloss * whos_aTB)
+
+  # expected QALY loss due to early death due to active TB
+  E.QALYloss_death_aTB <- cfr_age_lookup[cfr_age, "cfr"] * QALYloss_TB_death
+
+  # expected QALY loss due to early death over total cohort
+  E.QALYloss_death_cohort <- mean(E.QALYloss_death_aTB * whos_aTB)
+
+  # expected treatment cost over total cohort
+  E.aTB_Tx_cost_cohort <- mean(aTB_Tx_cost * whos_aTB)
+
+  aTB_QALYloss <- c(aTB_QALYloss, E.lifetime_QALYsloss_cohort + E.QALYloss_death_cohort)
+  aTB_cost <- c(aTB_cost, E.aTB_Tx_cost_cohort)
+}
 
 

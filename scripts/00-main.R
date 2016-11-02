@@ -6,7 +6,8 @@
 # main high-level script
 
 
-# memory.size(max = 8000)
+# increase available RAM to store data
+memory.size(max = 8000)
 
 # data("IMPUTED_sample")
 
