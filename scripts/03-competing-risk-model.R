@@ -59,11 +59,13 @@ p.complete_treat <- p.complete_treat_given_LTBI_by_who[IMPUTED_sample$who_prev_c
 # resample active TB status _after_ screening
 # create multiple samples of screened cohort
 n.uk_tbX <- 2
+uk_tbX_names <- paste("uk_tb", seq_len(n.uk_tbX), sep="")
+
 x <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
                           nrow = nrow(IMPUTED_sample),
                           ncol = n.uk_tbX, byrow = FALSE))
 
-names(x) = paste("uk_tb", seq_len(n.uk_tbX), sep="")
+names(x) <- uk_tbX_names
 
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
 
@@ -236,8 +238,12 @@ cx_screen
 
 
 
-cmprsk_age_screen <- data.frame(dis=dat_screen$age_at_entry, ftime=times, status=event_screen)
-cmprsk_screen <- data.frame(dis=1, ftime=times, status=event_screen) # without age
+cmprsk_age_screen <- data.frame(dis = dat_screen$age_at_entry,
+                                ftime = times,
+                                status = event_screen)
+cmprsk_screen <- data.frame(dis = 1,
+                            ftime = times,
+                            status = event_screen) # without age
 
 
 
@@ -247,13 +253,15 @@ cmprsk_screen <- data.frame(dis=1, ftime=times, status=event_screen) # without a
 # 12 month case fatality rate
 cfr_age_lookup <- data.frame(age = c("[15,45)", "[45,65)", "[65,200)"),
                              cfr = c(0.0018, 0.0476, 0.1755),
-                             a = c(1,125,413),
-                             b = c(564,2500,1940))
+                             a = c(1, 125, 413), #beta distn
+                             b = c(564, 2500, 1940))
 rownames(cfr_age_lookup) <- c("[15,45)", "[45,65)", "[65,200)")
 
 QALYloss_TB_death <- 19.96
 ##TODO##
 # could use expected death to calculate each QALY loss
+# difference between time of death from active TB and all-cause time of death
+# adjusted for utility of active TB
 
 lifetime_QALYsloss <- 0.054
 
@@ -268,12 +276,9 @@ aTB_Tx_cost <- 5329
 cfr_age <- cut(IMPUTED_sample$age_at_entry,
                breaks = c(15, 45, 65, 200), right = FALSE)
 
+for (i in uk_tbX_names){
 
-uk_tb_sample_names <- c("uk_tb1", "uk_tb2", "uk_tb3", "uk_tb4", "uk_tb5")
-
-for (i in uk_tb_sample_names){
-
-  whos_aTB <- IMPUTED_sample[,i]==1
+  whos_aTB <- IMPUTED_sample[ ,i]==1
 
   # expected QALY loss due to active TB in total cohort
   E.lifetime_QALYsloss_cohort <- mean(lifetime_QALYsloss * whos_aTB)

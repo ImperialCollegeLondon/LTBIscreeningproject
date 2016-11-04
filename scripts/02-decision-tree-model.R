@@ -52,7 +52,14 @@ N.mc <- 10
 # iterate over each deterministic scenario of parameter values
 j <- 1
 
-for (j in 1:nrow(scenario_parameter_cost)){
+# delete old output files
+if(file.exists("mc_cost.csv")) file.remove("mc_cost.csv")
+if(file.exists("mc_health.csv")) file.remove("mc_health.csv")
+if(file.exists("prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("prob_complete_Tx_given_LTBI_by_who.csv")
+
+for (j in 1:10){ #nrow(scenario_parameter_cost)){
+
+  print(sprintf("scenario: %d", j))
 
   # assign branching _probabilities_
   osNode.cost$Set(p = scenario_parameter_p[j, "Screening"],
@@ -128,12 +135,9 @@ for (j in 1:nrow(scenario_parameter_cost)){
 
 
 
-  # expected values ---------------------------------------------------------
+  # sample total expected values ---------------------------------------------------------
 
-  # for defined nodes, sample expected cost
   mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
-
-  # for defined nodes, sample expected health
   mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
 
 
@@ -142,13 +146,13 @@ for (j in 1:nrow(scenario_parameter_cost)){
   ########
 
   # cost-effectiveness outputs
-  cat(x = as.numeric(mc.cost$`expected values`),
+  cat(x = paste(as.numeric(mc.cost$`expected values`), collapse=","),
       file = "mc_cost.csv", append = TRUE, fill = TRUE)
-  cat(x = as.numeric(mc.health$`expected values`),
+  cat(x = paste(as.numeric(mc.health$`expected values`), collapse=","),
       file = "mc_health.csv", append = TRUE, fill = TRUE)
 
   # pathway probabilities
-  cat(x = as.numeric(p.complete_Tx_given_LTBI_by_who),
+  cat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse=","),
       file = "prob_complete_Tx_given_LTBI_by_who.csv", append = TRUE, fill = TRUE)
 }
 
