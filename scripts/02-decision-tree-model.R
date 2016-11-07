@@ -46,58 +46,59 @@ rm(i)
 
 
 N.mc <- 10
+n.scenarios <- nrow(scenario_parameter_cost)
 
 
 # sensitivity analysis ----------------------------------------------------
 # iterate over each deterministic scenario of parameter values
-j <- 1
 
 # delete old output files
 if(file.exists("mc_cost.csv")) file.remove("mc_cost.csv")
 if(file.exists("mc_health.csv")) file.remove("mc_health.csv")
 if(file.exists("prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("prob_complete_Tx_given_LTBI_by_who.csv")
 
-for (j in 1:10){ #nrow(scenario_parameter_cost)){
 
-  print(sprintf("scenario: %d", j))
+for (scenario in 1:10){ #seq_len(n.scenarios)){
+
+  print(sprintf("scenario: %d", scenario))
 
   # assign branching _probabilities_
-  osNode.cost$Set(p = scenario_parameter_p[j, "Screening"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Screening"],
                   filterFun = function(x) x$name=="Screening")
-  osNode.cost$Set(p = scenario_parameter_p[j, "No Screening"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "No Screening"],
                   filterFun = function(x) x$name=="No Screening")
 
-  osNode.cost$Set(p = scenario_parameter_p[j, "Start Treatment"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
                   filterFun = function(x) x$name=="Start Treatment")
-  osNode.cost$Set(p = scenario_parameter_p[j, "Not Start Treatment"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Start Treatment"],
                   filterFun = function(x) x$name=="Not Start Treatment")
 
-  osNode.cost$Set(p = scenario_parameter_p[j, "Complete Treatment"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Complete Treatment"],
                   filterFun = function(x) x$name=="Complete Treatment")
-  osNode.cost$Set(p = scenario_parameter_p[j, "Not Complete Treatment"],
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Complete Treatment"],
                   filterFun = function(x) x$name=="Not Complete Treatment")
 
-  osNode.health$Set(p = scenario_parameter_p[j, "Screening"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Screening"],
                     filterFun = function(x) x$name=="Screening")
-  osNode.health$Set(p = scenario_parameter_p[j, "No Screening"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "No Screening"],
                     filterFun = function(x) x$name=="No Screening")
 
-  osNode.health$Set(p = scenario_parameter_p[j, "Start Treatment"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
                     filterFun = function(x) x$name=="Start Treatment")
-  osNode.health$Set(p = scenario_parameter_p[j, "Not Start Treatment"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Start Treatment"],
                     filterFun = function(x) x$name=="Not Start Treatment")
 
-  osNode.health$Set(p = scenario_parameter_p[j, "Complete Treatment"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Complete Treatment"],
                     filterFun = function(x) x$name=="Complete Treatment")
-  osNode.health$Set(p = scenario_parameter_p[j, "Not Complete Treatment"],
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Complete Treatment"],
                     filterFun = function(x) x$name=="Not Complete Treatment")
 
   # assign branching _costs_
   osNode.cost$Set(distn = "unif",
                   filterFun = function(x) x$name=="Agree to Screen")
-  osNode.cost$Set(min = scenario_parameter_cost[j, "Agree to Screen"],
+  osNode.cost$Set(min = scenario_parameter_cost[scenario, "Agree to Screen"],
                   filterFun = function(x) x$name=="Agree to Screen")
-  osNode.cost$Set(max = scenario_parameter_cost[j, "Agree to Screen"],
+  osNode.cost$Set(max = scenario_parameter_cost[scenario, "Agree to Screen"],
                   filterFun = function(x) x$name=="Agree to Screen")
 
 
@@ -148,6 +149,7 @@ for (j in 1:10){ #nrow(scenario_parameter_cost)){
   # cost-effectiveness outputs
   cat(x = paste(as.numeric(mc.cost$`expected values`), collapse=","),
       file = "mc_cost.csv", append = TRUE, fill = TRUE)
+
   cat(x = paste(as.numeric(mc.health$`expected values`), collapse=","),
       file = "mc_health.csv", append = TRUE, fill = TRUE)
 
