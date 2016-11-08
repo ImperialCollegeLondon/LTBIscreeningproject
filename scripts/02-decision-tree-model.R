@@ -45,6 +45,7 @@ for (i in seq_along(who_levels)){
 rm(i)
 
 
+# number of Monte Carlo iterations
 N.mc <- 10
 n.scenarios <- nrow(scenario_parameter_cost)
 
@@ -53,9 +54,9 @@ n.scenarios <- nrow(scenario_parameter_cost)
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
-if(file.exists("mc_cost.csv")) file.remove("mc_cost.csv")
-if(file.exists("mc_health.csv")) file.remove("mc_health.csv")
-if(file.exists("prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("prob_complete_Tx_given_LTBI_by_who.csv")
+if(file.exists("ext-data/mc_cost.csv")) file.remove("ext-data/mc_cost.csv")
+if(file.exists("ext-data/mc_health.csv")) file.remove("ext-data/mc_health.csv")
+if(file.exists("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")
 
 
 for (scenario in 1:10){ #seq_len(n.scenarios)){
@@ -148,13 +149,13 @@ for (scenario in 1:10){ #seq_len(n.scenarios)){
 
   # cost-effectiveness outputs
   cat(x = paste(as.numeric(mc.cost$`expected values`), collapse=","),
-      file = "mc_cost.csv", append = TRUE, fill = TRUE)
+      file = "ext-data/mc_cost.csv", append = TRUE, fill = TRUE)
 
   cat(x = paste(as.numeric(mc.health$`expected values`), collapse=","),
-      file = "mc_health.csv", append = TRUE, fill = TRUE)
+      file = "ext-data/mc_health.csv", append = TRUE, fill = TRUE)
 
   # pathway probabilities
   cat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse=","),
-      file = "prob_complete_Tx_given_LTBI_by_who.csv", append = TRUE, fill = TRUE)
+      file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", append = TRUE, fill = TRUE)
 }
 

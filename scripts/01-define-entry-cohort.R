@@ -102,6 +102,22 @@ rm(cols_eventdate, cols_fup,
 ##TODO##
 # tidy this up! prone to typos
 
+is.death <- function(imputation_num, data,
+                     fup_limit = 19723){
+
+  date_deathX <- paste("date_death", imputation_num, sep="")
+  date_exit_ukX <- paste("date_exit_uk", imputation_num, sep="")
+  fupX <- paste("fup", imputation_num, sep="")
+
+  return(data[ ,date_deathX]<=data[ ,date_exit_ukX] &
+         data$uk_tb==0 &
+         data[ ,fupX]!=fup_limit)
+}
+
+# is.exit_uk
+# is.fup_limit
+
+
 fup_limit <- 19723  #days from 1960-01-01
 
 IMPUTED_sample <- transform(IMPUTED_sample,
@@ -117,8 +133,8 @@ IMPUTED_sample <- transform(IMPUTED_sample,
                             cens9  = fup9==fup_limit,
                             cens10 = fup10==fup_limit,
 
-                            death1  = (date_death1<=date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
-                            death2  = (date_death2<=date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
+                            death1  = (date_death1<=date_exit_uk1 & uk_tb==0 & fup1!=fup_limit), #is.death(1, IMPUTED_sample)
+                            death2  = (date_death2<=date_exit_uk2 & uk_tb==0 & fup2!=fup_limit), #is.death(2, IMPUTED_sample)
                             death3  = (date_death3<=date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
                             death4  = (date_death4<=date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
                             death5  = (date_death5<=date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
@@ -164,6 +180,14 @@ names(entryCohort_poptotal) <- c("year", "pop")
 
 # keep pre-screened status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+
+
+# active TB case fatality rate age groups
+IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + as.numeric(IMPUTED_sample$rNotificationDate_issdt)/365,
+                                     breaks = c(15, 45, 65, 200),
+                                     right = FALSE)
+
+age_at_uk_tb <- data$age_at_entry + years(data$uk_tb.issdtt)
 
 
 # summary statistics ------------------------------------------------------
