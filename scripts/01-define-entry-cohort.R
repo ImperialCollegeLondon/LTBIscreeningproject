@@ -187,7 +187,7 @@ IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + as.numeric(IM
                                      breaks = c(15, 45, 65, 200),
                                      right = FALSE)
 
-age_at_uk_tb <- data$age_at_entry + years(data$uk_tb.issdtt)
+age_at_fup <- IMPUTED_sample$age_at_entry + floor(IMPUTED_sample$fup1_issdt/365)
 
 
 # summary statistics ------------------------------------------------------

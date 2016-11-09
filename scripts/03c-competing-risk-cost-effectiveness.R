@@ -3,38 +3,29 @@
 # N Green
 # Oct 2016
 #
-# calculate cost-effectiveness active TB values
+# QALY loss and cost due to active TB
+
+
+# we assume that after active TB notification the risk of TB related death
+# is in the first year
+# and that treatment last one year and results in disease-free health
+# were are only interest for the QALY gain calculation in the active TB cases
+# since the other individuals remain the same
 
 
 ##TODO##
-#
-# need to calculate for the status quo too!
-# so use uk_tb (original)
-# then can add this to output plot code...
-#
-#
-#
-##
+# for now just use one of the death time
+# date_deathX_issdt_names <- paste("date_death", seq_len(n.impute), "_issdt", sep="")
 
-
-# fixed param values ------------------------------------------------------
 
 # 12 month case fatality rate
+# Crofts et al (2008)
 cfr_age_lookup <- data.frame(age = c("[15,45)", "[45,65)", "[65,200)"),
                              cfr = c(0.0018, 0.0476, 0.1755),
-                             a = c(1, 125, 413), #beta distns
+                             a = c(1, 125, 413), #beta distn
                              b = c(564, 2500, 1940))
 
 rownames(cfr_age_lookup) <- c("[15,45)", "[45,65)", "[65,200)")
-
-QALYloss_TB_death <- 19.96
-
-##TODO##
-# could use expected death to calculate each QALY loss
-# difference between time of death from active TB and all-cause time of death
-# adjusted for utility of active TB
-
-lifetime_QALYsloss <- 0.054
 
 # treatment:
 aTB_Tx_cost <- 5329
@@ -43,42 +34,76 @@ aTB_Tx_cost <- 5329
 # adverse effects?
 # test: cost?
 
-# create matching age bins in data
-cfr_age <- cut(IMPUTED_sample$age_at_entry,
-               breaks = c(15, 45, 65, 200),
-               right = FALSE)
+
+n.impute <- 10
+
+sample.uk_tb_only <- IMPUTED_sample[IMPUTED_sample$uk_tb==1, ]
+
+
+utility.disease_free <- 1.0
+utility.activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010)
+
+notification_to_allcause_death <- with(sample.uk_tb_only,
+                                       floor((date_death1_issdt - rNotificationDate_issdt)/365))
+
+
+# complete Tx LTBI -> disease-free (assume stay in uk) --------------------
+
+QALY_diseasefree <- calc_QALY_population(utility = utility.disease_free,
+                                         time_horizons = c(notification_to_allcause_death))
+
+
+# active TB related death -------------------------------------------------
+
+QALY.uk_tb_death <- calc_QALY_population(utility = utility.activeTB,
+                                         time_horizons = 1)
+
+QALY_uk_tb_death <- rep(QALY.uk_tb_death, length(QALY_diseasefree))
+
+
+# active TB cured ---------------------------------------------------------
+
+QALY_uk_tb_cured <- calc_QALY_population(utility = c(utility.activeTB, utility.disease_free),
+                                         time_horizons = c(notification_to_allcause_death))
 
 
 
-# total expected QALY losses and costs --------------------------------------------
+# imputed samples QALYs and cost ---------------------------------------------------
 
-# initiate output arrays
-aTB_QALYloss <- array(data = NA,
-                      dimnames = c("sim", "scenario"),
-                      dim = c(n.uk_tbX, N.scenarios))
-aTB_cost <- aTB_QALYloss
+# CFR for each active TB case
+cfr_age_groups_uk_tb <- sample.uk_tb_only$cfr_age_groups
 
-# all deterministic decision tree scenarios
-for (scenario in seq_len(N.scenarios)){
 
-  # within scenario samples
-  for (i in uk_tbX_names){
+uk_tbX_names <- paste("uk_tb", seq_len(n.impute), sep = "")
 
-    whos_aTB <- uk_tb_scenarios[ , i, scenario]==1
+for (i in uk_tbX_names){
 
-    # expected QALY loss due to active TB in total cohort
-    E.lifetime_QALYsloss_cohort <- mean(lifetime_QALYsloss * whos_aTB)
+  #############
+  # QALY loss #
+  #############
 
-    # expected QALY loss due to early death due to active TB
-    E.QALYloss_death_aTB <- cfr_age_lookup[cfr_age, "cfr"] * QALYloss_TB_death
+  # random sample death status due to active TB
+  uk_tb_death <- cfr_age_lookup[cfr_age_groups_uk_tb, "cfr"] > runif(length(cfr_age_groups_uk_tb))
 
-    # expected QALY loss due to early death over total cohort
-    E.QALYloss_death_cohort <- mean(E.QALYloss_death_aTB * whos_aTB)
+  ## status-quo
+  totalQALY.statusquo <- QALY_uk_tb_cured
+  totalQALY.statusquo[uk_tb_death] <- QALY_uk_tb_death[uk_tb_death]
 
-    # expected treatment cost over total cohort
-    E.aTB_Tx_cost_cohort <- mean(aTB_Tx_cost * whos_aTB)
+  ## screened
+  completed_LTBI_Tx <- sample.uk_tb_only$uk_tb==1 & sample.uk_tb_only[ ,i]==0
 
-    aTB_QALYloss[i, scenario] <- E.lifetime_QALYsloss_cohort + E.QALYloss_death_cohort
-    aTB_cost[i, scenario] <- E.aTB_Tx_cost_cohort
-  }
+  totalQALY.screened <- totalQALY.statusquo
+  totalQALY.screened[completed_LTBI_Tx] <- QALY_diseasefree[completed_LTBI_Tx]
+
+  aTB_QALYloss[i] <- sum(totalQALY.screened) - sum(totalQALY.statusquo)
+
+  ########
+  # cost #
+  ########
+
+  which_aTB <- IMPUTED_sample[ ,i]==1
+  aTB_cost[i] <- mean(aTB_Tx_cost * which_aTB)
 }
+
+
+

@@ -1,5 +1,5 @@
 
-#' Calculate QALYs using List of Utilities
+#' Calculate QALYs Using Vector of Utilities
 #'
 #' @param time_horizon
 #' @param utility
@@ -13,11 +13,10 @@
 calc_QALY <- function(time_horizon = NA,
                       utility = 0.9){
 
-  QALY <- NULL
-
-  if(is.na(time_horizon) | length(utility)>time_horizon) time_horizon <- length(utility)
+  if(is.na(time_horizon) | length(utility) > time_horizon) time_horizon <- length(utility)
   utility <- fillin_missing_utilities(utility, time_horizon)
 
+  QALY <- 0
   discountfactor <- make_discount()
   period <- c(numeric(time_horizon - 1) + 1, 0.5)
 
@@ -31,14 +30,23 @@ calc_QALY <- function(time_horizon = NA,
 
 
 
+#' Fill-in Missing Trailing Utilities
+#'
+#' @param utility
+#' @param time_horizon
+#'
+#' @return
+#' @export
+#'
 fillin_missing_utilities <- function(utility, time_horizon){
 
-  c(utility, rep(utility(length(utility)),
+  n.utility <- length(utility)
+  c(utility, rep(utility[n.utility],
                  max(0, time_horizon - n.utility, na.rm = T)))
 }
 
 
-#' Calculate QALYs using List of Utilities For Population
+#' Calculate QALYs Using Vector of Utilities For Population
 #'
 #' @param utility
 #' @param time_horizons
@@ -52,9 +60,9 @@ fillin_missing_utilities <- function(utility, time_horizon){
 calc_QALY_population <- function(utility, time_horizons){
 
   QALY <- NA
-  for (horizon in seq_along(time_horizons)){
+  for (i in seq_along(time_horizons)){
 
-    QALY[horizon] <- calc_QALY(time_horizon = horizon, utility)
+    QALY[i] <- calc_QALY(time_horizon = time_horizons[i], utility)
   }
 
   return(QALY)

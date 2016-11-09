@@ -19,7 +19,7 @@ make_discount <- function(){
 
 #' Calculate QALYs using Case-Fatality Rates
 #'
-#' Sum to time of death or some prespecified time horizon.
+#' Sum to time of death or a prespecified time horizon.
 #' CFRs are dependent on age.
 #' Utility is fixed over time.
 #'
@@ -76,7 +76,9 @@ calc_QALY_CFR <- function(AGES = NA,
 
     while(ltime==1){
 
-      if(!is.null(cfr_age_lookup)) ltime <- ifelse(cfr_age_lookup$cfr[cfr_age_lookup$age==agei] < runif(1), 1, 0.5)
+      if(!is.null(cfr_age_lookup)){
+        ltime <- ifelse(cfr_age_lookup$cfr[cfr_age_lookup$age==agei] < runif(1), 1, 0.5)
+      }
       if(!is.null(time_horizon)) ltime <- ifelse(count<time_horizon, 1, 0.5)
 
       QALY[i] <- QALY[i] + (ltime * utility * discountfactor())

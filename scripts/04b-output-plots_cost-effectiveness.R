@@ -27,17 +27,7 @@ mc_health_scenarios <- read.csv(file = "ext-data/mc_health.csv", header = FALSE)
 c.total <- t(rbind(0, mc_cost_scenarios))
 colnames(c.total) <- as.character(0:nrow(mc_cost_scenarios))
 
-##TODO##
-#
-# need to calculate status quo QALYs and costs
-# in 03c...
-# so can add to below
-#
-# costs = ??
-# QALY loss = ??
-#
-#
-#
+
 
 ##TODO##
 # if n.uk_tbX==n.mc
