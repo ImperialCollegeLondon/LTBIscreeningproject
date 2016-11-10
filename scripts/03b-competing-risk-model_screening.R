@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# fit competing risk models to imputed complete date set with ETS active TB data
+# fit competing risk models to imputed complete data set with ETS active TB data
 # with screening
 
 
@@ -36,11 +36,18 @@ uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
                                         nrow = n.pop,
                                         ncol = n.uk_tbX, byrow = FALSE))
 
+
+##TODO##
+# don't always need to keep individual tb status
+# if so then uncomment
+
 # 3-D output array (indiv x simulation x scenario)
-uk_tb_scenarios <- lapply(seq_len(n.scenarios), function(X) uk_tb_scenarios)
-uk_tb_scenarios <- abind(uk_tb_scenarios, along = 3)
+# # duplicate as list and stack along z
+# uk_tb_scenarios <- lapply(seq_len(n.scenarios), function(X) uk_tb_scenarios)
+# uk_tb_scenarios <- abind(uk_tb_scenarios, along = 3)
 
 names(uk_tb_scenarios) <- uk_tbX_names
+
 
 
 # sample updated active TB status after screening
@@ -51,21 +58,53 @@ uk_tb_after_screen <- function(is.tb, prob){
 }
 
 
+
+# 3-D output, recording all scenarios uk_tb
+#
+# for (scenario in seq_len(n.scenarios)){
+#
+#   # hash table (fast)
+#   hash <- melt(p.complete_treat_scenarios[scenario, ],
+#                variable_name = "who_prev_cat_Pareek2011")
+#   hash <- data.table(hash)
+#   setkey(hash, "who_prev_cat_Pareek2011")
+#   # tables()
+#
+#   # prob completing LTBI Tx for each cohort individual
+#   p.complete_treat_sample <- hash[as.character(IMPUTED_sample$who_prev_cat_Pareek2011), value]
+#
+#   # sample new tb status for n.uk_tbX samples
+#   for (tbsample in uk_tbX_names){
+#
+#     uk_tb_scenarios[uk_tb_TRUE, tbsample, scenario] <- uk_tb_after_screen(uk_tb_TRUE,
+#                                                                           p.complete_treat_sample)
+#   }
+#
+#   # number of active TB cases _after_ screening
+#   # for each simulated sample
+#   n.tb_screen[scenario] <- apply(uk_tb_scenarios, 2, table)
+# }
+
 for (scenario in seq_len(n.scenarios)){
 
-  # get prob of successfully completing LTBI treatment
-  # for each cohort individual
-  p.complete_treat_sample <- p.complete_treat_scenarios[scenario, IMPUTED_sample$who_prev_cat_Pareek2011]
-  colnames(p.complete_treat_sample) <- NULL
+  # hash table (fast)
+  hash <- melt(p.complete_treat_scenarios[scenario, ],
+               variable_name = "who_prev_cat_Pareek2011")
+  hash <- data.table(hash)
+  setkey(hash, "who_prev_cat_Pareek2011")
+  # tables()
+
+  # prob completing LTBI Tx for each cohort individual
+  p.complete_treat_sample <- hash[as.character(IMPUTED_sample$who_prev_cat_Pareek2011), value]
 
   # sample new tb status for n.uk_tbX samples
-  for (nm in uk_tbX_names){
-    uk_tb_scenarios[uk_tb_TRUE, nm, scenario] <- uk_tb_after_screen(uk_tb_TRUE,
-                                                                    p.complete_treat_sample)
+  for (tbsample in uk_tbX_names){
+
+    uk_tb_scenarios[uk_tb_TRUE, tbsample] <- uk_tb_after_screen(uk_tb_TRUE,
+                                                                p.complete_treat_sample)
   }
 
-  # number of active TB cases _after_ screening
-  # for each simulated sample
+  # number active TB cases _after_ screening
   n.tb_screen[scenario] <- apply(uk_tb_scenarios, 2, table)
 }
 
