@@ -132,8 +132,7 @@ detach(cmprsk_age_screen)
 
 
 # raw data number of TB cases over time
-
-CDF <- ecdf(IMPUTED_sample$fup1_issdt[IMPUTED_sample$uk_tb==1])
+CDF <- ecdf(IMPUTED_sample$fup1_issdt[uk_tb_TRUE])
 plot(CDF, yaxt='n', xlab="Days", main="Raw cumulative counts of active TB cases")
 axis(side = 2, at = 1, tck = 0.01, labels = sum(IMPUTED_sample$uk_tb), las="2")
 

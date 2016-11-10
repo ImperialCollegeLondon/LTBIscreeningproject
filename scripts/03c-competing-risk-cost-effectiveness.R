@@ -37,7 +37,7 @@ aTB_Tx_cost <- 5329
 
 n.impute <- 10
 
-sample.uk_tb_only <- IMPUTED_sample[IMPUTED_sample$uk_tb==1, ]
+sample.uk_tb_only <- IMPUTED_sample[uk_tb_TRUE, ]
 
 
 utility.disease_free <- 1.0

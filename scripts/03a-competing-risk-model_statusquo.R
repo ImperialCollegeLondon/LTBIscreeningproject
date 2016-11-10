@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# fit competing risk models to imputed active TB data
+# fit competing risk models to imputed complete dataset with ETS active TB cases
 # without screening
 
 
@@ -27,10 +27,13 @@ imputed_age.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ age_at_entry)
 
 
 # Cox proportion hazard fits
+# to different death and exit uk imputations
+# total sample
 cens_coxph1 <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
 cens_coxph3 <- coxph(imputed_age.form, data = IMPUTED_sample)
 
+# single year
 cens_coxph1_year <- coxph(imputed_age.form, data = IMPUTED_sample_year_cohort)
 
 
@@ -55,17 +58,12 @@ KM_original_year_age <- survfit(formula = imputed_age.form,
 ######################
 
 # create final state vectors full sample
-event <- rep(0, nrow(IMPUTED_sample)) #event-free i.e. censored event time
+event <- rep(0, n.pop) #event-free i.e. censored event time
 event[IMPUTED_sample$death1] <- 3
 event[IMPUTED_sample$exit_uk1] <- 2
 event[IMPUTED_sample$uk_tb_orig=="1"] <- 1
 
 times <- IMPUTED_sample$fup1_issdt
-
-#warning: slow for large sample
-# ci <- mstate::Cuminc(time = times, status = event)
-# ci.age <- mstate::Cuminc(time = times, status = event, group = IMPUTED_sample$age_at_entry)
-
 
 # transition matrix
 tmat <- trans.comprisk(3, c("event-free", "active_TB", "exit_uk", "dead"))
@@ -94,7 +92,7 @@ cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_
 cx
 
 
-
+# create data structures for cmprsk::
 cmprsk_age <- data.frame(dis = dat$age_at_entry,
                          ftime = times,
                          status = event)

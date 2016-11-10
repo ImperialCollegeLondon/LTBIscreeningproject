@@ -29,11 +29,13 @@ source("scripts/02-decision-tree-model.R")
 
 # survival model ----------------------------------------------------------
 
-source("scripts/03-competing-risk-model.R")
+source("scripts/03-competing-risk-model_statusquo.R")
+source("scripts/03-competing-risk-model_screening.R")
+source("scripts/03-competing-risk-cost-effectiveness.R")
 
 
 # output plots ------------------------------------------------------------
 
-source("scripts/04a-output-plots.R")
-source("scripts/04b-output-plots.R")
+source("scripts/04a-output-plots_competing_risks.R")
+source("scripts/04b-output-plots_cost_effectiveness.R")
 

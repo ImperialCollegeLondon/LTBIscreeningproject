@@ -47,7 +47,8 @@ rm(i)
 
 # number of Monte Carlo iterations
 N.mc <- 10
-n.scenarios <- nrow(scenario_parameter_cost)
+# n.scenarios <- nrow(scenario_parameter_cost)
+n.scenarios <- 2
 
 
 # sensitivity analysis ----------------------------------------------------
@@ -59,7 +60,7 @@ if(file.exists("ext-data/mc_health.csv")) file.remove("ext-data/mc_health.csv")
 if(file.exists("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")
 
 
-for (scenario in 1:10){ #seq_len(n.scenarios)){
+for (scenario in seq_len(n.scenarios)){
 
   print(sprintf("scenario: %d", scenario))
 

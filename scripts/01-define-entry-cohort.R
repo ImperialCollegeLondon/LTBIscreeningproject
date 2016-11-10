@@ -21,6 +21,9 @@ IMPUTED_sample <- subset(IMPUTED_sample, !is.na(issdt))
 # eligible screening age range only
 IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
+##TODO##
+# screening >35 year olds...
+
 
 
 # impute LTBI probability from country of origin  --------------------------
@@ -59,7 +62,8 @@ rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
 
 
 
-# from event dates create time-to-events in days --------------------------
+# create time-to-events in days --------------------------
+# from uk entry to event dates
 
 # find all columns with follow-up time imputations
 cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
@@ -84,6 +88,7 @@ colnames(issdt_event) <- paste(colnames(issdt_event), "_issdt", sep = "")
 # days from uk entry to active tb
 rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
 rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
+rNotificationDate_issdt.years <- as.numeric(IMPUTED_sample$rNotificationDate_issdt)/365
 
 
 IMPUTED_sample <- data.frame(IMPUTED_sample,
@@ -100,8 +105,6 @@ rm(cols_eventdate, cols_fup,
 # create event-type indicators --------------------------------------------
 
 ##TODO##
-# tidy this up! prone to typos
-
 is.death <- function(imputation_num, data,
                      fup_limit = 19723){
 
@@ -120,6 +123,8 @@ is.death <- function(imputation_num, data,
 
 fup_limit <- 19723  #days from 1960-01-01
 
+##TODO##
+# tidy this up! prone to typos
 IMPUTED_sample <- transform(IMPUTED_sample,
 
                             cens1  = fup1==fup_limit,
@@ -172,8 +177,11 @@ entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev
 entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
 entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
 
+# total sample size
+n.pop <- nrow(IMPUTED_sample)
+
 # total sample sizes for each yearly cohort
-entryCohort_poptotal <- aggregate(rep(1, nrow(IMPUTED_sample)),
+entryCohort_poptotal <- aggregate(rep(1, n.pop),
                                   by = list(IMPUTED_sample$issdt_year), sum)
 names(entryCohort_poptotal) <- c("year", "pop")
 
@@ -181,13 +189,15 @@ names(entryCohort_poptotal) <- c("year", "pop")
 # keep pre-screened status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
-
 # active TB case fatality rate age groups
-IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + as.numeric(IMPUTED_sample$rNotificationDate_issdt)/365,
+IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years,
                                      breaks = c(15, 45, 65, 200),
                                      right = FALSE)
 
 age_at_fup <- IMPUTED_sample$age_at_entry + floor(IMPUTED_sample$fup1_issdt/365)
+
+# logical active TB status of original data
+uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
 
 
 # summary statistics ------------------------------------------------------

@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# fit competing risk models to imputed active TB data
+# fit competing risk models to imputed complete date set with ETS active TB data
 # with screening
 
 
@@ -16,10 +16,9 @@ library(mstate)
 library(cmprsk) # http://www.stat.unipg.it/luca/R
 
 
+# read-in random sample of proportion of LTBI -> disease-free
 p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", header = FALSE)
 names(p.complete_treat_scenarios) <- names(p.complete_Tx_given_LTBI_by_who)
-
-n.pop <- nrow(IMPUTED_sample)
 
 
 ######################################
@@ -27,30 +26,24 @@ n.pop <- nrow(IMPUTED_sample)
 ##       censored (active TB) times ##
 ######################################
 
-
 # resample active TB status _after_ screening
 # create multiple samples of screened cohort
 
-n.uk_tbX <- 2 #n.mc
+n.uk_tbX <- 2 #==N.mc?
 uk_tbX_names <- paste("uk_tb", seq_len(n.uk_tbX), sep = "")
 
 uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
                                         nrow = n.pop,
                                         ncol = n.uk_tbX, byrow = FALSE))
 
-# 3-D output array recycled values
-uk_tb_scenarios <- array(uk_tb_scenarios,
-                         dimnames = c("uk_tb", "sim", "scenario"),
-                         dim = c(n.pop, n.uk_tbX, N.scenarios))
-
+# 3-D output array (indiv x simulation x scenario)
+uk_tb_scenarios <- lapply(seq_len(n.scenarios), function(X) uk_tb_scenarios)
+uk_tb_scenarios <- abind(uk_tb_scenarios, along = 3)
 
 names(uk_tb_scenarios) <- uk_tbX_names
-uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
 
-N.scenarios <- nrow(p.complete_treat_scenarios)
 
-# sample updated active TB status for each active TB case
-# after screening
+# sample updated active TB status after screening
 uk_tb_after_screen <- function(is.tb, prob){
 
   n.tb <- sum(is.tb)
@@ -58,20 +51,18 @@ uk_tb_after_screen <- function(is.tb, prob){
 }
 
 
-# all deterministic decision tree scenarios
-for (scenario in seq_len(N.scenarios)){
+for (scenario in seq_len(n.scenarios)){
 
-  # from decision tree get probability of successfully completing LTBI treatment
+  # get prob of successfully completing LTBI treatment
   # for each cohort individual
-  p.complete_treat_sample <- p.complete_treat_given_LTBI_by_who[scenario, IMPUTED_sample$who_prev_cat_Pareek2011]
+  p.complete_treat_sample <- p.complete_treat_scenarios[scenario, IMPUTED_sample$who_prev_cat_Pareek2011]
+  colnames(p.complete_treat_sample) <- NULL
 
   # sample new tb status for n.uk_tbX samples
   for (nm in uk_tbX_names){
     uk_tb_scenarios[uk_tb_TRUE, nm, scenario] <- uk_tb_after_screen(uk_tb_TRUE,
                                                                     p.complete_treat_sample)
   }
-
-  # IMPUTED_sample <- data.frame(IMPUTED_sample, scenario)
 
   # number of active TB cases _after_ screening
   # for each simulated sample
