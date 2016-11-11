@@ -513,6 +513,7 @@
       distn: unif
       min: 0
       max: 0
+      type: chance
       LTBI:
         p: 0.3
         distn: unif

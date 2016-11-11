@@ -12,6 +12,7 @@ library(treeSimR)
 
 options("max.print"=2000)
 
+
 # initiate decision tree --------------------------------------------------
 
 ##TODO##
@@ -48,6 +49,7 @@ rm(i)
 
 # number of Monte Carlo iterations
 N.mc <- 10
+
 # n.scenarios <- nrow(scenario_parameter_cost)
 n.scenarios <- 2
 
@@ -66,10 +68,10 @@ for (scenario in seq_len(n.scenarios)){
   print(sprintf("scenario: %d", scenario))
 
   # assign branching _probabilities_
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Screening"],
-                  filterFun = function(x) x$name=="Screening")
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "No Screening"],
-                  filterFun = function(x) x$name=="No Screening")
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Agree to Screen"],
+                  filterFun = function(x) x$name=="Agree to Screen")
+  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Agree to Screen"],
+                  filterFun = function(x) x$name=="Not Agree to Screen")
 
   osNode.cost$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
                   filterFun = function(x) x$name=="Start Treatment")
@@ -81,10 +83,10 @@ for (scenario in seq_len(n.scenarios)){
   osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Complete Treatment"],
                   filterFun = function(x) x$name=="Not Complete Treatment")
 
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Screening"],
-                    filterFun = function(x) x$name=="Screening")
-  osNode.health$Set(p = scenario_parameter_p[scenario, "No Screening"],
-                    filterFun = function(x) x$name=="No Screening")
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Agree to Screen"],
+                    filterFun = function(x) x$name=="Agree to Screen")
+  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Agree to Screen"],
+                    filterFun = function(x) x$name=="Not Agree to Screen")
 
   osNode.health$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
                     filterFun = function(x) x$name=="Start Treatment")
@@ -115,24 +117,18 @@ for (scenario in seq_len(n.scenarios)){
   # print(osNode.cost, "type", "p", "path_probs", "distn",
   #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
-  # test sum to 1
-  sum(osNode.cost$Get("path_probs", filterFun = isLeaf))
-
   ##TODO##
   ## with data.tree operations?
-  ## re-order tree structure?
 
-  # total probability successfully complete treatment of LTBI
+  # total probability successfully complete treatment of LTBI for each WHO category
   # use when know active TB cases in advance
   p.complete_Tx <- osNode.cost$Get('path_probs',
                                    filterFun = function(x) x$name=="Complete Treatment" & !grepl(pattern = "non-LTBI", x$pathString))
-
-  # branch probabilities for LTBI
-  p.LTBI <- osNode.cost$Get('p',
-                            filterFun = function(x) x$name=="LTBI" & !grepl(pattern = "No Screening", x$pathString))
+  p.LTBI <- osNode.cost$Get('path_probs',
+                                   filterFun = function(x) x$name=="LTBI")
 
   # prob of completing treatment for LTBI individuals in each WHO category
-  p.complete_Tx_given_LTBI_by_who <- setNames(p.complete_Tx/(p.LTBI * p.who), nm = who_levels)
+  p.complete_Tx_given_LTBI_by_who <- setNames(p.complete_Tx/p.LTBI, nm = who_levels)
 
 
 
