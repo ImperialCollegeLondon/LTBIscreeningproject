@@ -11,7 +11,21 @@
 # global constants --------------------------------------------------------
 
 screen_age_range <- 18:35
-year_cohort <- '2012'
+# screen_age_range <- 18:45
+
+# year_cohort <- '2012' #latest year
+year_cohort <- '2012' #largest population
+
+# Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+# ages 18-35
+# <50/100,000: 3% LTBI
+# 51-150/100,000: 13% LTBI
+pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
+
+
+###############
+# pre-process #
+###############
 
 ##TODO##
 # why are there missing issdt uk entry dates?
@@ -21,22 +35,12 @@ IMPUTED_sample <- subset(IMPUTED_sample, !is.na(issdt))
 # eligible screening age range only
 IMPUTED_sample <- subset(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
-##TODO##
-# screening >35 year olds...
-
-
 
 # impute LTBI probability from country of origin  --------------------------
 
 # match prevalence groups in dataset to paper
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
-
-# Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
-# ages 18-35
-# <50/100,000: 3% LTBI
-# 51-150/100,000: 13% LTBI
-pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 
 # prevalance group frequencies in data
 tab.who <- table(IMPUTED_sample$who_prev_cat_Pareek2011)
@@ -56,9 +60,6 @@ IMPUTED_sample$LTBI <- (runif(n = length(prob)) < prob)
 IMPUTED_sample$LTBI[IMPUTED_sample$uk_tb=="1"] <- TRUE
 
 rm(pLatentTB.who, pLatentTB.who_adjusted, prob)
-
-# test
-# prop.table(table(IMPUTED_sample$LTBI, IMPUTED_sample$who_prev_cat_Pareek2011), margin = 2)
 
 
 
@@ -112,7 +113,7 @@ is.death <- function(imputation_num, data,
   date_exit_ukX <- paste("date_exit_uk", imputation_num, sep="")
   fupX <- paste("fup", imputation_num, sep="")
 
-  return(data[ ,date_deathX]<=data[ ,date_exit_ukX] &
+  return(data[ ,date_deathX] <= data[ ,date_exit_ukX] &
          data$uk_tb==0 &
          data[ ,fupX]!=fup_limit)
 }
@@ -198,12 +199,23 @@ age_at_fup <- IMPUTED_sample$age_at_entry + floor(IMPUTED_sample$fup1_issdt/365)
 
 # logical active TB status of original data
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
+sample.uk_tb_only <- IMPUTED_sample[uk_tb_TRUE, ]
+
+
+uk_tb_only.notification_to_allcause_death <- with(sample.uk_tb_only,
+                                                  floor((date_death1_issdt - rNotificationDate_issdt)/365))
+
+##TODO##
+# why are some of these -ve?
+
+# for purpose of calculating QALYs
+uk_tb_only.notification_to_allcause_death[uk_tb_only.notification_to_allcause_death<0] <- 0
 
 
 # summary statistics ------------------------------------------------------
 
 # cohort size at arrival to uk
-pop <- sum(entryCohort_poptotal$pop)
+n.pop <- sum(entryCohort_poptotal$pop)
 pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 
 # number of active TB cases _before_ screening

@@ -10,867 +10,626 @@
       max: 0
       p: 0.0
       type: chance
-      Screening:
-        distn: unif
-        min: 0
-        max: 0
-        p: 0.25
-        type: chance
-        LTBI:
-          p: 0.03
-          distn: unif
-          min: 0
-          max: 0
-          type: chance
-          Not GP registered:
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-            type: terminal
-          GP registered:
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            type: chance
-            Not Agree to Screen:
-              p: 0.4
-              distn: unif
-              min: 0
-              max: 0
-              type: terminal
-            Agree to Screen:
-              p: 0.6
-              distn: unif
-              min: 0
-              max: 0
-              type: chance
-              Test Negative:
-                p: 0.4085
-                distn: unif
-                min: 0
-                max: 0
-                type: terminal
-              Test Positive:
-                p: 0.5915
-                distn: unif
-                min: 0
-                max: 0
-                type: chance
-                Not Start Treatment:
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                  type: terminal
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-        non-LTBI:
-          p: 0.97
-          distn: unif
-          min: 0
-          max: 0
-          type: chance
-          Not GP registered:
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-            type: terminal
-          GP registered:
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            type: chance
-            Not Agree to Screen:
-              p: 0.4
-              distn: unif
-              min: 0
-              max: 0
-              type: terminal
-            Agree to Screen:
-              p: 0.6
-              distn: unif
-              min: 0
-              max: 0
-              type: chance
-              Test Negative:
-                p: 0.7929
-                distn: unif
-                min: 0
-                max: 0
-                type: terminal
-              Test Positive:
-                p: 0.2071
-                distn: unif
-                min: 0
-                max: 0
-                type: chance
-                Not Start Treatment:
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                  type: terminal
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-      No Screening:
-        p: 0.25
+      LTBI:
+        p: 0.03
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          type: terminal
-          p: 0.03
+        Not Agree to Screen:
+          p: 0.4
           distn: unif
           min: 0
           max: 0
-        non-LTBI:
-          p: 0.97
           type: terminal
+        Agree to Screen:
+          p: 0.6
           distn: unif
           min: 0
           max: 0
+          type: chance
+          Test Negative:
+            p: 0.4085
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Test Positive:
+            p: 0.5915
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 0
+          max: 0
+          type: chance
+          Test Negative:
+            p: 0.7929
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Test Positive:
+            p: 0.2071
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
     (50,150]:
       distn: unif
       min: 0
       max: 0
       p: 0.04
       type: chance
-      Screening:
-        distn: unif
-        min: 0
-        max: 0
-        p: 0.25
-        type: chance
-        LTBI:
-          p: 0.13
-          distn: unif
-          min: 0
-          max: 0
-          type: chance
-          Not GP registered:
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-            type: terminal
-          GP registered:
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            type: chance
-            Not Agree to Screen:
-              p: 0.4
-              distn: unif
-              min: 0
-              max: 0
-              type: terminal
-            Agree to Screen:
-              p: 0.6
-              distn: unif
-              min: 0
-              max: 0
-              type: chance
-              Test Negative:
-                p: 0.4085
-                distn: unif
-                min: 0
-                max: 0
-                type: terminal
-              Test Positive:
-                p: 0.5915
-                distn: unif
-                min: 0
-                max: 0
-                type: chance
-                Not Start Treatment:
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                  type: terminal
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-        non-LTBI:
-          p: 0.87
-          distn: unif
-          min: 0
-          max: 0
-          type: chance
-          Not GP registered:
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-            type: terminal
-          GP registered:
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            type: chance
-            Not Agree to Screen:
-              p: 0.4
-              distn: unif
-              min: 0
-              max: 0
-              type: terminal
-            Agree to Screen:
-              p: 0.6
-              distn: unif
-              min: 0
-              max: 0
-              type: chance
-              Test Negative:
-                p: 0.7929
-                distn: unif
-                min: 0
-                max: 0
-                type: terminal
-              Test Positive:
-                p: 0.2071
-                distn: unif
-                min: 0
-                max: 0
-                type: chance
-                Not Start Treatment:
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                  type: terminal
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-      No Screening:
-        p: 0.25
+      LTBI:
+        p: 0.13
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          type: terminal
-          p: 0.13
+        Not Agree to Screen:
+          p: 0.4
           distn: unif
           min: 0
           max: 0
-        non-LTBI:
-          p: 0.87
           type: terminal
+        Agree to Screen:
+          p: 0.6
           distn: unif
           min: 0
           max: 0
+          type: chance
+          Test Negative:
+            p: 0.4085
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Test Positive:
+            p: 0.5915
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+      non-LTBI:
+        p: 0.87
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 0
+          max: 0
+          type: chance
+          Test Negative:
+            p: 0.7929
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Test Positive:
+            p: 0.2071
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
     (150,250]:
       p: 0.16
       distn: unif
       min: 0
       max: 0
       type: chance
-      Screening:
-        p: 0.25
+      LTBI:
+        p: 0.2
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          p: 0.2
+        Not Agree to Screen:
+          p: 0.4
           distn: unif
           min: 0
           max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
           type: chance
-          Not GP registered:
-            type: terminal
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-          GP registered:
-            type: chance
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            Not Agree to Screen:
-              p: 0.4
-              distn: unif
-              min: 0
-              max: 0
-              type: terminal
-            Agree to Screen:
-              p: 0.6
-              type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.4085
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
-                type: chance
-                p: 0.5915
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-        non-LTBI:
-          p: 0.8
           distn: unif
           min: 0
           max: 0
-          type: chance
-          Not GP registered:
+          Test Negative:
             type: terminal
-            p: 0.688
+            p: 0.4085
             distn: unif
             min: 0
             max: 0
-          GP registered:
+          Test Positive:
             type: chance
-            p: 0.322
+            p: 0.5915
             distn: unif
             min: 0
             max: 0
-            Not Agree to Screen:
-              p: 0.4
+            Not Start Treatment:
               type: terminal
+              p: 0.3
               distn: unif
               min: 0
               max: 0
-            Agree to Screen:
-              p: 0.6
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
               type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.7929
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
                 type: chance
-                p: 0.2071
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
+                Complete Treatment:
+                  p: 0.8
                   distn: unif
                   min: 0
                   max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-      No Screening:
-        p: 0.25
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+      non-LTBI:
+        p: 0.8
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          type: terminal
-          p: 0.2
-          distn: unif
-          min: 0
-          max: 0
-        non-LTBI:
-          p: 0.8
+        Not Agree to Screen:
+          p: 0.4
           type: terminal
           distn: unif
           min: 0
           max: 0
+        Agree to Screen:
+          p: 0.6
+          type: chance
+          distn: unif
+          min: 0
+          max: 0
+          Test Negative:
+            type: terminal
+            p: 0.7929
+            distn: unif
+            min: 0
+            max: 0
+          Test Positive:
+            type: chance
+            p: 0.2071
+            distn: unif
+            min: 0
+            max: 0
+            Not Start Treatment:
+              type: terminal
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
     (250,350]:
       p: 0.60
       distn: unif
       min: 0
       max: 0
       type: chance
-      Screening:
+      LTBI:
+        p: 0.3
         distn: unif
         min: 0
         max: 0
         type: chance
-        p: 0.25
-        LTBI:
-          p: 0.3
+        Not Agree to Screen:
+          p: 0.4
+          type: terminal
           distn: unif
           min: 0
           max: 0
+        Agree to Screen:
+          p: 0.6
           type: chance
-          Not GP registered:
-            type: terminal
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-          GP registered:
-            type: chance
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            Not Agree to Screen:
-              p: 0.4
-              type: terminal
-              distn: unif
-              min: 0
-              max: 0
-            Agree to Screen:
-              p: 0.6
-              type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.4085
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
-                type: chance
-                p: 0.5915
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-        non-LTBI:
-          p: 0.7
           distn: unif
           min: 0
           max: 0
-          type: chance
-          Not GP registered:
+          Test Negative:
             type: terminal
-            p: 0.688
+            p: 0.4085
             distn: unif
             min: 0
             max: 0
-          GP registered:
+          Test Positive:
             type: chance
-            p: 0.322
+            p: 0.5915
             distn: unif
             min: 0
             max: 0
-            Not Agree to Screen:
-              p: 0.4
+            Not Start Treatment:
               type: terminal
+              p: 0.3
               distn: unif
               min: 0
               max: 0
-            Agree to Screen:
-              p: 0.6
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
               type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.7929
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
                 type: chance
-                p: 0.2071
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
+                Complete Treatment:
+                  p: 0.8
                   distn: unif
                   min: 0
                   max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-      No Screening:
-        p: 0.25
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+      non-LTBI:
+        p: 0.7
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          type: terminal
-          p: 0.3
-          distn: unif
-          min: 0
-          max: 0
-        non-LTBI:
-          p: 0.7
+        Not Agree to Screen:
+          p: 0.4
           type: terminal
           distn: unif
           min: 0
           max: 0
+        Agree to Screen:
+          p: 0.6
+          type: chance
+          distn: unif
+          min: 0
+          max: 0
+          Test Negative:
+            type: terminal
+            p: 0.7929
+            distn: unif
+            min: 0
+            max: 0
+          Test Positive:
+            type: chance
+            p: 0.2071
+            distn: unif
+            min: 0
+            max: 0
+            Not Start Treatment:
+              type: terminal
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
     (350,1e+05]:
       p: 0.20
       distn: unif
       min: 0
       max: 0
-      type: chance
-      Screening:
+      LTBI:
+        p: 0.3
         distn: unif
         min: 0
         max: 0
         type: chance
-        p: 0.25
-        LTBI:
-          p: 0.3
+        Not Agree to Screen:
+          p: 0.4
+          type: terminal
           distn: unif
           min: 0
           max: 0
+        Agree to Screen:
+          p: 0.6
           type: chance
-          Not GP registered:
-            type: terminal
-            p: 0.688
-            distn: unif
-            min: 0
-            max: 0
-          GP registered:
-            type: chance
-            p: 0.322
-            distn: unif
-            min: 0
-            max: 0
-            Not Agree to Screen:
-              p: 0.4
-              type: terminal
-              distn: unif
-              min: 0
-              max: 0
-            Agree to Screen:
-              p: 0.6
-              type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.4085
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
-                type: chance
-                p: 0.5915
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
-                  distn: unif
-                  min: 0
-                  max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-        non-LTBI:
-          p: 0.7
           distn: unif
           min: 0
           max: 0
-          type: chance
-          Not GP registered:
+          Test Negative:
             type: terminal
-            p: 0.688
+            p: 0.4085
             distn: unif
             min: 0
             max: 0
-          GP registered:
+          Test Positive:
             type: chance
-            p: 0.322
+            p: 0.5915
             distn: unif
             min: 0
             max: 0
-            Not Agree to Screen:
-              p: 0.4
+            Not Start Treatment:
               type: terminal
+              p: 0.3
               distn: unif
               min: 0
               max: 0
-            Agree to Screen:
-              p: 0.6
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
               type: chance
-              distn: unif
-              min: 0
-              max: 0
-              Test Negative:
-                type: terminal
-                p: 0.7929
-                distn: unif
-                min: 0
-                max: 0
-              Test Positive:
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
                 type: chance
-                p: 0.2071
-                distn: unif
-                min: 0
-                max: 0
-                Not Start Treatment:
-                  type: terminal
-                  p: 0.3
+                Complete Treatment:
+                  p: 0.8
                   distn: unif
                   min: 0
                   max: 0
-                Start Treatment:
-                  p: 0.7
-                  distn: gamma
-                  shape: 65.753
-                  scale: 0.00007
-                  type: chance
-                  Symptoms:
-                    p: 1
-                    distn: gamma
-                    shape: 109.67
-                    scale: 0.000003
-                    type: chance
-                    Complete Treatment:
-                      p: 0.8
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-                    Not Complete Treatment:
-                      p: 0.2
-                      distn: unif
-                      min: 0
-                      max: 0
-                      type: terminal
-      No Screening:
-        p: 0.25
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+      non-LTBI:
+        p: 0.7
         distn: unif
         min: 0
         max: 0
         type: chance
-        LTBI:
-          type: terminal
-          p: 0.3
-          distn: unif
-          min: 0
-          max: 0
-        non-LTBI:
-          p: 0.7
+        Not Agree to Screen:
+          p: 0.4
           type: terminal
           distn: unif
           min: 0
           max: 0
+        Agree to Screen:
+          p: 0.6
+          type: chance
+          distn: unif
+          min: 0
+          max: 0
+          Test Negative:
+            type: terminal
+            p: 0.7929
+            distn: unif
+            min: 0
+            max: 0
+          Test Positive:
+            type: chance
+            p: 0.2071
+            distn: unif
+            min: 0
+            max: 0
+            Not Start Treatment:
+              type: terminal
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+            Start Treatment:
+              p: 0.7
+              distn: gamma
+              shape: 65.753
+              scale: 0.00007
+              type: chance
+              Symptoms:
+                p: 1
+                distn: gamma
+                shape: 109.67
+                scale: 0.000003
+                type: chance
+                Complete Treatment:
+                  p: 0.8
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal
+                Not Complete Treatment:
+                  p: 0.2
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: terminal

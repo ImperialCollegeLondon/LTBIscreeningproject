@@ -14,6 +14,8 @@
 library(survival)
 library(mstate)
 library(cmprsk) # http://www.stat.unipg.it/luca/R
+library(reshape)
+library(data.table)
 
 
 # read-in random sample of proportion of LTBI -> disease-free
@@ -21,21 +23,16 @@ p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_L
 names(p.complete_treat_scenarios) <- names(p.complete_Tx_given_LTBI_by_who)
 
 
-######################################
-## simple approach: other events as ##
-##       censored (active TB) times ##
-######################################
+# initiate output variables
 
-# resample active TB status _after_ screening
-# create multiple samples of screened cohort
-
-n.uk_tbX <- 2 #==N.mc?
+n.uk_tbX <- N.mc
 uk_tbX_names <- paste("uk_tb", seq_len(n.uk_tbX), sep = "")
 
 uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
                                         nrow = n.pop,
                                         ncol = n.uk_tbX, byrow = FALSE))
 names(uk_tb_scenarios) <- uk_tbX_names
+n.tb_screen <- list()
 
 
 
@@ -47,6 +44,12 @@ uk_tb_after_screen <- function(is.tb, prob){
 }
 
 
+
+#################################
+# tables of number of active TB #
+# cases for each scenario and   #
+# sample LTBI to disease-free   #
+#################################
 
 for (scenario in seq_len(n.scenarios)){
 
@@ -68,12 +71,22 @@ for (scenario in seq_len(n.scenarios)){
   }
 
   # number active TB cases _after_ screening
-  n.tb_screen[scenario] <- apply(uk_tb_scenarios, 2, table)
+  n.tb_screen[[scenario]] <- apply(uk_tb_scenarios, 2, table)
+
+  ##TODO##
+  #data.table version of table()
 }
 
 
 
-# fit Kaplan-Meier to _screened_ data -------------------------------------
+
+######################################
+## simple approach: other events as ##
+##       censored (active TB) times ##
+######################################
+
+
+#  Kaplan-Meier -------------------------------------------------------
 
 # redo year split with updated tb events
 IMPUTED_sample_splityear_screen <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)

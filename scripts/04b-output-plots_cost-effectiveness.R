@@ -10,17 +10,15 @@ library(ggplot2)
 library(BCEA)
 
 
-i <- 1 #uk_tbX
-
-# single intervention
-e.total <- matrix(c(rep(0,N.mc), -mc.health$`expected values`), #) + aTB_QALYloss[i, scenario]),
+# single scenario
+e.total <- matrix(c(rep(0,N.mc), -mc.health$`expected values` + aTB_QALYloss[[scenario]]),
                   ncol = 2, dimnames = list(NULL, c("do nothing","interv")))
 
-c.total <- matrix(c(rep(0,N.mc), mc.cost$`expected values`), # + aTB_cost[i, scenario])
+c.total <- matrix(c(rep(0,N.mc), mc.cost$`expected values` + aTB_cost[[scenario]]),
                   ncol = 2, dimnames = list(NULL, c("do nothing","interv")))
 
 
-# multiple scenarios intervention
+# multiple scenarios
 mc_cost_scenarios <- read.csv(file = "ext-data/mc_cost.csv", header = FALSE)
 mc_health_scenarios <- read.csv(file = "ext-data/mc_health.csv", header = FALSE)
 
@@ -66,8 +64,9 @@ ceac.plot(screen.bcea)
 ##TODO##
 
 # money saved/cases averted over time
-#   take difference of status quo and screening active TB cases
 
 # probability cost-effective for adherence vs uptake, for given costs per test
+## graphs
+## mesh/contour
 
 

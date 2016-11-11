@@ -1,17 +1,19 @@
 
 #' Calculate QALYs Using Vector of Utilities
 #'
-#' @param time_horizon
-#' @param utility
+#' Discounted total QALYs.
+#'
+#' @param utility vector of values between 0 and 1
+#' @param time_horizon a non-negative value
 #'
 #' @return
 #' @export
-#' @seealso \code{\link{calc_QALY_CFR}}
+#' @seealso \code{\link{calc_QALY_CFR}}, \code{\link{calc_QALY_population}}
 #'
 #' @examples
 #'
-calc_QALY <- function(time_horizon = NA,
-                      utility = 0.9){
+calc_QALY <- function(utility = 0.9,
+                      time_horizon = NA){
 
   if(is.na(time_horizon) | length(utility) > time_horizon) time_horizon <- length(utility)
   utility <- fillin_missing_utilities(utility, time_horizon)
@@ -32,8 +34,8 @@ calc_QALY <- function(time_horizon = NA,
 
 #' Fill-in Missing Trailing Utilities
 #'
-#' @param utility
-#' @param time_horizon
+#' @param utility vector of values between 0 and 1
+#' @param time_horizon a non-negative value
 #'
 #' @return
 #' @export
@@ -48,8 +50,11 @@ fillin_missing_utilities <- function(utility, time_horizon){
 
 #' Calculate QALYs Using Vector of Utilities For Population
 #'
-#' @param utility
-#' @param time_horizons
+#' This is a wrapper function for \code{calc_QALY} over
+#' multiple time horizons (e.g. individuals).
+#'
+#' @param utility vector of values between 0 and 1
+#' @param time_horizons vector of non-negative values
 #'
 #' @return
 #' @export
@@ -59,10 +64,13 @@ fillin_missing_utilities <- function(utility, time_horizon){
 #'
 calc_QALY_population <- function(utility, time_horizons){
 
+  stopifnot(all(time_horizons>=0))
+  stopifnot(all(utility>=0), all(utility<=1))
+
   QALY <- NA
   for (i in seq_along(time_horizons)){
 
-    QALY[i] <- calc_QALY(time_horizon = time_horizons[i], utility)
+    QALY[i] <- calc_QALY(utility, time_horizon = time_horizons[i])
   }
 
   return(QALY)

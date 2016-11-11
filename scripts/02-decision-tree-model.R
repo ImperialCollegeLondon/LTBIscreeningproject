@@ -10,6 +10,7 @@ library(readxl)
 library(data.tree)
 library(treeSimR)
 
+options("max.print"=2000)
 
 # initiate decision tree --------------------------------------------------
 
@@ -118,11 +119,8 @@ for (scenario in seq_len(n.scenarios)){
   sum(osNode.cost$Get("path_probs", filterFun = isLeaf))
 
   ##TODO##
-  ## this is a bit messy because the screening (uncertain) event is in between the WHO and LTBI events on the tree
-  ## and this may be different for different groups
-  ## theres probably a better way to do this:
-  ##    with data.tree operations?
-  ##    re-order tree structure?
+  ## with data.tree operations?
+  ## re-order tree structure?
 
   # total probability successfully complete treatment of LTBI
   # use when know active TB cases in advance
