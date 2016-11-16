@@ -36,7 +36,8 @@ source("scripts/02-decision-tree-model.R")
 
 # cost-effectiveness ------------------------------------------------------
 
-source("scripts/04-cost-effectiveness.R")
+source("scripts/04a-cost-effectiveness_activeTB-samples.R")
+source("scripts/04b-cost-effectiveness_QALY-costs.R")
 
 
 # output plots ------------------------------------------------------------

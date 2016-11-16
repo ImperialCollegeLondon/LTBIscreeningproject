@@ -226,3 +226,14 @@ p.who <- entryCohort_who_prop[[year_cohort]]
 who_levels <- names(p.who)
 
 
+
+# computation -------------------------------------------------------------
+
+# number of Monte Carlo iterations
+N.mc <- 10
+
+# n.scenarios <- nrow(scenario_parameter_cost)
+n.scenarios <- 2
+
+
+

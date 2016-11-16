@@ -47,12 +47,6 @@ for (i in seq_along(who_levels)){
 rm(i)
 
 
-# number of Monte Carlo iterations
-N.mc <- 10
-
-# n.scenarios <- nrow(scenario_parameter_cost)
-n.scenarios <- 2
-
 
 # sensitivity analysis ----------------------------------------------------
 # iterate over each deterministic scenario of parameter values
