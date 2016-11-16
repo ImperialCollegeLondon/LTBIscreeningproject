@@ -3,7 +3,6 @@ ggsurv <- function(s, CI = 'def', plot.cens = T, surv.col = 'gg.def',
                    cens.shape = 3, back.white = F, xlab = 'Time',
                    ylab = 'Survival', main = ''){
 
-  library(ggplot2)
   strata <- ifelse(is.null(s$strata) ==T, 1, length(s$strata))
   stopifnot(length(surv.col) == 1 | length(surv.col) == strata)
   stopifnot(length(lty.est) == 1 | length(lty.est) == strata)

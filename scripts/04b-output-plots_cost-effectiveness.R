@@ -10,12 +10,15 @@ library(ggplot2)
 library(BCEA)
 
 
-# single scenario
-e.total <- matrix(c(rep(0,N.mc), -mc.health$`expected values` + aTB_QALYloss[[scenario]]),
-                  ncol = 2, dimnames = list(NULL, c("do nothing","interv")))
+# convert to dataframes
+aTB_cost_diff.df <- data.frame(Reduce(rbind, aTB_cost_diff))
+aTB_QALYgain.df <- data.frame(Reduce(rbind, aTB_QALYgain))
 
-c.total <- matrix(c(rep(0,N.mc), mc.cost$`expected values` + aTB_cost[[scenario]]),
-                  ncol = 2, dimnames = list(NULL, c("do nothing","interv")))
+aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.df))
+colnames(aTB_cost_diff.df) <- as.character(0:nrow(mc_cost_scenarios))
+
+aTB_QALYgain.df <- t(rbind(0, aTB_QALYgain.df))
+colnames(aTB_QALYgain.df) <- as.character(0:nrow(mc_cost_scenarios))
 
 
 # multiple scenarios
@@ -25,21 +28,12 @@ mc_health_scenarios <- read.csv(file = "ext-data/mc_health.csv", header = FALSE)
 c.total <- t(rbind(0, mc_cost_scenarios))
 colnames(c.total) <- as.character(0:nrow(mc_cost_scenarios))
 
-
-
-##TODO##
-# if n.uk_tbX==n.mc
-# then can do a 1-to-1 pairing off below
-# for now just use same value (not very variable anyway)
-
-# add active TB costs
-c.total <- mapply(c.total, aTB_cost[1, ], FUN = function(x,y) x+y)
-
 e.total <- t(rbind(0, -mc_health_scenarios))
 colnames(e.total) <- as.character(0:nrow(mc_health_scenarios))
 
-# add active TB QALY loss
-e.total <- mapply(e.total, aTB_QALYloss[1, ], FUN = function(x,y) x+y)
+e.total <- e.total + aTB_QALYgain.df
+c.total <- c.total + aTB_cost_diff.df
+
 
 
 #########

@@ -44,9 +44,9 @@ utility.disease_free <- 1.0
 utility.activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010)
 
 
-#########
-# QALYs #
-#########
+##############
+# calc QALYs #
+##############
 
 # complete Tx LTBI -> disease-free (assume stay in uk) --------------------
 
@@ -75,36 +75,38 @@ QALY_uk_tb_cured <- calc_QALY_population(utility = c(utility.activeTB, utility.d
 cfr_age_groups_uk_tb <- cfr_age_lookup[sample.uk_tb_only$cfr_age_groups, "cfr"]
 
 ## random sample death status due to active TB
-uk_tb_death <- (cfr_age_groups_uk_tb > runif(length(cfr_age_groups_uk_tb)))
+uk_tb_death.statusquo <- (cfr_age_groups_uk_tb > runif(n.tb))
 
 ## status-quo
 totalQALY.statusquo <- QALY_uk_tb_cured
-totalQALY.statusquo[uk_tb_death] <- QALY_uk_tb_death[uk_tb_death]
+totalQALY.statusquo[uk_tb_death.statusquo] <- QALY_uk_tb_death[uk_tb_death.statusquo]
 
 aTB_cost.statusquo <- aTB_Tx_cost * n.tb
 
-aTB_QALYloss <- list()
+aTB_QALYgain <- list()
 aTB_cost.screened <- list()
+aTB_cost_diff <- list()
 
 
 for (scenario in seq_len(n.scenarios)){
 
-  aTB_QALYloss[[scenario]] <- NA
+  aTB_QALYgain[[scenario]] <- NA
   aTB_cost.screened[[scenario]] <- NA
+  aTB_cost_diff[[scenario]] <- NA
 
   for (i in uk_tbX_names){
 
-    # QALY loss
+    # QALY gain
 
     totalQALY.screened <- totalQALY.statusquo
 
     n.diseasefree <- n.tb - n.tb_screen[[scenario]]["1", i]
-    which_diseasefree <- sample(1:length(totalQALY.screened), n.diseasefree)
+    which_diseasefree <- sample(1:n.tb, n.diseasefree)
 
     totalQALY.screened[which_diseasefree] <- QALY_diseasefree[which_diseasefree]
 
-    aTB_QALYloss[[scenario]][i] <- sum(totalQALY.screened) - sum(totalQALY.statusquo)
-    aTB_QALYloss[[scenario]] <- na.omit(aTB_QALYloss[[scenario]])/n.pop
+    aTB_QALYgain[[scenario]][i] <- sum(totalQALY.screened) - sum(totalQALY.statusquo)
+    aTB_QALYgain[[scenario]] <- na.omit(aTB_QALYgain[[scenario]])/n.pop
 
     # cost
 
