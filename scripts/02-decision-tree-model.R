@@ -34,7 +34,7 @@ scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx", sheet 
 
 
 
-# assign cohort WHO group branching proportions, for given year -----------
+# assign cohort WHO TB incidence group branching proportions, for given year -----------
 
 for (i in seq_along(who_levels)){
 

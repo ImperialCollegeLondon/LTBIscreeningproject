@@ -6,7 +6,7 @@
 # main high-level script
 
 
-# increase available RAM to store data
+# increase RAM to store data
 memory.size(max = 8000)
 
 # data("IMPUTED_sample")
@@ -19,7 +19,8 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 # define entry cohort -----------------------------------------------------
 
-source("scripts/01-define-entry-cohort.R")
+source("scripts/01a-data-prep_modelling.R")
+source("scripts/01b-data-prep_cost-effectiveness.R")
 
 
 # decision tree -----------------------------------------------------------
@@ -29,13 +30,17 @@ source("scripts/02-decision-tree-model.R")
 
 # survival model ----------------------------------------------------------
 
-source("scripts/03-competing-risk-model_statusquo.R")
-source("scripts/03-competing-risk-model_screening.R")
-source("scripts/03-competing-risk-cost-effectiveness.R")
+# source("scripts/03a-competing-risk-model_statusquo.R")
+# source("scripts/03b-competing-risk-model_screening.R")
+
+
+# cost-effectiveness ------------------------------------------------------
+
+source("scripts/04-cost-effectiveness.R")
 
 
 # output plots ------------------------------------------------------------
 
-source("scripts/04a-output-plots_competing_risks.R")
-source("scripts/04b-output-plots_cost_effectiveness.R")
+source("scripts/05a-output-plots_competing_risks.R")
+source("scripts/05b-output-plots_cost_effectiveness.R")
 
