@@ -24,6 +24,10 @@ library(data.table)
 # read-in random sample of proportion of LTBI -> disease-free
 p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", header = FALSE)
 names(p.complete_treat_scenarios) <- who_levels
+p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
+
+hash <- melt(p.complete_treat_scenarios,
+             variable_name = "who_prev_cat_Pareek2011")
 
 
 n.uk_tbX <- N.mc
@@ -46,15 +50,11 @@ n.tb_screen <- list()
 
 for (scenario in seq_len(n.scenarios)){
 
-  # use hash table (fast)
-  hash <- melt(p.complete_treat_scenarios[scenario, ],
-               variable_name = "who_prev_cat_Pareek2011")
-  hash <- data.table(hash)
-  setkey(hash, "who_prev_cat_Pareek2011")
-  # tables()
+  p.completeTx <- data.table(hash[hash$scenario==scenario, ])
+  setkey(p.completeTx, "who_prev_cat_Pareek2011")
 
   # prob completing LTBI Tx for each cohort individual
-  p.complete_treat_sample <- hash[as.character(IMPUTED_sample$who_prev_cat_Pareek2011), value]
+  p.complete_treat_sample <- p.completeTx[as.character(IMPUTED_sample$who_prev_cat_Pareek2011), value]
 
   # sample new tb status for n.uk_tbX samples
   for (tbsample in uk_tbX_names){
@@ -65,6 +65,7 @@ for (scenario in seq_len(n.scenarios)){
 
   # number active TB cases _after_ screening
   n.tb_screen[[scenario]] <- apply(uk_tb_scenarios, 2, table)
+  rownames(n.tb_screen[[scenario]]) <- c("disease-free", "uk_tb")
 
   ##TODO##
   #data.table version of table()

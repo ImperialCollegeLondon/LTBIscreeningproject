@@ -230,7 +230,7 @@ who_levels <- names(p.who)
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 10
+N.mc <- 100
 
 # n.scenarios <- nrow(scenario_parameter_cost)
 n.scenarios <- 2

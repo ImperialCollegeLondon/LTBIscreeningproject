@@ -9,6 +9,7 @@ License: MIT
 LazyData: TRUE
 Imports:
     QALY,
+    readr,
     ggplot2,
     readxl,
     data.tree,

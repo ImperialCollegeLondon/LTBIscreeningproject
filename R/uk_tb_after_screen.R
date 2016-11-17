@@ -1,4 +1,4 @@
-#  Sample updated active TB status after screening
+#'  Sample updated active TB status after screening
 #'
 #' @param is.tb is individual active TB case (logical)
 #' @param prob probability of success (e.g. completing treatment)

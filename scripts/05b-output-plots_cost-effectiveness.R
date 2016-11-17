@@ -10,26 +10,29 @@ library(ggplot2)
 library(BCEA)
 
 
-# convert to dataframes
+# convert active TB lists to dataframes
 aTB_cost_diff.df <- data.frame(Reduce(rbind, aTB_cost_diff))
 aTB_QALYgain.df <- data.frame(Reduce(rbind, aTB_QALYgain))
 
+scenario.names <- as.character(c(0, seq_len(n.scenarios)))
+
 aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.df))
-colnames(aTB_cost_diff.df) <- as.character(0:nrow(mc_cost_scenarios))
+colnames(aTB_cost_diff.df) <- scenario.names
 
 aTB_QALYgain.df <- t(rbind(0, aTB_QALYgain.df))
-colnames(aTB_QALYgain.df) <- as.character(0:nrow(mc_cost_scenarios))
+colnames(aTB_QALYgain.df) <- scenario.names
 
 
-# multiple scenarios
+# convert LTBI screening dataframes
 mc_cost_scenarios <- read.csv(file = "ext-data/mc_cost.csv", header = FALSE)
 mc_health_scenarios <- read.csv(file = "ext-data/mc_health.csv", header = FALSE)
 
 c.total <- t(rbind(0, mc_cost_scenarios))
-colnames(c.total) <- as.character(0:nrow(mc_cost_scenarios))
+colnames(c.total) <- scenario.names
 
 e.total <- t(rbind(0, -mc_health_scenarios))
-colnames(e.total) <- as.character(0:nrow(mc_health_scenarios))
+colnames(e.total) <- scenario.names
+
 
 e.total <- e.total + aTB_QALYgain.df
 c.total <- c.total + aTB_cost_diff.df

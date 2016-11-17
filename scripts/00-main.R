@@ -42,6 +42,6 @@ source("scripts/04b-cost-effectiveness_QALY-costs.R")
 
 # output plots ------------------------------------------------------------
 
-source("scripts/05a-output-plots_competing_risks.R")
+# source("scripts/05a-output-plots_competing_risks.R")
 source("scripts/05b-output-plots_cost_effectiveness.R")
 
