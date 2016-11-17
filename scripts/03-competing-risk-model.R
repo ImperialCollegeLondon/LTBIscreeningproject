@@ -89,24 +89,6 @@ IMPUTED_sample <- data.frame(IMPUTED_sample, x)
 n.tb_screen <- apply(x, 2, table)
 
 
-# individuals who have changed from tb to non-tb
-# are now censored times
-IMPUTED_sample <- transform(IMPUTED_sample,
-                            cens1_screen  = cens1  | (uk_tb==0 & uk_tb_orig==1),
-                            cens2_screen  = cens2  | (uk_tb==0 & uk_tb_orig==1),
-                            cens3_screen  = cens3  | (uk_tb==0 & uk_tb_orig==1),
-                            cens4_screen  = cens4  | (uk_tb==0 & uk_tb_orig==1),
-                            cens5_screen  = cens5  | (uk_tb==0 & uk_tb_orig==1),
-                            cens6_screen  = cens6  | (uk_tb==0 & uk_tb_orig==1),
-                            cens7_screen  = cens7  | (uk_tb==0 & uk_tb_orig==1),
-                            cens8_screen  = cens8  | (uk_tb==0 & uk_tb_orig==1),
-                            cens9_screen  = cens9  | (uk_tb==0 & uk_tb_orig==1),
-                            cens10_screen = cens10 | (uk_tb==0 & uk_tb_orig==1))
-##TODO##
-# use followup and imputed death, leave uk times
-
-
-
 # fit Kaplan-Meier to _screened_ data directly
 
 # redo year split with updated tb events

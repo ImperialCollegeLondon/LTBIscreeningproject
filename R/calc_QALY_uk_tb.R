@@ -1,12 +1,12 @@
 
-#' calc_QALY_uk_tb
+#' Calculate QALYs for uk_tb Cases
 #'
-#' person-perspective or than NHS-perspective
+#' person-perspective or NHS-perspective
 #'
-#' @param data
-#' @param utility.disease_free
-#' @param utility.case
-#' @param endpoint
+#' @param data  Data set with tb status, death, exit uk and notification times
+#' @param utility.disease_free value
+#' @param utility.case value
+#' @param endpoint either death or exit uk
 #'
 #' @return
 #' @export
@@ -23,12 +23,14 @@ calc_QALY_uk_tb <- function(data,
   stopifnot(utility.case>=0, utility.case<=1)
 
   uk_tb_only <- subset(data, uk_tb==1)
+  days_in_year <- 365
+
   if (endpoint=="death"){
 
-    timetoevent <-  with(uk_tb_only, floor((date_death1_issdt - rNotificationDate_issdt)/365))
+    timetoevent <-  with(uk_tb_only, floor((date_death1_issdt - rNotificationDate_issdt)/days_in_year))
   }else if (endpoint=="exit uk"){
 
-    timetoevent <-  with(uk_tb_only, floor((date_exit_uk1_issdt - rNotificationDate_issdt)/365))
+    timetoevent <-  with(uk_tb_only, floor((date_exit_uk1_issdt - rNotificationDate_issdt)/days_in_year))
   }
 
   timetoevent[timetoevent<0] <- 0
@@ -38,7 +40,7 @@ calc_QALY_uk_tb <- function(data,
 
   death <- QALY::calc_QALY_population(utility = utility.case,
                                       time_horizons = 1)
-  death <- rep(QALY.uk_tb_death, length(QALY_diseasefree))
+  death <- rep(death, length(diseasefree))
 
 
   cured <- QALY::calc_QALY_population(utility = c(utility.case, utility.disease_free),

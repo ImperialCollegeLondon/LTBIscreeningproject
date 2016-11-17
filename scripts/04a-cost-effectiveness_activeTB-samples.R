@@ -21,7 +21,7 @@ library(data.table)
 
 # create variables --------------------------------------------------------
 
-# read-in random sample of proportion of LTBI -> disease-free
+# read-in random samples of proportion of LTBI -> disease-free
 p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", header = FALSE)
 names(p.complete_treat_scenarios) <- who_levels
 p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
@@ -35,10 +35,6 @@ n.uk_tbX <- N.mc
 uk_tbX_names <- paste("uk_tb", seq_len(n.uk_tbX), sep = "")
 
 # individual tb status for each scenario
-# uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample$uk_tb,
-#                                         nrow = n.pop,
-#                                         ncol = n.uk_tbX, byrow = FALSE))
-
 uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample_year_cohort$uk_tb,
                                         nrow = pop_year,
                                         ncol = n.uk_tbX, byrow = FALSE))
@@ -46,6 +42,7 @@ names(uk_tb_scenarios) <- uk_tbX_names
 
 n.tb_screen <- list()
 
+uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 
 
 #################################
@@ -60,15 +57,14 @@ for (scenario in seq_len(n.scenarios)){
   setkey(p.completeTx, "who_prev_cat_Pareek2011")
 
   # prob completing LTBI Tx for each cohort individual
-  # p.complete_treat_sample <- p.completeTx[as.character(IMPUTED_sample$who_prev_cat_Pareek2011), value]
-  p.complete_treat_sample <- p.completeTx[as.character(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011), value]
+  who_prev_cat <- as.character(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
+  p.complete_treat_sample <- p.completeTx[who_prev_cat, value]
 
   # sample new tb status for n.uk_tbX samples
   for (tbsample in uk_tbX_names){
 
-    # uk_tb_scenarios[uk_tb_TRUE, tbsample] <- uk_tb_after_screen(uk_tb_TRUE,
     uk_tb_scenarios[uk_tb_TRUE_year, tbsample] <- uk_tb_after_screen(uk_tb_TRUE_year,
-                                                                p.complete_treat_sample)
+                                                                     p.complete_treat_sample)
   }
 
   # number active TB cases _after_ screening

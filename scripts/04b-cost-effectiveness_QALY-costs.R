@@ -6,28 +6,22 @@
 # QALY loss and cost due to active TB
 
 
-
-# total sample
-# QALY_uk_tb <- calc_QALY_uk_tb(IMPUTED_sample,
-#                               utility.disease_free,
-#                               utility.case,
-#                               endpoint = "death")
-
 # single year
 QALY_uk_tb <- calc_QALY_uk_tb(IMPUTED_sample_year_cohort,
                               utility.disease_free,
-                              utility.case,
+                              utility.activeTB,
                               endpoint = "death")
+
+cfr_age_groups <- IMPUTED_sample_year_cohort$cfr_age_groups[uk_tb_TRUE_year]
 
 
 # imputed samples QALYs and cost ----------------------------------------------
 
 # CFR for each active TB case
-# cfr_age_groups_uk_tb <- cfr_age_lookup[sample.uk_tb_only$cfr_age_groups, "cfr"]
-cfr_age_groups_uk_tb <- cfr_age_lookup[sample.uk_tb_only_year$cfr_age_groups, "cfr"]
+cfr_uk_tb <- cfr_age_lookup[cfr_age_groups, "cfr"]
 
 ## random sample death status due to active TB
-uk_tb_death.statusquo <- (cfr_age_groups_uk_tb > runif(length(cfr_age_groups_uk_tb)))
+uk_tb_death.statusquo <- (cfr_uk_tb > runif(length(cfr_uk_tb)))
 
 ## status-quo
 totalQALY.statusquo <- QALY_uk_tb$cured
@@ -52,8 +46,8 @@ for (scenario in seq_len(n.scenarios)){
 
     totalQALY.screened <- totalQALY.statusquo
 
-    n.diseasefree <- n.tb - n.tb_screen[[scenario]]["uk_tb", sim]
-    which_diseasefree <- sample(1:n.tb, n.diseasefree)
+    n.diseasefree <- n.tb_year - n.tb_screen[[scenario]]["uk_tb", sim]
+    which_diseasefree <- sample(1:n.tb_year, n.diseasefree)
 
     totalQALY.screened[which_diseasefree] <- QALY_uk_tb$diseasefree[which_diseasefree]
 
