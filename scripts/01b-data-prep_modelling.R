@@ -8,7 +8,6 @@
 # define entry cohort in terms of LTBI prevalence and size by year
 
 
-library(data.table)
 library(dplyr)
 
 
@@ -22,7 +21,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
 
-# match prevalence groups in dataset to paper
+# match active TB prevalence groups in dataset to paper
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
@@ -50,7 +49,8 @@ rNotificationDate_issdt.years <- as.numeric(IMPUTED_sample$rNotificationDate_iss
 
 
 IMPUTED_sample <- data.frame(IMPUTED_sample,
-                             rNotificationDate_issdt)
+                             rNotificationDate_issdt,
+                             rNotificationDate_issdt.years)
 
 
 rm(cols_eventdate, cols_fup,
