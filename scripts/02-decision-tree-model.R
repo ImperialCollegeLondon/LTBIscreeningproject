@@ -38,10 +38,10 @@ scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx", sheet 
 
 for (i in seq_along(who_levels)){
 
-  osNode.cost$Set(p = p.who[i],
+  osNode.cost$Set(p = p.who_year[i],
                   filterFun = function(x) x$name==who_levels[i])
 
-  osNode.health$Set(p = p.who[i],
+  osNode.health$Set(p = p.who_year[i],
                     filterFun = function(x) x$name==who_levels[i])
 }
 rm(i)

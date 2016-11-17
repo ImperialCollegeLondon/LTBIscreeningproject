@@ -17,7 +17,7 @@ IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
-# define entry cohort -----------------------------------------------------
+# define and clean data ---------------------------------------------------
 
 source("scripts/01a-data-prep_simulation-constants.R")
 source("scripts/01b-data-prep_modelling.R")
@@ -29,7 +29,7 @@ source("scripts/01c-data-prep_cost-effectiveness.R")
 source("scripts/02-decision-tree-model.R")
 
 
-# survival model ----------------------------------------------------------
+# survival models ---------------------------------------------------------
 
 # source("scripts/03a-competing-risk-model_statusquo.R")
 # source("scripts/03b-competing-risk-model_screening.R")

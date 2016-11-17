@@ -146,6 +146,17 @@ IMPUTED_sample <- transform(IMPUTED_sample,
 
 # yearly entry cohort size by age and prevalence ---------------------------
 
+# total sample size
+n.pop <- nrow(IMPUTED_sample)
+
+# keep pre-screened status
+IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+
+# active TB case fatality rate age groups
+IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years,
+                                     breaks = c(15, 45, 65, 200),
+                                     right = FALSE)
+
 # extract year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
@@ -160,8 +171,6 @@ entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev
 entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
 entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
 
-# total sample size
-n.pop <- nrow(IMPUTED_sample)
 
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(rep(1, n.pop),
@@ -169,41 +178,22 @@ entryCohort_poptotal <- aggregate(rep(1, n.pop),
 names(entryCohort_poptotal) <- c("year", "pop")
 
 
-# keep pre-screened status
-IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-
-# active TB case fatality rate age groups
-IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years,
-                                     breaks = c(15, 45, 65, 200),
-                                     right = FALSE)
-
 age_at_fup <- IMPUTED_sample$age_at_entry + floor(IMPUTED_sample$fup1_issdt/365)
 
 # logical active TB status of original data
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
-sample.uk_tb_only <- IMPUTED_sample[uk_tb_TRUE, ]
-
-
-uk_tb_only.notification_to_allcause_death <- with(sample.uk_tb_only,
-                                                  floor((date_death1_issdt - rNotificationDate_issdt)/365))
-
-##TODO##
-# why are some of these -ve?
-
-# for purpose of calculating QALYs
-uk_tb_only.notification_to_allcause_death[uk_tb_only.notification_to_allcause_death<0] <- 0
+uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 
 
 # summary statistics ------------------------------------------------------
 
 # cohort size at arrival to uk
-n.pop <- sum(entryCohort_poptotal$pop)
 pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 
 # number of active TB cases _before_ screening
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
-p.who <- entryCohort_who_prop[[year_cohort]]
-who_levels <- names(p.who)
+p.who_year <- entryCohort_who_prop[[year_cohort]]
+who_levels <- names(p.who_year)
 

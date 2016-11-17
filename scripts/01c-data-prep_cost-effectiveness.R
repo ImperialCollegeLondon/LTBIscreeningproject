@@ -42,25 +42,42 @@ rownames(cfr_age_lookup) <- cfr_age_lookup$age
 #########
 
 # active TB diagnosis:
-culture_cost <- QALY::inflation_adjust_cost(from_year = 2015, to_year = 2016, from_cost = 22.29)  #Drobniewski (2015)
-xray_cost  <- QALY::inflation_adjust_cost(from_year = 2011, to_year = 2016, from_cost = 16.54)    #NICE guidance CG117
-smear_cost <- QALY::inflation_adjust_cost(from_year = 2015, to_year = 2016, from_cost = 8.23)     #2015 #Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis
+culture_cost <- QALY::inflation_adjust_cost(from_year = 2015,
+                                            to_year = 2016,
+                                            from_cost = 22.29)  #Drobniewski (2015)
+
+xray_cost  <- QALY::inflation_adjust_cost(from_year = 2011,
+                                          to_year = 2016,
+                                          from_cost = 16.54)    #NICE guidance CG117
+
+smear_cost <- QALY::inflation_adjust_cost(from_year = 2015,
+                                          to_year = 2016,
+                                          from_cost = 8.23)     #2015 #Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis
 
 aTB_Dx_cost <- culture_cost + xray_cost + smear_cost
 
 # active TB treatment:
-aTB_Tx_cost <- QALY::inflation_adjust_cost(from_year = 2014, to_year = 2016, from_cost = 5329)  #2014 #Jit& White/ NICE guidance CG117
+aTB_Tx_cost <- QALY::inflation_adjust_cost(from_year = 2014,
+                                           to_year = 2016,
+                                           from_cost = 5329)  #2014 #Jit& White/ NICE guidance CG117
 # gamma(8.333, 639.435)
 
 aTB_TxDx_cost <- aTB_Dx_cost + aTB_Tx_cost
 
 
 # adverse effects of LTBI Tx
-vomiting_cost <- QALY::inflation_adjust_cost(from_year = 2013, to_year = 2016, from_cost = 63)        #Jit&White/ NHS Reference costs (Curtis 2013)
-hepatotoxicity_cost <- QALY::inflation_adjust_cost(from_year = 2011, to_year = 2016, from_cost = 587) #Jit&White/ Pareek et al. 2011
+vomiting_cost <- QALY::inflation_adjust_cost(from_year = 2013,
+                                             to_year = 2016,
+                                             from_cost = 63)        #Jit&White/ NHS Reference costs (Curtis 2013)
+
+hepatotoxicity_cost <- QALY::inflation_adjust_cost(from_year = 2011,
+                                                   to_year = 2016,
+                                                   from_cost = 587) #Jit&White/ Pareek et al. 2011
 
 # LTBI complete treatment
-LTBI_Tx_cost <- QALY::inflation_adjust_cost(from_year = 2006, to_year = 2016, from_cost = 483.74)        #HTA VOLUME 20 ISSUE 38 MAY 2016 ISSN 1366-527, p.8
+LTBI_Tx_cost <- QALY::inflation_adjust_cost(from_year = 2006,
+                                            to_year = 2016,
+                                            from_cost = 483.74)        #HTA VOLUME 20 ISSUE 38 MAY 2016 ISSN 1366-527, p.8
 
 
 
