@@ -10,7 +10,7 @@ library(readxl)
 library(data.tree)
 library(treeSimR)
 
-options("max.print"=2000)
+options("max.print" = 2000)
 
 
 # initiate decision tree --------------------------------------------------

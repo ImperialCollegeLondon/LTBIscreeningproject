@@ -19,8 +19,9 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 # define entry cohort -----------------------------------------------------
 
-source("scripts/01a-data-prep_modelling.R")
-source("scripts/01b-data-prep_cost-effectiveness.R")
+source("scripts/01a-data-prep_simulation-constants.R")
+source("scripts/01b-data-prep_modelling.R")
+source("scripts/01c-data-prep_cost-effectiveness.R")
 
 
 # decision tree -----------------------------------------------------------
