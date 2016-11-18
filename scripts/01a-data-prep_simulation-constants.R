@@ -23,4 +23,4 @@ screen_age_range <- 18:35
 # screen_age_range <- 18:45   ##TODO##
 
 # year_cohort <- '2012' #latest full year
-year_cohort <- '2009' #largest population
+year_cohort <- '2009' #largest cohort

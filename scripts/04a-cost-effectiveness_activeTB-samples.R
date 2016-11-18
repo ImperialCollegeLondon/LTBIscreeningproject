@@ -18,7 +18,6 @@ library(reshape)
 library(data.table)
 
 
-
 # create variables --------------------------------------------------------
 
 # read-in random samples of proportion of LTBI -> disease-free
@@ -31,18 +30,12 @@ hash <- melt(p.complete_treat_scenarios,
 
 
 # number of active TB case samples
-n.uk_tbX <- N.mc
-uk_tbX_names <- paste("uk_tb", seq_len(n.uk_tbX), sep = "")
-
-# individual tb status for each scenario
-uk_tb_scenarios <- as.data.frame(matrix(IMPUTED_sample_year_cohort$uk_tb,
-                                        nrow = pop_year,
-                                        ncol = n.uk_tbX, byrow = FALSE))
-names(uk_tb_scenarios) <- uk_tbX_names
+uk_tbX_names <- paste("uk_tb", seq_len(N.mc), sep = "")
 
 n.tb_screen <- list()
 
 uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
+
 
 
 #################################
@@ -53,6 +46,9 @@ uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 
 for (scenario in seq_len(n.scenarios)){
 
+  # individual tb status for each scenario
+  uk_tb_scenarios <- c(NULL, NULL)
+
   p.completeTx <- data.table(hash[hash$scenario==scenario, ])
   setkey(p.completeTx, "who_prev_cat_Pareek2011")
 
@@ -60,17 +56,20 @@ for (scenario in seq_len(n.scenarios)){
   who_prev_cat <- as.character(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
   p.complete_treat_sample <- p.completeTx[who_prev_cat, value]
 
-  # sample new tb status for n.uk_tbX samples
+  # sample new tb status for N.mc samples
   for (tbsample in uk_tbX_names){
 
-    uk_tb_scenarios[uk_tb_TRUE_year, tbsample] <- uk_tb_after_screen(uk_tb_TRUE_year,
-                                                                     p.complete_treat_sample)
+    uk_tbX_after_screen <- sample_uk_tb(prob = p.complete_treat_sample, is.tb = uk_tb_TRUE_year)
+
+    uk_tb_scenarios <- rbind(uk_tb_scenarios,
+                             data.frame(sim = tbsample,  status = uk_tbX_after_screen))
   }
 
-  # number active TB cases _after_ screening
-  n.tb_screen[[scenario]] <- apply(uk_tb_scenarios, 2, table)
-  rownames(n.tb_screen[[scenario]]) <- c("disease-free", "uk_tb")
-
-  ##TODO##
-  #data.table version of table()
+  # counts of active TB cases _after_ screening
+  n.tb_screen[[scenario]] <- uk_tb_scenarios %>%
+                              group_by(sim, status) %>%
+                              tally()
+  # rename tb status
+  n.tb_screen[[scenario]]$status <- plyr::revalue(as.factor(n.tb_screen[[scenario]]$status),
+                                                  c("0"="disease-free", "1"="uk_tb"))
 }

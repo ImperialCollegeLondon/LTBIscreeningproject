@@ -62,6 +62,17 @@ ceac.plot(screen.bcea)
 
 # money saved/cases averted over time
 
+#status-quo
+
+notif_eventtime <- na.omit(IMPUTED_sample_year_cohort$rNotificationDate_issdt)
+
+CDF <- ecdf(notif_eventtime)
+plot(CDF, yaxt='n', xlab="Days", main="Raw cumulative counts of active TB cases", pch = NA)
+# axis(side = 2, at = 1, tck = 0.01, labels = sum(IMPUTED_sample$uk_tb), las = "2")
+axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), las = "2") # direct cost of active TB diagnosis and treatment
+
+
+
 # probability cost-effective for adherence vs uptake, for given costs per test
 ## graphs
 ## mesh/contour

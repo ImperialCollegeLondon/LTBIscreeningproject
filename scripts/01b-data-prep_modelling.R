@@ -69,15 +69,8 @@ IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotification
 # extract year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
-IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
-
 # single year sample
-IMPUTED_sample_year_cohort <- IMPUTED_sample_splityear[[year_cohort]]
-
-# age and active TB prevalence WHO classification tables split for each year cohort
-entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011))
-entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
-
+IMPUTED_sample_year_cohort <- filter(IMPUTED_sample, issdt_year==year_cohort)
 
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(rep(1, n.pop),
@@ -98,6 +91,9 @@ pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
-p.who_year <- entryCohort_who_prop[[year_cohort]]
+p.who_year <- prop.table(table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011))
+
 who_levels <- names(p.who_year)
+
+
 
