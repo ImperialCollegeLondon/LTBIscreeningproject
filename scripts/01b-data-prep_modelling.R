@@ -30,12 +30,6 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 # create time-to-events in days --------------------------
 # from uk entry to event dates
 
-# find all columns with follow-up time imputations
-cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
-
-# find all columns with either exit uk or death event time imputations
-cols_eventdate <- grepl(pattern = "date_exit_uk|date_death", x = names(IMPUTED_sample))
-
 IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
 
 # days to arrival in uk from time origin
@@ -53,10 +47,9 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
                              rNotificationDate_issdt.years)
 
 
-rm(cols_eventdate, cols_fup,
-   issdt.asnumeric,
-   rNotificationDate.asnumeric, rNotificationDate_issdt,
-   screen_age_range)
+rm(issdt.asnumeric,
+   rNotificationDate.asnumeric,
+   rNotificationDate_issdt)
 
 
 
@@ -82,11 +75,8 @@ IMPUTED_sample_splityear <- split(IMPUTED_sample, IMPUTED_sample$issdt_year)
 IMPUTED_sample_year_cohort <- IMPUTED_sample_splityear[[year_cohort]]
 
 # age and active TB prevalence WHO classification tables split for each year cohort
-# entryCohort_age <- lapply(IMPUTED_sample_splityear, function(x) dplyr::group_by(x, age_at_entry) %>% tally())
-entryCohort_age <- lapply(IMPUTED_sample_splityear, function(x) table(x$age_at_entry))
 entryCohort_who <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011))
 entryCohort_who_prop <- lapply(IMPUTED_sample_splityear, function(x) prop.table(table(x$who_prev_cat_Pareek2011)))
-entryCohort_age_who  <- lapply(IMPUTED_sample_splityear, function(x) table(x$who_prev_cat_Pareek2011, x$age_at_entry))
 
 
 # total sample sizes for each yearly cohort
@@ -94,8 +84,6 @@ entryCohort_poptotal <- aggregate(rep(1, n.pop),
                                   by = list(IMPUTED_sample$issdt_year), sum)
 names(entryCohort_poptotal) <- c("year", "pop")
 
-
-age_at_fup <- IMPUTED_sample$age_at_entry + floor(IMPUTED_sample$fup1_issdt/365)
 
 # logical active TB status of original data
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
