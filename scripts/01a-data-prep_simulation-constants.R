@@ -10,10 +10,10 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 100
+N.mc <- 1000
 
 # n.scenarios <- nrow(scenario_parameter_cost)
-n.scenarios <- 2
+n.scenarios <- 3
 
 
 
@@ -24,3 +24,6 @@ screen_age_range <- 18:35
 
 # year_cohort <- '2012' #latest full year
 year_cohort <- '2009' #largest cohort
+
+
+threshold <- 20000  #£

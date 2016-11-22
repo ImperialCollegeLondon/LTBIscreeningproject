@@ -20,11 +20,17 @@ library(data.table)
 
 # create variables --------------------------------------------------------
 
+##TODO##
+# if not already in memory. check
+# ...
+
+
 # read-in random samples of proportion of LTBI -> disease-free
 p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", header = FALSE)
 names(p.complete_treat_scenarios) <- who_levels
 p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
 
+# look-up table
 hash <- melt(p.complete_treat_scenarios,
              variable_name = "who_prev_cat_Pareek2011")
 
@@ -43,6 +49,10 @@ uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 # cases for each scenario and   #
 # sample LTBI to disease-free   #
 #################################
+
+
+dirname <- sprintf("output/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
+dir.create(dirname)
 
 for (scenario in seq_len(n.scenarios)){
 
@@ -64,6 +74,11 @@ for (scenario in seq_len(n.scenarios)){
     uk_tb_scenarios <- rbind(uk_tb_scenarios,
                              data.frame(sim = tbsample,  status = uk_tbX_after_screen))
   }
+
+  ##TODO##
+
+  filename <- sprintf("uk_tb_scenarios_%d", scenario)
+  save(uk_tb_scenarios, file = filename)
 
   # counts of active TB cases _after_ screening
   n.tb_screen[[scenario]] <- uk_tb_scenarios %>%

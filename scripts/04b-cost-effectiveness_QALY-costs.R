@@ -17,11 +17,12 @@ cfr_age_groups <- IMPUTED_sample_year_cohort$cfr_age_groups[uk_tb_TRUE_year]
 # CFR for each active TB case
 cfr_uk_tb <- cfr_age_lookup[cfr_age_groups, "cfr"]
 
-## random sample death status due to active TB
-uk_tb_death.statusquo <- cfr_uk_tb > runif(n.tb_year)
 
 
 # status-quo --------------------------------------------------------------
+
+# random sample death status due to active TB
+uk_tb_death.statusquo <- cfr_uk_tb > runif(n.tb_year)
 
 totalQALY.statusquo <- QALY_uk_tb$cured
 totalQALY.statusquo[uk_tb_death.statusquo] <- QALY_uk_tb$death[uk_tb_death.statusquo]
@@ -69,6 +70,19 @@ for (scenario in seq_len(n.scenarios)){
 
     aTB_cost.screened[[scenario]] <- na.omit(aTB_cost.screened[[scenario]])
     aTB_cost_diff[[scenario]] <- (aTB_cost.screened[[scenario]] - aTB_cost.statusquo)/pop_year
+
+    # ICER
+    ICER[[scenario]] <- aTB_cost_diff/aTB_QALYgain
+
+    # INMB
+    INMB[[scenario]] <- aTB_QALYgain*threshold - aTB_cost_diff
+
+    # proportion CE at threshold/QALY
+    p.CostEffective[scenario] <- prop.table(table(INMB>0))
 }
+
+# save to file?
+save(aTB_cost_diff, file = "aTB_cost_diff")
+save(aTB_QALYgain, file = "aTB_QALYgain")
 
 

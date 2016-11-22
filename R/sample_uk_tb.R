@@ -1,7 +1,8 @@
+
 #'  Sample (Updated) Active TB Status
 #'
+#' @param prob probability of success (e.g. completing treatment) for all cohort
 #' @param is.tb is individual active TB case (logical)
-#' @param prob probability of success (e.g. completing treatment)
 #'
 #' @return (counterfactual) TB status for active TB cases
 #' @export

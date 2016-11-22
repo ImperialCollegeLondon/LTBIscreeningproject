@@ -14,11 +14,6 @@
 # since the other individuals unchanged
 
 
-##TODO##
-# for now just use one of the death time
-# date_deathX_issdt_names <- paste("date_death", seq_len(N.mc), "_issdt", sep="")
-
-
 
 # Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35

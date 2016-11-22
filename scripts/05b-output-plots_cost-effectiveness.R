@@ -10,6 +10,16 @@ library(ggplot2)
 library(BCEA)
 
 
+##TODO##
+# check
+# if data not in memory
+# read in from file
+
+if(!exists("aTB_cost_diff")) load("aTB_cost_diff")
+if(!exists("aTB_QALYgain")) load("aTB_QALYgain")
+
+
+
 # convert active TB lists to dataframes
 aTB_cost_diff.df <- data.frame(Reduce(rbind, aTB_cost_diff))
 aTB_QALYgain.df <- data.frame(Reduce(rbind, aTB_QALYgain))
