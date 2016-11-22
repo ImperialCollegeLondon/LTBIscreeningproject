@@ -10,10 +10,10 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 1000
+N.mc <- 10
 
 # n.scenarios <- nrow(scenario_parameter_cost)
-n.scenarios <- 3
+n.scenarios <- 10
 
 
 
@@ -27,3 +27,10 @@ year_cohort <- '2009' #largest cohort
 
 
 threshold <- 20000  #£
+
+
+# create output folder
+
+diroutput <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
+dir.create(diroutput)
+

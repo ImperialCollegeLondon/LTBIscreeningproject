@@ -138,13 +138,13 @@ for (scenario in seq_len(n.scenarios)){
 
   # cost-effectiveness outputs
   cat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),
-      file = "ext-data/mc_cost.csv", append = TRUE, fill = TRUE)
+      file = paste(diroutput, "mc_cost.csv", sep = "/"), append = TRUE, fill = TRUE)
 
   cat(x = paste(as.numeric(mc.health$`expected values`), collapse = ","),
-      file = "ext-data/mc_health.csv", append = TRUE, fill = TRUE)
+      file = paste(diroutput, "mc_health.csv", sep = "/"), append = TRUE, fill = TRUE)
 
-  # pathway probabilities
+  # defined pathway probabilities
   cat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse = ","),
-      file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", append = TRUE, fill = TRUE)
+      file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"), append = TRUE, fill = TRUE)
 }
 

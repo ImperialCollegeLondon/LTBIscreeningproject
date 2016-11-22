@@ -10,14 +10,8 @@ library(ggplot2)
 library(BCEA)
 
 
-##TODO##
-# check
-# if data not in memory
-# read in from file
-
-if(!exists("aTB_cost_diff")) load("aTB_cost_diff")
-if(!exists("aTB_QALYgain")) load("aTB_QALYgain")
-
+if(!exists("aTB_cost_diff")) load(paste(diroutput, "aTB_cost_diff.RData", sep="/"))
+if(!exists("aTB_QALYgain")) load(paste(diroutput, "aTB_QALYgain.RData", sep="/"))
 
 
 # convert active TB lists to dataframes
@@ -68,8 +62,6 @@ ceac.plot(screen.bcea)
 
 
 
-##TODO##
-
 # money saved/cases averted over time
 
 #status-quo
@@ -84,7 +76,27 @@ axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), la
 
 
 # probability cost-effective for adherence vs uptake, for given costs per test
-## graphs
-## mesh/contour
 
+COST <- 20
+
+e.INMB <- plyr::ldply(INMB, mean)
+
+dat <- gdata::cbindX(scenario_parameter_cost, scenario_parameter_p, e.INMB)
+names(dat) <- make.names(names(dat), unique = TRUE)
+
+dat.plot <- dat[dat$Agree.to.Screen==COST, ] #specific unit cost
+dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #remove duplilcates
+
+# contours
+ggplot(data = dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
+  stat_contour()
+
+# colour areas
+ggplot(dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
+  stat_contour(geom = 'polygon', aes(fill = ..level..)) +
+  geom_tile(aes(fill = V1)) +
+  #stat_contour(bins = 15) +
+  xlab('') +
+  ylab('') +
+  guides(fill = guide_colorbar(title = ''))
 
