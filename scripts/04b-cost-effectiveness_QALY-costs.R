@@ -41,6 +41,8 @@ aTB_cost_diff <- list()
 
 for (scenario in seq_len(n.scenarios)){
 
+  print(sprintf("scenario: %d", scenario))
+
   aTB_cost.screened[[scenario]] <- NA
   ICER[[scenario]] <- NA
   INMB[[scenario]] <- NA

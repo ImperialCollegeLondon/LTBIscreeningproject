@@ -23,7 +23,7 @@ library(data.table)
 # read-in random samples of proportion of LTBI -> disease-free
 if(!exists("p.complete_treat_scenarios")){
 
-  p.complete_treat_scenarios <- read.csv(file = "ext-data/prob_complete_Tx_given_LTBI_by_who.csv", header = FALSE)
+  p.complete_treat_scenarios <- read.csv(file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"), header = FALSE)
   names(p.complete_treat_scenarios) <- who_levels
   p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
 }
@@ -51,6 +51,8 @@ uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 
 
 for (scenario in seq_len(n.scenarios)){
+
+  print(sprintf("scenario: %d", scenario))
 
   # individual tb status for each scenario
   uk_tb_scenarios <- c(NULL, NULL)
@@ -84,5 +86,7 @@ for (scenario in seq_len(n.scenarios)){
   save(uk_tb_scenarios, file = paste(diroutput, filename, sep="/"))
 
   filename <- sprintf("n.tb_screen - scenario_%d.RData", scenario)
-  save(n.tb_screen, file = paste(diroutput, filename, sep="/"))
+
+  n.tb_screen_scenario <- n.tb_screen[[scenario]]
+  save(n.tb_screen_scenario, file = paste(diroutput, filename, sep="/"))
 }
