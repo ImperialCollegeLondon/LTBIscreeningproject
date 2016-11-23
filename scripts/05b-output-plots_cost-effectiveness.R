@@ -28,8 +28,8 @@ colnames(aTB_QALYgain.df) <- scenario.names
 
 
 # convert LTBI screening dataframes
-mc_cost_scenarios <- read.csv(file = "ext-data/mc_cost.csv", header = FALSE)
-mc_health_scenarios <- read.csv(file = "ext-data/mc_health.csv", header = FALSE)
+mc_cost_scenarios <- read.csv(file = paste(diroutput, "mc_cost.csv", sep="/"), header = FALSE)
+mc_health_scenarios <- read.csv(file = paste(diroutput, "mc_health.csv", sep="/"), header = FALSE)
 
 c.total <- t(rbind(0, mc_cost_scenarios))
 colnames(c.total) <- scenario.names
@@ -77,7 +77,7 @@ axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), la
 
 # probability cost-effective for adherence vs uptake, for given costs per test
 
-COST <- 20
+COST <- 100
 
 e.INMB <- plyr::ldply(INMB, mean)
 
@@ -85,18 +85,24 @@ dat <- gdata::cbindX(scenario_parameter_cost, scenario_parameter_p, e.INMB)
 names(dat) <- make.names(names(dat), unique = TRUE)
 
 dat.plot <- dat[dat$Agree.to.Screen==COST, ] #specific unit cost
-dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #remove duplilcates
+dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #specific screening uptake
 
-# contours
+# contour
 ggplot(data = dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
+  theme_bw() +
   stat_contour()
 
-# colour areas
+# coloured mesh
 ggplot(dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
   stat_contour(geom = 'polygon', aes(fill = ..level..)) +
   geom_tile(aes(fill = V1)) +
   #stat_contour(bins = 15) +
-  xlab('') +
-  ylab('') +
+  xlab('Start treatment') +
+  ylab('Complete treatment') +
   guides(fill = guide_colorbar(title = ''))
+
+# http://stackoverflow.com/questions/38154679/r-adding-legend-and-directlabels-to-ggplot2-contour-plot
+
+
+
 

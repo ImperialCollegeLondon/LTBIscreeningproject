@@ -10,10 +10,10 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 10
+N.mc <- 200
 
 # n.scenarios <- nrow(scenario_parameter_cost)
-n.scenarios <- 10
+n.scenarios <- 180
 
 
 

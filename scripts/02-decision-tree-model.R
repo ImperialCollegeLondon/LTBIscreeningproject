@@ -52,9 +52,9 @@ rm(i)
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
-if(file.exists("ext-data/mc_cost.csv")) file.remove("ext-data/mc_cost.csv")
-if(file.exists("ext-data/mc_health.csv")) file.remove("ext-data/mc_health.csv")
-if(file.exists("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")) file.remove("ext-data/prob_complete_Tx_given_LTBI_by_who.csv")
+if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
+if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
+if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 
 
 for (scenario in seq_len(n.scenarios)){

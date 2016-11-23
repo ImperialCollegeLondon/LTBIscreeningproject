@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# QALY gain and cost due to active TB
+# QALY gain and cost due to active TB in uk
 
 
 QALY_uk_tb <- calc_QALY_uk_tb(IMPUTED_sample_year_cohort,
@@ -69,9 +69,10 @@ for (scenario in seq_len(n.scenarios)){
     aTB_cost.screened[[scenario]][simnum] <- aTB_cost.statusquo - (aTB_TxDx_cost * n.diseasefree)
   }
 
-    aTB_QALYgain[[scenario]] <- na.omit(aTB_QALYgain[[scenario]])/pop_year
+    aTB_QALYgain[[scenario]] <- aTB_QALYgain[[scenario]][!is.na(aTB_QALYgain[[scenario]])]
+    aTB_QALYgain[[scenario]] <- aTB_QALYgain[[scenario]]/pop_year
 
-    aTB_cost.screened[[scenario]] <- na.omit(aTB_cost.screened[[scenario]])
+    aTB_cost.screened[[scenario]] <- aTB_cost.screened[[scenario]][!is.na(aTB_cost.screened[[scenario]])]
     aTB_cost_diff[[scenario]] <- (aTB_cost.screened[[scenario]] - aTB_cost.statusquo)/pop_year
 
     # ICER
