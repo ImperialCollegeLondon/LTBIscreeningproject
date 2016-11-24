@@ -34,3 +34,6 @@ threshold <- 20000  #£
 diroutput <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
 dir.create(diroutput)
 
+
+# parameter_values_file <- "data/scenario_parameter_values.xlsx"
+parameter_values_file <- "data/scenario-parameter-values_adherence_completion.xlsx"

@@ -2,13 +2,14 @@
 #' Impute LTBI Status From Country of Origin
 #'
 #' @param data
+#' @param pLatentTB.who
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-impute_LTBI_status <- function(data) {
+impute_LTBI_status <- function(data, pLatentTB.who) {
 
   # prevalance group frequencies in data
   tab.who <- table(data$who_prev_cat_Pareek2011)
@@ -24,7 +25,7 @@ impute_LTBI_status <- function(data) {
   # sample LTBI status
   data$LTBI <- (runif(n = length(prob)) < prob)
 
-  # if active TB then assume LTBI
+  # if active TB then assumed LTBI
   data$LTBI[data$uk_tb=="1"] <- TRUE
 
   return(data)
