@@ -15,9 +15,6 @@ options("max.print" = 2000)
 
 # initiate decision tree --------------------------------------------------
 
-##TODO##
-# see if can build tree from smaller trees...
-
 # create decision tree
 ## cost
 osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-cost.yaml")
@@ -29,12 +26,12 @@ osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-h
 # print(osNode.health, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
 # grid of parameter values for deterministic sensitivity analysis
-scenario_parameter_cost <- read_excel("data/scenario-parameter-values.xlsx", sheet = "cost")
-scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx", sheet = "p")
+scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
+scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
 
 
-# assign cohort WHO TB incidence group branching proportions, for given year -----------
+# assign cohort WHO TB incidence group branching proportions, for given year -------
 
 for (i in seq_along(who_levels)){
 
@@ -45,6 +42,20 @@ for (i in seq_along(who_levels)){
                     filterFun = function(x) x$name==who_levels[i])
 }
 rm(i)
+
+
+# assign LTBI probability to each who active TB group  ---------------------------
+
+for (i in who_levels){
+
+  pLTBI <- pLatentTB.who_year$LTBI[pLatentTB.who_year$who_prev_cat_Pareek2011==i]
+
+  osNode.cost$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+  osNode.health$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+
+  osNode.cost$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+  osNode.health$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+}
 
 
 
@@ -126,15 +137,13 @@ for (scenario in seq_len(n.scenarios)){
 
 
 
-  # sample total expected values ---------------------------------------------------------
+  # sample total expected values ------------------------------------------------
 
   mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
   mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
 
 
-  ########
-  # save #
-  ########
+  # save --------------------------------------------------------------------
 
   # cost-effectiveness outputs
   cat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),

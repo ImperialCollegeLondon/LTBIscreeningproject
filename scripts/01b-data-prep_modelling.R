@@ -27,6 +27,33 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 
 
 
+# LTBI probabilities by who active TB prevalence group --------------------
+
+# ref. Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+# ages 18-35 pooled
+pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
+
+# age-dependent prob of LTBI
+pLatentTB.who_18to35 <- matrix(pLatentTB.who, ncol = 18, nrow = length(pLatentTB.who))
+
+# ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
+# 20 to 35/36 to 45 years old => 16%/10%
+pLatentTB.who_36to45 <- matrix(pLatentTB.who*1.65, ncol = 10, nrow = length(pLatentTB.who))
+
+pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
+                                pLatentTB.who_18to35,
+                                pLatentTB.who_36to45)
+colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
+
+detach(package:reshape)
+pLatentTB.who_age.long <- reshape2:::melt(pLatentTB.who_age, id.vars = "who_prev_cat_Pareek2011", value.name = "pLTBI", variable.name = "age_at_entry")
+IMPUTED_sample_year_cohort <- merge(IMPUTED_sample_year_cohort, pLatentTB.who_age.long, by = c("age_at_entry", "who_prev_cat_Pareek2011"))
+
+pLatentTB.who_year <- plyr::ddply(IMPUTED_sample_year_cohort, "who_prev_cat_Pareek2011", function(df) mean(df$pLTBI))
+names(pLatentTB.who_year)[names(pLatentTB.who_year)=="V1"] <- "LTBI"
+
+
+
 # create time-to-events in days --------------------------
 # from uk entry to event dates
 
@@ -91,6 +118,7 @@ pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
+# probability in each who active TB category
 p.who_year <- prop.table(table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011))
 
 who_levels <- names(p.who_year)

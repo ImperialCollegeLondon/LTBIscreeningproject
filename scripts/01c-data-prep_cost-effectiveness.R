@@ -14,14 +14,6 @@
 # since the other individuals unchanged
 
 
-
-# Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
-# ages 18-35
-# <50/100,000: 3% LTBI
-# 51-150/100,000: 13% LTBI
-pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
-
-
 # 12 month case fatality rate
 # Crofts et al (2008)
 cfr_age_lookup <- data.frame(age = c("[15,45)", "[45,65)", "[65,200)"),

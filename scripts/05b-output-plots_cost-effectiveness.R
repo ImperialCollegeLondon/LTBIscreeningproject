@@ -37,9 +37,10 @@ colnames(c.total) <- scenario.names
 e.total <- t(rbind(0, -mc_health_scenarios))
 colnames(e.total) <- scenario.names
 
+popscale <- 100000
 
-e.total <- e.total + aTB_QALYgain.df
-c.total <- c.total + aTB_cost_diff.df
+e.total <- (e.total + aTB_QALYgain.df) * popscale
+c.total <- (c.total + aTB_cost_diff.df) * popscale
 
 
 
@@ -77,7 +78,7 @@ axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), la
 
 # probability cost-effective for adherence vs uptake, for given costs per test
 
-COST <- 100
+COST <- 20 #20, 50, 100
 
 e.INMB <- plyr::ldply(INMB, mean)
 
@@ -90,7 +91,7 @@ dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #specific screening upta
 # contour
 ggplot(data = dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
   theme_bw() +
-  stat_contour()
+  stat_contour(show.legend = TRUE)
 
 # coloured mesh
 ggplot(dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
