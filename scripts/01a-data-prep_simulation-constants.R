@@ -10,17 +10,18 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 200
+N.mc <- 2#00
 
-# n.scenarios <- nrow(scenario_parameter_cost)
-n.scenarios <- 180
+# n.scenarios <- 180
+n.scenarios <- 441
 
 
 
 # global constants --------------------------------------------------------
 
-screen_age_range <- 18:35
-# screen_age_range <- 18:45   ##TODO##
+# screen_age_range <- 18:35
+screen_age_range <- 18:45
+
 
 # year_cohort <- '2012' #latest full year
 year_cohort <- '2009' #largest cohort
@@ -36,4 +37,4 @@ dir.create(diroutput)
 
 
 # parameter_values_file <- "data/scenario_parameter_values.xlsx"
-parameter_values_file <- "data/scenario-parameter-values_adherence_completion.xlsx"
+parameter_values_file <- "data/scenario-parameter-values_adherence_completion.xls"

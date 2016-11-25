@@ -3,6 +3,7 @@
 # N Green
 # Nov 2016
 #
+# create grid of parameter values representing each scenario
 
 
 library(xlsx)

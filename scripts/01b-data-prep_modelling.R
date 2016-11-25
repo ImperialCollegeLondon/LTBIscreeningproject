@@ -9,7 +9,7 @@ l#
 
 
 library(dplyr)
-
+library(tidyr)
 
 
 ##TODO##
@@ -37,7 +37,7 @@ pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 pLatentTB.who_18to35 <- matrix(pLatentTB.who, ncol = 18, nrow = length(pLatentTB.who))
 
 # ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
-# 20 to 35/36 to 45 years old => 16%/10%
+# 20_to_35/36_to_45 years old => 16%/10%
 pLatentTB.who_36to45 <- matrix(pLatentTB.who*1.65, ncol = 10, nrow = length(pLatentTB.who))
 
 pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
@@ -46,12 +46,10 @@ pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
 colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
 
 detach(package:reshape)
+
+
 pLatentTB.who_age.long <- reshape2:::melt(pLatentTB.who_age, id.vars = "who_prev_cat_Pareek2011", value.name = "pLTBI", variable.name = "age_at_entry")
-IMPUTED_sample_year_cohort <- merge(IMPUTED_sample_year_cohort, pLatentTB.who_age.long, by = c("age_at_entry", "who_prev_cat_Pareek2011"))
-
-pLatentTB.who_year <- plyr::ddply(IMPUTED_sample_year_cohort, "who_prev_cat_Pareek2011", function(df) mean(df$pLTBI))
-names(pLatentTB.who_year)[names(pLatentTB.who_year)=="V1"] <- "LTBI"
-
+IMPUTED_sample <- merge(IMPUTED_sample, pLatentTB.who_age.long, by = c("age_at_entry", "who_prev_cat_Pareek2011"))
 
 
 # create time-to-events in days --------------------------
@@ -123,5 +121,10 @@ p.who_year <- prop.table(table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek201
 
 who_levels <- names(p.who_year)
 
+# probability LTBI for each who category for year cohort
+IMPUTED_sample_year_cohort %>%
+  group_by(who_prev_cat_Pareek2011) %>%
+  summarise(LTBI = mean(pLTBI)) %>%
+  complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
 
 
