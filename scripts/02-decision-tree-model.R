@@ -30,7 +30,6 @@ scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
 scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
 
-
 # assign cohort WHO TB incidence group branching proportions, for given year -------
 
 for (i in seq_along(who_levels)){
@@ -41,7 +40,6 @@ for (i in seq_along(who_levels)){
   osNode.health$Set(p = p.who_year[i],
                     filterFun = function(x) x$name==who_levels[i])
 }
-rm(i)
 
 
 # assign LTBI probability to each who active TB group  ---------------------------
@@ -56,7 +54,6 @@ for (i in who_levels){
   osNode.cost$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
   osNode.health$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
 }
-
 
 
 # sensitivity analysis ----------------------------------------------------
@@ -121,9 +118,6 @@ for (scenario in seq_len(n.scenarios)){
 
   # print(osNode.cost, "type", "p", "path_probs", "distn",
   #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
-
-  ##TODO##
-  ## with data.tree operations?
 
   # total probability successfully complete treatment of LTBI for each WHO category
   # use when know active TB cases in advance

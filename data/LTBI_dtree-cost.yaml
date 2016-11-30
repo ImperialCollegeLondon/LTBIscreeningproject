@@ -24,9 +24,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             p: 0.4185
@@ -47,10 +47,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -90,9 +93,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             p: 0.7929
@@ -113,10 +116,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -162,9 +168,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             p: 0.4185
@@ -185,10 +191,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -228,9 +237,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             p: 0.7929
@@ -251,10 +260,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -300,9 +312,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -323,10 +335,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -366,9 +381,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -389,10 +404,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -438,9 +456,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -461,10 +479,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -504,9 +525,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -527,10 +548,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -576,9 +600,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -599,10 +623,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1
@@ -642,9 +669,9 @@
           type: terminal
         Agree to Screen:
           p: 0.6
-          distn: gamma
-          mean: 30.34
-          sd: 1
+          distn: unif
+          min: 50
+          max: 106
           type: chance
           Test Negative:
             type: terminal
@@ -665,10 +692,13 @@
               max: 0
               type: terminal
             Start Treatment:
+            #LFT & hep A, B  & HIV test & test visit
               p: 0.7
-              distn: gamma
-              mean: 483.74
-              sd: 1
+              distn: unif
+              #min: 190 + 2.98 + 28.12 + 8.71 + 241
+              #max: 1146 + 2.98 + 28.12 + 8.71 + 241
+              min: 470.81
+              max: 1426.81
               type: chance
               Symptoms hepatotoxicity:
                 p: 1

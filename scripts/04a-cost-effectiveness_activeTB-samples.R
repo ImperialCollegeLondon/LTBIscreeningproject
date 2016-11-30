@@ -29,10 +29,9 @@ if(!exists("p.complete_treat_scenarios")){
 }
 
 # look-up table
-hash <- melt(p.complete_treat_scenarios,
-             variable_name = "who_prev_cat_Pareek2011",
-             id.vars = "scenario")
-
+hash <-
+  p.complete_treat_scenarios %>%
+  gather("who_prev_cat_Pareek2011", "value", -scenario)
 
 # number of active TB case samples
 uk_tbX_names <- paste("uk_tb", seq_len(N.mc), sep = "")

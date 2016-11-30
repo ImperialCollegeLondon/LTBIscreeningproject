@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# input data for QALY loss and cost due to active TB
+# input data for QALY loss and cost
 
 
 # assume that after active TB notification the risk of TB related death
@@ -14,9 +14,16 @@
 # since the other individuals unchanged
 
 
+
+threshold <- 20000  #£
+
+
 # 12 month case fatality rate
 # Crofts et al (2008)
-cfr_age_lookup <- data.frame(age = c("[15,45)", "[45,65)", "[65,200)"),
+cfr_age_breaks <- c(15, 45, 65, 200)
+cfr_age_levels <- levels(cut(0, cfr_age_breaks, right = FALSE))
+
+cfr_age_lookup <- data.frame(age = cfr_age_levels,
                              cfr = c(0.0018, 0.0476, 0.1755),
                              a = c(1, 125, 413), #beta distn
                              b = c(564, 2500, 1940))
@@ -68,7 +75,19 @@ LTBI_Tx_cost <- QALY::inflation_adjust_cost(from_year = 2006,
                                             to_year = 2016,
                                             from_cost = 483.74)        #HTA VOLUME 20 ISSUE 38 MAY 2016 ISSN 1366-527, p.8
 
+# LFT test
+LFT_test_cost <- QALY::inflation_adjust_cost(from_year = 2009,
+                                             to_year = 2016,
+                                             from_cost = 2.69)        #Lilford
 
+# hep B, C test
+hep_test_cost <- QALY::inflation_adjust_cost(from_year = 2009,
+                                             to_year = 2016,
+                                             from_cost = 25.42)        #
+# HIV test
+HIV_test_cost <- QALY::inflation_adjust_cost(from_year = 2010,
+                                             to_year = 2016,
+                                             from_cost = 8)        #
 
 ##########
 # health #

@@ -12,8 +12,8 @@
 # number of Monte Carlo iterations
 N.mc <- 2#00
 
-# n.scenarios <- 180
-n.scenarios <- 441
+# n.scenarios <- 180    #"data/scenario_parameter_values.xlsx"
+n.scenarios <- 441    #data/scenario-parameter-values_adherence_completion.xls"
 
 
 
@@ -25,9 +25,6 @@ screen_age_range <- 18:45
 
 # year_cohort <- '2012' #latest full year
 year_cohort <- '2009' #largest cohort
-
-
-threshold <- 20000  #£
 
 
 # create output folder

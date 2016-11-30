@@ -1,11 +1,9 @@
-l#
+#
 # project: LTBI screening
 # N Green
 # Oct 2016
 #
-# pre-process Rob's imputed dataset
-# impute LTBI status given country of origin
-# define entry cohort in terms of LTBI prevalence and size by year
+# pre-process R Aldridge, Lancet (2016) imputed dataset
 
 
 library(dplyr)
@@ -45,8 +43,7 @@ pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
                                 pLatentTB.who_36to45)
 colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
 
-detach(package:reshape)
-
+if("reshape"%in%loadedNamespaces()) detach(package:reshape)
 
 pLatentTB.who_age.long <- reshape2:::melt(pLatentTB.who_age, id.vars = "who_prev_cat_Pareek2011", value.name = "pLTBI", variable.name = "age_at_entry")
 IMPUTED_sample <- merge(IMPUTED_sample, pLatentTB.who_age.long, by = c("age_at_entry", "who_prev_cat_Pareek2011"))
@@ -88,7 +85,7 @@ IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 # active TB case fatality rate age groups
 IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years,
-                                     breaks = c(15, 45, 65, 200),
+                                     breaks = cfr_age_breaks,
                                      right = FALSE)
 
 # extract year only
@@ -122,9 +119,8 @@ p.who_year <- prop.table(table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek201
 who_levels <- names(p.who_year)
 
 # probability LTBI for each who category for year cohort
-IMPUTED_sample_year_cohort %>%
-  group_by(who_prev_cat_Pareek2011) %>%
-  summarise(LTBI = mean(pLTBI)) %>%
-  complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
-
+pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
+                        group_by(who_prev_cat_Pareek2011) %>%
+                        summarise(LTBI = mean(pLTBI)) %>%
+                        complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
 
