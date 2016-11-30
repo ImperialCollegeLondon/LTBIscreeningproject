@@ -11,7 +11,7 @@ library(BCEA)
 
 
 if(!exists("aTB_cost_diff")) load(paste(diroutput, "aTB_cost_diff.RData", sep="/"))
-if(!exists("aTB_QALYgain")) load(paste(diroutput, "aTB_QALYgain.RData", sep="/"))
+if(!exists("aTB_QALYgain"))  load(paste(diroutput, "aTB_QALYgain.RData", sep="/"))
 
 
 # convert active TB lists to dataframes
@@ -78,15 +78,19 @@ axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), la
 
 # probability cost-effective for adherence vs uptake, for given costs per test
 
-COST <- 20 #20, 50, 100
+COST <- 50 #20, 50, 100
 
+# expected incremental net benefit
 e.INMB <- plyr::ldply(INMB, mean)
 
-dat <- gdata::cbindX(scenario_parameter_cost, scenario_parameter_p, e.INMB)
+dat <- gdata::cbindX(scenario_parameter_cost,
+                     scenario_parameter_p,
+                     e.INMB)
+
 names(dat) <- make.names(names(dat), unique = TRUE)
 
 dat.plot <- dat[dat$Agree.to.Screen==COST, ] #specific unit cost
-dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #specific screening uptake
+# dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #specific screening uptake
 
 # contour
 ggplot(data = dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
@@ -102,7 +106,16 @@ ggplot(dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
   ylab('Complete treatment') +
   guides(fill = guide_colorbar(title = ''))
 
-# http://stackoverflow.com/questions/38154679/r-adding-legend-and-directlabels-to-ggplot2-contour-plot
+
+e.INMB.sq <- matrix(dat.plot$V1, 21)
+
+filled.contour(x = seq(0,1,by = 0.05), y = seq(0,1,by = 0.05), e.INMB.sq,
+               color = terrain.colors, xlab="Completed Treatment", ylab="Started Treatment",
+               #plot.axes = { axis(1, seq(100, 800, by = 100))
+               #  axis(2, seq(100, 600, by = 100)) },
+               key.title = title(main = "INMB\n(GBP)"),
+               nlevels = 5)
+               #key.axes = axis(4, seq(90, 190, by = 10)))  # maybe also asp = 1
 
 
 
