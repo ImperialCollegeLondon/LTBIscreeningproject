@@ -10,37 +10,43 @@ library(ggplot2)
 library(BCEA)
 
 
-if(!exists("aTB_cost_diff")) load(paste(diroutput, "aTB_cost_diff.RData", sep="/"))
-if(!exists("aTB_QALYgain"))  load(paste(diroutput, "aTB_QALYgain.RData", sep="/"))
+if(!exists("aTB_cost_diff")) load(paste(diroutput, "aTB_cost_diff.RData", sep = "/"))
+if(!exists("aTB_QALYgain"))  load(paste(diroutput, "aTB_QALYgain.RData", sep = "/"))
 
 
 # convert active TB lists to dataframes
-aTB_cost_diff.df <- data.frame(Reduce(rbind, aTB_cost_diff))
-aTB_QALYgain.df <- data.frame(Reduce(rbind, aTB_QALYgain))
+aTB_cost_diff.melt <- data.frame(Reduce(rbind, aTB_cost_diff))
+aTB_QALYgain.melt  <- data.frame(Reduce(rbind, aTB_QALYgain))
 
 scenario.names <- as.character(c(0, seq_len(n.scenarios)))
 
-aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.df))
-colnames(aTB_cost_diff.df) <- scenario.names
+# BCEA format
+# append status-quo scenario
+aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.melt))
+aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain.melt))
 
-aTB_QALYgain.df <- t(rbind(0, aTB_QALYgain.df))
-colnames(aTB_QALYgain.df) <- scenario.names
+colnames(aTB_cost_diff.df) <- scenario.names
+colnames(aTB_QALYgain.df)  <- scenario.names
 
 
 # convert LTBI screening dataframes
-mc_cost_scenarios <- read.csv(file = paste(diroutput, "mc_cost.csv", sep="/"), header = FALSE)
-mc_health_scenarios <- read.csv(file = paste(diroutput, "mc_health.csv", sep="/"), header = FALSE)
+mc_cost_scenarios <- read.csv(file = paste(diroutput, "mc_cost.csv", sep = "/"), header = FALSE)
+mc_health_scenarios <- read.csv(file = paste(diroutput, "mc_health.csv", sep = "/"), header = FALSE)
 
-c.total <- t(rbind(0, mc_cost_scenarios))
-colnames(c.total) <- scenario.names
+# BCEA format
+# append status-quo scenario
+mc_cost_scenarios.df <- t(rbind(0, mc_cost_scenarios))
+mc_health_scenarios.df <- t(rbind(0, -mc_health_scenarios))
 
-e.total <- t(rbind(0, -mc_health_scenarios))
-colnames(e.total) <- scenario.names
+colnames(mc_cost_scenarios.df) <- scenario.names
+colnames(mc_health_scenarios.df) <- scenario.names
+
+
 
 popscale <- 100000
 
-e.total <- (e.total + aTB_QALYgain.df) * popscale
-c.total <- (c.total + aTB_cost_diff.df) * popscale
+c.total <- (mc_cost_scenarios.df + aTB_cost_diff.df) * popscale
+e.total <- (mc_health_scenarios.df + aTB_QALYgain.df) * popscale
 
 
 

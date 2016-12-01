@@ -14,7 +14,7 @@
 # since the other individuals unchanged
 
 
-
+# willingness to pay
 threshold <- 20000  #£
 
 
