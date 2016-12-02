@@ -112,7 +112,6 @@ for (scenario in seq_len(n.scenarios)){
   # pathway probabilities ---------------------------------------------------
 
   # calculate total probabilities along each branch, from root to leaf
-  ## screening
   path_probs.screen <- treeSimR::calc_pathway_probs(osNode.cost)
   osNode.cost$Set(path_probs = path_probs.screen)
 
@@ -131,7 +130,7 @@ for (scenario in seq_len(n.scenarios)){
 
 
 
-  # sample total expected values ------------------------------------------------
+  # sample total expected values ---------------------------------------------
 
   mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
   mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)

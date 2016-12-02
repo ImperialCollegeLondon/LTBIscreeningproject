@@ -1,5 +1,5 @@
 
-#'  Sample (Updated) Active TB Status
+#' Sample (Updated) Active TB Status for Active TB Cases
 #'
 #' @param prob probability of success (e.g. completing treatment) for all cohort
 #' @param is.tb is individual active TB case (logical)

@@ -10,6 +10,7 @@
 # memory.size(max = 8000)
 
 
+# load("C:/Users/Nathan/Dropbox/TB/LTBI/data/IMPUTED_sample.RData")
 # data("IMPUTED_sample")
 
 
@@ -48,3 +49,9 @@ source("scripts/04b-cost-effectiveness_QALY-costs.R")
 # source("scripts/05a-output-plots_competing-risks.R")
 source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05c-output-plots_cost-effectiveness_active-TB-cases.R")
+
+
+
+# clean-up session --------------------------------------------------------
+if(grepl("temp", diroutput, ignore.case = TRUE))
+  unlink(diroutput)

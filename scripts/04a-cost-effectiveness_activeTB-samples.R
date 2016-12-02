@@ -79,13 +79,13 @@ for (scenario in seq_len(n.scenarios)){
                               tally()
   # rename tb status
   n.tb_screen[[scenario]]$status <- plyr::revalue(as.factor(n.tb_screen[[scenario]]$status),
-                                                  c("0"="disease-free", "1"="uk_tb"))
+                                                  c("0" = "disease-free", "1" = "uk_tb"))
 
   filename <- sprintf("uk_tb_scenarios - scenario_%d.RData", scenario)
-  save(uk_tb_scenarios, file = paste(diroutput, filename, sep="/"))
+  save(uk_tb_scenarios, file = paste(diroutput, filename, sep = "/"))
 
   filename <- sprintf("n.tb_screen - scenario_%d.RData", scenario)
 
   n.tb_screen_scenario <- n.tb_screen[[scenario]]
-  save(n.tb_screen_scenario, file = paste(diroutput, filename, sep="/"))
+  save(n.tb_screen_scenario, file = paste(diroutput, filename, sep = "/"))
 }

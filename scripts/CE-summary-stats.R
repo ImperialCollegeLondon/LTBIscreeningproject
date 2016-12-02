@@ -1,5 +1,15 @@
+#
+# project: LTBI screening
+# N Green
+# Nov 2016
+#
+# calculate cost-effectiveness statistics for results tables
+
 
 library(dplyr)
+
+
+# create a single 'long/tidy' output array
 
 aTB_cost_diff.melt$scenario <- seq_len(nrow(aTB_cost_diff.melt))
 aTB_cost_diff.melt <- tidyr::gather(aTB_cost_diff.melt, key = MCrun, value = value, -scenario)
@@ -28,48 +38,50 @@ health_diff <- transform(health_diff, health_diff = value.aTB + value.screen)
 total_diff <- dplyr::full_join(health_diff, cost_diff, by = c("scenario", "MCrun"), suffix = c(".health", ".cost"))
 
 
+
+total_diff.means <-
+  total_diff %>%
+  group_by(scenario) %>%
+  summarise(E.screen.cost = mean(value.screen.cost),
+            E.screen.health = mean(value.screen.health))
+
+E.cost.screened <- total_diff.means$E.screen.cost + E.aTB_cost.screened
+E.QALY.screened <- total_diff.means$E.screen.health + E.aTB_QALY.screened
+
+
+total_diff.mean$INMB20000 <- INMB(E.QALY.screened - E.aTB_QALY.statusquo,
+                                  E.cost.screened - E.aTB_cost.statusquo,
+                                  20000)
+
+total_diff.mean$INMB30000 <- INMB(E.QALY.screened - E.aTB_QALY.statusquo,
+                                  E.cost.screened - E.aTB_cost.statusquo,
+                                  30000)
+
+total_diff.mean$ICER <- ICER(E.QALY.screened - E.aTB_QALY.statusquo,
+                             E.cost.screened - E.aTB_cost.statusquo)
+
+
 ## not standard way of doing this
 # this is on each simulation and not the scenario averages
 # INMB
 total_diff$INMB20000 <- INMB(total_diff$health_diff, total_diff$cost_diff, 20000)
 total_diff$INMB30000 <- INMB(total_diff$health_diff, total_diff$cost_diff, 30000)
-
 # ICER
 total_diff$ICER <- ICER(total_diff$health_diff, total_diff$cost_diff)
 
-
-
-
+# prob INMB>0
 
 total_diff %>%
   group_by(scenario) %>%
-  summarise(E.screen.cost = mean(value.screen.cost),
-            E.screen.health = mean(value.screen.health))
+  summarise(sum(INMB20000>0)/length(INMB20000))
 
-E.cost.screened <- E.screen.cost + E.aTB_cost.screened
-E.QALY.screened <- E.screen.health + E.aTB_QALY.screened
-
-E.cost.statusquo
-E.QALY.statusquo
-
-INMB(E.QALY.screened - E.QALY.statusquo,
-     E.cost.screened - E.cost.statusquo,
-     20000)
-
-INMB(E.QALY.screened - E.QALY.statusquo,
-     E.cost.screened - E.cost.statusquo,
-     30000)
-
-ICER(E.QALY.screened - E.QALY.statusquo,
-     E.cost.screened - E.cost.statusquo)
+total_diff %>%
+  group_by(scenario) %>%
+  summarise(sum(INMB30000>0)/length(INMB30000))
 
 
-
+##TODO##
 # CEAC
-
-
-# prob INMB>0
-
 
 
 

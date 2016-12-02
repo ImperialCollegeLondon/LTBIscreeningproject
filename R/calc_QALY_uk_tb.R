@@ -1,14 +1,17 @@
 
-#' Calculate QALYs for uk_tb Cases
+#' Calculate QALYs for UK Active TB Cases
 #'
-#' person-perspective or NHS-perspective
+#' Assume that death when if happens is within the first year of active TB.
+#' Assume that active TB cases when treated and survive first year are fully cured.
+#'
+#' Consider person-perspective or NHS-perspective. by defining the time-to-event.
 #'
 #' @param data  Data set with tb status, death, exit uk and notification times
 #' @param utility.disease_free value
 #' @param utility.case value
 #' @param endpoint either death or exit uk
 #'
-#' @return
+#' @return list(diseasefree, death, cured)
 #' @export
 #'
 #' @examples

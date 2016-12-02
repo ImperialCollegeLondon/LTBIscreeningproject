@@ -10,13 +10,12 @@ library(ggplot2)
 library(BCEA)
 
 
-if(!exists("aTB_cost_diff")) load(paste(diroutput, "aTB_cost_diff.RData", sep = "/"))
-if(!exists("aTB_QALYgain"))  load(paste(diroutput, "aTB_QALYgain.RData", sep = "/"))
+if(!exists("CE_stats_indiv")) load(paste(diroutput, "CE_stats_indiv.RData", sep = "/"))
 
 
 # convert active TB lists to dataframes
-aTB_cost_diff.melt <- data.frame(Reduce(rbind, aTB_cost_diff))
-aTB_QALYgain.melt  <- data.frame(Reduce(rbind, aTB_QALYgain))
+aTB_cost_diff.melt <- data.frame(Reduce(rbind, CE_stats_indiv$aTB_cost_diff))
+aTB_QALYgain.melt  <- data.frame(Reduce(rbind, CE_stats_indiv$aTB_QALYgain))
 
 scenario.names <- as.character(c(0, seq_len(n.scenarios)))
 
