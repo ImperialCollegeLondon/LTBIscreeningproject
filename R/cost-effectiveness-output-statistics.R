@@ -1,5 +1,4 @@
 
-
 #' Incremental Net (Monetary) Benefit
 #'
 #' @param delta.e
@@ -11,7 +10,11 @@
 #'
 #' @examples
 #'
-INMB <- function(delta.e, delta.c, wtp){
+calc.INMB <- function(delta.e, delta.c, wtp){
+
+  if(wtp<0)
+    stop("Willingness to pay must be non-negative.")
+
   return(delta.e*wtp - delta.c)
 }
 
@@ -26,6 +29,10 @@ INMB <- function(delta.e, delta.c, wtp){
 #'
 #' @examples
 #'
-ICER <- function(delta.e, delta.c){
+calc.ICER <- function(delta.e, delta.c){
+
+  if(any(delta.e==0))
+    warning("One or more health difference is 0.")
+
   return(delta.c/delta.e)
 }
