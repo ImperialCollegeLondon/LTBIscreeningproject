@@ -10,6 +10,10 @@ library(dplyr)
 library(tidyr)
 
 
+
+IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
+
+
 ##TODO##
 # why are there missing issdt uk entry dates?
 # for now just remove them...
@@ -32,7 +36,9 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 
 # age-dependent prob of LTBI
-pLatentTB.who_18to35 <- matrix(pLatentTB.who, ncol = 18, nrow = length(pLatentTB.who))
+pLatentTB.who_18to35 <- matrix(data = pLatentTB.who,
+                               ncol = 18,
+                               nrow = length(pLatentTB.who))
 
 # ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
 # 20_to_35/36_to_45 years old => 16%/10%
@@ -45,8 +51,24 @@ colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
 
 if("reshape"%in%loadedNamespaces()) detach(package:reshape)
 
-pLatentTB.who_age.long <- reshape2:::melt(pLatentTB.who_age, id.vars = "who_prev_cat_Pareek2011", value.name = "pLTBI", variable.name = "age_at_entry")
-IMPUTED_sample <- merge(IMPUTED_sample, pLatentTB.who_age.long, by = c("age_at_entry", "who_prev_cat_Pareek2011"))
+pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
+                                          id.vars = "who_prev_cat_Pareek2011",
+                                          value.name = "pLTBI",
+                                          variable.name = "age_at_entry")
+
+IMPUTED_sample <- merge(x = IMPUTED_sample,
+                        y = pLatentTB.who_age.long,
+                        by = c("age_at_entry", "who_prev_cat_Pareek2011"))
+
+#
+#
+##TODO##
+# when we assume the older ages are just 0.3 as well
+#
+#
+#
+#
+
 
 
 # create time-to-events in days --------------------------
@@ -61,7 +83,7 @@ issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
 # days from uk entry to active tb
 rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - as.Date("1960-01-01")
 rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
-rNotificationDate_issdt.years <- as.numeric(IMPUTED_sample$rNotificationDate_issdt)/365
+rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365
 
 
 IMPUTED_sample <- data.frame(IMPUTED_sample,
@@ -93,6 +115,8 @@ IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 # single year sample
 IMPUTED_sample_year_cohort <- filter(IMPUTED_sample, issdt_year==year_cohort)
+
+whoin_year_cohort <- IMPUTED_sample$issdt_year==year_cohort
 
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(rep(1, n.pop),

@@ -62,15 +62,20 @@ plot(survfit(cx), col=2:4, xlab = "Days", ylab = "Survival probability")
 legend("bottomleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1)
 
 attach(cmprsk)
-fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK", col=2:4)
+fit = CumIncidence(ftime, status, dis, cencode=0,
+                   t = seq(0, 3650, 365), #course yearly values
+                   xlab="Days since arrival to UK", col=2:4)
 legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
 detach(cmprsk)
 
-attach(cmprsk_age)
-fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK")
-# legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
-detach(cmprsk_age)
+# # slow
+# attach(cmprsk_age)
+# fit = CumIncidence(ftime, status, dis, cencode=0, xlab="Days since arrival to UK")
+# # legend("topleft", legend = c("Active TB", "Exit UK", "Death"), col=2:4, lty = 1, bg = "white")
+# detach(cmprsk_age)
 
+# # rough proportional to number of casesk
+# plot(fit$est[1, -1] - fit$est[1, ], type="h")
 
 
 ###############
@@ -138,13 +143,4 @@ detach(cmprsk_age_screen)
 counts <- table(floor(IMPUTED_sample$fup2_issdt[IMPUTED_sample$uk_tb_orig==1]/365))
 barplot(counts, ylim=c(0,600), xlab=("Years since migration"), ylab="Number of cases")
 
-
-
-
-##TODO##
-
-# money saved/cases averted over time
-#   take difference of status quo and screening active TB cases
-
-# case fatality ratio: at the moment dont have this in the model. we stop at TB activation.
 

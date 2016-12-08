@@ -10,7 +10,7 @@
 # memory.size(max = 8000)
 
 
-# load("C:/Users/Nathan/Dropbox/TB/LTBI/data/IMPUTED_sample.RData")
+# load("C:/Users/Nathan/Dropbox/TB/LTBI/data/051206 - IMPUTED_sample.RData")
 # data("IMPUTED_sample")
 
 
