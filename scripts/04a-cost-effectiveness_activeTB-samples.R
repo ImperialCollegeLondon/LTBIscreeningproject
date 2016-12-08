@@ -28,7 +28,7 @@ if(!exists("p.complete_treat_scenarios")){
   p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
 }
 
-# look-up table
+# LTBI probability look-up table
 hash <-
   p.complete_treat_scenarios %>%
   gather("who_prev_cat_Pareek2011", "value", -scenario)

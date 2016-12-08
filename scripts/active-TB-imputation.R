@@ -34,7 +34,8 @@ detach(cmprsk)
 # censor at leave UK
 # competing risk of all-cause death
 
-cumprob.activetb <- fit$est[1, ]
+cumprob.activetb <- c(0, fit$est[1, ])
+names(cumprob.activetb) <- as.character(1:length(cumprob.activetb) - 1)
 
 
 ##TODO##
@@ -45,31 +46,42 @@ cumprob.activetb <- fit$est[1, ]
 
 
 
-# at risk population each year for outside UK
-# extract year only
+# generate at risk population each year for outside UK
 LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
-issdt_exit_year <- ceiling((IMPUTED_sample$date_exit_uk1 - IMPUTED_sample$issdt)/365)[LTBI_status==1 & IMPUTED_sample$issdt_year=="2009"]
+# extract year only
+issdt_exit_year <- ceiling(IMPUTED_sample$date_exit_uk1_issdt/365)[LTBI_status==1 & whoin_year_cohort]
 
 issdt_exit_year.tab <- table(issdt_exit_year)
 
-# 101 is never leave; remove
+# 101 is 'never leave UK'; remove
 issdt_exit_year.tab <- issdt_exit_year.tab[as.numeric(names(issdt_exit_year.tab))<100]
 
 # scaled-up CIF by year population
-activetb.exituk <- issdt_exit_year.tab["0"] * cumprob.activetb
+max_year <- 10
+activetb.exituk <- NULL
 
-for (i in 1:10){
+for (i in 1:max_year){
+
+  pop_exit_in_year_i <- issdt_exit_year.tab[as.character(i)]
+
+  cumprob.activetb_starting_year_i <- pmax(0, cumprob.activetb - cumprob.activetb[as.character(i - 1)], na.rm = TRUE)
 
   activetb.exituk <- rbind(activetb.exituk,
-                           issdt_exit_year.tab[as.character(i)] * (pmax(0, cumprob.activetb - cumprob.activetb[i], na.rm=TRUE)))
+                           pop_exit_in_year_i * cumprob.activetb_starting_year_i)
 }
+colnames(activetb.exituk) <- names(cumprob.activetb)
 
 
 # sum all curves for each year
 cum_year_totals <- colSums(activetb.exituk)
-cum_year_total.diff <- cum_year_totals[-1] - cum_year_totals
-plot(0:10, cum_year_total.diff, ylim=c(0, 100), xlab="year", type="h")
+cum_year_total.diff <- diff(cum_year_totals)
+cum_year_total.diff <- cum_year_total.diff[cum_year_total.diff>0]
+
+plot(x = 1:length(cum_year_total.diff),
+     y = cum_year_total.diff,
+     main = "Histogram of number of\n active TB cases outside of UK",
+     ylim = c(0, 100), xlab = "Time from UK entry (years)", type = "h")
 
 
 

@@ -4,6 +4,7 @@
 # Oct 2016
 #
 # output cost-effectiveness plots
+# cost-effectiveness planes
 
 
 library(ggplot2)

@@ -61,6 +61,8 @@ total_diff.mean$ICER <- ICER(E.QALY.screened - E.aTB_QALY.statusquo,
                              E.cost.screened - E.aTB_cost.statusquo)
 
 
+#  ------------------------------------------------------------------------
+
 ## not standard way of doing this
 # this is on each simulation and not the scenario averages
 # INMB

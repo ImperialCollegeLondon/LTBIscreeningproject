@@ -27,7 +27,7 @@ screen_age_range <- 18:45
 year_cohort <- '2009' #largest cohort
 
 
-# create permanent output folder
+# # create permanent output folder
 # diroutput <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
 # dir.create(diroutput)
 
