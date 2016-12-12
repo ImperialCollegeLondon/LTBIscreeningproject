@@ -29,6 +29,19 @@ osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-h
 scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
 scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
+# baseline
+n.scenarios <- 1
+scenario_parameter_cost <- data.frame("Agree to Screen" = 50,
+                                      "scenario" = 1, check.names = FALSE)
+
+scenario_parameter_p <- data.frame("Start Treatment" = 0.9,
+                                   "Not Start Treatment" = 0.1,
+                                   "Complete Treatment" = 0.9,
+                                   "Not Complete Treatment" = 0.1,
+                                   "Agree to Screen" = 0.9,
+                                   "Not Agree to Screen" = 0.1,
+                                   "scenario" = 1, check.names = FALSE)
+
 
 # assign cohort WHO TB incidence group branching proportions, for given year -------
 
