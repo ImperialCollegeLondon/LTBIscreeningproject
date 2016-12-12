@@ -72,7 +72,19 @@
                     distn: unif
                     min: 0
                     max: 0
-                    type: terminal
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
                   Not Complete Treatment:
                     p: 0.2
                     distn: unif
@@ -216,7 +228,19 @@
                     distn: unif
                     min: 0
                     max: 0
-                    type: terminal
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
                   Not Complete Treatment:
                     p: 0.2
                     distn: unif
@@ -360,7 +384,19 @@
                     distn: unif
                     min: 0
                     max: 0
-                    type: terminal
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
                   Not Complete Treatment:
                     p: 0.2
                     distn: unif
@@ -504,7 +540,19 @@
                     distn: unif
                     min: 0
                     max: 0
-                    type: terminal
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
                   Not Complete Treatment:
                     p: 0.2
                     distn: unif
@@ -648,7 +696,19 @@
                     distn: unif
                     min: 0
                     max: 0
-                    type: terminal
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
                   Not Complete Treatment:
                     p: 0.2
                     distn: unif
