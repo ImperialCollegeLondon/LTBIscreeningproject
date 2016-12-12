@@ -132,9 +132,10 @@ for (scenario in seq_len(n.scenarios)){
   #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
   # total probability successfully complete treatment of LTBI for each WHO category
-  # use when know active TB cases in advance
+
   p.complete_Tx <- osNode.cost$Get('path_probs',
-                                   filterFun = function(x) x$name=="Complete Treatment" & !grepl(pattern = "non-LTBI", x$pathString))
+                                   filterFun = function(x) x$name=="Effective")
+
   p.LTBI <- osNode.cost$Get('path_probs',
                                    filterFun = function(x) x$name=="LTBI")
 
