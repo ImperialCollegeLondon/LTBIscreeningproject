@@ -37,4 +37,4 @@ diroutput <- tempdir()
 
 
 # parameter_values_file <- "data/scenario_parameter_values.xlsx"
-parameter_values_file <- "data/scenario-parameter-values_adherence_completion.xls"
+parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package="LTBIscreeningproject")

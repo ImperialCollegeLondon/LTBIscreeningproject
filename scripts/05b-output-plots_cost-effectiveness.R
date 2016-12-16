@@ -82,7 +82,8 @@ axis(side = 2, at = 1, tck = 0.01, labels = round(n.tb_year * aTB_TxDx_cost), la
 
 
 
-# probability cost-effective for adherence vs uptake, for given costs per test
+
+# probability cost-effective for adherence vs uptake, for given co --------
 
 COST <- 50 #20, 50, 100
 

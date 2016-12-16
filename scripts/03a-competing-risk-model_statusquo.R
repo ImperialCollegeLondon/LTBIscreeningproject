@@ -147,7 +147,6 @@ dat$event1 <- as.numeric(event == 1) #uk_tb
 mslong <- msprep(time = c(NA, "times", "times", "times"),
                  status = c(NA, "event1", "event2", "event3"),
                  data = dat, keep = "age_at_entry", trans = tmat)
-##TODO## could include other (latent) times (not just first) cos _unusually_ we do know these?
 
 # check frequencies
 events(mslong)

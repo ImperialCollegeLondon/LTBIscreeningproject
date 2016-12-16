@@ -9,14 +9,13 @@
 # UK by year
 
 
-source("03a-competing-risk-model_statusquo.R")
-
+source("scripts/03a-competing-risk-model_statusquo.R")
 
 
 # generate at-risk population
 # each year for outside UK
 
-LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
+LTBI_status <- LTBIscreeningproject::sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 
 ########################################
@@ -53,21 +52,17 @@ legend("topleft", legend = c("Active TB", "Death"),
 detach(cmprsk)
 
 
-# include 0 year
+# include year 0
 cumprob.activetb <- c(0, fit$est[1, ])
 names(cumprob.activetb) <- as.character(1:length(cumprob.activetb) - 1)
-
-
-
-##TODO##
-# do for all 10 imputation samples
-# ...
 
 
 
 ##################################################
 ## calculate absolute number of cases each year ##
 ##################################################
+
+## annual populations
 
 # extract year only
 issdt_exit_year <- ceiling(IMPUTED_sample$date_exit_uk1_issdt/365)[LTBI_status==1 & whoin_year_cohort]
@@ -77,7 +72,8 @@ issdt_exit_year.tab <- table(issdt_exit_year)
 # 101 is 'never leave UK'; remove
 issdt_exit_year.tab <- issdt_exit_year.tab[as.numeric(names(issdt_exit_year.tab))<100]
 
-# scaled-up CIF by year population
+
+# scaled-up CIF by year populations
 max_year <- 10
 activetb.exituk <- NULL
 
@@ -85,7 +81,9 @@ for (i in 1:max_year){
 
   pop_exit_in_year_i <- issdt_exit_year.tab[as.character(i)]
 
-  cumprob.activetb_starting_year_i <- pmax(0, cumprob.activetb - cumprob.activetb[as.character(i - 1)], na.rm = TRUE)
+  cumprob.activetb_starting_year_i <- cumprob.activetb - cumprob.activetb[as.character(i - 1)]
+
+  cumprob.activetb_starting_year_i <- pmax(0, cumprob.activetb_starting_year_i, na.rm = TRUE)
 
   activetb.exituk <- rbind(activetb.exituk,
                            pop_exit_in_year_i * cumprob.activetb_starting_year_i)

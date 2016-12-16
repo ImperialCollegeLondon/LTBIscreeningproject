@@ -15,15 +15,22 @@ options("max.print" = 2000)
 
 # initiate decision tree --------------------------------------------------
 
+osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost.yaml", package="LTBIscreeningproject")
+osNode.health.fileName <- system.file("data", "LTBI_dtree-health.yaml", package="LTBIscreeningproject")
+
 # create decision tree
 ## cost
-osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-cost.yaml")
+osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 
 ## health
-osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dtree-health.yaml")
+osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
 
 # print(osNode.cost, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 # print(osNode.health, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
+
+
+
+# deterministic parameter value grids -------------------------------------
 
 # grid of parameter values for deterministic sensitivity analysis
 scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
@@ -31,7 +38,10 @@ scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
 # baseline
 n.scenarios <- 1
-scenario_parameter_cost <- data.frame("Agree to Screen" = 50,
+scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
+                                      "distn" = "unif",
+                                      "min" = 50,
+                                      "max" = 50,
                                       "scenario" = 1, check.names = FALSE)
 
 scenario_parameter_p <- data.frame("Start Treatment" = 0.9,
@@ -77,49 +87,23 @@ if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(di
 if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
 if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 
+# tidy format
+scenario_parameter_p.melt <- reshape2::melt(data = scenario_parameter_p,
+                                            id.vars = "scenario", variable.name = "node", value.name = "p")
 
-for (scenario in seq_len(n.scenarios)){
 
-  print(sprintf("scenario: %d", scenario))
 
-  # assign branching _probabilities_
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Agree to Screen"],
-                  filterFun = function(x) x$name=="Agree to Screen")
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Agree to Screen"],
-                  filterFun = function(x) x$name=="Not Agree to Screen")
 
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
-                  filterFun = function(x) x$name=="Start Treatment")
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Start Treatment"],
-                  filterFun = function(x) x$name=="Not Start Treatment")
+for (scenario_i in seq_len(n.scenarios)){
 
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Complete Treatment"],
-                  filterFun = function(x) x$name=="Complete Treatment")
-  osNode.cost$Set(p = scenario_parameter_p[scenario, "Not Complete Treatment"],
-                  filterFun = function(x) x$name=="Not Complete Treatment")
+  print(sprintf("scenario: %d", scenario_i))
 
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Agree to Screen"],
-                    filterFun = function(x) x$name=="Agree to Screen")
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Agree to Screen"],
-                    filterFun = function(x) x$name=="Not Agree to Screen")
 
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Start Treatment"],
-                    filterFun = function(x) x$name=="Start Treatment")
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Start Treatment"],
-                    filterFun = function(x) x$name=="Not Start Treatment")
+  assign_branch_values(osNode.cost,
+                       osNode.health,
+                       subset(scenario_parameter_p.melt, scenario == scenario_i),
+                       subset(scenario_parameter_cost, scenario == scenario_i))
 
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Complete Treatment"],
-                    filterFun = function(x) x$name=="Complete Treatment")
-  osNode.health$Set(p = scenario_parameter_p[scenario, "Not Complete Treatment"],
-                    filterFun = function(x) x$name=="Not Complete Treatment")
-
-  # assign branching _costs_
-  osNode.cost$Set(distn = "unif",
-                  filterFun = function(x) x$name=="Agree to Screen")
-  osNode.cost$Set(min = scenario_parameter_cost[scenario, "Agree to Screen"],
-                  filterFun = function(x) x$name=="Agree to Screen")
-  osNode.cost$Set(max = scenario_parameter_cost[scenario, "Agree to Screen"],
-                  filterFun = function(x) x$name=="Agree to Screen")
 
 
   # pathway probabilities ---------------------------------------------------
@@ -131,7 +115,9 @@ for (scenario in seq_len(n.scenarios)){
   # print(osNode.cost, "type", "p", "path_probs", "distn",
   #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
 
-  # total probability successfully complete treatment of LTBI for each WHO category
+
+
+  # total prob successfully cured of LTBI for each WHO category -------------
 
   p.complete_Tx <- osNode.cost$Get('path_probs',
                                    filterFun = function(x) x$name=="Effective")
@@ -139,7 +125,6 @@ for (scenario in seq_len(n.scenarios)){
   p.LTBI <- osNode.cost$Get('path_probs',
                                    filterFun = function(x) x$name=="LTBI")
 
-  # prob of completing treatment for LTBI individuals in each WHO category
   p.complete_Tx_given_LTBI_by_who <- setNames(p.complete_Tx/p.LTBI, nm = who_levels)
 
 
@@ -148,6 +133,7 @@ for (scenario in seq_len(n.scenarios)){
 
   mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
   mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
+
 
 
   # save --------------------------------------------------------------------
