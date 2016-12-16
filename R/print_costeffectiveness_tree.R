@@ -1,13 +1,16 @@
 
 #' Print Method for Cost-Effectiveness Trees
 #'
-#' @param osNode
+#' @param decisiontree
+#' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
-print.costeffectiveness_tree <- function(decisiontree){
+print.costeffectiveness_tree <- function(decisiontree, ...){
 
-  do.call(print, c(decisiontree, decisiontree$fieldsAll), limit = NULL)
+  do.call(data.tree:::print.Node, c(decisiontree, decisiontree$fieldsAll, limit = 1000))
 }
+
+

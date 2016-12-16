@@ -15,19 +15,8 @@ options("max.print" = 2000)
 
 # initiate decision tree --------------------------------------------------
 
-osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost.yaml", package="LTBIscreeningproject")
-osNode.health.fileName <- system.file("data", "LTBI_dtree-health.yaml", package="LTBIscreeningproject")
-
-# create decision tree
-## cost
-osNode.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
-
-## health
-osNode.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
-
-# print(osNode.cost, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
-# print(osNode.health, "type", "p", "distn", "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
-
+osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost.yaml", package = "LTBIscreeningproject")
+osNode.health.fileName <- system.file("data", "LTBI_dtree-health.yaml", package = "LTBIscreeningproject")
 
 
 # deterministic parameter value grids -------------------------------------
@@ -51,6 +40,19 @@ scenario_parameter_p <- data.frame("Start Treatment" = 0.9,
                                    "Agree to Screen" = 0.9,
                                    "Not Agree to Screen" = 0.1,
                                    "scenario" = 1, check.names = FALSE)
+
+# create decision tree
+## cost
+costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
+osNode.cost <- costeff.cost$osNode
+
+## health
+costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
+osNode.health <- costeff.health$osNode
+
+# print(osNode.cost)
+# print(osNode.health)
+
 
 
 # assign cohort WHO TB incidence group branching proportions, for given year -------
@@ -112,8 +114,7 @@ for (scenario_i in seq_len(n.scenarios)){
   path_probs.screen <- treeSimR::calc_pathway_probs(osNode.cost)
   osNode.cost$Set(path_probs = path_probs.screen)
 
-  # print(osNode.cost, "type", "p", "path_probs", "distn",
-  #       "mean", "sd", "min", "max", "a", "b", "shape", "scale", limit = NULL)
+  # print(osNode.cost)
 
 
 
