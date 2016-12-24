@@ -1,4 +1,6 @@
 
+library(dplyr)
+library(magrittr)
 
 #' Tornado Plot
 #'
@@ -9,7 +11,7 @@
 #' These need to be calculated before hand.
 #'
 #' @param dat Data frame of output maximum and minimum values
-#' @param baseline_output
+#' @param baseline_output Values to compare maximum and minimum against
 #' @param ...
 #'
 #' @return
@@ -18,7 +20,7 @@
 #' @examples
 #'
 #' #e.g. ICER
-dat <- data.frame(name = c("Specificity (min:0.8; max:1)",
+dat <- data.frame(names = c("Specificity (min:0.8; max:1)",
                            "Sensitivity (min:0.8; max:1)",
                            "Cost of rule-out test (min:£10; max:£100)",
                            "Prevalence (min:40%; max:50%)",
@@ -26,14 +28,22 @@ dat <- data.frame(name = c("Specificity (min:0.8; max:1)",
                            "TB ruled-out non-TB patient 6 week follow-up (min:0%; max:10%)"),
                   min = c(1,2,3,4,5,6),
                   max = c(3,5,6,7,8,9))
+
+dat <- melt(dat, id.vars = "name",
+            variable.name = "val",
+            value.name = "output") %>%
+              arrange(name)
+
+class(dat) <- c("tornado", class(dat))
+
 baseline_output <- 3
 
 plot_tornado <- function(dat,
-                         baseline_output, ...){
+                         baseline_output = NA, ...){
 
   extra_args <- list(...)
 
-  if(!is.data.frame(dat)) stop("Input data must be data frame.")
+  if(class(dat)!="tornado") stop("Input data must be tornado class data frame.")
 
   # bar colours
   # 1 - dark: min to baseline
@@ -65,31 +75,64 @@ plot_tornado <- function(dat,
 }
 
 
-s_analysis <- data.frame(output = c(1,10,11,5,3),
-                         sens = c(2,2,3,1,2),
-                         spec = c(1,3,2,2,2))
 
-MINS <- apply(s_analysis[ ,-1], 2, min)
-MAXS <- apply(s_analysis[ ,-1], 2, max)
-BASELINE <- apply(s_analysis[ ,-1], 2, mean)
+#' Convert Sensitivity Analysis Output Data to Tornado Plot Input Data
+#'
+#' @param s_analysis Model.frame object
+#'
+#' @return Data frame of class tornado
+#' @export
+#'
+#' @examples
+#'
+#' s_analysis <- data.frame(output = c(1,10,11,5,3),
+#' sens = c(2,2,3,1,2),
+#' spec = c(1,3,2,2,2))
+#'
+#' s_analysis <- model.frame(formula = output ~ sens + spec,
+#'                           data = s_analysis)
+#'
+#' s_analysis_to_tornado_plot_data(s_analysis)
+#'
+s_analysis_to_tornado_plot_data <- function(s_analysis){
 
-subgrid_max <- data.frame(apply(diag(length(MAXS)), 1, function(y) MAXS*y),
-                          val = "max",
-                          names = names(MAXS), row.names = NULL)
+  if(!(is.data.frame(s_analysis) & typeof(s_analysis)=="list")){
+    stop("Require model.frame type as input data.")
+  }
 
-subgrid_min <- data.frame(apply(diag(length(MINS)), 1, function(y) MINS*y),
-                          val = "min",
-                          names = names(MINS), row.names = NULL)
+  output_name <- terms(s_analysis)[[2]]
+  design_matrix <- subset(x = s_analysis,
+                          select = -eval(parse(text = output_name)))
 
-SUBGRID <- rbind(subgrid_max, subgrid_min)
+  MINS <- apply(design_matrix, 2, min)
+  MAXS <- apply(design_matrix, 2, max)
+  BASELINE <- apply(design_matrix, 2, mean)
 
-for(param in seq_len(nrow(SUBGRID))){
+  diag_array <- diag(length(MAXS))
+  param_names <- names(MAXS)
 
-  where_baseline <- SUBGRID[ ,param]==0
-  SUBGRID[where_baseline, param] <- BASELINE[param]
+  subgrid_max <- data.frame(apply(diag_array, 1, function(y) MAXS*y),
+                            val = "max",
+                            names = param_names, row.names = NULL)
+
+  subgrid_min <- data.frame(apply(diag_array, 1, function(y) MINS*y),
+                            val = "min",
+                            names = param_names, row.names = NULL)
+
+  SUBGRID <- rbind(subgrid_max, subgrid_min) %>%
+                    set_names(c(names(MINS), "val", "names"))
+
+  # substitute in the baseline values
+  for(param in seq_len(nrow(SUBGRID))){
+
+    where_baseline <- SUBGRID[ ,param]==0
+    SUBGRID[where_baseline, param] <- BASELINE[param]
+  }
+
+  # join output values
+  SUBGRID <- merge(SUBGRID, s_analysis, by = c("sens", "spec")) %>%
+                arrange(names)
+  class(SUBGRID) <- c("tornado", class(SUBGRID))
+
+  return(SUBGRID)
 }
-
-names(SUBGRID) <- c(names(MAXS), names(SUBGRID)[-c(1,2)])
-SUBGRID <- merge(SUBGRID, s_analysis, by = c("sens", "spec"))
-
-
