@@ -1,6 +1,9 @@
 
 library(dplyr)
+library(reshape2)
+library(purrr)
 library(magrittr)
+
 
 #' Tornado Plot
 #'
@@ -11,7 +14,7 @@ library(magrittr)
 #' These need to be calculated before hand.
 #'
 #' @param dat Data frame of output maximum and minimum values
-#' @param baseline_output Values to compare maximum and minimum against
+#' @param baseline_output Values of outputs for baseline input paramater value to compare maximum and minimum against
 #' @param ...
 #'
 #' @return
@@ -29,10 +32,10 @@ dat <- data.frame(names = c("Specificity (min:0.8; max:1)",
                   min = c(1,2,3,4,5,6),
                   max = c(3,5,6,7,8,9))
 
-dat <- melt(dat, id.vars = "name",
+dat <- melt(dat, id.vars = "names",
             variable.name = "val",
             value.name = "output") %>%
-              arrange(name)
+              arrange(names)
 
 class(dat) <- c("tornado", class(dat))
 
@@ -43,7 +46,8 @@ plot_tornado <- function(dat,
 
   extra_args <- list(...)
 
-  if(class(dat)!="tornado") stop("Input data must be tornado class data frame.")
+  if(all(class(dat)!="tornado")) stop("Input data must be tornado class data frame.")
+  if(length(baseline_output)!=1) stop("baseline_input must be length one.")
 
   # bar colours
   # 1 - dark: min to baseline
@@ -51,15 +55,19 @@ plot_tornado <- function(dat,
   colLOW  <- 1
   colHIGH <- 2
 
-  # duplicate each row
-  datplot <- dat[rep(1:nrow(dat), each = 2), ]
-
-  odd_rows <- seq(from = 1, to = nrow(datplot), 2)
-  even_rows <- odd_rows + 1
-
-  # define 'central' point
-  datplot$max[odd_rows] <- baseline_output
-  datplot$min[even_rows] <- baseline_output
+  # datplot <- dat %>%
+  #   group_by(names) %>%
+  #   summarise(max(output), min(output))
+  #
+  # # duplicate each row
+  # datplot <- datplot[rep(1:nrow(datplot), each = 2), ]
+  #
+  # odd_rows <- seq(from = 1, to = nrow(datplot), 2)
+  # even_rows <- odd_rows + 1
+  #
+  #   # define 'central' point
+  #   datplot$max[odd_rows]  <- baseline_output
+  #   datplot$min[even_rows] <- baseline_output
 
   datplot$fill <- c(colLOW, colHIGH)
 
@@ -74,11 +82,19 @@ plot_tornado <- function(dat,
     theme(legend.position = "none", axis.text = element_text(size = 15))
 }
 
+dat$baseline <- baseline_output
+
+datplot <- dat[ ,c("output", "baseline")] %>%
+            by_row(min, .collate = "cols") %>%
+            by_row(max, .collate = "cols")
+
+datplot <- cbind(dat, datplot[ ,-c(1,2)])
 
 
 #' Convert Sensitivity Analysis Output Data to Tornado Plot Input Data
 #'
 #' @param s_analysis Model.frame object
+#' @param baseline_input Vector of baseline parameter values
 #'
 #' @return Data frame of class tornado
 #' @export
@@ -94,11 +110,14 @@ plot_tornado <- function(dat,
 #'
 #' s_analysis_to_tornado_plot_data(s_analysis)
 #'
-s_analysis_to_tornado_plot_data <- function(s_analysis){
+s_analysis_to_tornado_plot_data <- function(s_analysis,
+                                            baseline_input = NA){
 
   if(!(is.data.frame(s_analysis) & typeof(s_analysis)=="list")){
     stop("Require model.frame type as input data.")
   }
+
+  if(!is.vector(baseline_input)) stop("baseline_input must be a vector.")
 
   output_name <- terms(s_analysis)[[2]]
   design_matrix <- subset(x = s_analysis,
@@ -106,9 +125,12 @@ s_analysis_to_tornado_plot_data <- function(s_analysis){
 
   MINS <- apply(design_matrix, 2, min)
   MAXS <- apply(design_matrix, 2, max)
-  BASELINE <- apply(design_matrix, 2, mean)
 
-  diag_array <- diag(length(MAXS))
+  if(is.na(baseline_input)){
+    baseline_input <- apply(design_matrix, 2, mean)
+  }
+
+  diag_array  <- diag(length(MAXS))
   param_names <- names(MAXS)
 
   subgrid_max <- data.frame(apply(diag_array, 1, function(y) MAXS*y),
@@ -126,7 +148,7 @@ s_analysis_to_tornado_plot_data <- function(s_analysis){
   for(param in seq_len(nrow(SUBGRID))){
 
     where_baseline <- SUBGRID[ ,param]==0
-    SUBGRID[where_baseline, param] <- BASELINE[param]
+    SUBGRID[where_baseline, param] <- baseline_input[param]
   }
 
   # join output values
