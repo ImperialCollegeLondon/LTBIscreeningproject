@@ -1,24 +1,16 @@
 
-library(ggplot2)
-library(dplyr)
-library(reshape2)
-library(purrr)
-library(magrittr)
-
-
 #' Tornado Plot
 #'
-#' Create a tornado plot for a cost-effectiveness
-#' sensitivity analysis.
+#' Create a tornado plot for a cost-effectiveness one-way sensitivity analysis.
 #' Supply the parameter names and maximum and minimum values for an output
 #' statistic of interest e.g. ICER or INMB.
-#' These need to be calculated before hand.
+#' These need to be calculated before hand and in correct format (see \code{s_analysis_to_tornado_plot_data}).
 #'
 #' @param dat Data frame of output maximum and minimum values
 #' @param baseline_output Values of outputs for baseline input paramater value to compare maximum and minimum against
 #' @param ...
 #'
-#' @return
+#' @return ggplot object
 #' @export
 #'
 #' @seealso \code{\link{s_analysis_to_tornado_plot_data}}
@@ -40,9 +32,10 @@ library(magrittr)
 #'               arrange(names)
 #'
 #' class(dat) <- c("tornado", class(dat))
+#' attr(dat, "output_name") <- "output"
 #'
 #' baseline_output <- 3
-#' plot_tornado(dat, baseline_output)
+#' ggplot_tornado(dat, baseline_output)
 #'
 #' ## model ouput ##
 #' s_analysis <- data.frame(output = c(10,1,11,5,3),
@@ -52,30 +45,33 @@ library(magrittr)
 #' s_analysis <- model.frame(formula = output ~ sens + spec,
 #'                           data = s_analysis)
 #'
-#' dat <- s_analysis_to_tornado_plot_data(s_analysis)
-#' plot_tornado(dat, 6)
+#' s_analysis %>%
+#'    s_analysis_to_tornado_plot_data %>%
+#'    ggplot_tornado(baseline_output = 6)
 #'
-plot_tornado <- function(dat,
-                         baseline_output,
-                         YLAB = "", ...){
+ggplot_tornado <- function(dat,
+                           baseline_output,
+                           YLAB = "", ...){
 
   extra_args <- list(...)
 
   if(all(class(dat)!="tornado")) stop("Input data must be tornado class data frame.")
   if(length(baseline_output)!=1) stop("baseline_input must be length one.")
 
-
+  output_name <- attr(dat, "output_name")
   dat$baseline <- baseline_output
 
-  # order output columns as decending and accending
-  datplot <- dat[ ,c("output", "baseline")] %>%
-    by_row(min, .collate = "cols", .to = "min") %>%
-    by_row(max, .collate = "cols", .to = "max")
+  # don't strictly need this
+  # order output columns as decending and ascending
+  datplot <- dat[ ,c(output_name, "baseline")] %>%
+                  by_row(min, .collate = "cols", .to = "min") %>%
+                  by_row(max, .collate = "cols", .to = "max") %>%
+                  select(min, max)
 
-  # remove duplicate columns
-  datplot <- cbind(dat, datplot[ ,-c(1,2)])
+  datplot <- cbind(dat, datplot)
 
   # order by length of bars
+  ##TODO## assumes symmetrical
   datplot$names = factor(as.character(datplot$names),
                          levels = rev(unique(datplot$names[order(datplot$min, decreasing = FALSE)])))
 
@@ -91,9 +87,18 @@ plot_tornado <- function(dat,
 }
 
 
-
-
 #' Convert Sensitivity Analysis Output Data to Tornado Plot Input Data
+#'
+#' A preprocessing step is required to use ggplot_tornado.
+#'
+#' The output data from a multivariate sensitivity analysis are usually in the form
+#' of a grid of input parameter values and a column of associated output values.
+#'
+#' For a tornado plot we only want to keep the maximum and minimum output values
+#' for each parameter when all others are set at baseline (one-way analysis).
+#'
+#' We also want to record whether low parameter values give low output values
+#' or vice-versa.
 #'
 #' @param s_analysis model.frame object
 #' @param baseline_input Vector of baseline parameter values
@@ -167,6 +172,8 @@ s_analysis_to_tornado_plot_data <- function(s_analysis,
                 arrange(names)
 
   class(SUBGRID) <- c("tornado", class(SUBGRID))
+
+  attr(SUBGRID, "output_name") <-  as.character(output_name)
 
   return(SUBGRID)
 }

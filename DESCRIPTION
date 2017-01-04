@@ -20,5 +20,9 @@ Imports:
     reshape,
     GGally,
     BCEA,
-    data.table
+    data.table,
+    purrr,
+    dplyr,
+    reshape2,
+    magrittr
 RoxygenNote: 5.0.1
