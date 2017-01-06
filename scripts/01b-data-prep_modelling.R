@@ -6,12 +6,9 @@
 # pre-process R Aldridge, Lancet (2016) imputed dataset
 
 
-library(dplyr)
-library(tidyr)
-
-
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
+rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
 ##TODO##
@@ -23,7 +20,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
 
-# match active TB prevalence groups in dataset to paper
+# match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
@@ -35,19 +32,43 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 # ages 18-35 pooled
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 
-# age-dependent prob of LTBI
-pLatentTB.who_18to35 <- matrix(data = pLatentTB.who,
-                               ncol = 18,
+
+### adjust 36-45 by scaling factor ###
+
+# # age-dependent prob of LTBI
+# pLatentTB.who_18to35 <- matrix(data = pLatentTB.who,
+#                                ncol = 18,
+#                                nrow = length(pLatentTB.who))
+#
+# # ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
+# # 36_to_45/20_to_35 years old => 16%/10%
+#
+# ##TODO## check this value!!
+#
+# pLatentTB.who_36to45 <- matrix(data = pLatentTB.who*1.65,
+#                                ncol = 10,
+#                                nrow = length(pLatentTB.who))
+#
+# pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
+#                                 pLatentTB.who_18to35,
+#                                 pLatentTB.who_36to45)
+
+
+### assume >35 == 35 year olds ###
+# i.e. age independent
+
+pLatentTB.who_18to45 <- matrix(data = pLatentTB.who,
+                               ncol = 28,
                                nrow = length(pLatentTB.who))
 
-# ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
-# 20_to_35/36_to_45 years old => 16%/10%
-pLatentTB.who_36to45 <- matrix(pLatentTB.who*1.65, ncol = 10, nrow = length(pLatentTB.who))
-
 pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
-                                pLatentTB.who_18to35,
-                                pLatentTB.who_36to45)
+                                pLatentTB.who_18to45)
+
+
 colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
+
+
+# join with main data set
 
 if("reshape"%in%loadedNamespaces()) detach(package:reshape)
 
@@ -59,15 +80,6 @@ pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
 IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_entry", "who_prev_cat_Pareek2011"))
-
-#
-#
-##TODO##
-# when we assume the older ages are just 0.3 as well
-#
-#
-#
-#
 
 
 
@@ -102,26 +114,29 @@ rm(issdt.asnumeric,
 # total sample size
 n.pop <- nrow(IMPUTED_sample)
 
-# keep pre-screened status
+# keep status-quo TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 # active TB case fatality rate age groups
-IMPUTED_sample$cfr_age_groups <- cut(IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years,
+age_at_Notification <- IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years
+IMPUTED_sample$cfr_age_groups <- cut(age_at_Notification,
                                      breaks = cfr_age_breaks,
                                      right = FALSE)
+rm(age_at_Notification)
 
-# extract year only
+# extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
-# single year sample
-IMPUTED_sample_year_cohort <- filter(IMPUTED_sample, issdt_year==year_cohort)
+# single year cohort only
+IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample, issdt_year==year_cohort)
 
+# is record in chosen cohort logical
 whoin_year_cohort <- IMPUTED_sample$issdt_year==year_cohort
 
 # total sample sizes for each yearly cohort
-entryCohort_poptotal <- aggregate(rep(1, n.pop),
-                                  by = list(IMPUTED_sample$issdt_year), sum)
-names(entryCohort_poptotal) <- c("year", "pop")
+entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
+                                  by = list(IMPUTED_sample$issdt_year), sum) %>%
+                        set_names(c("year", "pop"))
 
 
 # logical active TB status of original data
@@ -133,7 +148,7 @@ uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
 # cohort size at arrival to uk
 pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
 
-# number of active TB cases _before_ screening
+# number of active TB cases _before_ screening i.e. status-quo
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 

@@ -3,12 +3,11 @@
 # N Green
 # Oct 2016
 #
-# input data for QALY loss and cost
-
+# input data for QALY gains and cost
 
 # assume that after active TB notification the risk of TB related death
 # is in the first year only
-# and treatment is one year and results in disease-free health
+# and effective treatment is one year and results in disease-free health
 #
 # only interested for the QALY gain calculation in active TB cases
 # since the other individuals unchanged
@@ -19,7 +18,7 @@ threshold <- 20000  #£
 
 
 # 12 month case fatality rate
-# Crofts et al (2008)
+
 cfr_age_breaks <- c(15, 45, 65, 200)
 cfr_age_levels <- levels(cut(0, cfr_age_breaks, right = FALSE))
 
@@ -29,6 +28,8 @@ cfr_age_lookup <- data.frame(age = cfr_age_levels,
                              b = c(564, 2500, 1940))
 
 rownames(cfr_age_lookup) <- cfr_age_lookup$age
+
+attr(cfr_age_lookup, "reference") <- "Crofts et al (2008)"
 
 
 #########
@@ -40,22 +41,26 @@ unit_cost <- list()
 # active TB diagnosis:
 unit_cost$culture <- QALY::inflation_adjust_cost(from_year = 2015,
                                                  to_year = 2016,
-                                                 from_cost = 22.29)  #Drobniewski (2015)
+                                                 from_cost = 22.29,
+                                                 reference = "Drobniewski (2015)")
 
 unit_cost$xray  <- QALY::inflation_adjust_cost(from_year = 2011,
                                                to_year = 2016,
-                                               from_cost = 16.54)    #NICE guidance CG117
+                                               from_cost = 16.54,
+                                               reference = "NICE guidance CG117")
 
 unit_cost$smear <- QALY::inflation_adjust_cost(from_year = 2015,
                                                to_year = 2016,
-                                               from_cost = 8.23)     #2015 #Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis
+                                               from_cost = 8.23,
+                                               reference = "(2015) Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis")
 
 unit_cost$aTB_Dx <- unit_cost$culture + unit_cost$xray + unit_cost$smear
 
 # active TB treatment:
 unit_cost$aTB_Tx <- QALY::inflation_adjust_cost(from_year = 2014,
                                                 to_year = 2016,
-                                                from_cost = 5329)  #2014 #Jit& White/ NICE guidance CG117
+                                                from_cost = 5329,
+                                                reference = "(2014) Jit& White. NICE guidance CG117")
 # gamma(8.333, 639.435)
 
 unit_cost$aTB_TxDx <- unit_cost$aTB_Dx + unit_cost$aTB_Tx
@@ -64,30 +69,34 @@ unit_cost$aTB_TxDx <- unit_cost$aTB_Dx + unit_cost$aTB_Tx
 # adverse effects of LTBI Tx
 unit_cost$vomiting <- QALY::inflation_adjust_cost(from_year = 2013,
                                                   to_year = 2016,
-                                                  from_cost = 63)        #Jit&White/ NHS Reference costs (Curtis 2013)
+                                                  from_cost = 63,
+                                                  reference = "Jit&White. NHS Reference costs (Curtis 2013)")
 
 unit_cost$hepatotoxicity <- QALY::inflation_adjust_cost(from_year = 2011,
                                                         to_year = 2016,
-                                                        from_cost = 587) #Jit&White/ Pareek et al. 2011
+                                                        from_cost = 587,
+                                                        reference = "Jit & White. Pareek et al. (2011)")
 
 # LTBI complete treatment
 unit_cost$LTBI_Tx <- QALY::inflation_adjust_cost(from_year = 2006,
                                                  to_year = 2016,
-                                                 from_cost = 483.74)        #HTA VOLUME 20 ISSUE 38 MAY 2016 ISSN 1366-527, p.8
+                                                 from_cost = 483.74,
+                                                 reference = "HTA VOLUME 20 ISSUE 38 MAY 2016 ISSN 1366-527, p.8")
 
 # LFT test
 unit_cost$LFT_test <- QALY::inflation_adjust_cost(from_year = 2009,
                                                   to_year = 2016,
-                                                  from_cost = 2.69)        #Lilford
+                                                  from_cost = 2.69,
+                                                  reference = "Lilford")
 
 # hep B, C test
 unit_cost$hep_test <- QALY::inflation_adjust_cost(from_year = 2009,
                                                   to_year = 2016,
-                                                  from_cost = 25.42)        #
+                                                  from_cost = 25.42)
 # HIV test
 unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2010,
                                                   to_year = 2016,
-                                                  from_cost = 8)        #
+                                                  from_cost = 8)
 
 ##########
 # health #
