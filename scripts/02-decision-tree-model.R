@@ -10,6 +10,8 @@ library(readxl)
 library(data.tree)
 library(treeSimR)
 
+
+# output to screen
 options("max.print" = 2000)
 
 
@@ -25,7 +27,9 @@ osNode.health.fileName <- system.file("data", "LTBI_dtree-health.yaml", package 
 scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
 scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
-# baseline
+## or
+# baseline only
+##TODO## what are the actual values??
 n.scenarios <- 1
 scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
                                       "distn" = "unif",
@@ -41,7 +45,7 @@ scenario_parameter_p <- data.frame("Start Treatment" = 0.9,
                                    "Not Agree to Screen" = 0.1,
                                    "scenario" = 1, check.names = FALSE)
 
-# create decision tree
+# create decision tree objects
 ## cost
 costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 osNode.cost <- costeff.cost$osNode

@@ -6,6 +6,9 @@
 # pre-process R Aldridge, Lancet (2016) imputed dataset
 
 
+library(dplyr)
+library(tidyr)
+
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
@@ -159,7 +162,7 @@ who_levels <- names(p.who_year)
 
 # probability LTBI for each who category for year cohort
 pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
-                        group_by(who_prev_cat_Pareek2011) %>%
+                        dplyr::group_by(who_prev_cat_Pareek2011) %>%
                         summarise(LTBI = mean(pLTBI)) %>%
                         complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
 
