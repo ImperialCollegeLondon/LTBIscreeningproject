@@ -93,7 +93,7 @@ if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(di
 if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
 if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 
-# tidy format
+# transform to tidy format
 scenario_parameter_p.melt <- reshape2::melt(data = scenario_parameter_p,
                                             id.vars = "scenario", variable.name = "node", value.name = "p")
 

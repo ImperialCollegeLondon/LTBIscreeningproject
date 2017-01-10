@@ -29,13 +29,13 @@
           max: 0
           type: chance
           Test Negative:
-            p: 0.4085
+            p: 0.16
             distn: unif
             min: 0
             max: 0
             type: terminal
           Test Positive:
-            p: 0.5915
+            p: 0.84
             distn: unif
             min: 0
             max: 0
@@ -101,13 +101,13 @@
           max: 0
           type: chance
           Test Negative:
-            p: 0.7929
+            p: 0.99
             distn: unif
             min: 0
             max: 0
             type: terminal
           Test Positive:
-            p: 0.2071
+            p: 0.01
             distn: unif
             min: 0
             max: 0
@@ -167,13 +167,13 @@
           max: 0
           type: chance
           Test Negative:
-            p: 0.4085
+            p: 0.16
             distn: unif
             min: 0
             max: 0
             type: terminal
           Test Positive:
-            p: 0.5915
+            p: 0.84
             distn: unif
             min: 0
             max: 0
@@ -239,13 +239,13 @@
           max: 0
           type: chance
           Test Negative:
-            p: 0.7929
+            p: 0.99
             distn: unif
             min: 0
             max: 0
             type: terminal
           Test Positive:
-            p: 0.2071
+            p: 0.01
             distn: unif
             min: 0
             max: 0
@@ -306,13 +306,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.4085
+            p: 0.16
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.5915
+            p: 0.84
             distn: unif
             min: 0
             max: 0
@@ -378,13 +378,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.7929
+            p: 0.99
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.2071
+            p: 0.01
             distn: unif
             min: 0
             max: 0
@@ -444,13 +444,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.4085
+            p: 0.16
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.5915
+            p: 0.84
             distn: unif
             min: 0
             max: 0
@@ -516,13 +516,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.7929
+            p: 0.99
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.2071
+            p: 0.01
             distn: unif
             min: 0
             max: 0
@@ -582,13 +582,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.4085
+            p: 0.16
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.5915
+            p: 0.84
             distn: unif
             min: 0
             max: 0
@@ -654,13 +654,13 @@
           max: 0
           Test Negative:
             type: terminal
-            p: 0.7929
+            p: 0.99
             distn: unif
             min: 0
             max: 0
           Test Positive:
             type: chance
-            p: 0.2071
+            p: 0.01
             distn: unif
             min: 0
             max: 0
