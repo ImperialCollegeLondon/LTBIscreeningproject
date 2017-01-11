@@ -17,8 +17,8 @@ options("max.print" = 2000)
 
 # initiate decision tree --------------------------------------------------
 
-osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost.yaml", package = "LTBIscreeningproject")
-osNode.health.fileName <- system.file("data", "LTBI_dtree-health.yaml", package = "LTBIscreeningproject")
+osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml", package = "LTBIscreeningproject")
+osNode.health.fileName <- system.file("data", "LTBI_dtree-health-symptoms.yaml", package = "LTBIscreeningproject")
 
 
 # deterministic parameter value grids -------------------------------------
@@ -54,8 +54,8 @@ osNode.cost <- costeff.cost$osNode
 costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
 osNode.health <- costeff.health$osNode
 
-# print(osNode.cost)
-# print(osNode.health)
+# print(costeff.cost)
+# print(costeff.health)
 
 
 
@@ -71,11 +71,11 @@ for (i in seq_along(who_levels)){
 }
 
 
-# assign LTBI probability to each who active TB group  ---------------------------
+# assign LTBI probability to each WHO active TB prevalence group  ------------------
 
 for (i in who_levels){
 
-  pLTBI <- pLatentTB.who_year$LTBI[pLatentTB.who_year$who_prev_cat_Pareek2011==i]
+  pLTBI <- subset(pLatentTB.who_year, who_prev_cat_Pareek2011==i, select = LTBI)
 
   osNode.cost$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
   osNode.health$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
@@ -93,11 +93,10 @@ if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(di
 if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
 if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 
+
 # transform to tidy format
 scenario_parameter_p.melt <- reshape2::melt(data = scenario_parameter_p,
                                             id.vars = "scenario", variable.name = "node", value.name = "p")
-
-
 
 
 for (scenario_i in seq_len(n.scenarios)){
@@ -130,7 +129,7 @@ for (scenario_i in seq_len(n.scenarios)){
   p.LTBI <- osNode.cost$Get('path_probs',
                                    filterFun = function(x) x$name=="LTBI")
 
-  p.complete_Tx_given_LTBI_by_who <- setNames(p.complete_Tx/p.LTBI, nm = who_levels)
+  p.complete_Tx_given_LTBI_by_who <- set_names(p.complete_Tx/p.LTBI, nm = who_levels)
 
 
 

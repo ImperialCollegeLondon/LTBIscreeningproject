@@ -7,7 +7,7 @@
 
 
 # increase RAM to store data
-# memory.size(max = 8000)
+memory.size(max = 8000)
 
 
 # load("C:/Users/Nathan/Dropbox/TB/LTBI/data/051206 - IMPUTED_sample.RData")
