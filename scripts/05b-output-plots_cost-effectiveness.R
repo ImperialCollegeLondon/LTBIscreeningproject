@@ -11,22 +11,25 @@ library(ggplot2)
 library(BCEA)
 
 
-if(!exists("CE_stats_indiv")) load(paste(diroutput, "CE_stats_indiv.RData", sep = "/"))
+if(!exists("aTB_CE_stats")) load(paste(diroutput, "aTB_CE_stats.RData", sep = "/"))
 
 
 # convert active TB lists to dataframes
-aTB_cost_diff.melt <- data.frame(Reduce(rbind, CE_stats_indiv$aTB_cost_diff))
-aTB_QALYgain.melt  <- data.frame(Reduce(rbind, CE_stats_indiv$aTB_QALYgain))
+aTB_cost_diff.melt <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_cost_diff_person)) %>%
+                        set_names("")
+aTB_QALYgain.melt  <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_QALYgain_person)) %>%
+                        set_names("")
 
+# with status-quo
 scenario.names <- as.character(c(0, seq_len(n.scenarios)))
 
 # BCEA format
 # append status-quo scenario
-aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.melt))
-aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain.melt))
+aTB_cost_diff.df <- cbind(0, aTB_cost_diff.melt) %>%
+                      set_names(scenario.names)
 
-colnames(aTB_cost_diff.df) <- scenario.names
-colnames(aTB_QALYgain.df)  <- scenario.names
+aTB_QALYgain.df  <- cbind(0, aTB_QALYgain.melt) %>%
+                      set_names(scenario.names)
 
 
 # convert LTBI screening dataframes

@@ -2,46 +2,55 @@
 #' Calculate Potentially Screened Cohort QALYs
 #'
 #' @param n.diseasefree Number of disease-free individuals
-#' @param QALY_uk_tb List of QALYs for total cohort status-quo (assumed treated and cured), death, or all treated to disease-free
+#' @param QALY List of QALYs for total cohort status-quo (assumed treated and cured), death, or all treated to disease-free
 #'
-#' @return sum total of QALYs for potentially screened cohort
+#' @return Total QALYs for potentially screened cohort
 #' @export
 #'
 #' @examples
 #'
 create_screened_cohort_QALYs <- function(n.diseasefree,
-                                         QALY_uk_tb) {
+                                         QALY) {
 
-  totalQALY.screened <-  QALY_uk_tb$cured
-  n.tb_year <- length(totalQALY.screened)
+  totalQALY <-  QALY$cured
+  n.tb <- length(totalQALY)
 
   if (length(n.diseasefree)>0) {
 
-    which_diseasefree <- sample(1:n.tb_year, n.diseasefree)
-    totalQALY.screened[which_diseasefree] <- QALY_uk_tb$diseasefree[which_diseasefree]
+    which_diseasefree <- sample(1:n.tb, n.diseasefree)
+    totalQALY[which_diseasefree] <- QALY$diseasefree[which_diseasefree]
   }
 
-  return(sum(totalQALY.screened))
+  return(sum(totalQALY))
 }
 
 
 #' Calculate Potentially Screened Cohort Costs
 #'
-#' @param n.diseasefree
-#' @param cost.statusquo
-#' @param unit_case_cost
+#' Substract the avoided cost of those successfully screened
+#' from status-quo cost.
 #'
-#' @return sum total of cost for potentially screened cohort
+#' @param n.diseasefree Number of disease-free individuals
+#' @param cost.statusquo Cost under status-quo
+#' @param unit_cost_case Unit cost of detect and treat an active TB case
+#'
+#' @return Total cost for potentially screened cohort
 #' @export
 #'
 #' @examples
 #'
 create_screened_cohort_cost <- function(n.diseasefree,
                                         cost.statusquo,
-                                        unit_case_cost){
-  if(length(n.diseasefree)==0){
+                                        unit_cost_case){
+  if (length(n.diseasefree)==0){
     n.diseasefree <- 0
   }
 
-  return(cost.statusquo - (unit_case_cost * n.diseasefree))
+  return(cost.statusquo - (unit_cost_case * n.diseasefree))
 }
+
+
+
+
+
+

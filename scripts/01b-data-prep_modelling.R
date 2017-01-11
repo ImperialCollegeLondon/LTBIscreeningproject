@@ -8,6 +8,7 @@
 
 library(dplyr)
 library(tidyr)
+library(purrr)
 
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
@@ -70,6 +71,8 @@ pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
 
 colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
 
+rm(pLatentTB.who_18to35, pLatentTB.who_36to45, pLatentTB.who_18to45)
+
 
 # join with main data set
 
@@ -101,15 +104,29 @@ rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
 rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365
 
 
+# days from uk entry to all-cause death
+data_death1.asnumeric <- as.Date(IMPUTED_sample$date_death1) - as.Date("1960-01-01")
+date_death1_issdt <- data_death1.asnumeric - issdt.asnumeric
+date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
+
+
+# days from uk entry to all-cause death
+date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - as.Date("1960-01-01")
+date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
+date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365
+
+
 IMPUTED_sample <- data.frame(IMPUTED_sample,
                              rNotificationDate_issdt,
-                             rNotificationDate_issdt.years)
-
+                             rNotificationDate_issdt.years,
+                             date_death1_issdt,
+                             date_death1_issdt.years,
+                             date_exit_uk1_issdt,
+                             date_exit_uk1_issdt.years)
 
 rm(issdt.asnumeric,
    rNotificationDate.asnumeric,
    rNotificationDate_issdt)
-
 
 
 # yearly entry cohort size by age and prevalence ---------------------------

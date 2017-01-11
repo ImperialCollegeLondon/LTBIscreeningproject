@@ -14,7 +14,7 @@
 
 
 # willingness to pay
-threshold <- 20000  #£
+wtp_threshold <- 20000  #£
 
 
 # 12 month case fatality rate
@@ -60,7 +60,7 @@ unit_cost$aTB_Dx <- unit_cost$culture + unit_cost$xray + unit_cost$smear
 unit_cost$aTB_Tx <- QALY::inflation_adjust_cost(from_year = 2014,
                                                 to_year = 2016,
                                                 from_cost = 5329,
-                                                reference = "(2014) Jit& White. NICE guidance CG117")
+                                                reference = "(2014) Jit & White. NICE guidance CG117")
 # gamma(8.333, 639.435)
 
 unit_cost$aTB_TxDx <- unit_cost$aTB_Dx + unit_cost$aTB_Tx
@@ -70,7 +70,7 @@ unit_cost$aTB_TxDx <- unit_cost$aTB_Dx + unit_cost$aTB_Tx
 unit_cost$vomiting <- QALY::inflation_adjust_cost(from_year = 2013,
                                                   to_year = 2016,
                                                   from_cost = 63,
-                                                  reference = "Jit&White. NHS Reference costs (Curtis 2013)")
+                                                  reference = "Jit & White. NHS Reference costs (Curtis 2013)")
 
 unit_cost$hepatotoxicity <- QALY::inflation_adjust_cost(from_year = 2011,
                                                         to_year = 2016,

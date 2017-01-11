@@ -1,11 +1,13 @@
 
 #' Incremental Net (Monetary) Benefit
 #'
-#' @param delta.e
-#' @param delta.c
-#' @param wtp
+#' Differences are [intervention] - [status-quo].
 #'
-#' @return
+#' @param delta.e Difference in effectivness i.e. health e.g. QALYs
+#' @param delta.c Difference in costs
+#' @param wtp Willingness to pay threshold
+#'
+#' @return Value
 #' @export
 #'
 #' @examples
@@ -15,14 +17,16 @@ calc.INMB <- function(delta.e, delta.c, wtp){
   if(wtp<0)
     stop("Willingness to pay must be non-negative.")
 
-  return(delta.e*wtp - delta.c)
+  return((delta.e * wtp) - delta.c)
 }
 
 
 #' Incremental Cost Effectiveness Ratio
 #'
-#' @param delta.e
-#' @param delta.c
+#' Differences are [intervention] - [status-quo].
+#'
+#' @param delta.e Difference in effectivness i.e. health e.g. QALYs
+#' @param delta.c Difference in costs
 #'
 #' @return
 #' @export
