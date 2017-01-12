@@ -3,16 +3,13 @@
 # N Green
 # Oct 2016
 #
-# main high-level script
+# Main top-level script
 
 
 # increase RAM to store data
 memory.size(max = 8000)
 
-
-# load("C:/Users/Nathan/Dropbox/TB/LTBI/data/051206 - IMPUTED_sample.RData")
-# data("IMPUTED_sample")
-
+load("../../data/051206 - IMPUTED_sample.RData")
 
 # total data set
 # load(file = "T:\\STATA-model_incidence data_updated\\IMPUTED_IOM_ETS_WHO_merged_15_2_9.RData")

@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# screening and treatment pathway decision tree model
+# LTBI screening and treatment pathway decision tree model
 
 
 library(readxl)
@@ -12,7 +12,7 @@ library(treeSimR)
 
 
 # output to screen
-options("max.print" = 2000)
+options("max.print" = 3000)
 
 
 # initiate decision tree --------------------------------------------------
@@ -29,7 +29,6 @@ scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
 ## or
 # baseline only
-##TODO## what are the actual values??
 n.scenarios <- 1
 scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
                                       "distn" = "unif",
@@ -37,18 +36,19 @@ scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
                                       "max" = 50,
                                       "scenario" = 1, check.names = FALSE)
 
-scenario_parameter_p <- data.frame("Start Treatment" = 0.9,
-                                   "Not Start Treatment" = 0.1,
-                                   "Complete Treatment" = 0.9,
-                                   "Not Complete Treatment" = 0.1,
-                                   "Agree to Screen" = 0.9,
-                                   "Not Agree to Screen" = 0.1,
+scenario_parameter_p <- data.frame("Agree to Screen" = 0.5,
+                                   "Not Agree to Screen" = 0.5,
+                                   "Start Treatment" = 0.5,
+                                   "Not Start Treatment" = 0.5,
+                                   "Complete Treatment" = 0.75,
+                                   "Not Complete Treatment" = 0.25,
                                    "scenario" = 1, check.names = FALSE)
 
 # create decision tree objects
 ## cost
 costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 osNode.cost <- costeff.cost$osNode
+
 
 ## health
 costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)

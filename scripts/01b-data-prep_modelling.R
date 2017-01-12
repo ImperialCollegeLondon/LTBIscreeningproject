@@ -57,7 +57,7 @@ pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 #                                 pLatentTB.who_18to35,
 #                                 pLatentTB.who_36to45)
 
-
+### or
 ### assume >35 == 35 year olds ###
 # i.e. age independent
 
@@ -105,8 +105,8 @@ rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365
 
 
 # days from uk entry to all-cause death
-data_death1.asnumeric <- as.Date(IMPUTED_sample$date_death1) - as.Date("1960-01-01")
-date_death1_issdt <- data_death1.asnumeric - issdt.asnumeric
+date_death1.asnumeric <- as.Date(IMPUTED_sample$date_death1) - as.Date("1960-01-01")
+date_death1_issdt <- date_death1.asnumeric - issdt.asnumeric
 date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
 
 
@@ -126,7 +126,14 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
 
 rm(issdt.asnumeric,
    rNotificationDate.asnumeric,
-   rNotificationDate_issdt)
+   rNotificationDate_issdt,
+   rNotificationDate_issdt.years,
+   date_death1_issdt,
+   date_death1.asnumeric,
+   date_death1_issdt.years,
+   date_exit_uk1_issdt,
+   date_exit_uk1.asnumeric,
+   date_exit_uk1_issdt.years)
 
 
 # yearly entry cohort size by age and prevalence ---------------------------

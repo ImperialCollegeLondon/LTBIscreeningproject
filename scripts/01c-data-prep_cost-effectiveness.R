@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# input data for QALY gains and cost
+# input data for QALY gains and costs
 
 # assume that after active TB notification the risk of TB related death
 # is in the first year only
@@ -17,7 +17,7 @@
 wtp_threshold <- 20000  #£
 
 
-# 12 month case fatality rate
+# 12 month active TB case fatality rate
 
 cfr_age_breaks <- c(15, 45, 65, 200)
 cfr_age_levels <- levels(cut(0, cfr_age_breaks, right = FALSE))
@@ -89,7 +89,7 @@ unit_cost$LFT_test <- QALY::inflation_adjust_cost(from_year = 2009,
                                                   from_cost = 2.69,
                                                   reference = "Lilford")
 
-# hep B, C test
+# hepatitis B, C test
 unit_cost$hep_test <- QALY::inflation_adjust_cost(from_year = 2009,
                                                   to_year = 2016,
                                                   from_cost = 25.42)
@@ -104,6 +104,6 @@ unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2010,
 
 utility <- list()
 
-utility$disease_free <- 1.0
+utility$disease_free <- 1.0 #assume perfect health
 utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010)
 
