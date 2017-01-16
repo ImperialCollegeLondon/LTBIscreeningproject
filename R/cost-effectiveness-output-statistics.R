@@ -12,7 +12,7 @@
 #'
 #' @examples
 #'
-calc.INMB <- function(delta.e, delta.c, wtp){
+calc.INMB <- function(delta.e, delta.c, wtp = 20000){
 
   if(wtp<0)
     stop("Willingness to pay must be non-negative.")
@@ -25,18 +25,32 @@ calc.INMB <- function(delta.e, delta.c, wtp){
 #'
 #' Differences are [intervention] - [status-quo].
 #'
-#' @param delta.e Difference in effectivness i.e. health e.g. QALYs
-#' @param delta.c Difference in costs
+#' @param e effectivness i.e. health e.g. QALYs
+#' @param c costs
+#' @param ref reference column. Defaults to 1
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-calc.ICER <- function(delta.e, delta.c){
+calc.ICER <- function(e, c, ref = 1){
 
-  if(any(delta.e==0))
-    warning("One or more health difference is 0.")
+  if(any(dim(c)!=dim(e)))
+    warning("Dimensions of e and c do not match.")
 
-  return(delta.c/delta.e)
+  n.sim <- dim(e)[1]
+  n.comparators <- dim(e)[2]
+
+  # Define reference & comparator intervention
+  ints <- 1:n.comparators
+  comp <- ints[-ref]
+  n.comparisons <- n.comparators - 1
+
+  delta.e <- as.data.frame(e[ ,comp] - e[ ,ref])
+  delta.c <- as.data.frame(c[ ,comp] - c[ ,ref])
+
+  ICER <- colMeans(delta.c)/colMeans(delta.e)
+
+  return(ICER)
 }
