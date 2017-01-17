@@ -127,7 +127,6 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
 rm(issdt.asnumeric,
    rNotificationDate.asnumeric,
    rNotificationDate_issdt,
-   rNotificationDate_issdt.years,
    date_death1_issdt,
    date_death1.asnumeric,
    date_death1_issdt.years,
@@ -149,7 +148,6 @@ age_at_Notification <- IMPUTED_sample$age_at_entry + rNotificationDate_issdt.yea
 IMPUTED_sample$cfr_age_groups <- cut(age_at_Notification,
                                      breaks = cfr_age_breaks,
                                      right = FALSE)
-rm(age_at_Notification)
 
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
@@ -168,6 +166,11 @@ entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
 
 # logical active TB status of original data
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
+
+
+rm(rNotificationDate_issdt.years,
+   age_at_Notification)
+
 
 
 # summary statistics ------------------------------------------------------
