@@ -11,6 +11,7 @@
 library(ggplot2)
 
 
+
 if(!exists("p.complete_treat_scenarios")){
 
   p.complete_treat_scenarios <- read.csv(file = file.choose(), header = FALSE)
@@ -58,11 +59,14 @@ activeTBcases <- rbind(activeTBcases,
                        uktb_estimated)
 colnames(activeTBcases) <- seq_len(ncol(activeTBcases))
 
+png(paste(plots_folder, "/barplot_raw_num_aTB.png", sep=""))
+
 barplot(height = activeTBcases,
         ylim = c(0, 200),
         main = "Raw number of active TB cases",
         xlab = "Time in UK (years)", ylab = "Cases")
 
+dev.off()
 
 
 # including LTBI indiv who have left EWNI -----------------------------------
@@ -72,6 +76,8 @@ activeTBcases_UK_nonUK <- rbind("UK observed" = activeTBcases,
                                 # "Non-UK estimated" = cum_year_total.diff[names(activeTBcases)])
 
 x11()
+png(paste(plots_folder, "/barplot_aTB_with_exituk.png", sep = ""))
+
 barplot(height = activeTBcases_UK_nonUK,
         main = sprintf("Number of active TB cases\n in %s cohort", year_cohort),
         xlab = "Times since arrival to the UK (years)",
@@ -83,6 +89,8 @@ barplot(height = activeTBcases_UK_nonUK,
 legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exited EWNI"),
        density = c(5,60,20), angle = c(10,45,75), fill = c("lightgrey", "darkgrey","lightblue"), bg = "white")
 
+dev.off()
+
 
 #####################
 ## after screening ##
@@ -90,7 +98,7 @@ legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exit
 
 # e.g.
 # basecase?
-SCENARIO <- 300
+SCENARIO <- 1#300
 
 p.completeTx <- subset(x = LTBI_prob_lookup,
                        scenario==as.character(SCENARIO) & who_prev_cat_Pareek2011=="(50,150]",
@@ -98,9 +106,14 @@ p.completeTx <- subset(x = LTBI_prob_lookup,
 
 activeTBcases_after_screen <- activeTBcases * (1 - p.completeTx)
 
+
+png(paste(plots_folder, "/barplot_raw_num_aTB_screened.png", sep = ""))
+
 barplot(height = activeTBcases_after_screen,
         main = sprintf("Raw number of active TB cases after screening in %s cohort", year_cohort),
         xlab = "Time in UK (years)", ylab = "Cases")
+
+dev.off()
 
 
 
@@ -108,7 +121,10 @@ barplot(height = activeTBcases_after_screen,
 
 activeTBcases_UK_nonUK_after_screen <- rbind("UK observed" = activeTBcases_after_screen,
                                              "Non-UK estimated" = cum_year_total.diff * (1 - p.completeTx))
+
 x11()
+png(paste(plots_folder, "/barplot_aTB_with_exituk_screened.png", sep = ""))
+
 barplot(height = activeTBcases_UK_nonUK_after_screen,
         main = sprintf("Number of active TB cases after screening\n in %s cohort", year_cohort),
         xlab = "Times since arrival to the UK (years)",
@@ -119,6 +135,8 @@ barplot(height = activeTBcases_UK_nonUK_after_screen,
 
 legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exited EWNI"),
        density = c(5,60,20), angle = c(10,45,75), fill = c("lightgrey", "darkgrey","lightblue"), bg = "white")
+
+dev.off()
 
 
 ##TODO##
@@ -143,9 +161,12 @@ missed_avoided_activeTBcases <- rbind("Missed" = activeTBcases_after_screen,
                                       "Avoided" = activeTBcases - activeTBcases_after_screen)
 
 # single scenario bar plot
+
 x11()
+png(paste(plots_folder, "/barplot_aTB_with_avoided.png", sep=""))
+
 barplot(height = missed_avoided_activeTBcases,
-        main = paste("Observed active TB incidence:", diroutput, "\n scenario", SCENARIO),
+        main = paste("Observed active TB incidence:\n", diroutput, "\n scenario", SCENARIO),
         xlab = "Times since arrival to the UK (years)",
         ylab = "Active TB cases",
         col = c("lightgrey", "darkgrey","lightblue","darkblue"),
@@ -154,6 +175,9 @@ barplot(height = missed_avoided_activeTBcases,
 
 legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Cases avoided EWNI", "Estimated Cases avoided EWNI"),
        density = c(5,60,20,100), angle = c(10,45,75,11), fill = c("lightgrey", "darkgrey","lightblue","darkblue"), bg = "white")
+
+dev.off()
+
 
 # cumulative counts
 # h <- hist(rNotificationDate_issdt.years, breaks = 0:5, plot = FALSE)
@@ -172,6 +196,8 @@ missed_avoided_UK_nonUK_activeTBcases <- rbind("Missed UK"  = activeTBcases_afte
                                                "Avoided non-UK" = cum_year_total.diff * p.completeTx)
 
 windows(rescale ="R")
+png(paste(plots_folder, "/barplot_aTB_with_exituk_avoided.png", sep=""))
+
 barplot(height = missed_avoided_UK_nonUK_activeTBcases,
         main = sprintf("Number of active TB cases\n before and after screening in %s cohort", year_cohort),
         xlab = "Times since arrival to EWNI (years)",
@@ -184,20 +210,24 @@ legend("topright",
        legend = c("Observed missed EWNI", "Estimated missed EWNI", "Observed cases avoided EWNI", "Estimated cases avoided EWNI", "Estimated cases missed exit EWNI", "Estimated cases avoided exit EWNI"),
        density = c(5,60,20,100), angle = c(10,45,75,11,30,80), fill = c("lightgrey", "darkgrey","lightblue","darkblue","red","green"), bg = "white")
 
+dev.off()
+
 
 ############################
 ## all scenarios combined ##
 ############################
 
 p.completeTx_scenarios <- LTBI_prob_lookup %>%
-  filter(who_prev_cat_Pareek2011=="(50,150]") %>%
-  select(value)
+                            filter(who_prev_cat_Pareek2011=="(50,150]") %>%
+                            select(value)
 
 counts.scenarios <- matrix(data = activeTBcases,
                            nrow = n.scenarios,
                            ncol = length(activeTBcases), byrow = TRUE)
 
-for (i in seq_len(n.scenarios)) counts.scenarios[i, ] <- counts.scenarios[i, ] * p.completeTx_scenarios[i, ]
+for (i in seq_len(n.scenarios)){
+  counts.scenarios[i, ] <- counts.scenarios[i, ] * p.completeTx_scenarios[i, ]
+}
 
 
 # all scenarios bar plot
@@ -210,10 +240,11 @@ counts.melt <- melt(counts.scenarios)
 # geom_point(aes(y = value), alpha=.3)
 
 
-# box plot
+# box ans whisker plot
 ggplot(data = counts.melt, aes(x = X2, y = value, group = X2)) +
   geom_boxplot() +
   stat_summary(fun.y = mean, geom = "point", shape = 5, size = 4) +
   theme_bw() +
   xlab("Times since arrival to the UK (years)") +
   ylab("Active TB cases avoided in EWNI")
+
