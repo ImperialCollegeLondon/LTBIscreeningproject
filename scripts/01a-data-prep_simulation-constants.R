@@ -27,8 +27,9 @@ screen_age_range <- 18:45
 year_cohort <- '2009' #largest cohort
 
 
-# parameter_values_file <- "data/scenario_parameter_values.xlsx"
-parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package = "LTBIscreeningproject")
+# parameter_values_file <- system.file("data", "scenario-parameter-values_full.xls", package = "LTBIscreeningproject")
+# parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package = "LTBIscreeningproject")
+parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx", package = "LTBIscreeningproject")
 
 
 # # create permanent output folder
@@ -38,3 +39,5 @@ parameter_values_file <- system.file("data", "scenario-parameter-values_adherenc
 
 # create temporary output folder
 diroutput <- tempdir()
+
+plots_folder <- "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/output/plots"
