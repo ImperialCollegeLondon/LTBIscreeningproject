@@ -53,7 +53,9 @@ for (scenario_i in seq_len(n.scenarios)){
   # individual tb status for each scenario
   uk_tb_scenarios <- c(NULL, NULL)
 
-  p.completeTx <- data.table(pLTBI_hash[pLTBI_hash$scenario==scenario_i, ])
+  p.completeTx <- pLTBI_hash[pLTBI_hash$scenario==scenario_i, ] %>%
+                    as.data.table()
+
   setkey(p.completeTx, "who_prev_cat_Pareek2011")
 
   # prob successfully completing LTBI Tx for each individual
