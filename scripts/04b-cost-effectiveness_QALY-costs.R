@@ -4,6 +4,7 @@
 # Oct 2016
 #
 # QALY gain and cost incurred due to active TB in UK arrivals
+#
 
 
 QALY_uk_tb <- calc_QALY_uk_tb(data = IMPUTED_sample_year_cohort,
@@ -23,9 +24,6 @@ cfr_uk_tb <- cfr_age_lookup[cfr_age_groups, "cfr"]
 # status-quo --------------------------------------------------------------
 
 QALY_uk_tb_cured_original <- QALY_uk_tb$cured
-
-# total cohort cost due to diagnosis and treatment
-aTB_cost.statusquo <- unit_cost$aTB_TxDx * n.tb_year
 
 
 # screened ----------------------------------------------------------------
@@ -64,6 +62,12 @@ for (scenario in seq_len(n.scenarios)){
   # QALYs and cost with screening
   for (simnum in uk_tbX_names){
 
+    unit_cost.aTB_TxDx <- sample_distributions(param.distns = unit_cost$aTB_TxDx) %>%
+                           sum()
+
+    # total cohort cost due to diagnosis and treatment
+    aTB_cost.statusquo <- unit_cost.aTB_TxDx * n.tb_year
+
     n.diseasefree <- filter(n.tb_screen[[scenario]],
                             status=="disease-free", sim==simnum)$n
 
@@ -76,7 +80,10 @@ for (scenario in seq_len(n.scenarios)){
     aTB_QALY.statusquo[[scenario]][simnum] <- sum(QALY_uk_tb$cured)
 
     aTB_QALY.screened[[scenario]][simnum] <- create_screened_cohort_QALYs(n.diseasefree, QALY_uk_tb)
-    aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree, aTB_cost.statusquo, unit_cost$aTB_TxDx)
+
+    aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree,
+                                                                         aTB_cost.statusquo,
+                                                                         unit_cost$aTB_TxDx)
 
     # reset to status-quo QALYs
     QALY_uk_tb$cured <- QALY_uk_tb_cured_original
@@ -108,15 +115,6 @@ for (scenario in seq_len(n.scenarios)){
   # expected total aTB screening QALYs over all simulations in scenario
   E.aTB_QALY.screened[scenario] <- mean(aTB_QALY.screened[[scenario]], na.rm = TRUE)
 
-  # ICER by sims for aTB only
-  aTB_ICER[[scenario]] <- calc.ICER(delta.e = aTB_cost_diff[[scenario]],
-                                delta.c = aTB_QALYgain[[scenario]])
-
-  # INMB by sims for aTB only
-  aTB_INMB[[scenario]] <- calc.INMB(delta.e = aTB_QALYgain[[scenario]],
-                                delta.c = aTB_cost_diff[[scenario]],
-                                wtp = wtp_threshold)
-
   # proportion CE at wtp_threshold/QALY
   aTB_p.costEffective[[scenario]] <- prop.table(table(aTB_INMB[[scenario]]>0, useNA = "no"))
 }
@@ -130,12 +128,9 @@ aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      aTB_QALYgain = aTB_QALYgain,
                      aTB_cost_diff_person = aTB_cost_diff_person,
                      aTB_QALYgain_person = aTB_QALYgain_person,
-                     aTB_ICER = aTB_ICER,
-                     aTB_INMB = aTB_INMB,
                      aTB_p.costEffective = aTB_p.costEffective)
 
 aTB_CE_stats_scenario <- cbind(E.aTB_cost.screened,
-                               aTB_cost.statusquo,
                                E.aTB_QALY.screened,
                                aTB_QALY.statusquo)
 

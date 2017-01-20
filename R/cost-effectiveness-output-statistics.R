@@ -15,19 +15,17 @@
 #'
 calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 
-  if(wtp<0)
+  if (wtp<0)
     stop("Willingness to pay must be non-negative.")
 
-  if(any(dim(c)!=dim(e)))
+  if (any(dim(c)!=dim(e)))
     warning("Dimensions of e and c do not match.")
 
-  n.sim <- dim(e)[1]
   n.comparators <- dim(e)[2]
 
   # Define reference & comparator intervention
   ints <- 1:n.comparators
   comp <- ints[-ref]
-  n.comparisons <- n.comparators - 1
 
   delta.e <- as.data.frame(e[ ,comp] - e[ ,ref])
   delta.c <- as.data.frame(c[ ,comp] - c[ ,ref])
@@ -53,16 +51,14 @@ calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 #'
 calc.ICER <- function(e, c, ref = 1){
 
-  if(any(dim(c)!=dim(e)))
+  if (any(dim(c)!=dim(e)))
     warning("Dimensions of e and c do not match.")
 
-  n.sim <- dim(e)[1]
   n.comparators <- dim(e)[2]
 
   # Define reference & comparator intervention
   ints <- 1:n.comparators
   comp <- ints[-ref]
-  n.comparisons <- n.comparators - 1
 
   delta.e <- as.data.frame(e[ ,comp] - e[ ,ref])
   delta.c <- as.data.frame(c[ ,comp] - c[ ,ref])

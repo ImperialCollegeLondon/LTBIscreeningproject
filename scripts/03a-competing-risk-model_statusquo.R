@@ -7,9 +7,6 @@
 # without screening
 
 
-##TODO##
-# extrapolate TB activation past ETS follow-up
-
 
 library(survival)
 library(mstate)

@@ -4,7 +4,8 @@
 # Oct 2016
 #
 # sample how many LTBI become active cases
-# with potential screening for each scenario
+# with potential screening
+# for each scenario
 
 
 library(survival)
@@ -26,9 +27,8 @@ if(!exists("p.complete_treat_scenarios")){
 }
 
 # LTBI probability look-up table
-pLTBI_hash <-
-  p.complete_treat_scenarios %>%
-  gather("who_prev_cat_Pareek2011", "value", -scenario)
+pLTBI_hash <- p.complete_treat_scenarios %>%
+                gather("who_prev_cat_Pareek2011", "value", -scenario)
 
 # labels of active TB case samples
 uk_tbX_names <- paste("uk_tb", seq_len(N.mc), sep = "")

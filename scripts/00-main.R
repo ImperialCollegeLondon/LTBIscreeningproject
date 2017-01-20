@@ -6,6 +6,11 @@
 # Main top-level script
 
 
+# packages
+devtools::load_all(".")
+
+suppressWarnings(warning("library"))
+
 # increase RAM to store data
 memory.size(max = 8000)
 
@@ -17,36 +22,40 @@ load("../../data/051206 - IMPUTED_sample.RData")
 # rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
-# define and clean data ---------------------------------------------------
+# 1) define and clean data ------------------------------------------------
 
-source("scripts/01a-data-prep_simulation-constants.R")
-source("scripts/01c-data-prep_cost-effectiveness.R")
-source("scripts/01b-data-prep_modelling.R")
+source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
+source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
+source("scripts/01c-data-prep_modelling.R", echo = TRUE)
 
 
-# decision tree -----------------------------------------------------------
+# 2) decision tree --------------------------------------------------------
 
 source("scripts/02-decision-tree-model.R")
 
 
-# survival models ---------------------------------------------------------
+# 3) survival models ------------------------------------------------------
 
 # source("scripts/03a-competing-risk-model_statusquo.R")
 # source("scripts/03b-competing-risk-model_screening.R")
 
 
-# cost-effectiveness ------------------------------------------------------
+# 4) cost-effectiveness ---------------------------------------------------
 
 source("scripts/04a-cost-effectiveness_activeTB-samples.R")
 source("scripts/04b-cost-effectiveness_QALY-costs.R")
 
 
-# output plots ------------------------------------------------------------
+# 5) output plots/tables --------------------------------------------------
 
 # source("scripts/05a-output-plots_competing-risks.R")
 source("scripts/05b-output-plots_cost-effectiveness.R")
-source("scripts/05c-output-plots_cost-effectiveness_active-TB-cases.R")
-
+source("scripts/05c-active-TB-imputation.R")
+# source("scripts/05d-active-TB-imputation_in-uk.R")
+source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")
+source("scripts/05f-tornado_plots.R")
+source("scripts/05g-histograms.R")
+source("scripts/05h-CE_summary_stats.R")
 
 
 # clean-up session --------------------------------------------------------

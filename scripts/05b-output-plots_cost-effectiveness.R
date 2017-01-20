@@ -15,24 +15,29 @@ library(BCEA)
 if(!exists("aTB_CE_stats")) load(paste(diroutput, "aTB_CE_stats.RData", sep = "/"))
 
 
+popscale <- 100000
+
+
 ###############
 ## active TB ##
 ###############
 
 # convert active TB lists to dataframes
-aTB_cost_diff.melt <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_cost_diff_person), row.names = NULL)
-aTB_QALYgain.melt  <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_QALYgain_person), row.names = NULL)
+aTB_cost_melt <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_cost_diff_person), row.names = NULL)
+aTB_QALYgain_melt  <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_QALYgain_person), row.names = NULL)
 
 # with status-quo
 scenario.names <- as.character(c(0, seq_len(n.scenarios)))
 
-# BCEA format
+
+## BCEA format
+
 # append status-quo scenario
-aTB_cost_diff.df <- t(rbind(0, aTB_cost_diff.melt)) %>%
+aTB_cost.df <- t(rbind(0, aTB_cost_melt)) %>%
                       as.data.frame() %>%
                       set_names(scenario.names)
 
-aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain.melt)) %>%
+aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain_melt)) %>%
                       as.data.frame() %>%
                       set_names(scenario.names)
 
@@ -45,26 +50,30 @@ aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain.melt)) %>%
 LTBI_cost_melt <- read.csv(file = paste(diroutput, "mc_cost.csv", sep = "/"), header = FALSE)
 LTBI_QALYloss_melt <- read.csv(file = paste(diroutput, "mc_health.csv", sep = "/"), header = FALSE)
 
-# BCEA format
+
+## BCEA format
+
 # append status-quo scenario
 LTBI_cost.df <- t(rbind(0, LTBI_cost_melt)) %>%
                   as.data.frame() %>%
                   set_names(scenario.names)
 
-# NB negative QALY loss is required QALY gain
+# NB negative QALY loss is QALY gain
 LTBI_QALYgain.df <- t(rbind(0, - LTBI_QALYloss_melt)) %>%
                     as.data.frame() %>%
                     set_names(scenario.names)
 
 
-popscale <- 100000
+############
+## totals ##
+############
 
-c.total <- as.matrix(LTBI_cost.df + aTB_cost_diff.df) * popscale
+c.total <- as.matrix(LTBI_cost.df + aTB_cost.df) * popscale
 e.total <- as.matrix(LTBI_QALYgain.df + aTB_QALYgain.df) * popscale
 
 
-screen.bcea <- bcea(e = -e.total,
-                    c =  c.total,
+screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 wrong way round in function!
+                    c =  -c.total,
                     ref = 1,
                     interventions = colnames(e.total))
 
@@ -79,10 +88,24 @@ screen.bcea <- bcea(e = -e.total,
 # cost-effectiveness planes -----------------------------------------------
 
 ceplane.plot(screen.bcea, pos = "topleft")
-ceplane.plot(screen.bcea, graph = "ggplot2")
+
 contour(screen.bcea)
+
+gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
+
 gg <- contour2(screen.bcea, graph = "ggplot2")
-gg + scale_color_brewer(palette = "Dark2")  #in colour
+
+gg + scale_color_brewer(palette = "Dark2") + xlim(0,10) + geom_abline(slope = 20000) +
+  scale_color_discrete(labels = c("baseline",
+                                  "agree to screen 0.1",
+                                  "agree to screen 1",
+                                  "start treatment 0.25",
+                                  "start treatment 1",
+                                  "",
+                                  "complete treatment 0.5",
+                                  "complete treatment 1",
+                                  "LTBI test cost 20",
+                                  "LTBI test cost 100"))    #change label
 
 
 eib.plot(screen.bcea)
@@ -91,6 +114,7 @@ ceac.plot(screen.bcea)
 
 
 
+##TODO: update money saved/cases averted over time
 
 # money saved/cases averted over time -------------------------------------
 

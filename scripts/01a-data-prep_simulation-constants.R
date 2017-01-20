@@ -10,7 +10,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2#00
+N.mc <- 2
 
 # n.scenarios <- 180    #"data/scenario_parameter_values.xlsx"
 n.scenarios <- 441    #data/scenario-parameter-values_adherence_completion.xls"
@@ -29,7 +29,8 @@ year_cohort <- '2009' #largest cohort
 
 # parameter_values_file <- system.file("data", "scenario-parameter-values_full.xls", package = "LTBIscreeningproject")
 # parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package = "LTBIscreeningproject")
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx", package = "LTBIscreeningproject")
+parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx",
+                                     package = "LTBIscreeningproject")
 
 
 # # create permanent output folder
@@ -40,4 +41,4 @@ parameter_values_file <- system.file("data", "scenario-parameter-values_range-li
 # create temporary output folder
 diroutput <- tempdir()
 
-plots_folder <- "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/output/plots"
+plots_folder <- system.file("output", "plots", package = "LTBIscreeningproject")
