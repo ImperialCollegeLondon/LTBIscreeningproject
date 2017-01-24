@@ -132,6 +132,15 @@ unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2010,
 
 utility <- list()
 
-utility$disease_free <- 1.0 #assume perfect health
+utility$falsepos_Tx <- 0.9
+
+utility$disease_free <- 1.0 #assume perfect health. we're only interest in relative changes
 utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010)
 
+utility$activeTB_preTx <- 0.9
+utility$activeTB_acute <- 0.675 #2 months
+utility$activeTB_postacute <- 0.813
+
+QALYloss_activeTB <- 0.4  #15-34 year olds. includes Tx adverse events
+QALYloss_falseposLTBI_adverse <- 0.0008
+QALYloss_falsepos_activeTB_Tx <- 0.03
