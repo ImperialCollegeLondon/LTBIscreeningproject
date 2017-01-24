@@ -13,19 +13,21 @@
 # since the other individuals unchanged
 
 
-# willingness to pay
-wtp_threshold <- 20000  #£
+# willingness to pay (£)
+wtp_threshold <- 20000
 
 
 # 12 month active TB case fatality rate
 
 cfr_age_breaks <- c(15, 45, 65, 200)
-cfr_age_levels <- levels(cut(0, cfr_age_breaks, right = FALSE))
+cfr_age_levels <- cut(0, cfr_age_breaks, right = FALSE) %>%
+                    levels()
 
 cfr_age_lookup <- data.frame(age = cfr_age_levels,
-                             cfr = c(0.0018, 0.0476, 0.1755),
-                             a = c(1, 125, 413), #beta distn
-                             b = c(564, 2500, 1940))
+                             cfr = c(0.012, NA, NA),
+                             distn = c("beta", "beta", "beta"),
+                             a = c(NA, NA, NA),
+                             b = c(NA, NA, NA))
 
 rownames(cfr_age_lookup) <- cfr_age_lookup$age
 
