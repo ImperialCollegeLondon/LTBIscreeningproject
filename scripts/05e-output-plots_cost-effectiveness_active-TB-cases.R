@@ -9,7 +9,7 @@
 
 
 library(ggplot2)
-
+library(denstrip)
 
 
 if(!exists("p.complete_treat_scenarios")){
@@ -30,10 +30,15 @@ LTBI_prob_lookup <-
 ## before screening ##
 ######################
 
-rNotificationDate_issdt.years <- IMPUTED_sample_year_cohort$rNotificationDate_issdt.years
-rNotificationDate_issdt.years <- ceiling(rNotificationDate_issdt.years[rNotificationDate_issdt.years>=0])
+##check are these for non-duplicate active tb cases only n.tb_year=368??
 
-activeTBcases <- table(rNotificationDate_issdt.years)
+notifDate_issdt.years <- subset(IMPUTED_sample_year_cohort,
+                                subset = (uk_tb==1 &
+                                          rNotificationDate_issdt.years>=0),
+                                select = rNotificationDate_issdt.years) %>%
+                          ceiling()
+
+activeTBcases <- table(notifDate_issdt.years)
 
 
 # fit exponential to (latest) observed active TB
@@ -52,7 +57,7 @@ uktb_estimated <- c(rep(0, length(activeTBcases)),
 
 # fillin missing years with NA
 activeTBcases <- c(activeTBcases,
-                   rep(0, length(cum_year_total.diff) - length(activeTBcases)))
+                   rep(0, length(uktb_estimated) - length(activeTBcases)))
 
 
 # fillin later years with estimates (exponential)
@@ -65,7 +70,7 @@ colnames(activeTBcases) <- seq_len(ncol(activeTBcases))
 png(paste(plots_folder, "/barplot_raw_num_aTB.png", sep=""))
 
 barplot(height = activeTBcases,
-        ylim = c(0, 200),
+        ylim = c(0, 150),
         main = "Raw number of active TB cases",
         xlab = "Time in UK (years)", ylab = "Cases")
 
@@ -75,8 +80,8 @@ dev.off()
 # including LTBI indiv who have left EWNI -----------------------------------
 
 activeTBcases_UK_nonUK <- rbind("UK observed" = activeTBcases,
-                                "Non-UK estimated" = cum_year_total.diff)
-                                # "Non-UK estimated" = cum_year_total.diff[names(activeTBcases)])
+                                "Non-UK estimated" = exituk_tb_year)
+                                # "Non-UK estimated" = exituk_tb_year[names(activeTBcases)])
 
 x11()
 png(paste(plots_folder, "/barplot_aTB_with_exituk.png", sep = ""))
@@ -105,7 +110,8 @@ SCENARIO <- 1#300
 
 p.completeTx <- subset(x = LTBI_prob_lookup,
                        scenario==as.character(SCENARIO) & who_prev_cat_Pareek2011=="(50,150]",
-                       select = value) %>% as.numeric
+                       select = value) %>%
+                as.numeric()
 
 activeTBcases_after_screen <- activeTBcases * (1 - p.completeTx)
 
@@ -113,17 +119,32 @@ activeTBcases_after_screen <- activeTBcases * (1 - p.completeTx)
 png(paste(plots_folder, "/barplot_raw_num_aTB_screened.png", sep = ""))
 
 barplot(height = activeTBcases_after_screen,
-        main = sprintf("Raw number of active TB cases after screening in %s cohort", year_cohort),
+        main = sprintf("Raw number of active TB cases\n after screening in %s cohort", year_cohort),
         xlab = "Time in UK (years)", ylab = "Cases")
 
 dev.off()
+
+
+# using density strips
+# to show uncertainty
+
+plot(NA, xlim = c(0, 9), ylim = c(0, 170),
+     xlab = "Time since arrival in EWNI (years)", ylab = "Number of notified active TB cases", type = "n")
+axis(side = 1, at = 1:8)
+combined_activeTBcases <- colSums(activeTBcases) %>% round()
+x <- list()
+for (i in seq_along(combined_activeTBcases)){
+
+  x[[i]] <- rbinom(n = 1000, size = combined_activeTBcases[i], prob = 1 - p.completeTx)
+  denstrip(x[[i]], colmax = "black", width = 1, at = i, horiz = FALSE, ticks = combined_activeTBcases[i], tlen = 1)
+}
 
 
 
 # including LTBI indiv who have left UK -----------------------------------
 
 activeTBcases_UK_nonUK_after_screen <- rbind("UK observed" = activeTBcases_after_screen,
-                                             "Non-UK estimated" = cum_year_total.diff * (1 - p.completeTx))
+                                             "Non-UK estimated" = exituk_tb_year * (1 - p.completeTx))
 
 x11()
 png(paste(plots_folder, "/barplot_aTB_with_exituk_screened.png", sep = ""))
@@ -194,8 +215,8 @@ dev.off()
 # stack missed and avoided active TB cases
 missed_avoided_UK_nonUK_activeTBcases <- rbind("Missed UK"  = activeTBcases_after_screen,
                                                "Avoided UK" = activeTBcases - activeTBcases_after_screen,
-                                               "Missed non-UK"  = cum_year_total.diff * (1 - p.completeTx),
-                                               "Avoided non-UK" = cum_year_total.diff * p.completeTx)
+                                               "Missed non-UK"  = exituk_tb_year * (1 - p.completeTx),
+                                               "Avoided non-UK" = exituk_tb_year * p.completeTx)
 
 windows(rescale ="R")
 png(paste(plots_folder, "/barplot_aTB_with_exituk_avoided.png", sep=""))

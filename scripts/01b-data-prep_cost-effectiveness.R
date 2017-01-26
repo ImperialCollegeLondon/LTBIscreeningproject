@@ -135,7 +135,13 @@ utility <- list()
 utility$falsepos_Tx <- 0.9
 
 utility$disease_free <- 1.0 #assume perfect health. we're only interest in relative changes
+
+
+# relative to disease free = 1
 utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010)
+utility$activeTB <- 0.9   #pre-treatment #Mears, J., (2015) The prospective evaluation of the TB strain typing service in England: a mixed methods study. Thorax
+utility$activeTB <- 0.82  #post-acute
+
 
 utility$activeTB_preTx <- 0.9
 utility$activeTB_acute <- 0.675 #2 months

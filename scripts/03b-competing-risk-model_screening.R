@@ -4,7 +4,7 @@
 # Oct 2016
 #
 # fit competing risk models to imputed complete data set with ETS active TB data
-# with screening
+# _with_ screening
 
 
 library(survival)

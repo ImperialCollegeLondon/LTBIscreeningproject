@@ -18,7 +18,7 @@ options("max.print" = 3000)
 # initiate decision tree --------------------------------------------------
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml", package = "LTBIscreeningproject")
-osNode.health.fileName <- system.file("data", "LTBI_dtree-health-symptoms.yaml", package = "LTBIscreeningproject")
+osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml", package = "LTBIscreeningproject")
 
 
 # deterministic parameter value grids -------------------------------------

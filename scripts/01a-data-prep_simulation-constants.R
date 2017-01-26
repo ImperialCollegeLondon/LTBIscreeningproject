@@ -10,7 +10,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2
+N.mc <- 200
 
 # n.scenarios <- 180    #"data/scenario_parameter_values.xlsx"
 n.scenarios <- 441    #data/scenario-parameter-values_adherence_completion.xls"
@@ -42,3 +42,7 @@ parameter_values_file <- system.file("data", "scenario-parameter-values_range-li
 diroutput <- tempdir()
 
 plots_folder <- system.file("output", "plots", package = "LTBIscreeningproject")
+
+# include QALYs and costs for individuals once they've left?
+QALY.ENDPOINT <- "death" #"exit uk"
+cost.ENDPOINT <- "death" #"exit uk"

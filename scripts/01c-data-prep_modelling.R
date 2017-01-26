@@ -15,6 +15,9 @@ IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
+# remove duplicate pre-entry screened
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample, dup_ref_id_orig==0)
+
 ##TODO: why are there missing issdt uk entry dates?
 # for now just remove them...
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))

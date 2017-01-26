@@ -4,7 +4,8 @@
 # Oct 2016
 #
 # fit competing risk models to imputed complete dataset with ETS active TB cases
-# without screening
+# _without_ screening
+
 
 
 
@@ -33,7 +34,6 @@ colnames(fup_issdt) <- paste(colnames(fup_issdt), "_issdt", sep = "")
 event_issdt <- apply(IMPUTED_sample[ ,cols_eventdate], 2,
                      FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
 colnames(event_issdt) <- paste(colnames(event_issdt), "_issdt", sep = "")
-
 
 IMPUTED_sample <- data.frame(IMPUTED_sample, event_issdt, fup_issdt)
 
@@ -127,13 +127,13 @@ event[IMPUTED_sample$uk_tb_orig=="1"] <- 1
 
 
 # 'observed' event time
-times <- fup_issdt[ ,"fup1_issdt"]
+fup_times <- fup_issdt[ ,"fup1_issdt"]
 
 
 # transition matrix
 tmat <- trans.comprisk(3, c("event-free", "active_TB", "exit_uk", "dead"))
 
-dat <- data.frame(times)
+dat <- data.frame(fup_times)
 dat$age_at_entry <- IMPUTED_sample$age_at_entry
 
 dat$event3 <- as.numeric(event == 3) #death
@@ -141,7 +141,7 @@ dat$event2 <- as.numeric(event == 2) #exit_uk
 dat$event1 <- as.numeric(event == 1) #uk_tb
 
 # transform to mstate format array
-mslong <- msprep(time = c(NA, "times", "times", "times"),
+mslong <- msprep(time = c(NA, "fup_times", "fup_times", "fup_times"),
                  status = c(NA, "event1", "event2", "event3"),
                  data = dat, keep = "age_at_entry", trans = tmat)
 
@@ -158,9 +158,9 @@ cx
 
 # create data structures for cmprsk::
 cmprsk_age <- data.frame(dis = dat$age_at_entry,
-                         ftime = times,
+                         ftime = fup_times,
                          status = event)
 cmprsk <- data.frame(dis = 1,
-                     ftime = times,
+                     ftime = fup_times,
                      status = event) # without age
 

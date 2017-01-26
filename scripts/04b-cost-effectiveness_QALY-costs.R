@@ -4,13 +4,16 @@
 # Oct 2016
 #
 # QALY gain and cost incurred due to active TB in UK arrivals
-#
+
+
+n.tb_year.ENDPOINT <- if (cost.ENDPOINT=="exit uk"){n.tb_year
+                      }else if (cost.ENDPOINT=="death"){n.tb_year + n.exit_tb}
 
 
 QALY_uk_tb <- calc_QALY_uk_tb(data = IMPUTED_sample_year_cohort,
                               utility$disease_free,
                               utility$activeTB,
-                              endpoint = "death")
+                              endpoint = QALY.ENDPOINT)
 
 cfr_age_groups <- subset(x = IMPUTED_sample_year_cohort,
                          subset = uk_tb_TRUE_year,
@@ -65,8 +68,8 @@ for (scenario in seq_len(n.scenarios)){
     unit_cost.aTB_TxDx <- sample_distributions(param.distns = unit_cost$aTB_TxDx) %>%
                            sum()
 
-    # total cohort cost due to diagnosis and treatment
-    aTB_cost.statusquo <- unit_cost.aTB_TxDx * n.tb_year
+    # total cohort cost due to diagnosis and treatment of active TB
+    aTB_cost.statusquo <- unit_cost.aTB_TxDx * n.tb_year.ENDPOINT
 
     n.diseasefree <- filter(n.tb_screen[[scenario]],
                             status=="disease-free", sim==simnum)$n
@@ -83,7 +86,19 @@ for (scenario in seq_len(n.scenarios)){
 
     aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree,
                                                                          aTB_cost.statusquo,
-                                                                         unit_cost$aTB_TxDx)
+                                                                         unit_cost.aTB_TxDx)
+
+    # include exit uk costs
+    ##TODO: take WHO cat average and move snippet to 04a.R
+    if (cost.ENDPOINT=="death"){
+
+      p.completeTx <- pLTBI_hash[pLTBI_hash$scenario==scenario, 1]
+
+      n.exit_tb.sampled <- rbinom(n = 1, size = n.exit_tb, prob = (1 - p.completeTx))
+
+      aTB_cost.screened[[scenario]][simnum] <- aTB_cost.screened[[scenario]][simnum] +
+                                                 unit_cost.aTB_TxDx * n.exit_tb.sampled
+      }
 
     # reset to status-quo QALYs
     QALY_uk_tb$cured <- QALY_uk_tb_cured_original

@@ -15,7 +15,7 @@ library(BCEA)
 if(!exists("aTB_CE_stats")) load(paste(diroutput, "aTB_CE_stats.RData", sep = "/"))
 
 
-popscale <- 100000
+popscale <- 1#00000
 
 
 ###############
@@ -88,20 +88,18 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 wrong way round in function!
 # cost-effectiveness planes -----------------------------------------------
 
 ceplane.plot(screen.bcea, pos = "topleft")
-
-contour(screen.bcea)
+# contour(screen.bcea)
 
 gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 
 gg <- contour2(screen.bcea, graph = "ggplot2")
 
-gg + scale_color_brewer(palette = "Dark2") + xlim(0,10) + geom_abline(slope = 20000) +
+gg + scale_color_brewer(palette = "Dark2") + geom_abline(slope = 20000) + xlim(0, 0.0001) +
   scale_color_discrete(labels = c("baseline",
                                   "agree to screen 0.1",
                                   "agree to screen 1",
                                   "start treatment 0.25",
                                   "start treatment 1",
-                                  "",
                                   "complete treatment 0.5",
                                   "complete treatment 1",
                                   "LTBI test cost 20",

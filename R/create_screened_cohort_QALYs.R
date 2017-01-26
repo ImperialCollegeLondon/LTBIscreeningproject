@@ -2,10 +2,12 @@
 #' Calculate Potentially Screened Cohort QALYs
 #'
 #' @param n.diseasefree Number of disease-free individuals
-#' @param QALY List of QALYs for total cohort status-quo (assumed treated and cured), death, or all treated to disease-free
+#' @param QALY List of QALYs for total cohort status-quo (assumed treated and cured),
+#'             death, or all treated to disease-free
 #'
 #' @return Total QALYs for potentially screened cohort
 #' @export
+#' @seealso \link{\code{create_screened_cohort_cost}}
 #'
 #' @examples
 #'
@@ -36,6 +38,7 @@ create_screened_cohort_QALYs <- function(n.diseasefree,
 #'
 #' @return Total cost for potentially screened cohort
 #' @export
+#' @seealso \link{\code{create_screened_cohort_QALYs}}
 #'
 #' @examples
 #'
