@@ -8,7 +8,6 @@
 
 
 
-
 library(survival)
 library(mstate)
 library(cmprsk) # http://www.stat.unipg.it/luca/R

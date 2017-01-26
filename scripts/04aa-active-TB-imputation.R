@@ -29,7 +29,7 @@ LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 ########################################
 
 cmprsk <- data.frame(dis = 1,
-                     ftime = times,
+                     ftime = fup_times,
                      status = event) # without age
 
 # replace exit uk with censored times
@@ -43,8 +43,7 @@ cmprsk$status[cmprsk$status==2] <- 0
 cmprsk <- cmprsk[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
 
 
-# calculate and plot
-# competing risk of active TB and all-cause death
+# competing risks of active TB and all-cause death
 # cumulative probability
 # use total cohort
 
@@ -71,10 +70,6 @@ names(cumprob.activetb) <- as.character(1:length(cumprob.activetb) - 1)
 
 # extract year only
 issdt_exit_year <- ceiling(IMPUTED_sample$date_exit_uk1_issdt/365)[LTBI_status==1 & whoin_year_cohort]
-# issdt_exit_year <- subset(IMPUTED_sample,
-#                           subset = LTBI_status==1 & whoin_year_cohort) %>%
-#                     transmute(date_exit_uk1_issdt/365) %>%
-#                     ceiling()
 
 issdt_exit_year.tab <- table(issdt_exit_year)
 
@@ -86,17 +81,18 @@ issdt_exit_year.tab <- issdt_exit_year.tab[as.numeric(names(issdt_exit_year.tab)
 max_year <- 10
 activetb.exituk <- NULL
 
-for (i in 1:max_year){
+for (i in seq_len(max_year)){
 
   pop_exit_in_year_i <- issdt_exit_year.tab[as.character(i)]
 
   cumprob.activetb_starting_year_i <- cumprob.activetb - cumprob.activetb[as.character(i - 1)]
 
-  cumprob.activetb_starting_year_i <- pmax(0, cumprob.activetb_starting_year_i, na.rm = TRUE)
+  cumprob.activetb_starting_year_i <- pmax(cumprob.activetb_starting_year_i, 0, na.rm = TRUE)
 
   activetb.exituk <- rbind(activetb.exituk,
                            pop_exit_in_year_i * cumprob.activetb_starting_year_i)
 }
+
 colnames(activetb.exituk) <- names(cumprob.activetb)
 
 

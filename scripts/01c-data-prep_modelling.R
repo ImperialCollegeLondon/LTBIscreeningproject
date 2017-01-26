@@ -162,12 +162,6 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample, issdt_year==year_coh
 # is record in chosen cohort logical
 whoin_year_cohort <- IMPUTED_sample$issdt_year==year_cohort
 
-# total sample sizes for each yearly cohort
-entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
-                                  by = list(IMPUTED_sample$issdt_year), sum) %>%
-                        set_names(c("year", "pop"))
-
-
 # logical active TB status of original data
 uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
 
@@ -179,8 +173,15 @@ rm(rNotificationDate_issdt.years,
 
 # summary statistics ------------------------------------------------------
 
+# total sample sizes for each yearly cohort
+entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
+                                  by = list(IMPUTED_sample$issdt_year), sum) %>%
+                        set_names(c("year", "pop"))
+
 # cohort size at arrival to uk
-pop_year <- with(entryCohort_poptotal, pop[year==year_cohort])
+pop_year <- entryCohort_poptotal %>%
+              filter(year==year_cohort) %>%
+              select(pop)
 
 # number of active TB cases _before_ screening i.e. status-quo
 n.tb <- sum(IMPUTED_sample$uk_tb)

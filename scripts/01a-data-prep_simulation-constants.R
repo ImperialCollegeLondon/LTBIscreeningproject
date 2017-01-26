@@ -10,7 +10,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 200
+N.mc <- 2
 
 # n.scenarios <- 180    #"data/scenario_parameter_values.xlsx"
 n.scenarios <- 441    #data/scenario-parameter-values_adherence_completion.xls"

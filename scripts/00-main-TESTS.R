@@ -16,11 +16,6 @@ memory.size(max = 8000)
 
 load("../../data/051206 - IMPUTED_sample.RData")
 
-# total data set
-# load(file = "T:\\STATA-model_incidence data_updated\\IMPUTED_IOM_ETS_WHO_merged_15_2_9.RData")
-# IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
-# rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
-
 
 # 1) define and clean data ------------------------------------------------
 
@@ -31,13 +26,12 @@ source("scripts/01c-data-prep_modelling.R", echo = TRUE)
 
 # 2) decision tree --------------------------------------------------------
 
-source("scripts/02-decision-tree-model.R")
+source("scripts/02-decision-tree-model-TESTS.R")
 
 
 # 3) survival models ------------------------------------------------------
 
 source("scripts/03a-competing-risk-model_statusquo.R")
-# source("scripts/03b-competing-risk-model_screening.R")
 
 
 # 4) cost-effectiveness ---------------------------------------------------

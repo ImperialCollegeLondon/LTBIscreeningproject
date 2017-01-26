@@ -10,8 +10,9 @@
 calc.INMB(e = e.total,
           c = c.total,
           wtp = wtp_threshold) %>%
-  hist(breaks = 10)
+  hist(breaks = 10,
+       main = "INMB")
 
 calc.ICER(e = e.total,
           c = c.total) %>%
-  hist()
+  hist(main = "ICER")

@@ -74,7 +74,7 @@ for (scenario in seq_len(n.scenarios)){
     n.diseasefree <- filter(n.tb_screen[[scenario]],
                             status=="disease-free", sim==simnum)$n
 
-    # random sample and TRUE if death status due to active TB
+    # random sample and TRUE if death due to active TB
     uk_tb_fatality <- (cfr_uk_tb > runif(n.tb_year))
 
     # substitute in QALYs for active TB death
@@ -87,19 +87,6 @@ for (scenario in seq_len(n.scenarios)){
     aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree,
                                                                          aTB_cost.statusquo,
                                                                          unit_cost.aTB_TxDx)
-
-    # include exit uk costs
-    ##TODO: take WHO cat average and move snippet to 04a.R
-    if (cost.ENDPOINT=="death"){
-
-      p.completeTx <- pLTBI_hash[pLTBI_hash$scenario==scenario, 1]
-
-      n.exit_tb.sampled <- rbinom(n = 1, size = n.exit_tb, prob = (1 - p.completeTx))
-
-      aTB_cost.screened[[scenario]][simnum] <- aTB_cost.screened[[scenario]][simnum] +
-                                                 unit_cost.aTB_TxDx * n.exit_tb.sampled
-      }
-
     # reset to status-quo QALYs
     QALY_uk_tb$cured <- QALY_uk_tb_cured_original
   }

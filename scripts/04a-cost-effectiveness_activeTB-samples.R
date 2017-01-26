@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# sample how many LTBI become active cases
+# sample how many LTBI become active cases in the UK
 # with potential screening
 # for each scenario
 
@@ -58,7 +58,7 @@ for (scenario_i in seq_len(n.scenarios)){
 
   setkey(p.completeTx, "who_prev_cat_Pareek2011")
 
-  # prob successfully completing LTBI Tx for each individual
+  # prob successfully completing LTBI Tx for each cohort individual
   who_prev_cat <- as.character(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
   p.complete_treat_sample <- p.completeTx[who_prev_cat, value]
 

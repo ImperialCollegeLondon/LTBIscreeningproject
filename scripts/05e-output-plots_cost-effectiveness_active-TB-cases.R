@@ -94,7 +94,7 @@ barplot(height = activeTBcases_UK_nonUK,
         xlim = c(0,10), ylim = c(0, 270),
         density = c(5,60,20,30), angle = c(10,45,75,11))
 
-legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exited EWNI"),
+legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exitted EWNI"),
        density = c(5,60,20), angle = c(10,45,75), fill = c("lightgrey", "darkgrey","lightblue"), bg = "white")
 
 dev.off()
@@ -157,7 +157,7 @@ barplot(height = activeTBcases_UK_nonUK_after_screen,
         xlim = c(0,10), ylim = c(0, 270),
         density = c(5,60,20,30), angle = c(10,45,75,11))
 
-legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exited EWNI"),
+legend("topright", legend = c("Observed EWNI", "Estimated EWNI", "Estimated exitted EWNI"),
        density = c(5,60,20), angle = c(10,45,75), fill = c("lightgrey", "darkgrey","lightblue"), bg = "white")
 
 dev.off()

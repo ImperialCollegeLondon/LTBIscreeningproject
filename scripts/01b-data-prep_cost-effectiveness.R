@@ -12,6 +12,7 @@
 # only interested for the QALY gain calculation in active TB cases
 # since the other individuals unchanged
 
+library(magrittr)
 
 # willingness to pay (£)
 wtp_threshold <- 20000
@@ -24,7 +25,7 @@ cfr_age_levels <- cut(0, cfr_age_breaks, right = FALSE) %>%
                     levels()
 
 cfr_age_lookup <- data.frame(age = cfr_age_levels,
-                             cfr = c(0.012, NA, NA),
+                             cfr = c(0.012, 0.012, 0.012),
                              distn = c("beta", "beta", "beta"),
                              a = c(NA, NA, NA),
                              b = c(NA, NA, NA))

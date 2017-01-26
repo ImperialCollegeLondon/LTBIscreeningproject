@@ -94,7 +94,7 @@ gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 
 gg <- contour2(screen.bcea, graph = "ggplot2")
 
-gg + scale_color_brewer(palette = "Dark2") + geom_abline(slope = 20000) + xlim(0, 0.0001) +
+gg + scale_color_brewer(palette = "Dark2") + geom_abline(slope = 20000) +# xlim(0, 0.0001) +
   scale_color_discrete(labels = c("baseline",
                                   "agree to screen 0.1",
                                   "agree to screen 1",
