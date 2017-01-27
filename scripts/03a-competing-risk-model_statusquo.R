@@ -46,7 +46,7 @@ IMPUTED_sample <- data.frame(IMPUTED_sample, event_issdt, fup_issdt)
 fup_limit <- 19723  #days from 1960-01-01
 
 
-# first event indicator for each imputation -------------------------------
+# first event indicator (T/F) for each imputation -------------------------------
 
 IMPUTED_sample <- transform(IMPUTED_sample,
                             cens1  = fup1==fup_limit,
@@ -94,9 +94,6 @@ event[IMPUTED_sample$uk_tb_orig=="1"] <- 1
 fup_times <- fup_issdt[ ,"fup1_issdt"]
 
 
-# transition matrix
-tmat <- trans.comprisk(3, c("event-free", "active_TB", "exit_uk", "dead"))
-
 dat <- data.frame(fup_times)
 dat$age_at_entry <- IMPUTED_sample$age_at_entry
 
@@ -104,27 +101,24 @@ dat$event3 <- as.numeric(event == 3) #death
 dat$event2 <- as.numeric(event == 2) #exit_uk
 dat$event1 <- as.numeric(event == 1) #uk_tb
 
-# transform to mstate format array
-mslong <- msprep(time = c(NA, "fup_times", "fup_times", "fup_times"),
-                 status = c(NA, "event1", "event2", "event3"),
-                 data = dat, keep = "age_at_entry", trans = tmat)
 
-# check frequencies
-events(mslong)
-
-# append age to mstate format array
-mslong <- expand.covs(mslong, "age_at_entry")
-
-cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
-            data = mslong, method = "breslow")
-cx
-
-
-# create data structures for cmprsk::
-cmprsk_age <- data.frame(dis = dat$age_at_entry,
-                         ftime = fup_times,
-                         status = event)
-cmprsk <- data.frame(dis = 1,
-                     ftime = fup_times,
-                     status = event) # without age
-
+# # transition matrix
+# tmat <- trans.comprisk(3, c("event-free", "active_TB", "exit_uk", "dead"))
+#
+# # transform to mstate format array
+# mslong <- msprep(time = c(NA, "fup_times", "fup_times", "fup_times"),
+#                  status = c(NA, "event1", "event2", "event3"),
+#                  data = dat,
+#                  keep = "age_at_entry",
+#                  trans = tmat)
+#
+# # check frequencies
+# events(mslong)
+#
+# # append age to mstate format array
+# mslong <- expand.covs(mslong, "age_at_entry")
+#
+# cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
+#             data = mslong,
+#             method = "breslow")
+# cx
