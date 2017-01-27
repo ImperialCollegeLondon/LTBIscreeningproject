@@ -37,41 +37,6 @@ colnames(event_issdt) <- paste(colnames(event_issdt), "_issdt", sep = "")
 IMPUTED_sample <- data.frame(IMPUTED_sample, event_issdt, fup_issdt)
 
 
-######################################
-## simple approach: other events as ##
-##       censored (active TB) times ##
-######################################
-
-imputed.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ 1)
-imputed_age.form <- as.formula(Surv(fup3_issdt, uk_tb) ~ age_at_entry)
-
-
-# Cox proportion hazard fits
-# to different death and exit uk imputations
-# total sample
-cens_coxph1 <- coxph(Surv(fup1_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-cens_coxph2 <- coxph(Surv(fup2_issdt, uk_tb) ~ age_at_entry, data = IMPUTED_sample)
-cens_coxph3 <- coxph(imputed_age.form, data = IMPUTED_sample)
-
-# single year
-cens_coxph1_year <- coxph(imputed_age.form, data = IMPUTED_sample[whoin_year_cohort, ])
-
-
-# fit K-M to original _full_ data
-KM_original_full <- survfit(formula = imputed.form,
-                            data = IMPUTED_sample)
-#   stratified by age
-KM_original_full_age <- survfit(formula = imputed_age.form,
-                                data = IMPUTED_sample)
-
-# fit K-M to original _year_ data
-KM_original_year <- survfit(formula = imputed.form,
-                            data = IMPUTED_sample[whoin_year_cohort, ])
-#   stratified by age
-KM_original_year_age <- survfit(formula = imputed_age.form,
-                                data = IMPUTED_sample[whoin_year_cohort, ])
-
-
 
 ######################
 ## multistate model ##
