@@ -8,12 +8,6 @@
 # UK by year
 
 
-##TODO: do I need to source this file?
-# system.file("scripts", "03a-competing-risk-model_statusquo.R",
-#             package = "LTBIscreeningproject") %>%
-#   source()
-
-
 # generate at-risk population
 # each year for outside UK
 
@@ -58,15 +52,38 @@ detach(cmprsk)
 
 
 # include year 0
-cumprob.activetb <- c(0, fit$est[1, ])
-names(cumprob.activetb) <- as.character(1:length(cumprob.activetb) - 1)
+cum_incidence.activetb <- c(0, fit$est[1, ])
+names(cum_incidence.activetb) <- as.character(1:length(cum_incidence.activetb) - 1)
+
+
+# extrapolate with exponential decay
+
+year_prob.activetb <- prob_from_cum_incidence(cum_incidence.activetb) %>%
+                        na.omit()
+
+year_prob.activetb.log <- model.frame(formula = logy ~ year,
+                                      data = data.frame(logy = log(year_prob.activetb)[6:9], year = 6:9))
+fit.lm <- lm(year_prob.activetb.log)
+years <- 10:50
+year_prob.activetb_estimated <- exp(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(Intercept)"])
+
+year_prob.activetb <- c(year_prob.activetb, year_prob.activetb_estimated)
+
+
+# plot(year_prob.activetb, type="o")
+# sum(year_prob.activetb)
+
+
+# sensitivity analysis:
+## constant yearly hazard
+year_prob.activetb <- rep(0.001, 100)
 
 
 ##################################################
 ## calculate absolute number of cases each year ##
 ##################################################
 
-## annual populations
+## annual populations leaving
 
 # extract year only
 issdt_exit_year <- ceiling(IMPUTED_sample$date_exit_uk1_issdt/365)[LTBI_status==1 & whoin_year_cohort]
@@ -77,81 +94,47 @@ issdt_exit_year.tab <- table(issdt_exit_year)
 issdt_exit_year.tab <- issdt_exit_year.tab[as.numeric(names(issdt_exit_year.tab))<100]
 
 
-# scaled-up CIF by year populations
-max_year <- 10
-activetb.exituk <- NULL
+exit_max_year <- 10
+followup_max_year <- 100
 
-for (i in seq_len(max_year)){
+activetb.exituk <- matrix(data = 0, nrow = exit_max_year, ncol = followup_max_year*2)
+
+for (i in seq_len(exit_max_year)){
 
   pop_exit_in_year_i <- issdt_exit_year.tab[as.character(i)]
 
-  cumprob.activetb_starting_year_i <- cumprob.activetb - cumprob.activetb[as.character(i - 1)]
+  activetb.exituk[i, i] <- pop_exit_in_year_i * year_prob.activetb[i]
 
-  cumprob.activetb_starting_year_i <- pmax(cumprob.activetb_starting_year_i, 0, na.rm = TRUE)
+  for (j in 1:(followup_max_year-1)){
 
-  activetb.exituk <- rbind(activetb.exituk,
-                           pop_exit_in_year_i * cumprob.activetb_starting_year_i)
+    activetb.exituk[i, i+j] <- (pop_exit_in_year_i - sum(activetb.exituk[i, ])) * year_prob.activetb[i+j]
+  }
+
 }
-
-colnames(activetb.exituk) <- names(cumprob.activetb)
 
 
 # sum all curves for each year
-exituk_tb_year <- colSums(activetb.exituk) %>%
-                  diff() %>%
-                  .[.>0]
+exituk_tb_year <- colSums(activetb.exituk)[1:followup_max_year]
 
 n.exit_tb <- sum(exituk_tb_year)
 
 
 
-###########
-## plots ##
-###########
-
-plot(diff(cumprob.activetb), type = "h",
-     main = "annual probability of active TB progression",
-     xlab = "Time from UK entry (years)")
-
-
-plot(x = 1:length(exituk_tb_year),
-     y = exituk_tb_year,
-     main = "Histogram of number of\n active TB cases outside of UK",
-     ylim = c(0, 200), xlab = "Time from UK entry (years)", type = "h")
-
-
-plot(issdt_exit_year.tab[-1],
-     main = "annual number of recent arrivals cohort leaving UK",
-     xlab = "Time from UK entry (years)")
-
-
-# combined plots
-windows(rescale = "R")
-
-par(mar = c(5,4,4,5) + .1)
-plot(issdt_exit_year.tab[-1][1:9],
-     type = "s", col = "red",
-     xlab = "", ylab = "Number leaving UK")
-
-par(new = TRUE)
-plot(exituk_tb_year,
-     main = "",
-     ylim = c(0, 200), lty = 2,
-     ylab = "", xlab = "Time from UK entry (years)", type = "s", col = "blue",
-     xaxt = "n", yaxt = "n")
-axis(4)
-mtext("Number of active TB cases of leavers", side = 4, line = 3)
-legend("topright", col = c("red","blue"), lty = c(1,2), legend = c("Leave UK","Active TB"))
-
-
-
-
-
-#  ------------------------------------------------------------------------
-# or
-# equivalently at an individual level
-# for each LTBI individual sample from CIF
-# account for when they leave country they have already moved forward in time
-# see Aldridge (2016) for method
-
-
+# check populations sizes ---------------------------------------------------
+# against expected
+#
+# # 'life time' risk in UK tb
+# n.tb_year/(pop_year*0.3)
+#
+# # 'life time' risk in UK tb of those 'detectable'
+# n.tb_year/(pop_year*0.3*case_detection_rate)
+#
+# # life time risk in UK and exit tb
+# (n.tb_year + n.exit_tb)/(pop_year*0.3)
+#
+# # life time risk in UK and exit tb of those 'detectable'
+# (n.tb_year + n.exit_tb)/(pop_year*0.3*case_detection_rate)
+#
+# # predicted number of active tb cases notified
+# pop_year*0.3*0.1*case_detection_rate
+#
