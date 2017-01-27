@@ -35,7 +35,6 @@ calc_QALY_uk_tb <- function(data,
 
   match.arg(arg = endpoint)
 
-  uk_tb_only <- subset(data, uk_tb==1)
   days_in_year <- 365
 
   # complete years from active TB diagnosis
