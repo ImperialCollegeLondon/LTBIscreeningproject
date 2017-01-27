@@ -10,7 +10,7 @@ n.tb_year.ENDPOINT <- if (cost.ENDPOINT=="exit uk"){n.tb_year
                       }else if (cost.ENDPOINT=="death"){n.tb_year + n.exit_tb}
 
 
-QALY_uk_tb <- calc_QALY_uk_tb(data = IMPUTED_sample_year_cohort,
+QALY_uk_tb <- calc_QALY_uk_tb(data = IMPUTED_sample_year_cohort[uk_tb_TRUE_year, ],
                               utility$disease_free,
                               utility$activeTB,
                               endpoint = QALY.ENDPOINT)
@@ -23,8 +23,6 @@ cfr_age_groups <- subset(x = IMPUTED_sample_year_cohort,
 # CFR for each active TB case
 cfr_uk_tb <- cfr_age_lookup[cfr_age_groups, "cfr"]
 
-
-# status-quo --------------------------------------------------------------
 
 QALY_uk_tb_cured_original <- QALY_uk_tb$cured
 
@@ -44,6 +42,8 @@ aTB_cost_diff_person <- list()
 
 E.aTB_cost.screened <- NA
 E.aTB_QALY.screened <- NA
+
+n.diseasefree_exit <- 0
 
 
 for (scenario in seq_len(n.scenarios)){
@@ -68,11 +68,18 @@ for (scenario in seq_len(n.scenarios)){
     unit_cost.aTB_TxDx <- sample_distributions(param.distns = unit_cost$aTB_TxDx) %>%
                            sum()
 
-    # total cohort cost due to diagnosis and treatment of active TB
-    aTB_cost.statusquo <- unit_cost.aTB_TxDx * n.tb_year.ENDPOINT
+    ## numbers of active TB cases avoided ##
 
-    n.diseasefree <- filter(n.tb_screen[[scenario]],
-                            status=="disease-free", sim==simnum)$n
+    n.diseasefree_uk <- filter(n.tb_screen[[scenario]],
+                               status=="disease-free", sim==simnum)$n
+
+    if(cost.ENDPOINT=="death"){    ##TODO: make dependent on WHO cat
+
+      prob.eff <- pLTBI_hash[pLTBI_hash$scenario==scenario &
+                               pLTBI_hash$who_prev_cat_Pareek2011=="(350,1e+05]", "value"]
+
+      n.diseasefree_exit <- rbinom(n = 1, size = as.integer(n.exit_tb), prob = prob.eff)
+    }
 
     # random sample and TRUE if death due to active TB
     uk_tb_fatality <- (cfr_uk_tb > runif(n.tb_year))
@@ -81,10 +88,19 @@ for (scenario in seq_len(n.scenarios)){
     QALY_uk_tb$cured[uk_tb_fatality] <- QALY_uk_tb$fatality[uk_tb_fatality]
 
     aTB_QALY.statusquo[[scenario]][simnum] <- sum(QALY_uk_tb$cured)
+    aTB_QALY.screened[[scenario]][simnum]  <- sum(create_screened_cohort_QALYs(n.diseasefree_uk, QALY_uk_tb))
 
-    aTB_QALY.screened[[scenario]][simnum] <- create_screened_cohort_QALYs(n.diseasefree, QALY_uk_tb)
+    # use weighted average of uk tb for exit tb
+    ##TODO: monitor LTBI individuals who leave uk that progress and use their actual event times
+    if (QALY.ENDPOINT=="death"){
 
-    aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree,
+      aTB_QALY.statusquo[[scenario]][simnum] <- aTB_QALY.statusquo[[scenario]][simnum] + (n.exit_tb * aTB_QALY.statusquo[[scenario]][simnum]/n.tb_year)
+      aTB_QALY.screened[[scenario]][simnum]  <- aTB_QALY.screened[[scenario]][simnum] + (n.exit_tb * aTB_QALY.screened[[scenario]][simnum]/n.tb_year)
+    }
+
+    # total cohort cost due to diagnosis and treatment of active TB
+    aTB_cost.statusquo <- unit_cost.aTB_TxDx * n.tb_year.ENDPOINT
+    aTB_cost.screened[[scenario]][simnum] <- create_screened_cohort_cost(n.diseasefree_uk + n.diseasefree_exit,
                                                                          aTB_cost.statusquo,
                                                                          unit_cost.aTB_TxDx)
     # reset to status-quo QALYs
