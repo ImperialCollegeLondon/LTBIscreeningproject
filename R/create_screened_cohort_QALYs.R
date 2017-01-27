@@ -14,16 +14,16 @@
 create_screened_cohort_QALYs <- function(n.diseasefree,
                                          QALY) {
 
-  totalQALY <-  QALY$cured
-  n.tb <- length(totalQALY)
+  res <-  QALY$cured
+  n.tb <- length(res)
 
   if (length(n.diseasefree)>0) {
 
     which_diseasefree <- sample(1:n.tb, n.diseasefree)
-    totalQALY[which_diseasefree] <- QALY$diseasefree[which_diseasefree]
+    res[which_diseasefree] <- QALY$diseasefree[which_diseasefree]
   }
 
-  return(sum(totalQALY))
+  return(res)
 }
 
 
