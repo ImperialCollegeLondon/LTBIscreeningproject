@@ -4,19 +4,20 @@
 # Oct 2016
 #
 # input data for QALY gains and costs
-
-# assume that after active TB notification the risk of TB related death
-# is in the first year only
-# and effective treatment is one year and results in disease-free health
 #
-# only interested for the QALY gain calculation in active TB cases
-# since the other individuals unchanged
+# DUMMY VALUES FOR TESTING
 
 
 library(magrittr)
 
+
 # willingness to pay (£)
 wtp_threshold <- 20000
+
+
+# case detection rate (CDR)
+# world bank 2015 uk (http://data.worldbank.org/indicator/SH.TBS.DTEC.ZS)
+case_detection_rate <- 0.89
 
 
 # 12 month active TB case fatality rate
