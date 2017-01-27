@@ -18,6 +18,7 @@ LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 # LTBI_status <- rep(1, pop_year)
 
 
+
 ########################################
 ## create (outside uk) times to event ##
 ########################################
@@ -76,7 +77,7 @@ year_prob.activetb <- c(year_prob.activetb, year_prob.activetb_estimated)
 
 # sensitivity analysis:
 ## constant yearly hazard
-year_prob.activetb <- rep(0.001, 100)
+# year_prob.activetb <- rep(0.001, 100)
 
 
 ##################################################
@@ -118,6 +119,26 @@ exituk_tb_year <- colSums(activetb.exituk)[1:followup_max_year]
 
 n.exit_tb <- sum(exituk_tb_year)
 
+
+
+##TODO: test and use in cost-effectivness-QALY-costs.R
+
+# sample of exit individuals who progress to active TB
+
+IMPUTED_sample_exit_tb <- NULL
+
+for (yeari in 1:exit_max_year){
+
+  LTBI_exit_yeari <- IMPUTED_sample[LTBI_status==1 & whoin_year_cohort, ][issdt_exit_year==1, ]
+
+  exit_cohorts_activetb_pop <- rowSums(activetb.exituk[, 1:followup_max_year], na.rm = T)
+
+  who_activetb <- sample(x = 1:nrow(LTBI_exit_yeari),
+                         size = exit_cohorts_activetb_pop[yeari],
+                         replace = FALSE)
+
+  IMPUTED_sample_exit_tb <- rbind(IMPUTED_sample_exit_tb, LTBI_exit_yeari[who_activetb, ])
+}
 
 
 # check populations sizes ---------------------------------------------------
