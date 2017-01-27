@@ -37,8 +37,6 @@ source("scripts/02-decision-tree-model.R")
 # 3) survival models ------------------------------------------------------
 
 source("scripts/03a-competing-risk-model_statusquo.R")
-# source("scripts/03b-competing-risk-model_screening.R")
-
 
 # 4) cost-effectiveness ---------------------------------------------------
 
