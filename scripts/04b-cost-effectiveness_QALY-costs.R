@@ -73,7 +73,8 @@ for (scenario in seq_len(n.scenarios)){
     n.diseasefree_uk <- filter(n.tb_screen[[scenario]],
                                status=="disease-free", sim==simnum)$n
 
-    if(cost.ENDPOINT=="death"){    ##TODO: make dependent on WHO cat
+    ##TODO: make dependent on WHO cat
+    if(cost.ENDPOINT=="death"){
 
       prob.eff <- pLTBI_hash[pLTBI_hash$scenario==scenario &
                                pLTBI_hash$who_prev_cat_Pareek2011=="(350,1e+05]", "value"]
@@ -91,7 +92,8 @@ for (scenario in seq_len(n.scenarios)){
     aTB_QALY.screened[[scenario]][simnum]  <- sum(create_screened_cohort_QALYs(n.diseasefree_uk, QALY_uk_tb))
 
     # use weighted average of uk tb for exit tb
-    ##TODO: monitor LTBI individuals who leave uk that progress and use their actual event times
+    ##TODO: use LTBI individuals who leave uk's actual event times
+    # IMPUTED_sample_exit_tb
     if (QALY.ENDPOINT=="death"){
 
       aTB_QALY.statusquo[[scenario]][simnum] <- aTB_QALY.statusquo[[scenario]][simnum] + (n.exit_tb * aTB_QALY.statusquo[[scenario]][simnum]/n.tb_year)

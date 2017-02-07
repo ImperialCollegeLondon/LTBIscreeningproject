@@ -12,7 +12,9 @@
 # only interested for the QALY gain calculation in active TB cases
 # since the other individuals unchanged
 
+
 library(magrittr)
+
 
 # willingness to pay (£)
 wtp_threshold <- 20000
