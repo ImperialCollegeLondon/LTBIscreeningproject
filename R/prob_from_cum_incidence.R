@@ -1,12 +1,24 @@
-#' prob_from_cum_incidence
+
+#' Calculate Jump Probabilities from Cumulative Incidence Functions
 #'
-#' @param cum_incidence
+#' @param cum_incidence_event Cumulative incidence for the event of interest
+#' @param cum_incidence_comprisks List of cumulative incidence for the other competing risk events
 #'
-#' @return
+#' @return Discrete probabilities
 #' @export
 #'
 #' @examples
-prob_from_cum_incidence <- function(cum_incidence){
+#'
+prob_from_cum_incidence <- function(cum_incidence_event,
+                                    cum_incidence_comprisks){
 
-  diff(cum_incidence)/(1 - cum_incidence)
+  comprisks_length <- lapply(cum_incidence_comprisks, length)
+
+  if(!all(comprisks_length==length(cum_incidence_event))){
+    stop("cumulative incidence lengths different")}
+
+
+  F_t <- Reduce("+", cum_incidence_comprisks) + cum_incidence_event
+
+  return(diff(cum_incidence_event)/(1 - F_t))
 }

@@ -153,3 +153,4 @@ utility$activeTB_postacute <- 0.813
 QALYloss_activeTB <- 0.4  #15-34 year olds. includes Tx adverse events
 QALYloss_falseposLTBI_adverse <- 0.0008
 QALYloss_falsepos_activeTB_Tx <- 0.03
+

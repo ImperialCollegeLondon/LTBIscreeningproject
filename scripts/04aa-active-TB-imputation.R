@@ -54,12 +54,17 @@ detach(cmprsk)
 
 # include year 0
 cum_incidence.activetb <- c(0, fit$est[1, ])
+cum_incidence.death <- c(0, fit$est[2, ])
+
 names(cum_incidence.activetb) <- as.character(1:length(cum_incidence.activetb) - 1)
+names(cum_incidence.death) <- as.character(1:length(cum_incidence.death) - 1)
 
 
-# extrapolate with exponential decay
 
-year_prob.activetb <- prob_from_cum_incidence(cum_incidence.activetb) %>%
+# extrapolate with exponential decay --------------------------------------
+
+year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidence.activetb,
+                                              cum_incidence_comprisks = cum_incidence.death) %>%
                         na.omit()
 
 year_prob.activetb.log <- model.frame(formula = logy ~ year,
@@ -68,6 +73,7 @@ fit.lm <- lm(year_prob.activetb.log)
 years <- 10:50
 year_prob.activetb_estimated <- exp(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(Intercept)"])
 
+# append
 year_prob.activetb <- c(year_prob.activetb, year_prob.activetb_estimated)
 
 
