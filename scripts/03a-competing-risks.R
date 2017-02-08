@@ -27,14 +27,18 @@ issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
 
 # days from arrival in uk to end of follow-up
 fup_issdt <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
-colnames(fup_issdt) <- paste(colnames(fup_issdt), "_issdt", sep = "")
+
+colnames(fup_issdt) <- paste0(colnames(fup_issdt), "_issdt")
 
 # days from uk arrival to death & uk exit
 event_issdt <- apply(IMPUTED_sample[ ,cols_eventdate], 2,
                      FUN = function(y) as.Date(y, "%Y-%m-%d") - IMPUTED_sample$issdt)
-colnames(event_issdt) <- paste(colnames(event_issdt), "_issdt", sep = "")
 
-IMPUTED_sample <- data.frame(IMPUTED_sample, event_issdt, fup_issdt)
+colnames(event_issdt) <- paste0(colnames(event_issdt), "_issdt")
+
+IMPUTED_sample <- data.frame(IMPUTED_sample,
+                             event_issdt,
+                             fup_issdt)
 
 
 

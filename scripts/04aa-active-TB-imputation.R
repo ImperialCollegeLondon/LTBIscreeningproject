@@ -64,7 +64,7 @@ names(cum_incidence.death) <- as.character(1:length(cum_incidence.death) - 1)
 # extrapolate with exponential decay --------------------------------------
 
 year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidence.activetb,
-                                              cum_incidence_comprisks = cum_incidence.death) %>%
+                                              cum_incidence_comprisks = list(cum_incidence.death)) %>%
                         na.omit()
 
 year_prob.activetb.log <- model.frame(formula = logy ~ year,

@@ -31,7 +31,7 @@ pLTBI_hash <- p.complete_treat_scenarios %>%
                 gather("who_prev_cat_Pareek2011", "value", -scenario)
 
 # labels of active TB case samples
-uk_tbX_names <- paste("uk_tb", seq_len(N.mc), sep = "")
+uk_tbX_names <- paste0("uk_tb", seq_len(N.mc))
 
 n.tb_screen <- list()
 

@@ -94,9 +94,20 @@ for (i in who_levels){
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
-if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
-if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
-if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
+if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))){
+
+  file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
+}
+
+if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))){
+
+  file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
+}
+
+if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))){
+
+  file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
+}
 
 
 # transform to tidy format
@@ -161,15 +172,17 @@ for (scenario_i in seq_len(n.scenarios)){
 
   # save --------------------------------------------------------------------
 
-  # cost-effectiveness outputs
-  cat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),
-      file = paste(diroutput, "mc_cost.csv", sep = "/"), append = TRUE, fill = TRUE)
+  appcat <- pryr::partial(cat, append = TRUE, fill = TRUE)
 
-  cat(x = paste(as.numeric(mc.health$`expected values`), collapse = ","),
-      file = paste(diroutput, "mc_health.csv", sep = "/"), append = TRUE, fill = TRUE)
+  # cost-effectiveness outputs
+  appcat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),
+         file = paste(diroutput, "mc_cost.csv", sep = "/"))
+
+  appcat(x = paste(as.numeric(mc.health$`expected values`), collapse = ","),
+         file = paste(diroutput, "mc_health.csv", sep = "/"))
 
   # defined pathway probabilities
-  cat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse = ","),
-      file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"), append = TRUE, fill = TRUE)
+  appcat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse = ","),
+         file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 }
 
