@@ -42,7 +42,7 @@ source("scripts/03a-competing-risks.R")
 # 4) cost-effectiveness ---------------------------------------------------
 
 source("scripts/04a-cost-effectiveness_activeTB-samples.R")
-source("scripts/04aa-active-TB-imputation.R")
+source("scripts/04aa-active-TB-imputation_extrapolation.R")
 source("scripts/04b-cost-effectiveness_QALY-costs.R")
 
 

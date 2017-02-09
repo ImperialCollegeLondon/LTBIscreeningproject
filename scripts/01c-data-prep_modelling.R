@@ -140,8 +140,11 @@ rm(issdt.asnumeric,
 
 # yearly entry cohort size by age and prevalence ---------------------------
 
-# total sample size
-n.pop <- nrow(IMPUTED_sample)
+
+# remove death before entry to UK
+##TODO: are deaths before entry the same for all imputation samples?
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample, date_death1_issdt>=0)
+
 
 # keep status-quo TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
@@ -170,8 +173,10 @@ rm(rNotificationDate_issdt.years,
    age_at_Notification)
 
 
-
 # summary statistics ------------------------------------------------------
+
+# total sample size
+n.pop <- nrow(IMPUTED_sample)
 
 # total sample sizes for each yearly cohort
 entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
