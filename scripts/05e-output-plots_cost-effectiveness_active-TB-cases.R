@@ -30,30 +30,6 @@ LTBI_prob_lookup <-
 ## before screening ##
 ######################
 
-##check are these for non-duplicate active tb cases only n.tb_year=368??
-
-notifDate_issdt.years <- subset(IMPUTED_sample_year_cohort,
-                                subset = (uk_tb==1 &
-                                          rNotificationDate_issdt.years>=0),
-                                select = rNotificationDate_issdt.years) %>%
-                          ceiling()
-
-activeTBcases <- table(notifDate_issdt.years)
-
-
-# fit exponential to (latest) observed active TB
-# yearly frequencies to predict missing years
-
-activeTBcases.log <- model.frame(formula = logy.Freq ~ year,
-                                 data = data.frame(logy = log(activeTBcases)[4:5], year = 4:5))
-fit <- lm(activeTBcases.log)
-years <- 1:8
-uktb_estimated <- exp(years*fit$coefficients["year"] + fit$coefficients["(Intercept)"])
-names(uktb_estimated) <- as.character(years)
-
-
-uktb_estimated <- c(rep(0, length(activeTBcases)),
-                    uktb_estimated[-(1:length(activeTBcases))])
 
 # fillin missing years with NA
 activeTBcases <- c(activeTBcases,
@@ -84,7 +60,7 @@ activeTBcases_UK_nonUK <- rbind("UK observed" = activeTBcases,
                                 # "Non-UK estimated" = exituk_tb_year[names(activeTBcases)])
 
 x11()
-png(paste(plots_folder, "/barplot_aTB_with_exituk.png", sep = ""))
+png(paste0(plots_folder, "/barplot_aTB_with_exituk.png"))
 
 barplot(height = activeTBcases_UK_nonUK,
         main = sprintf("Number of active TB cases\n in %s cohort", year_cohort),
@@ -116,7 +92,7 @@ p.completeTx <- subset(x = LTBI_prob_lookup,
 activeTBcases_after_screen <- activeTBcases * (1 - p.completeTx)
 
 
-png(paste(plots_folder, "/barplot_raw_num_aTB_screened.png", sep = ""))
+png(paste0(plots_folder, "/barplot_raw_num_aTB_screened.png"))
 
 barplot(height = activeTBcases_after_screen,
         main = sprintf("Raw number of active TB cases\n after screening in %s cohort", year_cohort),
@@ -147,7 +123,7 @@ activeTBcases_UK_nonUK_after_screen <- rbind("UK observed" = activeTBcases_after
                                              "Non-UK estimated" = exituk_tb_year * (1 - p.completeTx))
 
 x11()
-png(paste(plots_folder, "/barplot_aTB_with_exituk_screened.png", sep = ""))
+png(paste0(plots_folder, "/barplot_aTB_with_exituk_screened.png"))
 
 barplot(height = activeTBcases_UK_nonUK_after_screen,
         main = sprintf("Number of active TB cases after screening\n in %s cohort", year_cohort),

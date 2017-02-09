@@ -67,23 +67,35 @@ year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidenc
                                               cum_incidence_comprisks = list(cum_incidence.death)) %>%
                         na.omit()
 
+max_years_obs <- length(year_prob.activetb)
+
+# constant prob at older ages
+# asymptote to non-zero
+offset <- 0.001
+
+# only use decreasing section of curve
 year_prob.activetb.log <- model.frame(formula = logy ~ year,
-                                      data = data.frame(logy = log(year_prob.activetb)[6:9], year = 6:9))
+                                      data = data.frame(logy = log(year_prob.activetb - offset)[5:max_years_obs],
+                                                        year = 5:max_years_obs))
 fit.lm <- lm(year_prob.activetb.log)
-years <- 10:50
+years <- (max_years_obs + 1):50
 year_prob.activetb_estimated <- exp(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(Intercept)"])
 
 # append
-year_prob.activetb <- c(year_prob.activetb, year_prob.activetb_estimated)
+year_prob.activetb <- c(year_prob.activetb,
+                        year_prob.activetb_estimated + offset)
 
 
-# plot(year_prob.activetb, type="o")
+plot(year_prob.activetb, type = "o")
+lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2)
 # sum(year_prob.activetb)
 
 
 # sensitivity analysis:
 ## constant yearly hazard
+#
 # year_prob.activetb <- rep(0.001, 100)
+
 
 
 ##################################################
@@ -127,15 +139,15 @@ n.exit_tb <- sum(exituk_tb_year)
 
 
 
-##TODO: test and use in cost-effectivness-QALY-costs.R
+# sample of exit individuals who progress to active TB --------------------
 
-# sample of exit individuals who progress to active TB
+##TODO: test and use in cost-effectivness-QALY-costs.R
 
 IMPUTED_sample_exit_tb <- NULL
 
 for (yeari in 1:exit_max_year){
 
-  LTBI_exit_yeari <- IMPUTED_sample[LTBI_status==1 & whoin_year_cohort, ][issdt_exit_year==1, ]
+  LTBI_exit_yeari <- IMPUTED_sample[LTBI_status==1 & whoin_year_cohort, ][issdt_exit_year==yeari, ]
 
   exit_cohorts_activetb_pop <- rowSums(activetb.exituk[, 1:followup_max_year], na.rm = T)
 
@@ -143,8 +155,79 @@ for (yeari in 1:exit_max_year){
                          size = exit_cohorts_activetb_pop[yeari],
                          replace = FALSE)
 
-  IMPUTED_sample_exit_tb <- rbind(IMPUTED_sample_exit_tb, LTBI_exit_yeari[who_activetb, ])
+  IMPUTED_sample_exit_tb <- rbind(IMPUTED_sample_exit_tb,
+                                  LTBI_exit_yeari[who_activetb, ])
 }
+
+
+
+# extrapolate within uk exponential decay -----------------------------------
+
+
+##check are these for non-duplicate active tb cases only n.tb_year=368??
+
+notifDate_issdt.years <- subset(IMPUTED_sample_year_cohort,
+                                subset = (uk_tb==1 &
+                                          rNotificationDate_issdt.years>=0),
+                                select = rNotificationDate_issdt.years) %>%
+                          ceiling()
+
+max_years_obs_uk <- length(activeTBcases)
+
+activeTBcases <- table(notifDate_issdt.years)
+
+activeTBcases.log <- model.frame(formula = logy.Freq ~ year,
+                                 data = data.frame(logy = log(activeTBcases)[4:max_years_obs_uk], year = 4:max_years_obs_uk))
+
+fit <- lm(activeTBcases.log)
+
+years <- 1:followup_max_year
+
+uktb_estimated <- exp(years*fit$coefficients["year"] + fit$coefficients["(Intercept)"])
+
+names(uktb_estimated) <- as.character(years)
+
+uktb_estimated <- c(rep(0, max_years_obs_uk),
+                    uktb_estimated[-(1:max_years_obs_uk)])
+
+
+# sensitivity analysis:
+# constant number of cases after followup
+#
+# uktb_estimated <- c(rep(0, max_years_obs_uk),
+#                     rep(activeTBcases[length(activeTBcases)], followup_max_year))
+
+
+##TODO
+use the rate from out of uk calculated above
+and yearly in uk population, removing death and active tb from risk set
+#
+#
+#
+#
+
+##########################
+# yearly sub-populations #
+##########################
+
+
+attach(IMPUTED_sample_year_cohort)
+
+strat_pop_year <- list(tb = rNotificationDate_issdt.years,
+                       exit_uk = date_exit_uk1_issdt.years,
+                       death = date_death1_issdt.years) %>%
+  count_comprsk_events()
+
+detach(IMPUTED_sample_year_cohort)
+
+
+par(mfrow=c(2,2))
+
+plot(unlist(strat_pop_year["tb", ]), type="s", ylim=c(0,500), xlim=c(0,20), ylab="active TB")
+plot(unlist(strat_pop_year["death", ]), type="s", xlim=c(0,20), ylab = "all-cause death")
+plot(unlist(strat_pop_year["exit_uk", ]), type="s", xlim=c(0,20), ylab = "exit EWNI")
+plot(unlist(strat_pop_year["remainder", ]), type="s", xlim=c(0,20), ylab = "remain in EWNI")
+
 
 
 # check populations sizes ---------------------------------------------------

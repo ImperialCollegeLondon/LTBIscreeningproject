@@ -19,7 +19,13 @@ prob_from_cum_incidence <- function(cum_incidence_event,
 
 
   F_t <- Reduce("+", cum_incidence_comprisks) + cum_incidence_event
-  F_t <- F_t[1:(length(F_t)-1)] #trim last element
+  F_t <- trim_last(F_t)
 
   return(diff(cum_incidence_event)/(1 - F_t))
+}
+
+
+trim_last <- function(x){
+
+  x[1:(length(x)-1)]
 }
