@@ -18,6 +18,9 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, dup_ref_id_orig==0)
 
+# remove duplicate notification dates
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample, is.na(rNotificationDate) | uk_tb==1)
+
 ##TODO: why are there missing issdt uk entry dates?
 # for now just remove them...
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))
@@ -150,7 +153,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample, date_death1_issdt>=0)
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 # active TB case fatality rate age groups
-age_at_Notification <- IMPUTED_sample$age_at_entry + rNotificationDate_issdt.years
+age_at_Notification <- with(IMPUTED_sample, age_at_entry + rNotificationDate_issdt.years)
 
 IMPUTED_sample$cfr_age_groups <- cut(age_at_Notification,
                                      breaks = cfr_age_breaks,
@@ -202,4 +205,28 @@ pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
                         dplyr::group_by(who_prev_cat_Pareek2011) %>%
                         summarise(LTBI = mean(pLTBI)) %>%
                         complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
+
+
+
+# calc yearly active tb, exit uk, death sub-pops --------------------------
+
+attach(IMPUTED_sample_year_cohort)
+
+strat_pop_year <- list(tb = rNotificationDate_issdt.years,
+                       exit_uk = date_exit_uk1_issdt.years,
+                       death = date_death1_issdt.years) %>%
+  count_comprsk_events()
+
+detach(IMPUTED_sample_year_cohort)
+
+
+# par(mfrow=c(2,2))
+#
+# plot(unlist(strat_pop_year["tb", ]), type = "s", ylim = c(0,500), xlim=c(0,20), ylab="active TB", xlab = "Year")
+# plot(unlist(strat_pop_year["death", ]), type = "s", xlim = c(0,20), ylab = "all-cause death", xlab = "Year")
+# plot(unlist(strat_pop_year["exit_uk", ]), type = "s", xlim = c(0,20), ylab = "exit EWNI", xlab = "Year")
+# plot(unlist(strat_pop_year["remainder", ]), type = "s", xlim = c(0,20), ylab = "remain in EWNI", xlab = "Year")
+#
+# knitr::kable(t(strat_pop_year))
+
 
