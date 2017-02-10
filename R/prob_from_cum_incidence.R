@@ -17,7 +17,7 @@ prob_from_cum_incidence <- function(cum_incidence_event,
   if(!all(comprisks_length==length(cum_incidence_event))){
     stop("cumulative incidence lengths different")}
 
-
+  # sum all CIF for 1 - overall survival
   F_t <- Reduce("+", cum_incidence_comprisks) + cum_incidence_event
   F_t <- trim_last(F_t)
 

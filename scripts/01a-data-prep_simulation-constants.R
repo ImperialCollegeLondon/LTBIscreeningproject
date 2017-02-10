@@ -32,6 +32,8 @@ QALY.ENDPOINT <- "death" #"exit uk"
 cost.ENDPOINT <- "death" #"exit uk"
 
 
+screening_year_delay <- 0
+
 
 # folder locations --------------------------------------------------------
 

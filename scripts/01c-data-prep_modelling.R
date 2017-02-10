@@ -15,6 +15,10 @@ IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
+
+# remove duplicate and not needed records ---------------------------------
+
+
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, dup_ref_id_orig==0)
 
@@ -29,13 +33,11 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample, age_at_entry%in%screen_age_range)
 
 
+# create LTBI probabilities by WHO active TB prevalence group --------------------
+
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
-
-
-
-# LTBI probabilities by who active TB prevalence group --------------------
 
 # ref. Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
@@ -141,8 +143,21 @@ rm(issdt.asnumeric,
    date_exit_uk1_issdt.years)
 
 
-# yearly entry cohort size by age and prevalence ---------------------------
 
+# adjust sample for delay starting screening ------------------------------
+
+# remove records for events in year < screening year
+
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                   date_death1_issdt.years>=screening_year_delay,
+                   date_exit_uk1_issdt.years>=screening_year_delay,
+                   rNotificationDate_issdt.years>=screening_year_delay | is.na(rNotificationDate_issdt.years))
+
+num_uk_tb_before_screening <- strat_pop_year["tb", seq_len(screening_year_delay)] %>% sum()
+
+
+
+# create misc variables ---------------------------------------------------
 
 # remove death before entry to UK
 ##TODO: are deaths before entry the same for all imputation samples?
@@ -208,7 +223,7 @@ pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
 
 
 
-# calc yearly active tb, exit uk, death sub-pops --------------------------
+# calc yearly active tb, exit uk, death sub-pops for cohort year  ---------------------
 
 attach(IMPUTED_sample_year_cohort)
 
