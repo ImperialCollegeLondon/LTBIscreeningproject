@@ -144,17 +144,12 @@ rm(issdt.asnumeric,
 
 
 
-# adjust sample for delay starting screening ------------------------------
-
-# remove records for events in year < screening year
+# subset data for delay starting screening ------------------------------
 
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                    date_death1_issdt.years>=screening_year_delay,
                    date_exit_uk1_issdt.years>=screening_year_delay,
                    rNotificationDate_issdt.years>=screening_year_delay | is.na(rNotificationDate_issdt.years))
-
-num_uk_tb_before_screening <- strat_pop_year["tb", seq_len(screening_year_delay)] %>% sum()
-
 
 
 # create misc variables ---------------------------------------------------
@@ -191,6 +186,28 @@ rm(rNotificationDate_issdt.years,
    age_at_Notification)
 
 
+# calc yearly active tb, exit uk, death sub-pops for cohort year  ---------------------
+
+attach(IMPUTED_sample_year_cohort)
+
+strat_pop_year <- list(tb = rNotificationDate_issdt.years,
+                       exit_uk = date_exit_uk1_issdt.years,
+                       death = date_death1_issdt.years) %>%
+  count_comprsk_events()
+
+detach(IMPUTED_sample_year_cohort)
+
+
+# par(mfrow=c(2,2))
+#
+# plot(unlist(strat_pop_year["tb", ]), type = "s", ylim = c(0,500), xlim=c(0,20), ylab="active TB", xlab = "Year")
+# plot(unlist(strat_pop_year["death", ]), type = "s", xlim = c(0,20), ylab = "all-cause death", xlab = "Year")
+# plot(unlist(strat_pop_year["exit_uk", ]), type = "s", xlim = c(0,20), ylab = "exit EWNI", xlab = "Year")
+# plot(unlist(strat_pop_year["remainder", ]), type = "s", xlim = c(0,20), ylab = "remain in EWNI", xlab = "Year")
+#
+# knitr::kable(t(strat_pop_year))
+
+
 # summary statistics ------------------------------------------------------
 
 # total sample size
@@ -222,26 +239,8 @@ pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
                         complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
 
 
-
-# calc yearly active tb, exit uk, death sub-pops for cohort year  ---------------------
-
-attach(IMPUTED_sample_year_cohort)
-
-strat_pop_year <- list(tb = rNotificationDate_issdt.years,
-                       exit_uk = date_exit_uk1_issdt.years,
-                       death = date_death1_issdt.years) %>%
-  count_comprsk_events()
-
-detach(IMPUTED_sample_year_cohort)
+num_uk_tb_before_screening <- strat_pop_year["tb", seq_len(screening_year_delay)] %>% sum()
 
 
-# par(mfrow=c(2,2))
-#
-# plot(unlist(strat_pop_year["tb", ]), type = "s", ylim = c(0,500), xlim=c(0,20), ylab="active TB", xlab = "Year")
-# plot(unlist(strat_pop_year["death", ]), type = "s", xlim = c(0,20), ylab = "all-cause death", xlab = "Year")
-# plot(unlist(strat_pop_year["exit_uk", ]), type = "s", xlim = c(0,20), ylab = "exit EWNI", xlab = "Year")
-# plot(unlist(strat_pop_year["remainder", ]), type = "s", xlim = c(0,20), ylab = "remain in EWNI", xlab = "Year")
-#
-# knitr::kable(t(strat_pop_year))
 
 
