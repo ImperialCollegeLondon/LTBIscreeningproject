@@ -2,9 +2,9 @@
 #' Calculate QALYs for UK Active TB Cases
 #'
 #' Calculate the QALYs for each active TB individuals for each of 3 alternatives:
-#'  diseasefree: to all-cause death
-#'  fatality: case-fatality 12 months from notification
-#'  cured: successfully treated
+#'  * diseasefree: to all-cause death
+#'  * fatality: case-fatality 12 months from notification
+#'  * cured: successfully treated
 #'
 #' Assume that death when if happens is within the first year of active TB.
 #' Assume that active TB cases when treated and survive first year are fully cured.
@@ -12,7 +12,7 @@
 #' Consider person-perspective (death) or NHS-perspective (exit uk)
 #' by defining the particular time-to-event end point.
 #'
-#' @param data  Data set with TB status, death, exit uk and active TB notification times
+#' @param data Data set with TB status, death, exit uk and active TB notification times
 #' @param utility.disease_free Utility value of non-diseased individual
 #' @param utility.case Utility value of diseased individual
 #' @param endpoint Either "death" or "exit uk"
@@ -40,11 +40,11 @@ calc_QALY_uk_tb <- function(data,
   # complete years from active TB diagnosis
   if (endpoint=="death"){
 
-    timetoevent <-  with(uk_tb_only,
+    timetoevent <-  with(data,
                          floor((date_death1_issdt - rNotificationDate_issdt)/days_in_year))
   }else if (endpoint=="exit uk"){
 
-    timetoevent <-  with(uk_tb_only,
+    timetoevent <-  with(data,
                          floor((date_exit_uk1_issdt - rNotificationDate_issdt)/days_in_year))
   }
 
