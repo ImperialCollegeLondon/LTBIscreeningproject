@@ -39,9 +39,12 @@ uk_tb_TRUE_year <- IMPUTED_sample_year_cohort$uk_tb==1
 
 
 
+
+# sample active TB cases --------------------------------------------------
+
 #####################################
-# tables of samples of number of    #
-# active TB cases for each scenario #
+# list of tables of samples         #
+# of cases for each scenario        #
 # and sample LTBI to disease-free   #
 #####################################
 
@@ -79,6 +82,9 @@ for (scenario_i in seq_len(n.scenarios)){
   # rename tb status
   n.tb_screen[[scenario_i]]$status <- plyr::revalue(as.factor(n.tb_screen[[scenario_i]]$status),
                                                   c("0" = "disease-free", "1" = "uk_tb"))
+
+
+  # save --------------------------------------------------------------------
 
   filename <- sprintf("uk_tb_scenarios - scenario_%d.RData", scenario_i)
   save(uk_tb_scenarios, file = paste(diroutput, filename, sep = "/"))

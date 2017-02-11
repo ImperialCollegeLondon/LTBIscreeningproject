@@ -10,8 +10,7 @@
 ##TODO: add error to CIF plots and abs numbers
 
 
-# generate at-risk population
-# each year for outside UK
+# generate at-risk (LTBI) population
 
 LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
@@ -70,6 +69,8 @@ year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidenc
 
 # fit exponential distn to trans probs & extrapolate  ----------------------------
 
+fup_max_year <- 100
+
 max_years_obs <- length(year_prob.activetb)
 
 # constant prob at older ages
@@ -81,7 +82,7 @@ year_prob.activetb.log <- model.frame(formula = logy ~ year,
                                       data = data.frame(logy = log(year_prob.activetb - offset)[5:max_years_obs],
                                                         year = 5:max_years_obs))
 fit.lm <- lm(year_prob.activetb.log)
-years <- (max_years_obs + 1):50
+years <- (max_years_obs + 1):fup_max_year
 year_prob.activetb_estimated <- exp(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(Intercept)"])
 
 # append
@@ -89,10 +90,10 @@ year_prob.activetb <- c(year_prob.activetb,
                         year_prob.activetb_estimated + offset)
 
 
-plot(year_prob.activetb, type = "o", xlab = "Year", ylab = "Probability")
-lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
-abline(h = 0.001, col = "blue")
-segments(max_years_obs, year_prob.activetb[max_years_obs], 50, year_prob.activetb[max_years_obs], col = "green")
+# plot(year_prob.activetb, type = "o", xlab = "Year", ylab = "Probability")
+# lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
+# abline(h = 0.001, col = "blue")
+# segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_prob.activetb[max_years_obs], col = "green")
 
 
 # sum(year_prob.activetb)
@@ -108,65 +109,81 @@ segments(max_years_obs, year_prob.activetb[max_years_obs], 50, year_prob.activet
 
 # calc number of active TB each year in exit uk pop  ---------------------------
 
-## each year populations leaving
+# each year sub-populations leaving
 
 ##TODO: not quite as good as individual level cacl cos fixed prob LTBI
-issdt_exit_year.tab <- (strat_pop_year["exit_uk", ] * 0.3) %>%
+
+LTBI_ukexit_year_pop <- (strat_pop_year["exit_uk", ] * 0.3) %>%
                           diff()
 
-issdt_exit_year.tab <- c(strat_pop_year["exit_uk", 1] * 0.3, issdt_exit_year.tab)
-issdt_exit_year.tab <- issdt_exit_year.tab[!duplicated(issdt_exit_year.tab)]
+LTBI_ukexit_year_pop <- c(strat_pop_year["exit_uk", 1] * 0.3, LTBI_ukexit_year_pop)
+LTBI_ukexit_year_pop <- LTBI_ukexit_year_pop[!duplicated(LTBI_ukexit_year_pop)]
 
+# include year 0 so consistent with year_prob.activetb
+LTBI_ukexit_year_pop <- c(0, LTBI_ukexit_year_pop)
 
 exit_max_year <- 10
-followup_max_year <- 100
 
-activetb.exituk <- matrix(data = 0,
-                          nrow = exit_max_year,
-                          ncol = followup_max_year*2)
+activetb.exit <- matrix(data = 0,
+                        nrow = exit_max_year,
+                        ncol = fup_max_year*2)
 
 
-# creat staggered times of ative TB cases in exit uk
 
-for (i in seq_len(exit_max_year)){
+# count number of deaths in each exit uk year subgroup ---------------------
 
-  pop_exit_in_year_i <- issdt_exit_year.tab[as.character(i)]
+exit_yeari_deaths <- list()
 
-  activetb.exituk[i, i] <- pop_exit_in_year_i * year_prob.activetb[i]
+for (yeari in seq_len(exit_max_year)){
 
-  for (j in 1:(followup_max_year-1)){
+  # single year cohort
+  # exit in yeari and exit first event (before death, active tb, followup censoring)
+  cohort_subset <- IMPUTED_sample[whoin_year_cohort, ] %>%
+    dplyr::filter((yeari-1)<date_exit_uk1_issdt.years,
+                  date_exit_uk1_issdt.years<yeari,
+                  exit_uk1==TRUE)
 
-    activetb.exituk[i, i+j] <- (pop_exit_in_year_i - sum(activetb.exituk[i, ])) * year_prob.activetb[i+j]
+  exit_yeari_deaths[[yeari]] <- list(death = cohort_subset$date_death1_issdt.years) %>%
+    count_comprsk_events()
+}
+
+
+# assume all exit subgroups same death rate
+# otherwise later subgroups too small
+prob_death <- c(0, divide_by(diff(exit_yeari_deaths[[1]]["death", ]),
+                             exit_yeari_deaths[[1]]["remainder", ]))
+# test...
+
+
+# create staggered times of ative TB cases in exit uk pop -----------------
+
+for (exityear in seq_len(exit_max_year)){
+
+  pop_exit_in_year_i <- LTBI_ukexit_year_pop[exityear]
+
+  activetb.exit[exityear, exityear] <- pop_exit_in_year_i * year_prob.activetb[exityear]
+
+  risk_set <- pop_exit_in_year_i
+
+  for (t in seq_len(fup_max_year-1)){
+
+    progression_year <- exityear + t
+
+    risk_set <- risk_set * (1 - prob_death[progression_year])
+
+    activetb.exit[exityear, progression_year] <- risk_set * year_prob.activetb[progression_year]
+
+    risk_set <- risk_set - activetb.exit[exityear, progression_year]
   }
 }
 
+# sum across all curves for each year
+exituk_tb_year <- colSums(activetb.exit)[1:fup_max_year]
 
-# sum all curves for each year
-exituk_tb_year <- colSums(activetb.exituk)[1:followup_max_year]
-
-n.exit_tb <- sum(exituk_tb_year)
-
+n.exit_tb <- sum(exituk_tb_year, na.rm = T)
 
 
-# indiv-level sample of exit_uk who progress to active TB --------------------
-
-##TODO: test and use in cost-effectivness-QALY-costs.R
-
-IMPUTED_sample_exit_tb <- NULL
-
-for (yeari in 1:exit_max_year){
-
-  LTBI_exit_yeari <- IMPUTED_sample[LTBI_status==1 & whoin_year_cohort, ][issdt_exit_year==yeari, ]
-
-  exit_cohorts_activetb_pop <- rowSums(activetb.exituk[, 1:followup_max_year], na.rm = T)
-
-  who_activetb <- sample(x = 1:nrow(LTBI_exit_yeari),
-                         size = exit_cohorts_activetb_pop[yeari],
-                         replace = FALSE)
-
-  IMPUTED_sample_exit_tb <- rbind(IMPUTED_sample_exit_tb,
-                                  LTBI_exit_yeari[who_activetb, ])
-}
+# plot(exituk_tb_year, type = "o")
 
 
 
@@ -174,11 +191,10 @@ for (yeari in 1:exit_max_year){
 
 ## depricated by using CIF instead ##
 
-# notifDate_issdt.years <- strat_pop_year["tb", ][!duplicated(strat_pop_year["tb", ])]
-#
-# activeTBcases <- diff(c(0, notifDate_issdt.years))
-#
-#
+notifDate_issdt.years <- strat_pop_year["tb", ][!duplicated(strat_pop_year["tb", ])]
+
+activeTBcases <- diff(c(0, notifDate_issdt.years))
+
 #
 # max_years_obs_uk <- length(activeTBcases)
 #
@@ -208,6 +224,7 @@ for (yeari in 1:exit_max_year){
 # calc number tb_uk (extrapolated) using CIF ----------------------------------
 
 ##TODO: make dependent on different LTBI probs
+
 # yearly in uk LTBI population
 LTBI_pop_year <- strat_pop_year["remainder", ] * 0.3
 
@@ -222,9 +239,13 @@ for (i in seq_along(LTBI_pop_year)){
 }
 
 
-plot(num_activeTB_extrap[1:20], type = "o", ylim = c(0,85),
-     xlab = "Year", ylab = "Number of active TB cases")
-lines(activeTBcases, type="o", col="red")
+# plot(num_activeTB_extrap[1:20], type = "o", ylim = c(0,85),
+#      xlab = "Year", ylab = "Number of active TB cases")
+# lines(activeTBcases, type="o", col="red")
+
+
+# use estimated active tb numbers rather than observed sample
+activeTBcases <- num_activeTB_extrap
 
 
 
