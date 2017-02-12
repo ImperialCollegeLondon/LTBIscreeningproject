@@ -13,10 +13,12 @@
 # generate at-risk (LTBI) population
 
 LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
+IMPUTED_sample_year_cohort$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample_year_cohort$pLTBI)
 
 # sensitivity analysis:
 # assume _everyone_ has LTBI
 # LTBI_status <- rep(1, pop_year)
+
 
 
 
@@ -90,13 +92,13 @@ year_prob.activetb <- c(year_prob.activetb,
                         year_prob.activetb_estimated + offset)
 
 
-# plot(year_prob.activetb, type = "o", xlab = "Year", ylab = "Probability")
-# lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
-# abline(h = 0.001, col = "blue")
-# segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_prob.activetb[max_years_obs], col = "green")
+plot(year_prob.activetb, type = "o", xlab = "Year", ylab = "Probability")
+lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
+abline(h = 0.001, col = "blue")
+segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_prob.activetb[max_years_obs], col = "green")
 
 
-# sum(year_prob.activetb)
+# 1 - exp(-sum(year_prob.activetb))
 
 
 # sensitivity analysis:
@@ -107,11 +109,11 @@ year_prob.activetb <- c(year_prob.activetb,
 
 
 
-# calc number of active TB each year in exit uk pop  ---------------------------
+# calc number of LTBI each year in exit uk pop  ---------------------------
 
 # each year sub-populations leaving
 
-##TODO: not quite as good as individual level cacl cos fixed prob LTBI
+##TODO: not quite as good as individual level calc cos fixed prob LTBI
 
 LTBI_ukexit_year_pop <- (strat_pop_year["exit_uk", ] * 0.3) %>%
                           diff()
@@ -130,57 +132,102 @@ activetb.exit <- matrix(data = 0,
 
 
 
-# count number of deaths in each exit uk year subgroup ---------------------
 
-exit_yeari_deaths <- list()
+
+# simulate active tb progression times for exit uk individuals ----------------------
+
+sample_tb <- function(p) sample(c("tb", "disease-free"), size = 1, prob = c(p, 1-p))
+
+for (i in seq_len(pop_year)){
+
+  if(IMPUTED_sample_year_cohort$LTBI[i]==0){
+
+    IMPUTED_sample_year_cohort$exituk_tb_year[i] <- Inf
+  }else{
+
+    # sample if active TB each year
+    tb_year <- sapply(year_prob.activetb, sample_tb) %>%
+                equals("tb") %>%
+                which()
+
+    # remove time if progress before exit uk
+    tb_year[tb_year<IMPUTED_sample_year_cohort$date_exit_uk1_issdt.years[i]] <- NA
+
+    # if multiple take first occurence
+    IMPUTED_sample_year_cohort$exituk_tb_year[i] <- min(tb_year, na.rm = TRUE) %>%
+                                                      suppressWarnings()
+  }
+}
+
+
+# count number of deaths, tb cases in each exit uk year subgroup ---------------------
+
+strat_exit_year <- list()
 
 for (yeari in seq_len(exit_max_year)){
 
   # single year cohort
   # exit in yeari and exit first event (before death, active tb, followup censoring)
-  cohort_subset <- IMPUTED_sample[whoin_year_cohort, ] %>%
-    dplyr::filter((yeari-1)<date_exit_uk1_issdt.years,
-                  date_exit_uk1_issdt.years<yeari,
-                  exit_uk1==TRUE)
+  cohort_subset <- IMPUTED_sample_year_cohort %>%
+                    dplyr::filter((yeari-1)<date_exit_uk1_issdt.years,
+                                  date_exit_uk1_issdt.years<yeari,
+                                  exit_uk1==TRUE)
 
-  exit_yeari_deaths[[yeari]] <- list(death = cohort_subset$date_death1_issdt.years) %>%
-    count_comprsk_events()
+  strat_exit_year[[yeari]] <- list(tb = cohort_subset$exituk_tb_year,
+                                   death = cohort_subset$date_death1_issdt.years) %>%
+                                count_comprsk_events()
 }
 
 
-# assume all exit subgroups same death rate
-# otherwise later subgroups too small
-prob_death <- c(0, divide_by(diff(exit_yeari_deaths[[1]]["death", ]),
-                             exit_yeari_deaths[[1]]["remainder", ]))
-# test...
-
-
-# create staggered times of ative TB cases in exit uk pop -----------------
-
-for (exityear in seq_len(exit_max_year)){
-
-  pop_exit_in_year_i <- LTBI_ukexit_year_pop[exityear]
-
-  activetb.exit[exityear, exityear] <- pop_exit_in_year_i * year_prob.activetb[exityear]
-
-  risk_set <- pop_exit_in_year_i
-
-  for (t in seq_len(fup_max_year-1)){
-
-    progression_year <- exityear + t
-
-    risk_set <- risk_set * (1 - prob_death[progression_year])
-
-    activetb.exit[exityear, progression_year] <- risk_set * year_prob.activetb[progression_year]
-
-    risk_set <- risk_set - activetb.exit[exityear, progression_year]
-  }
-}
-
-# sum across all curves for each year
-exituk_tb_year <- colSums(activetb.exit)[1:fup_max_year]
-
-n.exit_tb <- sum(exituk_tb_year, na.rm = T)
+# exit_yeari_deaths <- list()
+#
+# for (yeari in seq_len(exit_max_year)){
+#
+#   # single year cohort
+#   # exit in yeari and exit first event (before death, active tb, followup censoring)
+#   cohort_subset <- IMPUTED_sample[whoin_year_cohort, ] %>%
+#                     dplyr::filter((yeari-1)<date_exit_uk1_issdt.years,
+#                                   date_exit_uk1_issdt.years<yeari,
+#                                   exit_uk1==TRUE)
+#
+#   exit_yeari_deaths[[yeari]] <- list(death = cohort_subset$date_death1_issdt.years) %>%
+#                                   count_comprsk_events()
+# }
+#
+#
+# # assume all exit subgroups same death rate
+# # otherwise later subgroups too small
+# prob_death <- c(0, divide_by(diff(exit_yeari_deaths[[1]]["death", ]),
+#                              exit_yeari_deaths[[1]]["remainder", ]))
+# # test...
+#
+#
+# # create staggered times of ative TB cases in exit uk pop -----------------
+#
+# for (exityear in seq_len(exit_max_year)){
+#
+#   pop_exit_in_year_i <- LTBI_ukexit_year_pop[exityear]
+#
+#   activetb.exit[exityear, exityear] <- pop_exit_in_year_i * year_prob.activetb[exityear]
+#
+#   risk_set <- pop_exit_in_year_i
+#
+#   for (t in seq_len(fup_max_year-1)){
+#
+#     progression_year <- exityear + t
+#
+#     risk_set <- risk_set * (1 - prob_death[progression_year])
+#
+#     activetb.exit[exityear, progression_year] <- risk_set * year_prob.activetb[progression_year]
+#
+#     risk_set <- risk_set - activetb.exit[exityear, progression_year]
+#   }
+# }
+#
+# # sum across all curves for each year
+# exituk_tb_year <- colSums(activetb.exit)[1:fup_max_year]
+#
+# n.exit_tb <- sum(exituk_tb_year, na.rm = TRUE)
 
 
 # plot(exituk_tb_year, type = "o")

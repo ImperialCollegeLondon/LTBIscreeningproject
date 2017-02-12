@@ -221,7 +221,8 @@ entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
 # cohort size at arrival to uk
 pop_year <- entryCohort_poptotal %>%
               filter(year==year_cohort) %>%
-              select(pop)
+              select(pop) %>%
+              as.integer()
 
 # number of active TB cases _before_ screening i.e. status-quo
 n.tb <- sum(IMPUTED_sample$uk_tb)

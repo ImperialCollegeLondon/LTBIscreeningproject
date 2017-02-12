@@ -1,6 +1,8 @@
 
 #' Calculate Jump Probabilities from Cumulative Incidence Functions
 #'
+#' see Jackson ()
+#'
 #' @param cum_incidence_event Cumulative incidence for the event of interest
 #' @param cum_incidence_comprisks List of cumulative incidence for the other competing risk events
 #'
