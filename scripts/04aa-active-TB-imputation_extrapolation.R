@@ -7,7 +7,7 @@
 # estimate (impute or proportionally) number of active TB cases outside of
 # UK by year
 
-##TODO: add error to CIF plots and abs numbers
+##TODO: add error to survival estimates
 
 
 # generate at-risk (LTBI) population
@@ -21,8 +21,8 @@ IMPUTED_sample_year_cohort$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample_year_c
 
 
 
-#  ------------------------------------------------------------------------
 
+# estimate active TB transition probabilities -----------------------------
 
 data_etm <- data.frame(id = seq_len(n.pop),
                        from = 9,
@@ -33,18 +33,19 @@ data_etm$to[data_etm$to==2] <- 0
 data_etm <- data_etm[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
 data_etm <- data_etm[data_etm$time>0, ]
 
-TRA <- mstate::trans.comprisk(K = 2, names = c(1, 3)) %>%
-          is.na() %>% not()
+trans_mat <- mstate::trans.comprisk(K = 2, names = c(1, 3)) %>%
+              is.na() %>% not()
 
 res_etm <- etm::etm(data = data_etm,
                     state.names = c(9, 1, 3),
                     cens.name = 0,
-                    tra = TRA,
+                    tra = trans_mat,
                     s = 0)
 
 year_prob.activetb <- diff(c(0, 0, res_etm$est["9","1",]))
 
-plot(year_prob.activetb, ylim = c(0,0.006), xlim = c(0,50), type = "o")
+# plot(year_prob.activetb,
+#      ylim = c(0,0.006), xlim = c(0,50), type = "o")
 
 
 
@@ -77,8 +78,6 @@ lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
 abline(h = 0.001, col = "blue")
 segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_prob.activetb[max_years_obs], col = "green")
 
-
-# 1 - exp(-sum(year_prob.activetb))
 
 
 # sensitivity analysis:
@@ -141,8 +140,7 @@ for (i in seq_len(pop_year)){
 
 
 
-# count number of deaths, tb cases in each exit uk year subgroup ---------------------
-
+# count number of deaths & active TB cases in each exit uk year subgroup ---------------------
 
 strat_exit_year <- list()
 
@@ -151,8 +149,8 @@ for (yeari in seq_len(exit_max_year)){
   # single year cohort
   # exit in yeari and exit first event (before death, active tb, followup censoring)
   cohort_subset <- IMPUTED_sample_year_cohort %>%
-                    dplyr::filter((yeari-1)<date_exit_uk1_issdt.years,
-                                  date_exit_uk1_issdt.years<yeari,
+                    dplyr::filter((yeari-1) < date_exit_uk1_issdt.years,
+                                  date_exit_uk1_issdt.years < yeari,
                                   exit_uk1==TRUE)
 
   strat_exit_year[[yeari]] <- list(tb = cohort_subset$exituk_tb_year,
@@ -172,41 +170,14 @@ for (yeari in seq_len(exit_max_year)){
 
 
 
-# fit exp distn to _number_ of active TB & extrapolate tb_uk  -------------------------
-
-## depricated by using CIF instead ##
 
 notifDate_issdt.years <- strat_pop_year["tb", ][!duplicated(strat_pop_year["tb", ])]
 
 activeTBcases <- diff(c(0, notifDate_issdt.years))
 
-#
-# max_years_obs_uk <- length(activeTBcases)
-#
-# activeTBcases.log <- model.frame(formula = logy ~ year,
-#                                  data = data.frame(logy = log(activeTBcases)[4:max_years_obs_uk], year = 4:max_years_obs_uk))
-#
-# fit <- lm(activeTBcases.log)
-#
-# years <- 1:followup_max_year
-#
-# uktb_estimated <- exp(years*fit$coefficients["year"] + fit$coefficients["(Intercept)"])
-#
-# names(uktb_estimated) <- as.character(years)
-#
-# uktb_estimated <- c(rep(0, max_years_obs_uk),
-#                     uktb_estimated[-(1:max_years_obs_uk)])
 
 
-# sensitivity analysis:
-# constant number of cases after followup
-#
-# uktb_estimated <- c(rep(0, max_years_obs_uk),
-#                     rep(activeTBcases[length(activeTBcases)], followup_max_year))
-
-
-
-# calc number tb_uk (extrapolated) using CIF ----------------------------------
+# calc number tb_uk (extrapolated) using trans probs  -----------------------------
 
 ##TODO: make dependent on different LTBI probs
 
