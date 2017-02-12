@@ -21,52 +21,79 @@ IMPUTED_sample_year_cohort$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample_year_c
 
 
 
+#  ------------------------------------------------------------------------
+
+
+data_etm <- data.frame(id = seq_len(n.pop),
+                       from = 9,
+                       to = event,
+                       time = ceiling(fup_times/365))
+
+data_etm$to[data_etm$to==2] <- 0
+data_etm <- data_etm[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
+data_etm <- data_etm[data_etm$time>0, ]
+
+TRA <- mstate::trans.comprisk(K = 2, names = c(1, 3)) %>%
+          is.na() %>% not()
+
+res_etm <- etm::etm(data = data_etm,
+                    state.names = c(9, 1, 3),
+                    cens.name = 0,
+                    tra = TRA,
+                    s = 0)
+
+year_prob.activetb <- diff(c(0, 0, res_etm$est["9","1",]))
+
+plot(year_prob.activetb, ylim = c(0,0.006), xlim = c(0,50), type = "o")
+
+
+
+
 
 # fit CIF to complete dataset --------------------------------------
 
-cmprsk <- data.frame(dis = 1,
-                     ftime = fup_times,
-                     status = event) # without age
-
-# replace exit uk with censored times
-cmprsk$status[cmprsk$status==2] <- 0
-
-
-# not all individuals are in the risk set of progressing to active TB
-# we asssume that those without LTBI will never do so
-# remove non-LTBI individuals
-
-cmprsk <- cmprsk[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
-
+# cmprsk <- data.frame(dis = 1,
+#                      ftime = fup_times,
+#                      status = event) # without age
+#
+# # replace exit uk with censored times
+# cmprsk$status[cmprsk$status==2] <- 0
+#
+#
+# # not all individuals are in the risk set of progressing to active TB
+# # we asssume that those without LTBI will never do so
+# # remove non-LTBI individuals
+#
+# cmprsk <- cmprsk[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
 
 # competing risks of active TB and all-cause death
 # cumulative probability
 # use total cohort
 
-attach(cmprsk)
-fit = CumIncidence(ftime, status, dis, cencode = 0,
-                   t = seq(0, 3650, 365), #discrete yearly values
-                   xlab = "Days since arrival to UK", col = 2:4)
+# attach(cmprsk)
+# fit = CumIncidence(ftime, status, dis, cencode = 0,
+#                    t = seq(0, 3650, 365), #discrete yearly values
+#                    xlab = "Days since arrival to UK", col = 2:4)
+#
+# legend("topleft", legend = c("Active TB", "Death"),
+#        col = 2:3, lty = 1, bg = "white")
+# detach(cmprsk)
+#
+#
+# # include year 0
+# cum_incidence.activetb <- c(0, fit$est[1, ])
+# cum_incidence.death <- c(0, fit$est[2, ])
+#
+# names(cum_incidence.activetb) <- as.character(1:length(cum_incidence.activetb) - 1)
+# names(cum_incidence.death) <- as.character(1:length(cum_incidence.death) - 1)
+#
+#
+#
+# year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidence.activetb,
+#                                               cum_incidence_comprisks = list(cum_incidence.death)) %>%
+#                         na.omit()
 
-legend("topleft", legend = c("Active TB", "Death"),
-       col = 2:3, lty = 1, bg = "white")
-detach(cmprsk)
 
-
-# include year 0
-cum_incidence.activetb <- c(0, fit$est[1, ])
-cum_incidence.death <- c(0, fit$est[2, ])
-
-names(cum_incidence.activetb) <- as.character(1:length(cum_incidence.activetb) - 1)
-names(cum_incidence.death) <- as.character(1:length(cum_incidence.death) - 1)
-
-
-
-# calc annual transition prob to active TB --------------------------------
-
-year_prob.activetb <- prob_from_cum_incidence(cum_incidence_event = cum_incidence.activetb,
-                                              cum_incidence_comprisks = list(cum_incidence.death)) %>%
-                        na.omit()
 
 
 # fit exponential distn to trans probs & extrapolate  ----------------------------
@@ -132,14 +159,14 @@ activetb.exit <- matrix(data = 0,
 
 
 
-
-
 # simulate active tb progression times for exit uk individuals ----------------------
+
 
 sample_tb <- function(p) sample(c("tb", "disease-free"), size = 1, prob = c(p, 1-p))
 
 for (i in seq_len(pop_year)){
 
+  # LTBI free
   if(IMPUTED_sample_year_cohort$LTBI[i]==0){
 
     IMPUTED_sample_year_cohort$exituk_tb_year[i] <- Inf
@@ -160,7 +187,9 @@ for (i in seq_len(pop_year)){
 }
 
 
+
 # count number of deaths, tb cases in each exit uk year subgroup ---------------------
+
 
 strat_exit_year <- list()
 

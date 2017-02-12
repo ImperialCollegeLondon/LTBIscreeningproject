@@ -129,6 +129,8 @@ event[IMPUTED_sample$uk_tb_orig=="1"] <- 1
 # 'observed' event time
 fup_times <- fup_issdt[ ,"fup1_issdt"]
 
+##TODO: use imputed exit uk and death times instead of followup censoring
+
 
 dat <- data.frame(fup_times)
 dat$age_at_entry <- IMPUTED_sample$age_at_entry
