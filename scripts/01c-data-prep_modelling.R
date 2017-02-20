@@ -95,6 +95,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_entry", "who_prev_cat_Pareek2011"))
 
+IMPUTED_sample$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 
 # create time-to-events in days --------------------------
@@ -143,13 +144,17 @@ rm(issdt.asnumeric,
    date_exit_uk1_issdt.years)
 
 
+# coverage: sample when indiv screened  ------------------------------------
 
-# subset data for delay starting screening ------------------------------
+if (screen_0_to_5_year){
 
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                   date_death1_issdt.years>=screening_year_delay,
-                   date_exit_uk1_issdt.years>=screening_year_delay,
-                   rNotificationDate_issdt.years>=screening_year_delay | is.na(rNotificationDate_issdt.years))
+  IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
+
+  IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                  date_death1_issdt.years>=screen_year,
+                                  date_exit_uk1_issdt.years>=screen_year,
+                                  rNotificationDate_issdt.years>=screen_year | is.na(rNotificationDate_issdt.years))
+}
 
 
 # create misc variables ---------------------------------------------------
@@ -198,16 +203,6 @@ strat_pop_year <- list(tb = rNotificationDate_issdt.years,
 detach(IMPUTED_sample_year_cohort)
 
 
-# par(mfrow=c(2,2))
-#
-# plot(unlist(strat_pop_year["tb", ]), type = "s", ylim = c(0,500), xlim=c(0,20), ylab="active TB", xlab = "Year")
-# plot(unlist(strat_pop_year["death", ]), type = "s", xlim = c(0,20), ylab = "all-cause death", xlab = "Year")
-# plot(unlist(strat_pop_year["exit_uk", ]), type = "s", xlim = c(0,20), ylab = "exit EWNI", xlab = "Year")
-# plot(unlist(strat_pop_year["remainder", ]), type = "s", xlim = c(0,20), ylab = "remain in EWNI", xlab = "Year")
-#
-# knitr::kable(t(strat_pop_year))
-
-
 # summary statistics ------------------------------------------------------
 
 # total sample size
@@ -238,10 +233,5 @@ pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
                         dplyr::group_by(who_prev_cat_Pareek2011) %>%
                         summarise(LTBI = mean(pLTBI)) %>%
                         complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
-
-
-num_uk_tb_before_screening <- strat_pop_year["tb", seq_len(screening_year_delay)] %>% sum()
-
-
 
 
