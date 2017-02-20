@@ -21,13 +21,15 @@ library(cmprsk) # http://www.stat.unipg.it/luca/R
 cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
 
 # find all columns with either exit uk or death event time imputations
-cols_eventdate <- grepl(pattern = "date_exit_uk|date_death", x = names(IMPUTED_sample))
+cols_eventdate <- grepl(pattern = "date_exit_uk|date_death",
+                        x = names(IMPUTED_sample))
 
 # days to arrival in uk from time origin
 issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
 
 # days from arrival in uk to end of follow-up
-fup_issdt <- apply(IMPUTED_sample[ ,cols_fup], 2, FUN = function(x) x - issdt.asnumeric)
+fup_issdt <- apply(IMPUTED_sample[ ,cols_fup], 2,
+                   FUN = function(x) x - issdt.asnumeric)
 
 colnames(fup_issdt) <- paste0(colnames(fup_issdt), "_issdt")
 
@@ -139,28 +141,5 @@ dat$event3 <- as.numeric(event == 3) #death
 dat$event2 <- as.numeric(event == 2) #exit_uk
 dat$event1 <- as.numeric(event == 1) #uk_tb
 
-
-# multistate model --------------------------------------------------------
-#
-# # transition matrix
-# tmat <- trans.comprisk(3, c("event-free", "active_TB", "exit_uk", "dead"))
-#
-# # transform to mstate format array
-# mslong <- msprep(time = c(NA, "fup_times", "fup_times", "fup_times"),
-#                  status = c(NA, "event1", "event2", "event3"),
-#                  data = dat,
-#                  keep = "age_at_entry",
-#                  trans = tmat)
-#
-# # check frequencies
-# events(mslong)
-#
-# # append age to mstate format array
-# mslong <- expand.covs(mslong, "age_at_entry")
-#
-# cx <- coxph(Surv(Tstart, Tstop, status) ~ age_at_entry.1 + age_at_entry.2 + age_at_entry.3 + strata(trans),
-#             data = mslong,
-#             method = "breslow")
-# cx
 
 
