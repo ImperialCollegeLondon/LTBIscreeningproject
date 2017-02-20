@@ -27,16 +27,12 @@ load("../../data/051206 - IMPUTED_sample.RData")
 source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 source("scripts/01c-data-prep_modelling.R", echo = TRUE)
+source("scripts/01d-data-prep_competing-risks.R")
 
 
 # 2) decision tree --------------------------------------------------------
 
 source("scripts/02-decision-tree-model.R")
-
-
-# 3) survival models ------------------------------------------------------
-
-source("scripts/03a-competing-risks.R")
 
 
 # 4) cost-effectiveness ---------------------------------------------------
