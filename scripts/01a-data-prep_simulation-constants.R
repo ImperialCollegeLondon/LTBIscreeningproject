@@ -12,10 +12,6 @@
 # number of Monte Carlo iterations
 N.mc <- 2
 
-# n.scenarios <- 180    #"data/scenario_parameter_values.xlsx"
-n.scenarios <- 441    #data/scenario-parameter-values_adherence_completion.xls"
-
-
 
 # global constants --------------------------------------------------------
 
@@ -28,18 +24,20 @@ year_cohort <- '2009' #largest cohort
 
 
 # include QALYs and costs for individuals once they've left (death)?
-QALY.ENDPOINT <- "death" #"exit uk"
-cost.ENDPOINT <- "death" #"exit uk"
+QALY.ENDPOINT <- "exit uk" #"death"
+cost.ENDPOINT <- "exit uk" #"death"
 
 
-screening_year_delay <- 0
+# rather than screen _everyone_ on entry
+# screen at random 0-5 years from entry
+screen_0_to_5_year <- TRUE
 
 
 # folder locations --------------------------------------------------------
 
 # parameter_values_file <- system.file("data", "scenario-parameter-values_full.xls", package = "LTBIscreeningproject")
 # parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package = "LTBIscreeningproject")
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx",
+parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
