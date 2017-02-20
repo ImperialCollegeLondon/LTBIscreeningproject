@@ -15,7 +15,7 @@ library(treeSimR)
 options("max.print" = 3000)
 
 
-# initiate decision tree --------------------------------------------------
+# load decision trees data --------------------------------------------------
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml", package = "LTBIscreeningproject")
 osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml", package = "LTBIscreeningproject")
@@ -28,8 +28,9 @@ osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml
 scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
 scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
+
+# baseline only -----------------------------------------------------------
 ## or
-# baseline only
 # scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
 #                                       "distn" = "unif",
 #                                       "min" = 50,
@@ -46,10 +47,11 @@ scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
 
 
 
+# create decision tree objects --------------------------------------------
+
 n.scenarios <- length(unique(scenario_parameter_p$scenario))
 
 
-# create decision tree objects
 ## cost
 costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 osNode.cost <- costeff.cost$osNode
@@ -82,11 +84,15 @@ for (i in who_levels){
 
   pLTBI <- subset(pLatentTB.who_year, who_prev_cat_Pareek2011==i, select = LTBI)
 
-  osNode.cost$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
-  osNode.health$Set(p = pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+  osNode.cost$Set(p = pLTBI,
+                  filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+  osNode.health$Set(p = pLTBI,
+                    filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
 
-  osNode.cost$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
-  osNode.health$Set(p = 1 - pLTBI, filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+  osNode.cost$Set(p = 1 - pLTBI,
+                  filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+  osNode.health$Set(p = 1 - pLTBI,
+                    filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
 }
 
 
@@ -94,6 +100,7 @@ for (i in who_levels){
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
+##TODO: move this to a MakeFile
 if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))){
 
   file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
@@ -185,4 +192,5 @@ for (scenario_i in seq_len(n.scenarios)){
   appcat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse = ","),
          file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 }
+
 
