@@ -10,16 +10,14 @@
 ##TODO: add error to survival estimates
 
 
-# generate at-risk (LTBI) population
+days_to_years <- function(days)
+  ceiling(days/365)
 
-LTBI_status <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
-IMPUTED_sample_year_cohort$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample_year_cohort$pLTBI)
+
 
 # sensitivity analysis:
 # assume _everyone_ has LTBI
 # LTBI_status <- rep(1, pop_year)
-
-
 
 
 # estimate active TB transition probabilities -----------------------------
@@ -27,10 +25,11 @@ IMPUTED_sample_year_cohort$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample_year_c
 data_etm <- data.frame(id = seq_len(n.pop),
                        from = 9,
                        to = event,
-                       time = ceiling(fup_times/365))
+                       time = days_to_years(fup_times))
 
+# censor exit uk
 data_etm$to[data_etm$to==2] <- 0
-data_etm <- data_etm[LTBI_status==1 | IMPUTED_sample$uk_tb_orig==1, ]
+data_etm <- data_etm[IMPUTED_sample$LTBI==1 | IMPUTED_sample$uk_tb_orig==1, ]
 data_etm <- data_etm[data_etm$time>0, ]
 
 trans_mat <- mstate::trans.comprisk(K = 2, names = c(1, 3)) %>%
@@ -44,10 +43,11 @@ res_etm <- etm::etm(data = data_etm,
 
 year_prob.activetb <- diff(c(0, 0, res_etm$est["9","1",]))
 
-# plot(year_prob.activetb,
-#      ylim = c(0,0.006), xlim = c(0,50), type = "o")
-
-
+plot(year_prob.activetb,
+     ylim = c(0,0.006), xlim = c(0,50), type = "o",
+     main = "LTBI to active TB annual transition probabilities\n with censoring at exit uk times",
+     xlab = "Time (years)",
+     ylab = "Probability")
 
 
 # fit exponential distn to trans probs & extrapolate  ----------------------------
@@ -73,10 +73,14 @@ year_prob.activetb <- c(year_prob.activetb,
                         year_prob.activetb_estimated + offset)
 
 
-plot(year_prob.activetb, type = "o", xlab = "Year", ylab = "Probability")
+plot(year_prob.activetb, type = "o",
+     xlim = c(0, 20),
+     main = "LTBI to active TB annual transition probabilities\n with censoring at exit uk times",
+     xlab = "Time (year)", ylab = "Probability")
 lines(year_prob.activetb[1:max_years_obs], type = "o", col = 2) #observed
 abline(h = 0.001, col = "blue")
-segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_prob.activetb[max_years_obs], col = "green")
+segments(max_years_obs, year_prob.activetb[max_years_obs],
+         fup_max_year, year_prob.activetb[max_years_obs], col = "green")
 
 
 
@@ -86,35 +90,28 @@ segments(max_years_obs, year_prob.activetb[max_years_obs], fup_max_year, year_pr
 # year_prob.activetb <- rep(0.001, 100)
 
 
-
-
 # calc number of LTBI each year in exit uk pop  ---------------------------
-
-# each year sub-populations leaving
-
 ##TODO: not quite as good as individual level calc cos fixed prob LTBI
 
 LTBI_ukexit_year_pop <- (strat_pop_year["exit_uk", ] * 0.3) %>%
                           diff()
 
 LTBI_ukexit_year_pop <- c(strat_pop_year["exit_uk", 1] * 0.3, LTBI_ukexit_year_pop)
+
+# remove trailing 0's
 LTBI_ukexit_year_pop <- LTBI_ukexit_year_pop[!duplicated(LTBI_ukexit_year_pop)]
 
 # include year 0 so consistent with year_prob.activetb
 LTBI_ukexit_year_pop <- c(0, LTBI_ukexit_year_pop)
 
+
+
+# simulate active TB progression times for exit uk _for_each_individual_  ----------------------
+
 exit_max_year <- 10
 
-activetb.exit <- matrix(data = 0,
-                        nrow = exit_max_year,
-                        ncol = fup_max_year*2)
-
-
-
-# simulate active tb progression times for exit uk individuals ----------------------
-
-
-sample_tb <- function(p) sample(c("tb", "disease-free"), size = 1, prob = c(p, 1-p))
+sample_tb <- function(p)
+              sample(c("tb", "disease-free"), size = 1, prob = c(p, 1-p))
 
 for (i in seq_len(pop_year)){
 
@@ -130,6 +127,7 @@ for (i in seq_len(pop_year)){
                 which()
 
     # remove time if progress before exit uk
+    # this captures never exit indivs
     tb_year[tb_year<IMPUTED_sample_year_cohort$date_exit_uk1_issdt.years[i]] <- NA
 
     # if multiple take first occurence
@@ -158,50 +156,56 @@ for (yeari in seq_len(exit_max_year)){
                                 count_comprsk_events()
 }
 
+# remove entries after at-risk pop = 0
+# strat_exit_year <- sapply(strat_exit_year,
+#                           function(x) x[, x["at-risk", ]!=0])
 
 
-# # sum across all curves for each year
-# exituk_tb_year <- colSums(activetb.exit)[1:fup_max_year]
-#
-# n.exit_tb <- sum(exituk_tb_year, na.rm = TRUE)
+# sum across all curves for each year
+num_exituk_tb_year <- rowSums(sapply(strat_exit_year,
+                                     function(x) diff(x["tb", ])))
+
+n.exit_tb <- sum(num_exituk_tb_year, na.rm = TRUE)
 
 
-# plot(exituk_tb_year, type = "o")
+# plot(num_exituk_tb_year, type = "o")
 
 
 
+##TODO: do the same as above so that each _individual_ has an extrapolated progression time
+
+# calc number tb_uk (extrapolated) using trans probs  -----------------------------
+# compartmental type aggregation
 
 notifDate_issdt.years <- strat_pop_year["tb", ][!duplicated(strat_pop_year["tb", ])]
 
-activeTBcases <- diff(c(0, notifDate_issdt.years))
+obs_uk_tb_year <- diff(c(0, notifDate_issdt.years))
 
-
-
-# calc number tb_uk (extrapolated) using trans probs  -----------------------------
 
 ##TODO: make dependent on different LTBI probs
 
-# yearly in uk LTBI population
-LTBI_pop_year <- strat_pop_year["remainder", ] * 0.3
+# yearly in uk LTBI population'
+LTBI_pop_year <- strat_pop_year["at-risk", ] * 0.3
 
-num_activeTB_extrap <- NULL
+num_uk_tb_year <- NULL
 
-for (i in seq_along(LTBI_pop_year)){
+for (i in seq_along(LTBI_pop_year[-1])){
 
-  num_activeTB_extrap[i] <- year_prob.activetb[i+1] * LTBI_pop_year[i]
+  num_uk_tb_year[i+1] <- year_prob.activetb[i+1] * LTBI_pop_year[i]
 
-  # removing active tb from risk set
-  LTBI_pop_year[i+1] <- LTBI_pop_year[i+1] - num_activeTB_extrap[i]
+  # removing estimated active tb from risk set
+  # replace observed active tb
+  LTBI_pop_year[i+1] <- LTBI_pop_year[i+1] - num_uk_tb_year[i+1] + strat_pop_year["tb", i+1]
 }
 
 
-# plot(num_activeTB_extrap[1:20], type = "o", ylim = c(0,85),
-#      xlab = "Year", ylab = "Number of active TB cases")
-# lines(activeTBcases, type="o", col="red")
+plot(0:19, num_uk_tb_year[1:20],
+     type = "o", ylim = c(0,85),
+     xlab = "Year", ylab = "Frequency",
+     main = "Active TB cases in EWNI for\n observed (red)\n and estimated (black)")
+lines(obs_uk_tb_year, type="o", col="red")
 
-
-# use estimated active tb numbers rather than observed sample
-activeTBcases <- num_activeTB_extrap
+num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
 
 
 
