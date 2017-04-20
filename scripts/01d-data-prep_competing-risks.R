@@ -18,7 +18,8 @@ library(cmprsk) # http://www.stat.unipg.it/luca/R
 # create uk_entry to follow-up times ---------------------------------------------
 
 # find all columns with follow-up time imputations
-cols_fup <- grepl(pattern = "fup", x = names(IMPUTED_sample))
+cols_fup <- grepl(pattern = "fup",
+                  x = names(IMPUTED_sample))
 
 # find all columns with either exit uk or death event time imputations
 cols_eventdate <- grepl(pattern = "date_exit_uk|date_death",
@@ -51,81 +52,84 @@ fup_limit <- 19723  #days from 1960-01-01
 # first event indicator (T/F) for each imputation -------------------------------
 
 IMPUTED_sample <- transform(IMPUTED_sample,
-                            cens1  = fup1==fup_limit,
-                            cens2  = fup2==fup_limit,
-                            cens3  = fup3==fup_limit,
-                            cens4  = fup4==fup_limit,
-                            cens5  = fup5==fup_limit,
-                            cens6  = fup6==fup_limit,
-                            cens7  = fup7==fup_limit,
-                            cens8  = fup8==fup_limit,
-                            cens9  = fup9==fup_limit,
-                            cens10 = fup10==fup_limit,
+                            cens1  = fup1 == fup_limit,
+                            cens2  = fup2 == fup_limit,
+                            cens3  = fup3 == fup_limit,
+                            cens4  = fup4 == fup_limit,
+                            cens5  = fup5 == fup_limit,
+                            cens6  = fup6 == fup_limit,
+                            cens7  = fup7 == fup_limit,
+                            cens8  = fup8 == fup_limit,
+                            cens9  = fup9 == fup_limit,
+                            cens10 = fup10 == fup_limit,
 
-                            death1  = (date_death1<=date_exit_uk1 & uk_tb==0 & fup1!=fup_limit), #is.death(1, IMPUTED_sample)
-                            death2  = (date_death2<=date_exit_uk2 & uk_tb==0 & fup2!=fup_limit), #is.death(2, IMPUTED_sample)
-                            death3  = (date_death3<=date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
-                            death4  = (date_death4<=date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
-                            death5  = (date_death5<=date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
-                            death6  = (date_death6<=date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
-                            death7  = (date_death7<=date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
-                            death8  = (date_death8<=date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
-                            death9  = (date_death9<=date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
-                            death10 = (date_death10<=date_exit_uk10 & uk_tb==0 & fup10!=fup_limit),
+                            death1  = (date_death1 <= date_exit_uk1 & uk_tb == 0 & fup1 != fup_limit), #is.death(1, IMPUTED_sample)
+                            death2  = (date_death2 <= date_exit_uk2 & uk_tb == 0 & fup2 != fup_limit), #is.death(2, IMPUTED_sample)
+                            death3  = (date_death3 <= date_exit_uk3 & uk_tb == 0 & fup3 != fup_limit),
+                            death4  = (date_death4 <= date_exit_uk4 & uk_tb == 0 & fup4 != fup_limit),
+                            death5  = (date_death5 <= date_exit_uk5 & uk_tb == 0 & fup5 != fup_limit),
+                            death6  = (date_death6 <= date_exit_uk6 & uk_tb == 0 & fup6 != fup_limit),
+                            death7  = (date_death7 <= date_exit_uk7 & uk_tb == 0 & fup7 != fup_limit),
+                            death8  = (date_death8 <= date_exit_uk8 & uk_tb == 0 & fup8 != fup_limit),
+                            death9  = (date_death9 <= date_exit_uk9 & uk_tb == 0 & fup9 != fup_limit),
+                            death10 = (date_death10 <= date_exit_uk10 & uk_tb == 0 & fup10 != fup_limit),
 
-                            exit_uk1  = (date_death1>date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
-                            exit_uk2  = (date_death2>date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
-                            exit_uk3  = (date_death3>date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
-                            exit_uk4  = (date_death4>date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
-                            exit_uk5  = (date_death5>date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
-                            exit_uk6  = (date_death6>date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
-                            exit_uk7  = (date_death7>date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
-                            exit_uk8  = (date_death8>date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
-                            exit_uk9  = (date_death9>date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
-                            exit_uk10 = (date_death10>date_exit_uk10 & uk_tb==0 & fup10!=fup_limit))
+                            exit_uk1  = (date_death1>date_exit_uk1 & uk_tb == 0 & fup1 != fup_limit),
+                            exit_uk2  = (date_death2>date_exit_uk2 & uk_tb == 0 & fup2 != fup_limit),
+                            exit_uk3  = (date_death3>date_exit_uk3 & uk_tb == 0 & fup3 != fup_limit),
+                            exit_uk4  = (date_death4>date_exit_uk4 & uk_tb == 0 & fup4 != fup_limit),
+                            exit_uk5  = (date_death5>date_exit_uk5 & uk_tb == 0 & fup5 != fup_limit),
+                            exit_uk6  = (date_death6>date_exit_uk6 & uk_tb == 0 & fup6 != fup_limit),
+                            exit_uk7  = (date_death7>date_exit_uk7 & uk_tb == 0 & fup7 != fup_limit),
+                            exit_uk8  = (date_death8>date_exit_uk8 & uk_tb == 0 & fup8 != fup_limit),
+                            exit_uk9  = (date_death9>date_exit_uk9 & uk_tb == 0 & fup9 != fup_limit),
+                            exit_uk10 = (date_death10>date_exit_uk10 & uk_tb == 0 & fup10 != fup_limit))
 
 
 
 IMPUTED_sample_year_cohort <- transform(IMPUTED_sample_year_cohort,
-                                        cens1  = fup1==fup_limit,
-                                        cens2  = fup2==fup_limit,
-                                        cens3  = fup3==fup_limit,
-                                        cens4  = fup4==fup_limit,
-                                        cens5  = fup5==fup_limit,
-                                        cens6  = fup6==fup_limit,
-                                        cens7  = fup7==fup_limit,
-                                        cens8  = fup8==fup_limit,
-                                        cens9  = fup9==fup_limit,
-                                        cens10 = fup10==fup_limit,
+                                        cens1  = fup1 == fup_limit,
+                                        cens2  = fup2 == fup_limit,
+                                        cens3  = fup3 == fup_limit,
+                                        cens4  = fup4 == fup_limit,
+                                        cens5  = fup5 == fup_limit,
+                                        cens6  = fup6 == fup_limit,
+                                        cens7  = fup7 == fup_limit,
+                                        cens8  = fup8 == fup_limit,
+                                        cens9  = fup9 == fup_limit,
+                                        cens10 = fup10 == fup_limit,
 
-                                        death1  = (date_death1<=date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
-                                        death2  = (date_death2<=date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
-                                        death3  = (date_death3<=date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
-                                        death4  = (date_death4<=date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
-                                        death5  = (date_death5<=date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
-                                        death6  = (date_death6<=date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
-                                        death7  = (date_death7<=date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
-                                        death8  = (date_death8<=date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
-                                        death9  = (date_death9<=date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
-                                        death10 = (date_death10<=date_exit_uk10 & uk_tb==0 & fup10!=fup_limit),
+                                        death1  = (date_death1 <= date_exit_uk1 & uk_tb == 0 & fup1 != fup_limit),
+                                        death2  = (date_death2 <= date_exit_uk2 & uk_tb == 0 & fup2 != fup_limit),
+                                        death3  = (date_death3 <= date_exit_uk3 & uk_tb == 0 & fup3 != fup_limit),
+                                        death4  = (date_death4 <= date_exit_uk4 & uk_tb == 0 & fup4 != fup_limit),
+                                        death5  = (date_death5 <= date_exit_uk5 & uk_tb == 0 & fup5 != fup_limit),
+                                        death6  = (date_death6 <= date_exit_uk6 & uk_tb == 0 & fup6 != fup_limit),
+                                        death7  = (date_death7 <= date_exit_uk7 & uk_tb == 0 & fup7 != fup_limit),
+                                        death8  = (date_death8 <= date_exit_uk8 & uk_tb == 0 & fup8 != fup_limit),
+                                        death9  = (date_death9 <= date_exit_uk9 & uk_tb == 0 & fup9 != fup_limit),
+                                        death10 = (date_death10 <= date_exit_uk10 & uk_tb == 0 & fup10 != fup_limit),
 
-                                        exit_uk1  = (date_death1>date_exit_uk1 & uk_tb==0 & fup1!=fup_limit),
-                                        exit_uk2  = (date_death2>date_exit_uk2 & uk_tb==0 & fup2!=fup_limit),
-                                        exit_uk3  = (date_death3>date_exit_uk3 & uk_tb==0 & fup3!=fup_limit),
-                                        exit_uk4  = (date_death4>date_exit_uk4 & uk_tb==0 & fup4!=fup_limit),
-                                        exit_uk5  = (date_death5>date_exit_uk5 & uk_tb==0 & fup5!=fup_limit),
-                                        exit_uk6  = (date_death6>date_exit_uk6 & uk_tb==0 & fup6!=fup_limit),
-                                        exit_uk7  = (date_death7>date_exit_uk7 & uk_tb==0 & fup7!=fup_limit),
-                                        exit_uk8  = (date_death8>date_exit_uk8 & uk_tb==0 & fup8!=fup_limit),
-                                        exit_uk9  = (date_death9>date_exit_uk9 & uk_tb==0 & fup9!=fup_limit),
-                                        exit_uk10 = (date_death10>date_exit_uk10 & uk_tb==0 & fup10!=fup_limit))
+                                        exit_uk1  = (date_death1 > date_exit_uk1 & uk_tb == 0 & fup1 != fup_limit),
+                                        exit_uk2  = (date_death2 > date_exit_uk2 & uk_tb == 0 & fup2 != fup_limit),
+                                        exit_uk3  = (date_death3 > date_exit_uk3 & uk_tb == 0 & fup3 != fup_limit),
+                                        exit_uk4  = (date_death4 > date_exit_uk4 & uk_tb == 0 & fup4 != fup_limit),
+                                        exit_uk5  = (date_death5 > date_exit_uk5 & uk_tb == 0 & fup5 != fup_limit),
+                                        exit_uk6  = (date_death6 > date_exit_uk6 & uk_tb == 0 & fup6 != fup_limit),
+                                        exit_uk7  = (date_death7 > date_exit_uk7 & uk_tb == 0 & fup7 != fup_limit),
+                                        exit_uk8  = (date_death8 > date_exit_uk8 & uk_tb == 0 & fup8 != fup_limit),
+                                        exit_uk9  = (date_death9 > date_exit_uk9 & uk_tb == 0 & fup9 != fup_limit),
+                                        exit_uk10 = (date_death10 > date_exit_uk10 & uk_tb == 0 & fup10 != fup_limit))
 
+
+# survival analysis array -------------------------------------------------
+# just use a single imputation
 
 # create final state vectors full sample
 event <- rep(0, n.pop) #event-free i.e. censored event time
 event[IMPUTED_sample$death1] <- 3
 event[IMPUTED_sample$exit_uk1] <- 2
-event[IMPUTED_sample$uk_tb_orig=="1"] <- 1
+event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
 
 
 # 'observed' event time

@@ -19,11 +19,11 @@ N.mc <- 2
 screen_age_range <- 18:45
 
 
-# year_cohort <- '2012' #most recent full year
+# year_cohort <- '2012' #most recent complete year
 year_cohort <- '2009' #largest cohort
 
 
-# include QALYs and costs for individuals once they've left (death)?
+# include QALYs and costs for individuals once they've left (i.e. to death)?
 QALY.ENDPOINT <- "exit uk" #"death"
 cost.ENDPOINT <- "exit uk" #"death"
 
@@ -35,9 +35,7 @@ screen_0_to_5_year <- TRUE
 
 # folder locations --------------------------------------------------------
 
-# parameter_values_file <- system.file("data", "scenario-parameter-values_full.xls", package = "LTBIscreeningproject")
-# parameter_values_file <- system.file("data", "scenario-parameter-values_adherence_completion.xls", package = "LTBIscreeningproject")
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
+parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx",
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
@@ -47,4 +45,5 @@ parameter_values_file <- system.file("data", "scenario-parameter-values_range-li
 # create temporary output folder
 diroutput <- tempdir()
 
-plots_folder <- system.file("output", "plots", package = "LTBIscreeningproject")
+plots_folder <- system.file("output", "plots",
+                            package = "LTBIscreeningproject")

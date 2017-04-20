@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# pre-process R Aldridge, Lancet (2016) imputed dataset
+# pre-process imputed dataset, from Aldridge (2016) Lancet
 
 
 library(dplyr)
@@ -20,26 +20,30 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
 # remove duplicate pre-entry screened
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample, dup_ref_id_orig==0)
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                dup_ref_id_orig == 0)
 
 # remove duplicate notification dates
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample, is.na(rNotificationDate) | uk_tb==1)
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                is.na(rNotificationDate) | uk_tb == 1)
 
 ##TODO: why are there missing issdt uk entry dates?
 # for now just remove them...
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample, !is.na(issdt))
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                !is.na(issdt))
 
 # eligible screening age range only
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample, age_at_entry%in%screen_age_range)
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                age_at_entry %in% screen_age_range)
 
 
-# create LTBI probabilities by WHO active TB prevalence group --------------------
+# create LTBI probs by WHO active TB group ---------------------------------
 
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
-# ref. Pareek M, Watson JP, Ormerod LP, Kon OM, Woltmann G, White PJ, et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+# ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 
@@ -76,6 +80,7 @@ pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
 
 colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
 
+
 withr::with_options(list(warn = -1),
                     rm(pLatentTB.who_18to35,
                        pLatentTB.who_36to45,
@@ -84,7 +89,8 @@ withr::with_options(list(warn = -1),
 
 # join with main data set
 
-if("reshape"%in%loadedNamespaces()) try(detach(name = package:reshape), silent = TRUE)
+if ("reshape" %in% loadedNamespaces()) try(detach(name = package:reshape),
+                                           silent = TRUE)
 
 pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
                                           id.vars = "who_prev_cat_Pareek2011",
@@ -95,6 +101,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_entry", "who_prev_cat_Pareek2011"))
 
+# sample LTBI status
 IMPUTED_sample$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 
@@ -146,14 +153,14 @@ rm(issdt.asnumeric,
 
 # coverage: sample when indiv screened  ------------------------------------
 
-if (screen_0_to_5_year){
+if (screen_0_to_5_year) {
 
   IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
 
-  IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                  date_death1_issdt.years>=screen_year,
-                                  date_exit_uk1_issdt.years>=screen_year,
-                                  rNotificationDate_issdt.years>=screen_year | is.na(rNotificationDate_issdt.years))
+  IMPUTED_sample <- dplyr::filter(.data = IMPUTED_sample,
+                                  date_death1_issdt.years >= screen_year,
+                                  date_exit_uk1_issdt.years >= screen_year,
+                                  rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years))
 }
 
 
@@ -161,43 +168,48 @@ if (screen_0_to_5_year){
 
 # remove death before entry to UK
 ##TODO: are deaths before entry the same for all imputation samples?
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample, date_death1_issdt>=0)
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                date_death1_issdt >= 0)
 
 
 # keep status-quo TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 # active TB case fatality rate age groups
-age_at_Notification <- with(IMPUTED_sample, age_at_entry + rNotificationDate_issdt.years)
 
-IMPUTED_sample$cfr_age_groups <- cut(age_at_Notification,
-                                     breaks = cfr_age_breaks,
-                                     right = FALSE)
+IMPUTED_sample$cfr_age_groups <-
+  with(IMPUTED_sample,
+       age_at_entry + rNotificationDate_issdt.years) %>%
+  cut(breaks = cfr_age_breaks,
+      right = FALSE)
+
 
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 # single year cohort only
-IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample, issdt_year==year_cohort)
+IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
+                                            issdt_year == year_cohort)
 
-# is record in chosen cohort logical
-whoin_year_cohort <- IMPUTED_sample$issdt_year==year_cohort
+# is record in chosen cohort (logical)
+whoin_year_cohort <- IMPUTED_sample$issdt_year == year_cohort
 
-# logical active TB status of original data
-uk_tb_TRUE <- IMPUTED_sample$uk_tb==1
-
-
-rm(rNotificationDate_issdt.years,
-   age_at_Notification)
+# active TB status of original data (logical)
+uk_tb_TRUE <- IMPUTED_sample$uk_tb == 1
 
 
-# calc yearly active tb, exit uk, death sub-pops for cohort year  ---------------------
+rm(rNotificationDate_issdt.years)
+
+
+# calc yearly counts for cohort year  -------------------------------------
+# active tb, exit uk, death sub-pops
 
 attach(IMPUTED_sample_year_cohort)
 
-strat_pop_year <- list(tb = rNotificationDate_issdt.years,
-                       exit_uk = date_exit_uk1_issdt.years,
-                       death = date_death1_issdt.years) %>%
+strat_pop_year <-
+  list(tb = rNotificationDate_issdt.years,
+       exit_uk = date_exit_uk1_issdt.years,
+       death = date_death1_issdt.years) %>%
   count_comprsk_events()
 
 detach(IMPUTED_sample_year_cohort)
@@ -209,29 +221,36 @@ detach(IMPUTED_sample_year_cohort)
 n.pop <- nrow(IMPUTED_sample)
 
 # total sample sizes for each yearly cohort
-entryCohort_poptotal <- aggregate(x = rep(1, n.pop),
-                                  by = list(IMPUTED_sample$issdt_year), sum) %>%
-                        set_names(c("year", "pop"))
+entryCohort_poptotal <-
+  aggregate(x = rep(1, n.pop),
+            by = list(IMPUTED_sample$issdt_year),
+            sum) %>%
+  set_names(c("year", "pop"))
 
 # cohort size at arrival to uk
-pop_year <- entryCohort_poptotal %>%
-              filter(year==year_cohort) %>%
-              select(pop) %>%
-              as.integer()
+pop_year <-
+  entryCohort_poptotal %>%
+  filter(year == year_cohort) %>%
+  select(pop) %>%
+  as.integer()
 
 # number of active TB cases _before_ screening i.e. status-quo
 n.tb <- sum(IMPUTED_sample$uk_tb)
 n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
 # probability in each who active TB category
-p.who_year <- prop.table(table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011))
+p.who_year <-
+  table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011) %>%
+  prop.table()
 
 who_levels <- names(p.who_year)
 
 # probability LTBI for each WHO category for year cohort
-pLatentTB.who_year <- IMPUTED_sample_year_cohort %>%
-                        dplyr::group_by(who_prev_cat_Pareek2011) %>%
-                        summarise(LTBI = mean(pLTBI)) %>%
-                        complete(who_prev_cat_Pareek2011, fill = list(LTBI = 0))
+pLatentTB.who_year <-
+  IMPUTED_sample_year_cohort %>%
+  dplyr::group_by(who_prev_cat_Pareek2011) %>%
+  summarise(LTBI = mean(pLTBI)) %>%
+  complete(who_prev_cat_Pareek2011,
+           fill = list(LTBI = 0))
 
 

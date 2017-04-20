@@ -17,20 +17,26 @@ options("max.print" = 3000)
 
 # load decision trees data --------------------------------------------------
 
-osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml", package = "LTBIscreeningproject")
-osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml", package = "LTBIscreeningproject")
+osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
+                                    package = "LTBIscreeningproject")
+
+osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml",
+                                      package = "LTBIscreeningproject")
 
 
 # deterministic parameter value grids -------------------------------------
 # comment-out appropriately
 
 # grid of parameter values for deterministic sensitivity analysis
-scenario_parameter_cost <- read_excel(parameter_values_file, sheet = "cost")
-scenario_parameter_p <- read_excel(parameter_values_file, sheet = "p")
+scenario_parameter_cost <- read_excel(parameter_values_file,
+                                      sheet = "cost")
+
+scenario_parameter_p <- read_excel(parameter_values_file,
+                                   sheet = "p")
 
 
 # baseline only -----------------------------------------------------------
-## or
+#
 # scenario_parameter_cost <- data.frame("node" = "Agree to Screen",
 #                                       "distn" = "unif",
 #                                       "min" = 50,
@@ -68,31 +74,31 @@ osNode.health <- costeff.health$osNode
 
 # assign cohort WHO TB incidence group branching proportions, for given year -------
 
-for (i in seq_along(who_levels)){
+for (i in seq_along(who_levels)) {
 
   osNode.cost$Set(p = p.who_year[i],
-                  filterFun = function(x) x$name==who_levels[i])
+                  filterFun = function(x) x$name == who_levels[i])
 
   osNode.health$Set(p = p.who_year[i],
-                    filterFun = function(x) x$name==who_levels[i])
+                    filterFun = function(x) x$name == who_levels[i])
 }
 
 
 # assign LTBI probability to each WHO active TB prevalence group  ------------------
 
-for (i in who_levels){
+for (i in who_levels) {
 
-  pLTBI <- subset(pLatentTB.who_year, who_prev_cat_Pareek2011==i, select = LTBI)
+  pLTBI <- subset(pLatentTB.who_year, who_prev_cat_Pareek2011 == i, select = LTBI)
 
   osNode.cost$Set(p = pLTBI,
-                  filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+                  filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "LTBI", sep = "/"))
   osNode.health$Set(p = pLTBI,
-                    filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "LTBI", sep="/"))
+                    filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "LTBI", sep = "/"))
 
   osNode.cost$Set(p = 1 - pLTBI,
-                  filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+                  filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "non-LTBI", sep = "/"))
   osNode.health$Set(p = 1 - pLTBI,
-                    filterFun = function(x) x$pathString==paste("LTBI screening cost", i, "non-LTBI", sep="/"))
+                    filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "non-LTBI", sep = "/"))
 }
 
 
@@ -101,17 +107,17 @@ for (i in who_levels){
 
 # delete old output files
 ##TODO: move this to a MakeFile
-if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))){
+if (file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) {
 
   file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
 }
 
-if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))){
+if (file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) {
 
   file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
 }
 
-if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))){
+if (file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) {
 
   file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
 }
@@ -125,7 +131,7 @@ scenario_parameter_p.melt <- as.data.frame(scenario_parameter_p) %>%
 
 
 
-for (scenario_i in seq_len(n.scenarios)){
+for (scenario_i in seq_len(n.scenarios)) {
 
 
   print(sprintf("scenario: %d", scenario_i))
@@ -157,10 +163,10 @@ for (scenario_i in seq_len(n.scenarios)){
   Effective.leafCount <- LTBItreeClone$leafCount
 
   p.complete_Tx <- osNode.cost$Get('path_probs',
-                                   filterFun = function(x) x$name=="Effective")
+                                   filterFun = function(x) x$name == "Effective")
 
   p.LTBI <- osNode.cost$Get('path_probs',
-                                   filterFun = function(x) x$name=="LTBI")
+                                   filterFun = function(x) x$name == "LTBI")
 
   # sum path_probs over all leafs in WHO groups
   Effective.groups <- rep(seq_along(p.LTBI), each = Effective.leafCount)

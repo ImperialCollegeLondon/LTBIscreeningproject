@@ -31,18 +31,18 @@ count_comprsk_events <- function(indiv_event_times,
                                  followup_max_year = 100,
                                  fill = TRUE){
 
-  if(missing(indiv_event_times)){
+  if (missing(indiv_event_times)) {
     stop("Require event times")
   }
 
   n_events <- lapply(indiv_event_times, length) %>%
                 unlist()
 
-  if(!isTRUE(all.equal(abs(max(n_events) - min(n_events)), 0))){
+  if (!isTRUE(all.equal(abs(max(n_events) - min(n_events)), 0))) {
     stop("Require number of time points to be the same for all events")
   }
 
-  if(!is.list(indiv_event_times)){
+  if (!is.list(indiv_event_times)) {
     stop("Require list for indiv_event_times")
   }
 
@@ -54,16 +54,16 @@ count_comprsk_events <- function(indiv_event_times,
 
   event_counts <- NULL
 
-  for (yeari in seq_len(followup_max_year)){
+  for (yeari in seq_len(followup_max_year)) {
 
     # FALSE means removed from the population
     risk_set <- rep(TRUE, N_pop)
     num_event_year <- NULL
 
-    for (eventi in seq_along(indiv_event_times)){
+    for (eventi in seq_along(indiv_event_times)) {
 
       # of the at-risk pop who experiences eventi before yeari
-      event_lgl <- indiv_event_times[[eventi]][risk_set]<yeari
+      event_lgl <- indiv_event_times[[eventi]][risk_set] < yeari
 
       # remove recent event indiv from risk set
       risk_set[risk_set][event_lgl] <- FALSE
@@ -78,17 +78,19 @@ count_comprsk_events <- function(indiv_event_times,
                                           N_pop - sum(num_event_year)))
 
     # risk-set = 0
-    if (N_pop - sum(num_event_year)<=0) break
+    if (N_pop - sum(num_event_year) <= 0) break
   }
 
   # fill to followup_max_year
   # last value carried forward
   num_years_events <- ncol(event_counts)
+
   missing_years <- matrix(event_counts[, num_years_events, drop = FALSE],
                           byrow = FALSE,
                           nrow = nrow(event_counts),
                           ncol = followup_max_year - num_years_events)
-  event_counts <- cbind(event_counts, missing_years)
+
+    event_counts <- cbind(event_counts, missing_years)
 
 
   rownames(event_counts) <- c("year",
