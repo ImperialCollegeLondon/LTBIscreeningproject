@@ -16,11 +16,6 @@ sim_aTB_times <- function(pop,
                           data,
                           prob) {
 
-  sample_tb <- function(p) {
-    sample(c("tb", "disease-free"),
-           size = 1,
-           prob = c(p, 1 - p))}
-
   exituk_tb_year <- vector(length = pop,
                            mode = "double")
 
@@ -30,24 +25,18 @@ sim_aTB_times <- function(pop,
     if (data$LTBI[i] == 0) {
 
       exituk_tb_year[i] <- Inf
-    }else{
+    }else if (!data$exit_uk1[i]) {
 
-      # sample if active TB each year
-      # from incidence probs
-      tb_year <-
-        sapply(X = prob,
-               FUN = sample_tb) %>%
-        equals("tb") %>%
-        which()
+      exituk_tb_year[i] <- NA
+    }else {
 
-      # remove time if progress before exit uk
-      # this captures never exit indivs
-      tb_year[tb_year < data$date_exit_uk1_issdt.years[i]] <- NA
+      prob_after_exituk <- prob
 
-      # if multiple take first occurence
-      exituk_tb_year[i] <-
-        min(tb_year, na.rm = TRUE) %>%
-        suppressWarnings()
+      prob_after_exituk[0:data$date_exit_uk1_issdt.years[i] + 1] <- 0
+
+      exituk_tb_year[i] <- sample(x = seq_along(prob_after_exituk),
+                                  size = 1,
+                                  prob = prob_after_exituk)
     }
   }
 
