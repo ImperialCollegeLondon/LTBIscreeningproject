@@ -24,5 +24,12 @@ Imports:
     purrr,
     dplyr,
     reshape2,
-    magrittr
-RoxygenNote: 5.0.1
+    magrittr,
+    purrr
+RoxygenNote: 6.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat,
+    denstrip,
+    plotCostEffectiveness
+VignetteBuilder: knitr
