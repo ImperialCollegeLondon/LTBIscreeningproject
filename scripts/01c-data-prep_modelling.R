@@ -6,10 +6,6 @@
 # pre-process imputed dataset, from Aldridge (2016) Lancet
 
 
-library(dplyr)
-library(tidyr)
-library(purrr)
-
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
@@ -126,7 +122,7 @@ date_death1_issdt <- date_death1.asnumeric - issdt.asnumeric
 date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
 
 
-# days from uk entry to all-cause death
+# days from uk entry to uk exit
 date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - as.Date("1960-01-01")
 date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
 date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365
@@ -230,7 +226,7 @@ entryCohort_poptotal <-
 # cohort size at arrival to uk
 pop_year <-
   entryCohort_poptotal %>%
-  filter(year == year_cohort) %>%
+  dplyr::filter(year == year_cohort) %>%
   select(pop) %>%
   as.integer()
 

@@ -9,8 +9,8 @@
 
 # define variables --------------------------------------------------------
 
-n.tb_year.ENDPOINT <- if (cost.ENDPOINT=="exit uk"){n.tb_year
-                      }else if (cost.ENDPOINT=="death"){n.tb_year + n.exit_tb}
+n.tb_year.ENDPOINT <- if (cost.ENDPOINT == "exit uk") {n.tb_year
+                      }else if (cost.ENDPOINT == "death") {n.tb_year + n.exit_tb}
 
 
 # we're only interested in this subset (in uk)
@@ -52,7 +52,7 @@ n.diseasefree_exit <- 0
 
 
 
-for (scenario in seq_len(n.scenarios)){
+for (scenario in seq_len(n.scenarios)) {
 
   print(sprintf("scenario: %d", scenario))
 
@@ -70,7 +70,7 @@ for (scenario in seq_len(n.scenarios)){
 
   # QALYs and cost with screening -------------------------------------------
 
-  for (simnum in uk_tbX_names){
+  for (simnum in uk_tbX_names) {
 
     unit_cost.aTB_TxDx <- sample_distributions(param.distns = unit_cost$aTB_TxDx) %>%
                            sum()
@@ -78,16 +78,17 @@ for (scenario in seq_len(n.scenarios)){
 
     # numbers of active TB cases avoided
 
-    n.diseasefree_uk <- filter(n.tb_screen[[scenario]],
-                               status=="disease-free", sim==simnum)$n
+    n.diseasefree_uk <- dplyr::filter(n.tb_screen[[scenario]],
+                                      status == "disease-free",
+                                      sim == simnum)$n
 
 
     ##TODO: make dependent on WHO cat
     # sample num disease-free of exit uk sub-pop
-    if(cost.ENDPOINT=="death"){
+    if (cost.ENDPOINT == "death") {
 
-      prob.effective <- pLTBI_hash[pLTBI_hash$scenario==scenario &
-                                     pLTBI_hash$who_prev_cat_Pareek2011=="(350,1e+05]", "value"]
+      prob.effective <- pLTBI_hash[pLTBI_hash$scenario == scenario &
+                                     pLTBI_hash$who_prev_cat_Pareek2011 == "(350,1e+05]", "value"]
 
       n.diseasefree_exit <- rbinom(n = 1, size = as.integer(n.exit_tb), prob = prob.effective)
     }
@@ -109,7 +110,7 @@ for (scenario in seq_len(n.scenarios)){
 
     weight <- n.exit_tb/n.tb_year
 
-    if (QALY.ENDPOINT=="death"){
+    if (QALY.ENDPOINT == "death") {
 
       aTB_QALY.statusquo[[scenario]][simnum] <- aTB_QALY.statusquo[[scenario]][simnum] + (weight * aTB_QALY.statusquo[[scenario]][simnum])
       aTB_QALY.screened[[scenario]][simnum]  <- aTB_QALY.screened[[scenario]][simnum] + (weight * aTB_QALY.screened[[scenario]][simnum])
@@ -151,7 +152,7 @@ for (scenario in seq_len(n.scenarios)){
   E.aTB_QALY.screened[scenario] <- mean(aTB_QALY.screened[[scenario]], na.rm = TRUE)
 
   # proportion CE at wtp_threshold/QALY
-  aTB_p.costEffective[[scenario]] <- prop.table(table(aTB_INMB[[scenario]]>0, useNA = "no"))
+  aTB_p.costEffective[[scenario]] <- prop.table(table(aTB_INMB[[scenario]] > 0, useNA = "no"))
 }
 
 

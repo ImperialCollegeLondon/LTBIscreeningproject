@@ -6,8 +6,6 @@
 # calculate cost-effectiveness statistics for results tables
 
 
-library(dplyr)
-
 
 # create a single 'long/tidy' output array
 

@@ -35,7 +35,7 @@ screen_0_to_5_year <- TRUE
 
 # folder locations --------------------------------------------------------
 
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits.xlsx",
+parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder

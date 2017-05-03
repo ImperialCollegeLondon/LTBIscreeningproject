@@ -171,6 +171,7 @@ unit_cost$LTBI_Tx_3mISORIF <- QALY::inflation_adjust_cost(from_year = 2015,
                                                           from_cost = 396,
                                                           reference = "Jit & White (2015)")
 
+
 ##########
 # health #
 ##########

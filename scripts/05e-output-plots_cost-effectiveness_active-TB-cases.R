@@ -8,10 +8,6 @@
 # bar plots & box plots
 
 
-library(ggplot2)
-library(denstrip)
-
-
 if(!exists("p.complete_treat_scenarios")){
 
   p.complete_treat_scenarios <- read.csv(file = file.choose(), header = FALSE)

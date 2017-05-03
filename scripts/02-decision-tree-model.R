@@ -6,8 +6,6 @@
 # LTBI screening and treatment pathway decision tree model
 
 
-library(readxl)
-library(data.tree)
 library(treeSimR)
 
 
@@ -55,7 +53,10 @@ scenario_parameter_p <- read_excel(parameter_values_file,
 
 # create decision tree objects --------------------------------------------
 
-n.scenarios <- length(unique(scenario_parameter_p$scenario))
+n.scenarios <-
+  unique(scenario_parameter_p$scenario) %>%
+  length()
+
 
 
 ## cost
@@ -88,7 +89,9 @@ for (i in seq_along(who_levels)) {
 
 for (i in who_levels) {
 
-  pLTBI <- subset(pLatentTB.who_year, who_prev_cat_Pareek2011 == i, select = LTBI)
+  pLTBI <- subset(pLatentTB.who_year,
+                  who_prev_cat_Pareek2011 == i,
+                  select = LTBI)
 
   osNode.cost$Set(p = pLTBI,
                   filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "LTBI", sep = "/"))
@@ -102,11 +105,15 @@ for (i in who_levels) {
 }
 
 
+
+
+
 # sensitivity analysis ----------------------------------------------------
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
 ##TODO: move this to a MakeFile
+
 if (file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) {
 
   file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
@@ -124,10 +131,12 @@ if (file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep =
 
 
 # transform to tidy format
-scenario_parameter_p.melt <- as.data.frame(scenario_parameter_p) %>%
-                              reshape2::melt(id.vars = "scenario") %>%
-                              plyr::rename(replace = c("variable" = "node",
-                                                       "value" = "p"))
+
+scenario_parameter_p.melt <-
+  as.data.frame(scenario_parameter_p) %>%
+  reshape2::melt(id.vars = "scenario") %>%
+  plyr::rename(replace = c("variable" = "node",
+                           "value" = "p"))
 
 
 
@@ -156,7 +165,8 @@ for (scenario_i in seq_len(n.scenarios)) {
 
   # total prob successfully cured of LTBI for each WHO category -------------
 
-  # number of ways to effectively compelete Tx per LTBI
+  # number of ways to effectively complete Tx per LTBI
+
   LTBItreeClone <- Clone(osNode.cost$`(50,150]`$LTBI,
                          pruneFun = function(x) myPruneFun(x, "Effective"))
 
@@ -166,26 +176,40 @@ for (scenario_i in seq_len(n.scenarios)) {
                                    filterFun = function(x) x$name == "Effective")
 
   p.LTBI <- osNode.cost$Get('path_probs',
-                                   filterFun = function(x) x$name == "LTBI")
+                            filterFun = function(x) x$name == "LTBI")
 
   # sum path_probs over all leafs in WHO groups
-  Effective.groups <- rep(seq_along(p.LTBI), each = Effective.leafCount)
-  p.Effective <- aggregate(p.complete_Tx, by = list(Effective.groups), FUN = sum)$x
 
-  p.complete_Tx_given_LTBI_by_who <- set_names(p.Effective/p.LTBI, nm = who_levels)
+  Effective.groups <- rep(seq_along(p.LTBI),
+                          each = Effective.leafCount)
+
+  p.Effective <-
+    aggregate(p.complete_Tx,
+              by = list(Effective.groups),
+              FUN = sum) %>%
+    select(x) %>%
+    unlist()
+
+  p.complete_Tx_given_LTBI_by_who <- set_names(x = p.Effective/p.LTBI,
+                                               nm = who_levels)
 
 
 
   # sample total expected values --------------------------------------------
 
-  mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost, n = N.mc)
-  mc.health <- treeSimR::MonteCarlo_expectedValues(osNode.health, n = N.mc)
+  mc.cost <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.cost,
+                                                 n = N.mc)
+
+  mc.health <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.health,
+                                                   n = N.mc)
 
 
 
   # save --------------------------------------------------------------------
 
-  appcat <- pryr::partial(cat, append = TRUE, fill = TRUE)
+  appcat <- pryr::partial(cat,
+                          append = TRUE,
+                          fill = TRUE)
 
   # cost-effectiveness outputs
   appcat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),

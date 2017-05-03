@@ -8,10 +8,6 @@
 # costs incurred and QALY gains
 
 
-library(ggplot2)
-library(BCEA)
-
-
 if(!exists("aTB_CE_stats")) load(paste(diroutput, "aTB_CE_stats.RData", sep = "/"))
 
 

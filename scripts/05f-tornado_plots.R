@@ -7,9 +7,6 @@
 # tornado plots
 
 
-library(plotCostEffectiveness)
-
-
 positive_branch_only <- gsub(pattern = "Not ",
                              replacement = "",
                              x = names(scenario_parameter_p)) %>% unique()

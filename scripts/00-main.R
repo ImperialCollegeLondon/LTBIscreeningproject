@@ -38,7 +38,8 @@ source("scripts/02-decision-tree-model.R")
 # 4) cost-effectiveness ---------------------------------------------------
 
 source("scripts/04a-cost-effectiveness_activeTB-samples.R")
-source("scripts/04aa-active-TB-imputation_extrapolation.R")
+source("scripts/04a_1-active-TB-extrapolation.R")
+source("scripts/04a_2-active-TB-imputation.R")
 source("scripts/04b-cost-effectiveness_QALY-costs.R")
 
 
@@ -53,5 +54,5 @@ source("scripts/05h-CE_summary_stats.R")
 
 
 # clean-up session --------------------------------------------------------
-if(grepl("temp", diroutput, ignore.case = TRUE))
+if (grepl("temp", diroutput, ignore.case = TRUE))
   unlink(diroutput)

@@ -13,7 +13,7 @@
 #' @param followup_max_year Time horizon
 #' @param fill Append counts up to time horixon after risk-set empty
 #'
-#' @return Event counts by year
+#' @return Event counts by year. Note that the risk-set is for the following year i.e. column year 1 is the risk set for year 2.
 #' @export
 #'
 #' @examples
