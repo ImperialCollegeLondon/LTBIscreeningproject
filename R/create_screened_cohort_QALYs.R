@@ -11,13 +11,13 @@
 #'
 #' @examples
 #'
-create_screened_cohort_QALYs <- function(n.diseasefree,
-                                         QALY) {
+screened_cohort_QALYs <- function(n.diseasefree,
+                                  QALY) {
 
-  res <-  QALY$cured
+  res <- QALY$cured
   n.tb <- length(res)
 
-  if (length(n.diseasefree)>0) {
+  if (length(n.diseasefree) > 0) {
 
     which_diseasefree <- sample(1:n.tb, n.diseasefree)
     res[which_diseasefree] <- QALY$diseasefree[which_diseasefree]
@@ -42,10 +42,11 @@ create_screened_cohort_QALYs <- function(n.diseasefree,
 #'
 #' @examples
 #'
-create_screened_cohort_cost <- function(n.diseasefree,
-                                        cost.statusquo,
-                                        unit_cost_case){
-  if (length(n.diseasefree)==0){
+screened_cohort_cost <- function(n.diseasefree,
+                                 cost.statusquo,
+                                 unit_cost_case) {
+
+  if (length(n.diseasefree) == 0) {
     n.diseasefree <- 0
   }
 

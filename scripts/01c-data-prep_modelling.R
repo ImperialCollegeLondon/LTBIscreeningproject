@@ -11,7 +11,6 @@ IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
-
 # remove duplicate and not needed records ---------------------------------
 
 
@@ -85,8 +84,12 @@ withr::with_options(list(warn = -1),
 
 # join with main data set
 
-if ("reshape" %in% loadedNamespaces()) try(detach(name = package:reshape),
-                                           silent = TRUE)
+if ("reshape" %in% loadedNamespaces()) {
+
+  try(detach(
+    name = package:reshape),
+    silent = TRUE)
+}
 
 pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
                                           id.vars = "who_prev_cat_Pareek2011",
@@ -98,7 +101,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         by = c("age_at_entry", "who_prev_cat_Pareek2011"))
 
 # sample LTBI status
-IMPUTED_sample$LTBI <- sample_uk_tb(prob = 1 - IMPUTED_sample$pLTBI)
+IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 
 # create time-to-events in days --------------------------
@@ -125,6 +128,9 @@ date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
 # days from uk entry to uk exit
 date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - as.Date("1960-01-01")
 date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
+
+date_exit_uk1_issdt[date_exit_uk1_issdt == 36525] <- Inf  #never exit imputed 100 years
+
 date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365
 
 
@@ -168,17 +174,17 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 date_death1_issdt >= 0)
 
 
-# keep status-quo TB status
+# keep original TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 # active TB case fatality rate age groups
 
-IMPUTED_sample$cfr_age_groups <-
-  with(IMPUTED_sample,
-       age_at_entry + rNotificationDate_issdt.years) %>%
-  cut(breaks = cfr_age_breaks,
-      right = FALSE)
-
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
+         agegroup_uk_notification = cut(age_uk_notification,
+                                        breaks = cfr_age_breaks,
+                                        right = FALSE))
 
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
@@ -232,7 +238,7 @@ pop_year <-
 
 # number of active TB cases _before_ screening i.e. status-quo
 n.tb <- sum(IMPUTED_sample$uk_tb)
-n.tb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
+n.uktb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
 # probability in each who active TB category
 p.who_year <-
@@ -248,5 +254,4 @@ pLatentTB.who_year <-
   summarise(LTBI = mean(pLTBI)) %>%
   complete(who_prev_cat_Pareek2011,
            fill = list(LTBI = 0))
-
 

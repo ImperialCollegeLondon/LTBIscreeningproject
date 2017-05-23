@@ -1,3 +1,9 @@
+#
+#
+# Sutherland journal paper values
+#
+#
+
 
 library(readr)
 
@@ -22,10 +28,15 @@ prob_estimated <- log(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(
 
 lines(years, prob_estimated, type = "l", col = "red")
 
+activetb_year_pmf_sutherland <- diff(prob_estimated)/100
+
+save(activetb_year_pmf_sutherland, file = "data/activetb_year_pmf_sutherland")
 
 
 # add  to ETS plot
-lines(years[-1][years[-1] > 7], diff(prob_estimated)[years[-1] > 7]/100, type = 'l', col = "orange")
+plot(years[-1][years[-1] > 7],
+     activetb_year_pmf_sutherland[years[-1] > 7],
+     type = 'l', col = "orange")
 
 
 

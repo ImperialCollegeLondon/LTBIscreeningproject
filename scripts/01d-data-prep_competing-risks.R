@@ -166,12 +166,13 @@ dat_surv_naive <-
   dplyr::filter(IMPUTED_sample$LTBI_or_activeTB == TRUE)
 
 
-# impute progression time after follow-up
+# impute progression time after follow-up in uk
+# from exponential distn
 
 n.LTBI <- sum(IMPUTED_sample$LTBI_or_activeTB)
 imputed_uk_tb_excess <- rexp(n = n.LTBI, rate = 1e-5)  #days
 
-dat_surv_imputed_uk_tb <-
+dat_surv_etm_imputed_uk_tb <-
   IMPUTED_sample %>%
   dplyr::filter(LTBI_or_activeTB == TRUE) %>%
   transmute(imputed_uk_tb_times = fup1_issdt + imputed_uk_tb_excess,
@@ -181,9 +182,9 @@ dat_surv_imputed_uk_tb <-
             time_days = ifelse(cens1 == TRUE, min_uk_tb_death_impute, fup1_issdt),
             time = days_to_years(time_days),
             to = ifelse(death1 == TRUE, 3,
-                                  ifelse(exit_uk1 == TRUE, 2,
-                                  ifelse(uk_tb_orig == "1", 1,
-                                  ifelse(imputed_uk_tb_times <= date_death1_issdt, 1, 3)))),
+                  ifelse(exit_uk1 == TRUE, 2,
+                  ifelse(uk_tb_orig == "1", 1,
+                  ifelse(imputed_uk_tb_times <= date_death1_issdt, 1, 3)))),
             cens = ifelse(to == 1, 1, 0),
             from = 9,
             id = rownames(.))

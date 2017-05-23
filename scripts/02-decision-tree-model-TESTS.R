@@ -43,9 +43,9 @@ print(costeff.health)
 # iterate over each deterministic scenario of parameter values
 
 # delete old output files
-if(file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
-if(file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
-if(file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
+if (file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) file.remove(pastef(diroutput, "mc_cost.csv"))
+if (file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) file.remove(pastef(diroutput, "mc_health.csv"))
+if (file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) file.remove(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))
 
 
 # pathway probabilities ---------------------------------------------------
@@ -65,10 +65,10 @@ LTBItreeClone <- Clone(osNode.cost$LTBI,
 Effective.leafCount <- LTBItreeClone$leafCount
 
 p.complete_Tx <- osNode.cost$Get('path_probs',
-                                 filterFun = function(x) x$name=="Effective")
+                                 filterFun = function(x) x$name == "Effective")
 
 p.LTBI <- osNode.cost$Get('path_probs',
-                          filterFun = function(x) x$name=="LTBI")
+                          filterFun = function(x) x$name == "LTBI")
 
 
 # sum path_probs over all leafs in WHO groups

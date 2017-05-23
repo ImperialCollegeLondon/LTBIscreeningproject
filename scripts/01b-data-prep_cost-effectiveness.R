@@ -17,12 +17,8 @@
 # since the other individuals unchanged
 
 
-library(magrittr)
-
-
 # willingness to pay (£)
 wtp_threshold <- 20000
-
 
 
 # 12 month active TB case fatality rate -----------------------------------
@@ -32,7 +28,7 @@ cfr_age_levels <- cut(0, cfr_age_breaks, right = FALSE) %>%
                     levels()
 
 cfr_age_lookup <- data.frame(age = cfr_age_levels,
-                             cfr = c(0.012, 0.012, 0.012),
+                             cfr = c(0.012, 0.048, 0.176),
                              distn = c("beta", "beta", "beta"),
                              a = c(NA, NA, NA),
                              b = c(NA, NA, NA))
@@ -49,69 +45,10 @@ attr(cfr_age_lookup, "reference") <- "Crofts et al (2008)"
 unit_cost <- list()
 
 
-# active TB -----------------------------------------------------
-
-# diagnosis
-
-culture <- QALY::inflation_adjust_cost(from_year = 2015,
-                                       to_year = 2016,
-                                       from_cost = 22.29,
-                                       reference = "Drobniewski (2015)")
-
-culture <- list(distn = "gamma",
-                params = c(shape = 100,
-                           scale = culture/100))
-
-xray <- QALY::inflation_adjust_cost(from_year = 2011,
-                                     to_year = 2016,
-                                     from_cost = 35,
-                                     reference = "NICE guidance CG117 (March 2011)")
-xray <- list(distn = "pert",
-             params = c(mode = xray,
-                        min = 30,
-                        max = 50))
-
-
-smear <- QALY::inflation_adjust_cost(from_year = 2015,
-                                     to_year = 2016,
-                                     from_cost = 8.23,
-                                     reference = "(2015) Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis")
-smear <- list(distn = "gamma",
-              params = c(shape = 106,
-                         scale = smear/106))
-
-# NHS England. (2013). 2014 / 15 National Tariff Payment System
-first_visit <- list(distn = "gamma",
-                    params = c(shape = 53.3,
-                               scale = 4.52)) #241
-
-# NHS England. (2013). 2014 / 15 National Tariff Payment System
-followup_visit <- list(distn = "gamma",
-                       params = c(shape = 18.78,
-                                  scale = 7.62)) #143
-
-
-# treatment
-aTB_Tx <- QALY::inflation_adjust_cost(from_year = 2015,
-                                      to_year = 2016,
-                                      from_cost = 5329,
-                                      reference = "Jit & White (2015)")
-aTB_Tx <- list(distn = "gamma",
-               params = c(shape = 8.333,
-                          scale = aTB_Tx/8.333))
-
-
-unit_cost$aTB_TxDx <- list(culture = culture,
-                           xray = xray,
-                           smear = smear,
-                           first_visit = first_visit,
-                           followup_visit = followup_visit,
-                           aTB_Tx = aTB_Tx)
-
-
 # LTBI --------------------------------------------------------------------
 
-# adverse effects of LTBI treatment
+## adverse effects of LTBI treatment
+
 unit_cost$vomiting <- QALY::inflation_adjust_cost(from_year = 2015,
                                                   to_year = 2016,
                                                   from_cost = 63,
@@ -130,6 +67,7 @@ unit_cost$hepatotoxicity <- QALY::inflation_adjust_cost(from_year = 2015,
 #                                  params = c(shape = 6.679,
 #                                             scale = unit_cost$hepatotoxicity/6.679))
 
+## tests
 
 # LFT test
 unit_cost$LFT_test <- QALY::inflation_adjust_cost(from_year = 2013,
@@ -170,6 +108,74 @@ unit_cost$LTBI_Tx_3mISORIF <- QALY::inflation_adjust_cost(from_year = 2015,
                                                           to_year = 2016,
                                                           from_cost = 396,
                                                           reference = "Jit & White (2015)")
+
+# active TB -----------------------------------------------------
+
+# diagnosis
+
+culture <- QALY::inflation_adjust_cost(from_year = 2015,
+                                       to_year = 2016,
+                                       from_cost = 22.29,
+                                       reference = "Drobniewski (2015)")
+
+culture <- list(distn = "gamma",
+                params = c(shape = 100,
+                           scale = culture/100))
+
+xray <- QALY::inflation_adjust_cost(from_year = 2011,
+                                    to_year = 2016,
+                                    from_cost = 35,
+                                    reference = "NICE guidance CG117 (March 2011)")
+xray <- list(distn = "pert",
+             params = c(mode = xray,
+                        min = 30,
+                        max = 50))
+
+
+smear <- QALY::inflation_adjust_cost(from_year = 2015,
+                                     to_year = 2016,
+                                     from_cost = 8.23,
+                                     reference = "(2015) Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis")
+smear <- list(distn = "gamma",
+              params = c(shape = 106,
+                         scale = smear/106))
+
+# NHS England. (2013). 2014 / 15 National Tariff Payment System
+first_visit <- list(distn = "gamma",
+                    params = c(shape = 53.3,
+                               scale = 4.52)) #241
+
+# NHS England. (2013). 2014 / 15 National Tariff Payment System
+followup_visit <- list(distn = "gamma",
+                       params = c(shape = 18.78,
+                                  scale = 7.62)) #143
+
+
+# treatment
+aTB_Tx <- QALY::inflation_adjust_cost(from_year = 2015,
+                                      to_year = 2016,
+                                      from_cost = 5329,
+                                      reference = "Jit & White (2015)")
+aTB_Tx <- list(distn = "gamma",
+               params = c(shape = 8.333,
+                          scale = aTB_Tx/8.333))
+
+
+unit_cost$aTB_TxDx <- list(culture = culture,
+                           xray = xray,
+                           smear = smear,
+                           first_visit = first_visit,
+                           followup_visit = followup_visit,
+                           HIV_test = list(distn = "unif",
+                                           params = c(min = unit_cost$HIV_test,
+                                                      max = unit_cost$HIV_test)),
+                           LFT_test = list(distn = "unif",
+                                           params = c(min = unit_cost$LFT_test,
+                                                      max = unit_cost$LFT_test)),
+                           hep_test = list(distn = "unif",
+                                           params = c(min = unit_cost$hep_test,
+                                                      max = unit_cost$hep_test)),
+                           aTB_Tx = aTB_Tx)
 
 
 ##########

@@ -10,7 +10,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2
+N.mc <- 1
 
 
 # global constants --------------------------------------------------------
@@ -24,8 +24,8 @@ year_cohort <- '2009' #largest cohort
 
 
 # include QALYs and costs for individuals once they've left (i.e. to death)?
-QALY.ENDPOINT <- "exit uk" #"death"
-cost.ENDPOINT <- "exit uk" #"death"
+ENDPOINT_QALY <- "death" #"exit uk"
+ENDPOINT_cost <- "exit uk" #"death"
 
 
 # rather than screen _everyone_ on entry

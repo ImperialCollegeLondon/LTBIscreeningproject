@@ -8,10 +8,11 @@
 # bar plots & box plots
 
 
-if(!exists("p.complete_treat_scenarios")){
 
-  p.complete_treat_scenarios <- read.csv(file = file.choose(), header = FALSE)
-  # p.complete_treat_scenarios <- read.csv(file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"), header = FALSE)
+if (!exists("p.complete_treat_scenarios")) {
+
+  # p.complete_treat_scenarios <- read.csv(file = file.choose(), header = FALSE)
+  p.complete_treat_scenarios <- read.csv(file = pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"), header = FALSE)
   names(p.complete_treat_scenarios) <- who_levels
   p.complete_treat_scenarios$scenario <- rownames(p.complete_treat_scenarios)
 }
@@ -19,7 +20,7 @@ if(!exists("p.complete_treat_scenarios")){
 
 LTBI_prob_lookup <-
   p.complete_treat_scenarios %>%
-  gather("who_prev_cat_Pareek2011", "value", - scenario)
+  gather("who_prev_cat_Pareek2011", "value", -scenario)
 
 
 ######################
@@ -27,9 +28,11 @@ LTBI_prob_lookup <-
 ######################
 
 
+##TODO: update variable names etc...
+
 # fillin missing years with NA
 obs_uk_tb_year <- c(obs_uk_tb_year,
-                   rep(0, length(uktb_estimated) - length(obs_uk_tb_year)))
+                    rep(0, length(uktb_estimated) - length(obs_uk_tb_year)))
 
 
 # fillin later years with estimates (exponential)
@@ -39,7 +42,7 @@ obs_uk_tb_year <- rbind(obs_uk_tb_year,
 
 colnames(obs_uk_tb_year) <- seq_len(ncol(obs_uk_tb_year))
 
-png(paste(plots_folder, "/barplot_raw_num_aTB.png", sep=""))
+png(paste(plots_folder, "/barplot_raw_num_aTB.png", sep = ""))
 
 barplot(height = obs_uk_tb_year,
         ylim = c(0, 150),
@@ -81,7 +84,7 @@ dev.off()
 SCENARIO <- 1#300
 
 p.completeTx <- subset(x = LTBI_prob_lookup,
-                       scenario==as.character(SCENARIO) & who_prev_cat_Pareek2011=="(50,150]",
+                       scenario == as.character(SCENARIO) & who_prev_cat_Pareek2011 == "(50,150]",
                        select = value) %>%
                 as.numeric()
 
@@ -105,7 +108,8 @@ plot(NA, xlim = c(0, 9), ylim = c(0, 170),
 axis(side = 1, at = 1:8)
 combined_activeTBcases <- colSums(obs_uk_tb_year) %>% round()
 x <- list()
-for (i in seq_along(combined_activeTBcases)){
+
+for (i in seq_along(combined_activeTBcases)) {
 
   x[[i]] <- rbinom(n = 1000, size = combined_activeTBcases[i], prob = 1 - p.completeTx)
   denstrip(x[[i]], colmax = "black", width = 1, at = i, horiz = FALSE, ticks = combined_activeTBcases[i], tlen = 1)
@@ -158,7 +162,7 @@ missed_avoided_activeTBcases <- rbind("Missed" = activeTBcases_after_screen,
 # single scenario bar plot
 
 x11()
-png(paste(plots_folder, "/barplot_aTB_with_avoided.png", sep=""))
+png(paste(plots_folder, "/barplot_aTB_with_avoided.png", sep = ""))
 
 barplot(height = missed_avoided_activeTBcases,
         main = paste("Observed active TB incidence:\n", diroutput, "\n scenario", SCENARIO),
@@ -190,8 +194,8 @@ missed_avoided_UK_nonUK_activeTBcases <- rbind("Missed UK"  = activeTBcases_afte
                                                "Missed non-UK"  = exituk_tb_year * (1 - p.completeTx),
                                                "Avoided non-UK" = exituk_tb_year * p.completeTx)
 
-windows(rescale ="R")
-png(paste(plots_folder, "/barplot_aTB_with_exituk_avoided.png", sep=""))
+windows(rescale = "R")
+png(paste(plots_folder, "/barplot_aTB_with_exituk_avoided.png", sep = ""))
 
 barplot(height = missed_avoided_UK_nonUK_activeTBcases,
         main = sprintf("Number of active TB cases\n before and after screening in %s cohort", year_cohort),
@@ -213,14 +217,14 @@ dev.off()
 ############################
 
 p.completeTx_scenarios <- LTBI_prob_lookup %>%
-                            filter(who_prev_cat_Pareek2011=="(50,150]") %>%
+                            filter(who_prev_cat_Pareek2011 == "(50,150]") %>%
                             select(value)
 
 counts.scenarios <- matrix(data = obs_uk_tb_year,
                            nrow = n.scenarios,
                            ncol = length(obs_uk_tb_year), byrow = TRUE)
 
-for (i in seq_len(n.scenarios)){
+for (i in seq_len(n.scenarios)) {
   counts.scenarios[i, ] <- counts.scenarios[i, ] * p.completeTx_scenarios[i, ]
 }
 

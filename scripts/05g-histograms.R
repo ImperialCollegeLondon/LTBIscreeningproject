@@ -4,7 +4,7 @@
 # Oct 2016
 #
 # histogram plots
-# this is only useful for the complete set of scenarios
+# this is only useful for the complete gridded set of scenarios
 
 
 calc.INMB(e = e.total,

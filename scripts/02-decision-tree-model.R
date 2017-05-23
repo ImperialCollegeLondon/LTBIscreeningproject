@@ -6,13 +6,6 @@
 # LTBI screening and treatment pathway decision tree model
 
 
-library(treeSimR)
-
-
-# output to screen
-options("max.print" = 3000)
-
-
 # load decision trees data --------------------------------------------------
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
@@ -70,7 +63,7 @@ osNode.health <- costeff.health$osNode
 
 # print(costeff.cost)
 # print(costeff.health)
-
+# listviewer::jsonedit(ToListExplicit(osNode.cost))
 
 
 # assign cohort WHO TB incidence group branching proportions, for given year -------
@@ -94,14 +87,14 @@ for (i in who_levels) {
                   select = LTBI)
 
   osNode.cost$Set(p = pLTBI,
-                  filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "LTBI", sep = "/"))
+                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
   osNode.health$Set(p = pLTBI,
-                    filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "LTBI", sep = "/"))
+                    filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
 
   osNode.cost$Set(p = 1 - pLTBI,
-                  filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "non-LTBI", sep = "/"))
+                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
   osNode.health$Set(p = 1 - pLTBI,
-                    filterFun = function(x) x$pathString == paste("LTBI screening cost", i, "non-LTBI", sep = "/"))
+                    filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
 }
 
 
@@ -114,19 +107,19 @@ for (i in who_levels) {
 # delete old output files
 ##TODO: move this to a MakeFile
 
-if (file.exists(paste(diroutput, "mc_cost.csv", sep = "/"))) {
+if (file.exists(pastef(diroutput, "mc_cost.csv"))) {
 
-  file.remove(paste(diroutput, "mc_cost.csv", sep = "/"))
+  file.remove(pastef(diroutput, "mc_cost.csv"))
 }
 
-if (file.exists(paste(diroutput, "mc_health.csv", sep = "/"))) {
+if (file.exists(pastef(diroutput, "mc_health.csv"))) {
 
-  file.remove(paste(diroutput, "mc_health.csv", sep = "/"))
+  file.remove(pastef(diroutput, "mc_health.csv"))
 }
 
-if (file.exists(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))) {
+if (file.exists(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))) {
 
-  file.remove(paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
+  file.remove(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))
 }
 
 
@@ -213,14 +206,14 @@ for (scenario_i in seq_len(n.scenarios)) {
 
   # cost-effectiveness outputs
   appcat(x = paste(as.numeric(mc.cost$`expected values`), collapse = ","),
-         file = paste(diroutput, "mc_cost.csv", sep = "/"))
+         file = pastef(diroutput, "mc_cost.csv"))
 
   appcat(x = paste(as.numeric(mc.health$`expected values`), collapse = ","),
-         file = paste(diroutput, "mc_health.csv", sep = "/"))
+         file = pastef(diroutput, "mc_health.csv"))
 
   # defined pathway probabilities
   appcat(x = paste(as.numeric(p.complete_Tx_given_LTBI_by_who), collapse = ","),
-         file = paste(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv", sep = "/"))
+         file = pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))
 }
 
 

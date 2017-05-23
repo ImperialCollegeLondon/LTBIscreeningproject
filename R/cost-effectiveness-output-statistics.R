@@ -3,9 +3,9 @@
 #'
 #' Differences are [intervention] - [status-quo].
 #'
-#' @param e effectivness i.e. health e.g. QALYs
-#' @param c costs
-#' @param ref reference column. Defaults to 1
+#' @param e Effectivness i.e. health e.g. QALYs
+#' @param c Costs
+#' @param ref Reference column. Defaults to 1
 #' @param wtp Willingness to pay threshold
 #'
 #' @return Value
@@ -15,10 +15,10 @@
 #'
 calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 
-  if (wtp<0)
+  if (wtp < 0)
     stop("Willingness to pay must be non-negative.")
 
-  if (any(dim(c)!=dim(e)))
+  if (any(dim(c) != dim(e)))
     warning("Dimensions of e and c do not match.")
 
   n.comparators <- dim(e)[2]
@@ -40,9 +40,9 @@ calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 #'
 #' Differences are [intervention] - [status-quo].
 #'
-#' @param e effectivness i.e. health e.g. QALYs
-#' @param c costs
-#' @param ref reference column. Defaults to 1
+#' @param e Effectivness i.e. health e.g. QALYs
+#' @param c Costs
+#' @param ref Reference column. Defaults to 1
 #'
 #' @return
 #' @export
@@ -51,7 +51,7 @@ calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 #'
 calc.ICER <- function(e, c, ref = 1){
 
-  if (any(dim(c)!=dim(e)))
+  if (any(dim(c) != dim(e)))
     warning("Dimensions of e and c do not match.")
 
   n.comparators <- dim(e)[2]

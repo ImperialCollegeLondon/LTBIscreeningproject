@@ -12,8 +12,8 @@ plot(diff(cumprob.activetb), type = "h",
      xlab = "Time from UK entry (years)")
 
 
-plot(x = 1:length(exituk_tb_year),
-     y = exituk_tb_year,
+plot(x = 1:length(exituk_tb.years),
+     y = exituk_tb.years,
      main = "Histogram of number of\n active TB cases outside of UK",
      ylim = c(0, 200), xlab = "Time from UK entry (years)", type = "h")
 

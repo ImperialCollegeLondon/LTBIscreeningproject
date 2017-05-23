@@ -8,7 +8,7 @@
 # costs incurred and QALY gains
 
 
-if(!exists("aTB_CE_stats")) load(paste(diroutput, "aTB_CE_stats.RData", sep = "/"))
+if (!exists("aTB_CE_stats")) load(pastef(diroutput, "aTB_CE_stats.RData"))
 
 
 popscale <- 1#00000
@@ -19,23 +19,33 @@ popscale <- 1#00000
 ###############
 
 # convert active TB lists to dataframes
-aTB_cost_melt <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_cost_diff_person), row.names = NULL)
-aTB_QALYgain_melt  <- data.frame(Reduce(rbind, aTB_CE_stats$aTB_QALYgain_person), row.names = NULL)
+aTB_cost_melt <-
+  Reduce(rbind,
+         aTB_CE_stats$aTB_cost_diff_person) %>%
+  data.frame(row.names = NULL)
+
+aTB_QALYgain_melt <-
+  Reduce(rbind,
+         aTB_CE_stats$aTB_QALYgain_person) %>%
+  data.frame(row.names = NULL)
 
 # with status-quo
-scenario.names <- as.character(c(0, seq_len(n.scenarios)))
+scenario.names <-
+  c(0, seq_len(n.scenarios)) %>%
+  as.character(.)
 
 
 ## BCEA format
 
-# append status-quo scenario
-aTB_cost.df <- t(rbind(0, aTB_cost_melt)) %>%
-                      as.data.frame() %>%
-                      set_names(scenario.names)
+aTB_cost.df <-
+  t(rbind(0, aTB_cost_melt)) %>%
+  as.data.frame() %>%
+  set_names(scenario.names)
 
-aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain_melt)) %>%
-                      as.data.frame() %>%
-                      set_names(scenario.names)
+aTB_QALYgain.df <-
+  t(rbind(0, aTB_QALYgain_melt)) %>%
+  as.data.frame() %>%
+  set_names(scenario.names)
 
 
 ####################
@@ -43,21 +53,35 @@ aTB_QALYgain.df  <- t(rbind(0, aTB_QALYgain_melt)) %>%
 ####################
 
 # convert LTBI screening dataframes
-LTBI_cost_melt <- read.csv(file = paste(diroutput, "mc_cost.csv", sep = "/"), header = FALSE)
-LTBI_QALYloss_melt <- read.csv(file = paste(diroutput, "mc_health.csv", sep = "/"), header = FALSE)
+# LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
+# LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
+#
+# ## BCEA format
+#
+# # append status-quo scenario
+# LTBI_cost.df <-
+#   t(rbind(0, LTBI_cost_melt)) %>%
+#   as.data.frame() %>%
+#   set_names(scenario.names)
+#
+# # NB negative QALY loss is QALY gain
+# LTBI_QALYgain.df <-
+#   t(rbind(0, -LTBI_QALYloss_melt)) %>%
+#   as.data.frame() %>%
+#   set_names(scenario.names)
 
+# cluster output
+dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
+
+LTBI_cost_melt <- do.call(cbind.data.frame,
+                          map(dectree_res, 1))
+
+LTBI_QALYloss_melt <- do.call(cbind.data.frame,
+                              map(dectree_res, 2))
 
 ## BCEA format
-
-# append status-quo scenario
-LTBI_cost.df <- t(rbind(0, LTBI_cost_melt)) %>%
-                  as.data.frame() %>%
-                  set_names(scenario.names)
-
-# NB negative QALY loss is QALY gain
-LTBI_QALYgain.df <- t(rbind(0, - LTBI_QALYloss_melt)) %>%
-                    as.data.frame() %>%
-                    set_names(scenario.names)
+LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
+LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
 
 
 ############
@@ -68,7 +92,7 @@ c.total <- as.matrix(LTBI_cost.df + aTB_cost.df) * popscale
 e.total <- as.matrix(LTBI_QALYgain.df + aTB_QALYgain.df) * popscale
 
 
-screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 wrong way round in function!
+screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
                     c =  -c.total,
                     ref = 1,
                     interventions = colnames(e.total))
@@ -83,27 +107,34 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 wrong way round in function!
 
 # cost-effectiveness planes -----------------------------------------------
 
-ceplane.plot(screen.bcea, pos = "topleft")
+ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
 gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 
 gg <- contour2(screen.bcea, graph = "ggplot2")
 
-gg + scale_color_brewer(palette = "Dark2") + geom_abline(slope = 20000) +# xlim(0, 0.0001) +
-  scale_color_discrete(labels = c("baseline",
-                                  "agree to screen 0.1",
-                                  "agree to screen 1",
-                                  "start treatment 0.25",
-                                  "start treatment 1",
-                                  "complete treatment 0.5",
-                                  "complete treatment 1",
-                                  "LTBI test cost 20",
-                                  "LTBI test cost 100"))    #change label
+gg +
+  scale_color_brewer(palette = "Dark2") +
+  geom_abline(slope = 20000) + # xlim(0, 0.0001) +
+  scale_color_discrete(labels = c("Baseline (6m iso £low)",
+                                  "Agree to screen prob 0.1",
+                                  "Agree to screen prob 1",
+                                  "Start treatment prob 0.25",
+                                  "Start treatment prob 1",
+                                  "Complete treatment prob 0.5",
+                                  "Complete treatment prob 1",
+                                  "LTBI test cost £20",
+                                  "LTBI test cost £100",
+                                  "LTBI Treatment: 3m iso + rif £low",
+                                  "LTBI Treatment: 6m iso £high",
+                                  "LTBI Treatment: 3m iso + rif £high",
+                                  "Best case: screening probs = 1",
+                                  "Best case: probs = 1, perfect test/treat"))
 
 
 eib.plot(screen.bcea)
-ceac.plot(screen.bcea)
+ceac.plot(screen.bcea, graph = "ggplot2") + theme(legend.position = c(0.2, 0.4))
 
 
 
@@ -124,7 +155,7 @@ plot(CDF, yaxt = 'n',
 
 # axis(side = 2, at = 1, tck = 0.01, labels = sum(IMPUTED_sample$uk_tb), las = "2")
 axis(side = 2, at = 1, tck = 0.01,
-     labels = round(n.tb_year * unit_cost$aTB_TxDx), las = "2") # direct cost of active TB diagnosis and treatment
+     labels = round(n.uktb_year * unit_cost$aTB_TxDx), las = "2") # direct cost of active TB diagnosis and treatment
 
 
 
@@ -142,9 +173,11 @@ dat <- gdata::cbindX(scenario_parameter_cost,
                      scenario_parameter_p,
                      e.INMB)
 
-names(dat) <- make.names(names(dat), unique = TRUE)
+names(dat) <-
+  names(dat) %>%
+  make.names(unique = TRUE)
 
-dat.plot <- dat[dat$Agree.to.Screen==COST, ] #specific unit cost
+dat.plot <- dat[dat$Agree.to.Screen == COST, ] #specific unit cost
 # dat.plot <- dat.plot[dat.plot$Agree.to.Screen.1==0.1, ] #specific screening uptake
 
 
@@ -165,8 +198,10 @@ ggplot(dat.plot, aes(x = Start.Treatment, y = Complete.Treatment, z = V1)) +
 
 e.INMB.sq <- matrix(dat.plot$V1, 21)
 
-filled.contour(x = seq(0,1,by = 0.05), y = seq(0,1,by = 0.05), e.INMB.sq,
-               color = terrain.colors, xlab="Completed Treatment", ylab="Started Treatment",
+filled.contour(x = seq(0, 1, by = 0.05),
+               y = seq(0, 1, by = 0.05), e.INMB.sq,
+               color = terrain.colors,
+               xlab = "Completed Treatment", ylab = "Started Treatment",
                #plot.axes = { axis(1, seq(100, 800, by = 100))
                #  axis(2, seq(100, 600, by = 100)) },
                key.title = title(main = "INMB\n(GBP)"),
