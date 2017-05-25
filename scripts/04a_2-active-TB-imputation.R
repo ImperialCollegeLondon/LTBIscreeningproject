@@ -3,7 +3,7 @@
 # N Green
 # April 2017
 #
-# impute missing values
+# impute missing/unobserved values
 
 
 # include a year 0 baseline
@@ -33,7 +33,7 @@ IMPUTED_sample_year_cohort$exituk_tb.years <-
   sim_aTB_times(data = IMPUTED_sample_year_cohort,
                 prob = year_prob.activetb_cens_exituk)
 
-# tb status variable
+# active tb status
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
   mutate(exituk_tb = !is.na(exituk_tb.years) &
@@ -52,7 +52,7 @@ table(IMPUTED_sample_year_cohort$exituk_tb.years, useNA = "always")
 # n.exit_tb <- sum(num_exituk_tb_year, na.rm = TRUE)
 
 
-# proportion calc for exit_uk tb ------------------------------------------
+# _proportion_ calc for exit_uk tb ------------------------------------------
 
 prob_year <- list()
 maxyear_exituk <- 10
@@ -71,30 +71,20 @@ for (n in seq_len(maxyear_exituk)) {
   prob_year[[n]] <- round(LTBI_ukexit_year_pop[n + 1] * prob)
 }
 
-# sum across all curves for each year
+# sum across all (exit year) curves
 num_exituk_tb_year <- prob_year %>% reduce(`+`)
 
 
 ## use sampled values for C-E calcs
 ## rather than expected values
 ## WHY?...
+## cos individual better?
 
 # n.exit_tb <- sum(num_exituk_tb_year)
 n.exit_tb <-
   IMPUTED_sample_year_cohort %>%
   dplyr::filter(exituk_tb) %>%
   count()
-
-
-## plots
-
-## equivalent
-plot(num_exituk_tb_year, type = 's', xlim = c(0, 20),
-      col = "red") #rgb(0, 0, 0, 0.5))
-
-hist(IMPUTED_sample_year_cohort$exituk_tb.years,
-     breaks = 100, xlim = c(0, 20), ylim = c(0,25),
-     xlab = "year", main = "", add = T)
 
 
 # multiple samples
@@ -117,15 +107,12 @@ hist(IMPUTED_sample_year_cohort$exituk_tb.years,
 
 # individually SIMULATE active TB progression times uk tb after followup ----------------------
 
-issdt.asnumeric <- IMPUTED_sample_year_cohort$issdt - as.Date("1960-01-01")
-
-IMPUTED_sample_year_cohort$fup_issdt <-
-  days_to_years(IMPUTED_sample_year_cohort$fup1 - issdt.asnumeric)
-
-
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
-  mutate(rNotificationDate_issdt.years = sim_uktb_times(data = IMPUTED_sample_year_cohort,
+  mutate(issdt.asnumeric = issdt - as.Date("1960-01-01"),
+         fup_issdt_days = fup1 - issdt.asnumeric,
+         fup_issdt = days_to_years(fup_issdt_days),
+         rNotificationDate_issdt.years = sim_uktb_times(data = .,
                                                         prob = year_prob.activetb_cmprsk_exituk),
          age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
          agegroup_uk_notification = cut(age_uk_notification,
@@ -138,7 +125,7 @@ table(
   round(IMPUTED_sample_year_cohort$rNotificationDate_issdt.years), useNA = "always")
 
 
-# calc number tb_uk (extrapolated) using trans probs  -----------------------------
+# calc number tb_uk (extrapolated) using _proportions_ -----------------------------
 # straight forward, direct method
 
 num_uk_tb_year <- pop_year * year_prob.activetb_cmprsk_exituk * PROB_LTBI
@@ -154,7 +141,15 @@ obs_uk_tb_year <-
 
 
 
-## plot
+
+# plots --------------------------------------------------------------------
+
+hist(IMPUTED_sample_year_cohort$exituk_tb.years,
+     breaks = 50, xlim = c(0, 50), ylim = c(0,25),
+     xlab = "year", main = "")
+
+lines(num_exituk_tb_year, type = 'l', xlim = c(0, 20),
+      col = "red") #rgb(0, 0, 0, 0.5))
 
 plot(x = 0:19,
      y = num_uk_tb_year[1:20],

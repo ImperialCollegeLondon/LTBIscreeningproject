@@ -43,15 +43,15 @@ calc_QALY_tb <- function(timetoevent,
 
   diseasefree <- QALY::calc_QALY_population(utility = utility.disease_free,
                                             time_horizons = timetoevent,
-                                            age = age)#, ...)
+                                            age = age)
 
   fatality <- QALY::calc_QALY_population(utility = utility.case,
                                          time_horizons = pmin(timetoevent, 1),
-                                         age = age)#, halfend = TRUE)#, ...)
+                                         age = age)
 
   cured <- QALY::calc_QALY_population(utility = c(utility.case, utility.disease_free),
                                       time_horizons = timetoevent,
-                                      age = age)#, ...)
+                                      age = age)
 
   return(list(diseasefree = diseasefree,
               fatality = fatality,

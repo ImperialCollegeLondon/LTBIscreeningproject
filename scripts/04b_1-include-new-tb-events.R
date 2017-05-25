@@ -21,11 +21,6 @@ num_all_tb_QALY <-
 
 # combine exit uk and uk tb data ------------------------------------------
 
-##TODO: what about extrapolated in uk???
-# uk_tb and uk_tb_orig??
-
-# active TB case fatality rate age groups
-
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
   mutate(all_tb = uk_tb | exituk_tb,
@@ -43,6 +38,7 @@ IMPUTED_sample_year_cohort <-
                                          right = FALSE))
 
 # case fatality rate for each active TB case
+
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
   left_join(cfr_age_lookup,
@@ -61,10 +57,18 @@ QALY_all_tb <-
 
 QALY_tb_cured_original <- QALY_all_tb$cured
 
+E_fatalities <- with(IMPUTED_sample_year_cohort,
+                     cfr[!is.na(cfr)])
 
-E_fatality_QALYloss <-
-  QALY_all_tb$diseasefree * with(IMPUTED_sample_year_cohort,
-                                 cfr[!is.na(cfr)])
+E_total_fatalities <- sum(E_fatalities)
+
+E_fatality_QALYloss <- QALY_all_tb$diseasefree * E_fatalities
+
+E_total_fatality_QALYloss <- sum(E_fatality_QALYloss)
+
+
+# adjusted_life_years type object equivalent calc
+# useful for plotting...
 
 QALY_diseasefree <- list()
 
@@ -74,12 +78,15 @@ QALY_diseasefree <-
   with(.,
        map2(.x = age_all_notification,
             .y = all_death_rNotificationDate,
-            .f = adjusted_life_years,
+            .f = QALY::adjusted_life_years,
             start_year = 0,
             end_year = NA,
             utility = utility$disease_free,
             discount_rate = 0.035)) %>%
   map(total_QALYs)
 
-# map_dbl(QALY_diseasefree, 1)
+# QALYloss_diseasefree <- map_dbl(QALY_diseasefree, 1)
+# QALY_all_tb$diseasefree
+
+mean_QALYloss_fatality <- mean(QALY_all_tb$diseasefree - QALY_all_tb$fatality)
 
