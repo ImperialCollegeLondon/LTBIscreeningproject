@@ -209,8 +209,8 @@ utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
 
 QALYloss <- list()
 
-QALYloss$activeTB <- 0.4  #15-34 year olds. includes Tx adverse events   #Mears J, et al. Thorax 2019
-QALYloss$falseposLTBI_adverse <- 0.0008   #Mears J, et al. Thorax 2019
-QALYloss$falsepos_activeTB_Tx <- 0.03     #Mears J, et al. Thorax 2019
+QALYloss$activeTB <- 0.4  #15-34 year olds. includes Tx adverse events   #Mears J, et al. Thorax 2015
+QALYloss$falseposLTBI_adverse <- 0.0008   #Mears J, et al. Thorax 2015
+QALYloss$falsepos_activeTB_Tx <- 0.03     #Mears J, et al. Thorax 2015
 
 
