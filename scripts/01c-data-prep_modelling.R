@@ -220,7 +220,7 @@ detach(IMPUTED_sample_year_cohort)
 
 # mdr ---------------------------------------------------------------------
 
-MDR_burden <- read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/MDR_RR_TB_burden_estimates_2017-05-30.csv")
+MDR_burden <- readr::read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/WHO/MDR_RR_TB_burden_estimates_2017-05-30.csv")
 
 sample_mdr <- left_join(IMPUTED_sample_year_cohort[,c("iso_a3_nat","iso_a3_country")],
                 MDR_burden[,c("iso3","e_rr_pct_new")],

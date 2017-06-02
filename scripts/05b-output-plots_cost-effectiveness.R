@@ -53,35 +53,35 @@ aTB_QALYgain.df <-
 ####################
 
 # convert LTBI screening dataframes
-# LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
-# LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
-#
-# ## BCEA format
-#
-# # append status-quo scenario
-# LTBI_cost.df <-
-#   t(rbind(0, LTBI_cost_melt)) %>%
-#   as.data.frame() %>%
-#   set_names(scenario.names)
-#
-# # NB negative QALY loss is QALY gain
-# LTBI_QALYgain.df <-
-#   t(rbind(0, -LTBI_QALYloss_melt)) %>%
-#   as.data.frame() %>%
-#   set_names(scenario.names)
-
-# cluster output
-dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
-
-LTBI_cost_melt <- do.call(cbind.data.frame,
-                          map(dectree_res, 1))
-
-LTBI_QALYloss_melt <- do.call(cbind.data.frame,
-                              map(dectree_res, 2))
+LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
+LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
 
 ## BCEA format
-LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
-LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
+
+# append status-quo scenario
+LTBI_cost.df <-
+  t(rbind(0, LTBI_cost_melt)) %>%
+  as.data.frame() %>%
+  set_names(scenario.names)
+
+# NB negative QALY loss is QALY gain
+LTBI_QALYgain.df <-
+  t(rbind(0, -LTBI_QALYloss_melt)) %>%
+  as.data.frame() %>%
+  set_names(scenario.names)
+
+# # cluster output
+# dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
+#
+# LTBI_cost_melt <- do.call(cbind.data.frame,
+#                           map(dectree_res, 1))
+#
+# LTBI_QALYloss_melt <- do.call(cbind.data.frame,
+#                               map(dectree_res, 2))
+#
+# ## BCEA format
+# LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
+# LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
 
 
 ############
@@ -107,6 +107,8 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
 
 # cost-effectiveness planes -----------------------------------------------
 
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(14)
+
 ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
@@ -114,23 +116,30 @@ gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 
 gg <- contour2(screen.bcea, graph = "ggplot2")
 
+gg + scale_colour_manual(values = cbPalette)
+
 gg +
-  scale_color_brewer(palette = "Dark2") +
-  geom_abline(slope = 20000) + # xlim(0, 0.0001) +
-  scale_color_discrete(labels = c("Baseline (6m iso £low)",
-                                  "Agree to screen prob 0.1",
-                                  "Agree to screen prob 1",
-                                  "Start treatment prob 0.25",
-                                  "Start treatment prob 1",
-                                  "Complete treatment prob 0.5",
-                                  "Complete treatment prob 1",
-                                  "LTBI test cost £20",
-                                  "LTBI test cost £100",
-                                  "LTBI Treatment: 3m iso + rif £low",
-                                  "LTBI Treatment: 6m iso £high",
-                                  "LTBI Treatment: 3m iso + rif £high",
-                                  "Best case: screening probs = 1",
-                                  "Best case: probs = 1, perfect test/treat"))
+  # scale_color_brewer(palette = "Dark2") +
+  # scale_colour_manual(values = cbPalette) +
+  geom_abline(slope = 30000) + # xlim(0, 0.0001) +
+  scale_color_discrete(labels = c("1: Baseline (6m iso £low)",
+                                  "2: Agree to screen prob 0.1",
+                                  "3: Agree to screen prob 1",
+                                  "4: Start treatment prob 0.25",
+                                  "5: Start treatment prob 1",
+                                  "6: Complete treatment prob 0.5",
+                                  "7: Complete treatment prob 1",
+                                  "8: LTBI test cost £20",
+                                  "9: LTBI test cost £100",
+                                  "10: LTBI Treatment: 3m iso + rif £low",
+                                  "11: LTBI Treatment: 6m iso £high",
+                                  "12: LTBI Treatment: 3m iso + rif £high",
+                                  "13: Best case: screening probs = 1",
+                                  "14: Best case: probs = 1, perfect test/treat")) +
+  annotate("text",
+           x = apply(screen.bcea$delta.e, 2, mean),
+           y = apply(screen.bcea$delta.c, 2, mean),
+           label = 1:14)
 
 
 eib.plot(screen.bcea)

@@ -111,8 +111,8 @@ IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
   mutate(issdt.asnumeric = issdt - as.Date("1960-01-01"),
          fup_issdt_days = fup1 - issdt.asnumeric,
-         fup_issdt = days_to_years(fup_issdt_days),
-         rNotificationDate_issdt.years = sim_uktb_times(data = .,
+         fup_issdt = days_to_years(fup_issdt_days)) %>%
+  mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
                                                         prob = year_prob.activetb_cmprsk_exituk),
          age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
          agegroup_uk_notification = cut(age_uk_notification,

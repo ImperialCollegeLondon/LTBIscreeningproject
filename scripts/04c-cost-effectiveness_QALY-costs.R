@@ -6,15 +6,28 @@
 # QALY gain and cost incurred due to active TB
 
 
+NUM_SECONDARY_INF <- 0.2
+
 aTB_cost.screened <- aTB_QALY.screened <- list()
 aTB_cost_diff <- aTB_cost_diff_person <- list()
 aTB_QALYgain <- aTB_QALYgain_person <- list()
 aTB_ICER <- aTB_INMB <- list()
 aTB_p.costEffective <- list()
-aTB_QALY.statusquo <- list()
+aTB_QALY.statusquo <- aTB_cost.statusquo <- list()
 
 E.aTB_cost.screened <- NA
 E.aTB_QALY.screened <- NA
+
+
+# discounts for costs
+
+uk_notif_dates <-
+  IMPUTED_sample_year_cohort$rNotificationDate_issdt.years %>%
+  keep(function(x) !is.na(x) & x < Inf)
+
+ydiscounts <- discount(t_limit = max(uk_notif_dates) + 1)
+uk_notif_discounts <- ydiscounts[ceiling(uk_notif_dates)]
+secondary_inf_discounts <- ydiscounts[ceiling(uk_notif_dates) + 1]
 
 
 for (s in seq_len(n.scenarios)) {
@@ -26,7 +39,7 @@ for (s in seq_len(n.scenarios)) {
   aTB_QALYgain[[s]] <- aTB_QALYgain_person[[s]] <- NA     #QALY[screen] - QALY[statusquo]
   aTB_ICER[[s]] <- aTB_INMB[[s]] <- NA
   aTB_p.costEffective[[s]] <- NA
-  aTB_QALY.statusquo[[s]] <- NA
+  aTB_QALY.statusquo[[s]] <- aTB_cost.statusquo[[s]] <- NA
 
 
   # QALYs and cost with screening -------------------------------------------
@@ -37,6 +50,13 @@ for (s in seq_len(n.scenarios)) {
       unit_cost$aTB_TxDx %>%
       sample_distributions() %>%
       sum()
+
+    # secondary infections
+    # in following year
+    cost_secondary_inf <- NUM_SECONDARY_INF * unit_cost.aTB_TxDx * secondary_inf_discounts
+
+    cost_uk_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
+    cost_uk_notif.screened  <- cost_uk_notif.statusquo
 
     num_avoided.all_tb <-
       dplyr::filter(n.tb_screen.all_tb[[s]],
@@ -53,10 +73,13 @@ for (s in seq_len(n.scenarios)) {
     # TRUE if death due to active TB
     tb_fatality <-
       IMPUTED_sample_year_cohort %>%
-      with(.,
-           runif(n = nrow(cfr)) %>%
-             is_less_than(cfr) %>%
-             na.omit())
+      transmute(x = runif(n()) < cfr) %>%
+      na.omit() %>% unlist()
+
+    who_uk_tb_avoided <- sample(x = seq_along(cost_uk_notif.screened),
+                                size = num_avoided.uk_tb)
+
+    cost_uk_notif.screened[who_uk_tb_avoided] <- 0
 
     # substitute in QALYs for active TB death
     QALY_all_tb$cured[tb_fatality] <- QALY_all_tb$fatality[tb_fatality]
@@ -65,15 +88,11 @@ for (s in seq_len(n.scenarios)) {
 
     aTB_QALY.screened[[s]][i] <-
       screened_cohort_QALYs(num_avoided.all_tb,
-                            QALY_all_tb) %>%
-      sum()
+                            QALY_all_tb) %>% sum()
 
+    aTB_cost.statusquo[[s]][i] <- sum(cost_uk_notif.statusquo)
+    aTB_cost.screened[[s]][i]  <- sum(cost_uk_notif.screened)
 
-    aTB_cost.statusquo <- unit_cost.aTB_TxDx * num_all_tb_cost
-
-    aTB_cost.screened[[s]][i] <- screened_cohort_cost(num_avoided.uk_tb,
-                                                      aTB_cost.statusquo,
-                                                      unit_cost.aTB_TxDx)
     # reset to status-quo QALYs
     QALY_all_tb$cured <- QALY_tb_cured_original
   }
@@ -93,7 +112,7 @@ for (s in seq_len(n.scenarios)) {
   # cost difference per person for each simulation
   aTB_cost.screened[[s]] <- rm_na(aTB_cost.screened[[s]])
 
-  aTB_cost_diff[[s]] <- aTB_cost.screened[[s]] - aTB_cost.statusquo
+  aTB_cost_diff[[s]] <- aTB_cost.screened[[s]] - aTB_cost.statusquo[[s]]
   aTB_cost_diff_person[[s]] <- aTB_cost_diff[[s]]/pop_year
 
   # expected total aTB screening cost over all simulations in scenario

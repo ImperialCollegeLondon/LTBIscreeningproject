@@ -48,12 +48,11 @@ IMPUTED_sample_year_cohort <-
 
 QALY_all_tb <-
   IMPUTED_sample_year_cohort %>%
-  subset(all_tb == TRUE) %>%
-  with(.,
+  subset(all_tb == TRUE) %$%
        calc_QALY_tb(timetoevent = all_death_rNotificationDate,
                     utility.disease_free = utility$disease_free,
                     utility.case = utility$activeTB,
-                    age = age_all_notification))
+                    age = age_all_notification)
 
 QALY_tb_cured_original <- QALY_all_tb$cured
 
@@ -74,15 +73,14 @@ QALY_diseasefree <- list()
 
 QALY_diseasefree <-
   IMPUTED_sample_year_cohort %>%
-  subset(all_tb == TRUE) %>%
-  with(.,
+  subset(all_tb == TRUE) %$%
        map2(.x = age_all_notification,
             .y = all_death_rNotificationDate,
             .f = QALY::adjusted_life_years,
             start_year = 0,
             end_year = NA,
             utility = utility$disease_free,
-            discount_rate = 0.035)) %>%
+            discount_rate = 0.035) %>%
   map(total_QALYs)
 
 # QALYloss_diseasefree <- map_dbl(QALY_diseasefree, 1)

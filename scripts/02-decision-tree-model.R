@@ -51,7 +51,6 @@ n.scenarios <-
   length()
 
 
-
 ## cost
 costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 osNode.cost <- costeff.cost$osNode

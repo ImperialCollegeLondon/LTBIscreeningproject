@@ -25,7 +25,8 @@ Imports:
     dplyr,
     reshape2,
     magrittr,
-    purrr
+    purrr,
+    readr
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown,

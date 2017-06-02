@@ -40,15 +40,14 @@ for (SCENARIO in seq_len(num_scenarios)) {
                screen_success = runif(n()) < prob) %>%
         dplyr::filter(fatality == TRUE,
                       scenario == SCENARIO,
-                      screen_success == TRUE) %>%
-        with(.,
+                      screen_success == TRUE) %$%
              map2(.x = age_all_notification,
                   .y = all_death_rNotificationDate,
                   .f = QALY::adjusted_life_years,
                   start_year = 0,
                   end_year = NA,
                   utility = utility$disease_free,
-                  discount_rate = 0.035)) %>%
+                  discount_rate = 0.035) %>%
         map(total_QALYs) %>%
         sapply(.,
                FUN = function(x) attr(x, "yearly_QALYs")) %>%

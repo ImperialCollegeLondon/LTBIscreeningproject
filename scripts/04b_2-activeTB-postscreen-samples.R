@@ -9,7 +9,7 @@
 
 
 # if using cluster LTBI screening output separately
-N.mc <- 1
+N.mc <- 2
 
 
 p_complete_screen_lookup <-
