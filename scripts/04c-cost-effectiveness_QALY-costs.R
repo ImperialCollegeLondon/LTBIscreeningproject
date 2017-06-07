@@ -6,7 +6,6 @@
 # QALY gain and cost incurred due to active TB
 
 
-NUM_SECONDARY_INF <- 0.2
 
 aTB_cost.screened <- aTB_QALY.screened <- list()
 aTB_cost_diff <- aTB_cost_diff_person <- list()
@@ -53,7 +52,12 @@ for (s in seq_len(n.scenarios)) {
 
     # secondary infections
     # in following year
-    cost_secondary_inf <- NUM_SECONDARY_INF * unit_cost.aTB_TxDx * secondary_inf_discounts
+
+    num_sec_inf <-
+      NUM_SECONDARY_INF %>%
+      sample_distributions()
+
+    cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * secondary_inf_discounts
 
     cost_uk_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
     cost_uk_notif.screened  <- cost_uk_notif.statusquo

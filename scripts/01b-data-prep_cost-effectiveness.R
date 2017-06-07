@@ -21,6 +21,11 @@
 wtp_threshold <- 20000
 
 
+NUM_SECONDARY_INF <- list(distn = "pert",
+                          params = c(mode = 0.2,
+                                     min = 0.1,
+                                     max = 0.31))
+
 # 12 month active TB case fatality rate -----------------------------------
 
 cfr_age_breaks <- c(15, 45, 65, 200)

@@ -144,7 +144,7 @@ IMPUTED_sample <-
 
 
 # create final state vectors full sample
-event <- rep(0, n.pop)                          #event-free i.e. censored at followup
+event <- rep(0, n.pop_screen)                          #event-free i.e. censored at followup
 event[IMPUTED_sample$death1] <- 3
 event[IMPUTED_sample$exit_uk1] <- 2
 event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
@@ -197,7 +197,7 @@ dat_surv_etm_imputed_uk_tb <-
 # 14  9   0  1961.000    6
 
 data_etm <-
-  data.frame(id = seq_len(n.pop),
+  data.frame(id = seq_len(n.pop_screen),
              from = 9,
              to = event,
              time_days = fup_issdt[ ,"fup1_issdt"],
