@@ -33,6 +33,11 @@ ENDPOINT_cost <- "exit uk" #"death"
 screen_0_to_5_year <- TRUE
 
 
+# which incidence groups to screen
+# incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
+incidence_grps_screen <- c("(150,250]", "(250,350]", "(350,1e+05]")
+
+
 # folder locations --------------------------------------------------------
 
 parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",

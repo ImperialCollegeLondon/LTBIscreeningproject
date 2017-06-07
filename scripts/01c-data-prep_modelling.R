@@ -38,6 +38,12 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
+
+# remove individuals from low incidence countries
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                who_prev_cat_Pareek2011 %in% incidence_grps_screen)
+
+
 # ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
@@ -153,26 +159,12 @@ rm(issdt.asnumeric,
    date_exit_uk1_issdt.years)
 
 
-# coverage: sample when indiv screened  ------------------------------------
-
-if (screen_0_to_5_year) {
-
-  IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
-
-  IMPUTED_sample <- dplyr::filter(.data = IMPUTED_sample,
-                                  date_death1_issdt.years >= screen_year,
-                                  date_exit_uk1_issdt.years >= screen_year,
-                                  rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years))
-}
-
-
 # create misc variables ---------------------------------------------------
 
 # remove death before entry to UK
 ##TODO: are deaths before entry the same for all imputation samples?
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 date_death1_issdt >= 0)
-
 
 # keep original TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
@@ -189,16 +181,37 @@ IMPUTED_sample <-
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
+
+# total sample size
+n.pop <- nrow(IMPUTED_sample)
+
+# total sample sizes for each yearly cohort
+n.popyear <-
+  aggregate(x = rep(1, n.pop),
+            by = list(IMPUTED_sample$issdt_year),
+            sum) %>%
+  set_names(c("year", "pop"))
+
+
+# coverage: sample only if indiv screened  ------------------------------------
+
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
+
+IMPUTED_sample %<>%
+  mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
+                           date_exit_uk1_issdt.years >= screen_year &
+                           (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)), 1, 0))
+
+if (screen_0_to_5_year) {
+
+  IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                  screen == 1)
+}
+
+
 # single year cohort only
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
                                             issdt_year == year_cohort)
-
-# is record in chosen cohort (logical)
-whoin_year_cohort <- IMPUTED_sample$issdt_year == year_cohort
-
-# active TB status of original data (logical)
-uk_tb_TRUE <- IMPUTED_sample$uk_tb == 1
-
 
 rm(rNotificationDate_issdt.years)
 
@@ -232,18 +245,18 @@ mdr_pct <- mean(sample_mdr$e_rr_pct_new)
 # summary statistics ------------------------------------------------------
 
 # total sample size
-n.pop <- nrow(IMPUTED_sample)
+n.pop_screen <- nrow(IMPUTED_sample)
 
 # total sample sizes for each yearly cohort
-entryCohort_poptotal <-
-  aggregate(x = rep(1, n.pop),
+n.popyear_screen <-
+  aggregate(x = rep(1, n.pop_screen),
             by = list(IMPUTED_sample$issdt_year),
             sum) %>%
   set_names(c("year", "pop"))
 
 # cohort size at arrival to uk
 pop_year <-
-  entryCohort_poptotal %>%
+  n.popyear_screen %>%
   dplyr::filter(year == year_cohort) %>%
   select(pop) %>%
   as.integer()
