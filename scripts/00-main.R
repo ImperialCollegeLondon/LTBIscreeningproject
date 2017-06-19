@@ -8,7 +8,7 @@
 
 devtools::load_all(".")
 
-# load("../../data/051206 - IMPUTED_sample.RData")
+data("051206 - IMPUTED_sample")
 
 
 # 1) define and clean data ------------------------------------------------
@@ -20,7 +20,7 @@ source("scripts/01d-data-prep_competing-risks.R")
 
 
 # 2) decision tree --------------------------------------------------------
-
+## cluster?
 source("scripts/02-decision-tree-model.R")
 
 
