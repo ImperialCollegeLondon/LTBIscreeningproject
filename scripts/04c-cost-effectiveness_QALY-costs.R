@@ -55,7 +55,8 @@ for (s in seq_len(n.scenarios)) {
 
     num_sec_inf <-
       NUM_SECONDARY_INF %>%
-      sample_distributions()
+      sample_distributions() %>%
+      unlist()
 
     cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * secondary_inf_discounts
 
@@ -145,8 +146,7 @@ aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      aTB_p.costEffective = aTB_p.costEffective)
 
 aTB_CE_stats_scenario <- cbind(E.aTB_cost.screened,
-                               E.aTB_QALY.screened,
-                               aTB_QALY.statusquo)
+                               E.aTB_QALY.screened)
 
 save(aTB_CE_stats,
      file = pastef(diroutput, "aTB_CE_stats.RData"))

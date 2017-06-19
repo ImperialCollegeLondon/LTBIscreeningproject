@@ -14,7 +14,7 @@ suppressWarnings(warning("library"))
 # increase RAM to store data
 memory.size(max = 8000)
 
-load("../../data/051206 - IMPUTED_sample.RData")
+# load("../../data/051206 - IMPUTED_sample.RData")
 
 
 # 1) define and clean data ------------------------------------------------

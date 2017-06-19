@@ -39,11 +39,6 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
 
-# remove individuals from low incidence countries
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                who_prev_cat_Pareek2011 %in% incidence_grps_screen)
-
-
 # ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
@@ -208,12 +203,18 @@ if (screen_0_to_5_year) {
                                   screen == 1)
 }
 
+rm(rNotificationDate_issdt.years)
 
-# single year cohort only
+
+# remove individuals from low incidence countries
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                who_prev_cat_Pareek2011 %in% incidence_grps_screen)
+
+
+# single year cohort only -------------------------------------------------
+
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
                                             issdt_year == year_cohort)
-
-rm(rNotificationDate_issdt.years)
 
 
 # calc yearly counts for cohort year  -------------------------------------

@@ -107,21 +107,21 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
 
 # cost-effectiveness planes -----------------------------------------------
 
-cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(14)
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(16)
 
 ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
 gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 
-gg <- contour2(screen.bcea, graph = "ggplot2")
+gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 30000)
 
 gg + scale_colour_manual(values = cbPalette)
 
 gg +
   # scale_color_brewer(palette = "Dark2") +
   # scale_colour_manual(values = cbPalette) +
-  geom_abline(slope = 30000) + # xlim(0, 0.0001) +
+  xlim(0, 0.008) +
   scale_color_discrete(labels = c("1: Baseline (6m iso £low)",
                                   "2: Agree to screen prob 0.1",
                                   "3: Agree to screen prob 1",
@@ -135,11 +135,13 @@ gg +
                                   "11: LTBI Treatment: 6m iso £high",
                                   "12: LTBI Treatment: 3m iso + rif £high",
                                   "13: Best case: screening probs = 1",
-                                  "14: Best case: probs = 1, perfect test/treat")) +
+                                  "14: Best case: probs = 1, perfect test/treat",
+                                  "15: LTBI test cost £10, screening probs = 1",
+                                  "16: LTBI test cost £0, screening probs = 1")) +
   annotate("text",
            x = apply(screen.bcea$delta.e, 2, mean),
            y = apply(screen.bcea$delta.c, 2, mean),
-           label = 1:14)
+           label = 1:16) + theme(legend.position = c(.2, 1))
 
 
 eib.plot(screen.bcea)

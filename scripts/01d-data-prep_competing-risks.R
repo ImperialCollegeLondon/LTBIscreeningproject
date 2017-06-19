@@ -128,8 +128,8 @@ IMPUTED_sample_year_cohort <-
             exit_uk8  = date_exit_uk8_issdt == fup8_issdt,
             exit_uk9  = date_exit_uk9_issdt == fup9_issdt,
             exit_uk10 = date_exit_uk10_issdt == fup10_issdt) %>%
-  merge(IMPUTED_sample_year_cohort, by = "ref_id", sort = FALSE)
-
+  merge(IMPUTED_sample_year_cohort,
+        by = "ref_id", sort = FALSE)
 
 
 IMPUTED_sample <-
@@ -157,7 +157,7 @@ event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
 cens <- event
 cens[cens != 1] <- 0
 times <- fup_issdt[ ,"fup1_issdt"]
-times_years = days_to_years(fup_issdt[ ,"fup1_issdt"])
+times_years <- days_to_years(fup_issdt[ ,"fup1_issdt"])
 
 dat_surv_naive <-
   data.frame(cens = cens,
