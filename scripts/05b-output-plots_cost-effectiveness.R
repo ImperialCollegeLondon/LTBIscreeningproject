@@ -70,18 +70,21 @@ LTBI_QALYgain.df <-
   as.data.frame() %>%
   set_names(scenario.names)
 
-# # cluster output
-# dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
-#
-# LTBI_cost_melt <- do.call(cbind.data.frame,
-#                           map(dectree_res, 1))
-#
-# LTBI_QALYloss_melt <- do.call(cbind.data.frame,
-#                               map(dectree_res, 2))
-#
-# ## BCEA format
-# LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
-# LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
+# cluster output
+if (cluster) {
+
+  dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
+
+  LTBI_cost_melt <- do.call(cbind.data.frame,
+                            map(dectree_res, 1))
+
+  LTBI_QALYloss_melt <- do.call(cbind.data.frame,
+                                map(dectree_res, 2))
+
+  ## BCEA format
+  LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
+  LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
+}
 
 
 ############

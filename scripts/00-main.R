@@ -24,11 +24,14 @@ source("scripts/01d-data-prep_competing-risks.R")
 source("scripts/02-decision-tree-model.R")
 
 
-# 4) cost-effectiveness ---------------------------------------------------
+# 4ab) event times estimation ---------------------------------------------------
 
 source("scripts/04a_1-active-TB-extrapolation.R")
 source("scripts/04a_2-active-TB-imputation.R")
 source("scripts/04b_1-include-new-tb-events.R")
+
+
+# 4bc) cost-effectiveness ---------------------------------------------------
 
 source("scripts/04b_2-activeTB-postscreen-samples.R")
 source("scripts/04c-cost-effectiveness_QALY-costs.R")

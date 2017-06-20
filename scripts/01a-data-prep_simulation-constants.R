@@ -6,11 +6,12 @@
 # simulation specific constants
 
 
-
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
 N.mc <- 2
+
+cluster <-  FALSE
 
 
 # global constants --------------------------------------------------------
@@ -18,20 +19,16 @@ N.mc <- 2
 # screen_age_range <- 18:35
 screen_age_range <- 18:45
 
-
 # year_cohort <- '2012' #most recent complete year
 year_cohort <- '2009' #largest cohort
-
 
 # include QALYs and costs for individuals once they've left (i.e. to death)?
 ENDPOINT_QALY <- "death" #"exit uk"
 ENDPOINT_cost <- "exit uk" #"death"
 
-
 # rather than screen _everyone_ on entry
 # screen at random 0-5 years from entry
 screen_0_to_5_year <- TRUE
-
 
 # which incidence groups to screen
 incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set

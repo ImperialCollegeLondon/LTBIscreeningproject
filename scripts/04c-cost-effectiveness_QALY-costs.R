@@ -6,6 +6,12 @@
 # QALY gain and cost incurred due to active TB
 
 
+if (cluster) {
+  n.tb_screen <- n.tb_screen %>% purrr::transpose() #previously calc'd scenario-wise
+  n.tb_screen.all_tb <- n.tb_screen[[1]]
+  n.tb_screen.uk_tb  <- n.tb_screen[[2]]
+}
+
 
 aTB_cost.screened <- aTB_QALY.screened <- list()
 aTB_cost_diff <- aTB_cost_diff_person <- list()
@@ -35,10 +41,10 @@ for (s in seq_len(n.scenarios)) {
 
   aTB_cost.screened[[s]] <- aTB_QALY.screened[[s]] <- NA
   aTB_cost_diff[[s]] <- aTB_cost_diff_person[[s]] <- NA   #cost[screen] - cost[statusquo]
-  aTB_QALYgain[[s]] <- aTB_QALYgain_person[[s]] <- NA     #QALY[screen] - QALY[statusquo]
+  aTB_QALYgain[[s]]  <- aTB_QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
   aTB_ICER[[s]] <- aTB_INMB[[s]] <- NA
   aTB_p.costEffective[[s]] <- NA
-  aTB_QALY.statusquo[[s]] <- aTB_cost.statusquo[[s]] <- NA
+  aTB_QALY.statusquo[[s]]  <- aTB_cost.statusquo[[s]] <- NA
 
 
   # QALYs and cost with screening -------------------------------------------

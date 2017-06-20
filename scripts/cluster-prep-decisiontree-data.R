@@ -6,6 +6,10 @@
 # create data in a format to use in DIDE computer cluster functions
 # run jobs using network drive Q:\R\cluster--LTBI-decision-tree
 
+library(data.tree)
+library(dplyr)
+library(plyr)
+
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
                                     package = "LTBIscreeningproject")
@@ -33,6 +37,16 @@ osNode.health <- costeff.health$osNode
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 
+#2009
+p.who_year <- c("(0,50]" = 0,
+                "(50,150]" = 0.02505289,
+                "(150,250]" = 0.09000483,
+                "(250,350]" = 0.02046914,
+                "(350,1e+05]" = 0.86447315)
+
+pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p.who_year),
+                                 LTBI = c(0, 0.13, 0.2, 0.3, 0.3))
+
 
 # insert probs in incidence group for given year (2009)
 for (i in seq_along(who_levels)) {
@@ -44,6 +58,8 @@ for (i in seq_along(who_levels)) {
                     filterFun = function(x) x$name == who_levels[i])
 }
 
+
+pastef <- purrr::partial(...f = paste, sep = "/")
 
 # insert LTBI probs
 for (i in who_levels) {
@@ -86,7 +102,7 @@ scenario_parameters <- plyr::dlply(scenario_parameters, .(scenario))
 
 #  ------------------------------------------------------------------------
 
-save(scenario_parameters, file = "C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/data/scenario_parameters.RData")
-save(osNode.cost, file = "C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/data/osNode_cost_2009.RData")
-save(osNode.health, file = "C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/data/osNode_health_2009.RData")
+save(scenario_parameters, file = "data/scenario_parameters.RData")
+save(osNode.cost, file = "data/osNode_cost_2009.RData")
+save(osNode.health, file = "data/osNode_health_2009.RData")
 

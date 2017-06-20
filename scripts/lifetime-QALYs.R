@@ -3,7 +3,7 @@ make_discount <- function(){
   i <- 0
   function(){
     i <<- i + 1
-    return(min(discount(t=i)))
+    return(min(discount(t = i)))
   }
 }
 
@@ -16,7 +16,7 @@ calc_QALY_CFR <- function(AGES = NA,
   QALY <- NULL
   pop <- max(length(AGES), length(time_horizon))
 
-  for (i in seq_len(pop)){
+  for (i in seq_len(pop)) {
 
     # age at start
     agei <- AGES[i]
@@ -24,10 +24,10 @@ calc_QALY_CFR <- function(AGES = NA,
     discountfactor <- make_discount()
     count <- 1
 
-    while(ltime==1){
+    while (ltime == 1) {
 
-      if(!is.null(cfr_age_lookup)) ltime <- ifelse(cfr_age_lookup$cfr[cfr_age_lookup$age==agei] < runif(1), 1, 0.5)
-      if(!is.null(time_horizon)) ltime <- ifelse(count<time_horizon, 1, 0.5)
+      if (!is.null(cfr_age_lookup)) ltime <- ifelse(cfr_age_lookup$cfr[cfr_age_lookup$age == agei] < runif(1), 1, 0.5)
+      if (!is.null(time_horizon)) ltime <- ifelse(count < time_horizon, 1, 0.5)
 
       QALY[i] <- QALY[i] + (ltime * utility * discountfactor())
       age <- age + 1
@@ -41,15 +41,15 @@ calc_QALY_CFR <- function(AGES = NA,
 
 
 # status-quo
-QALY.statusquo <- calc_QALY_CFR(AGES = IMPUTED_sample$cfr_age_groups[IMPUTED_sample$uk_tb==1],
+QALY.statusquo <- calc_QALY_CFR(AGES = IMPUTED_sample$cfr_age_groups[IMPUTED_sample$uk_tb == 1],
                                 cfr_age_lookup)
 
 # screened imputed sample
-QALY.screened <- calc_QALY_CFR(AGES = IMPUTED_sample$cfr_age_groups[IMPUTED_sample$uk_tb1==1],
+QALY.screened <- calc_QALY_CFR(AGES = IMPUTED_sample$cfr_age_groups[IMPUTED_sample$uk_tb1 == 1],
                                cfr_age_lookup)
 
 # who changed LTBI status
-uk_TB.completedTx <- (IMPUTED_sample$uk_tb1==0 & IMPUTED_sample$uk_tb==1)
+uk_TB.completedTx <- (IMPUTED_sample$uk_tb1 == 0 & IMPUTED_sample$uk_tb == 1)
 
 # fixed over time
 QALY_uk_TB.completedTx <- years(death.isdtt[uk_TB.completedTx] - uk_tb.isdtt[uk_TB.completedTx])

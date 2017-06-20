@@ -12,7 +12,7 @@
 ##TODO: add error to survival estimates
 
 
-load(file = "data/activetb_year_pmf_sutherland.RData")
+data("activetb_year_pmf_sutherland")
 
 
 # sensitivity analysis scenario:
