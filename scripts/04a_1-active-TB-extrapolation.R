@@ -19,7 +19,6 @@ data("activetb_year_pmf_sutherland")
 # assume _everyone_ has LTBI
 # LTBI_status <- rep(1, pop_year)
 
-
 # estimate active TB transition probabilities -----------------------------
 
 trans_mat_cmprsk_exituk <-
@@ -33,7 +32,6 @@ trans_mat_cens_exituk <-
                          names = c(1, 3)) %>%
   is.na() %>%
   not()
-
 
 # empirical transition probabilities
 

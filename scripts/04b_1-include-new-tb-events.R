@@ -81,7 +81,7 @@ QALY_diseasefree <-
             end_year = NA,
             utility = utility$disease_free,
             discount_rate = 0.035) %>%
-  map(total_QALYs)
+  map(QALY::total_QALYs)
 
 # QALYloss_diseasefree <- map_dbl(QALY_diseasefree, 1)
 # QALY_all_tb$diseasefree

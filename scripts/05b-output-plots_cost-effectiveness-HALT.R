@@ -51,25 +51,6 @@ aTB_QALYgain.df <-
 ## LTBI screening ##
 ####################
 
-# convert LTBI screening dataframes
-LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
-LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
-
-## BCEA format
-
-# append status-quo scenario
-LTBI_cost.df <-
-  t(rbind(0, LTBI_cost_melt)) %>%
-  as.data.frame() %>%
-  set_names(scenario.names)
-
-# NB negative QALY loss is QALY gain
-LTBI_QALYgain.df <-
-  t(rbind(0, -LTBI_QALYloss_melt)) %>%
-  as.data.frame() %>%
-  set_names(scenario.names)
-
-# cluster output
 if (cluster) {
 
   LTBI_cost_melt <- do.call(cbind.data.frame,
@@ -81,21 +62,49 @@ if (cluster) {
   ## BCEA format
   LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
   LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
+
+} else {
+
+  # convert LTBI screening dataframes
+  LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
+  LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
+
+  ## BCEA format
+
+  # append status-quo scenario
+  LTBI_cost.df <-
+    t(rbind(0, LTBI_cost_melt)) %>%
+    as.data.frame() %>%
+    set_names(scenario.names)
+
+  # NB negative QALY loss is QALY gain
+  LTBI_QALYgain.df <-
+    t(rbind(0, -LTBI_QALYloss_melt)) %>%
+    as.data.frame() %>%
+    set_names(scenario.names)
 }
 
 
 ############
 ## totals ##
 ############
+# Q1 - Q0 different way round in function!
 
 c.total <- as.matrix(LTBI_cost.df + aTB_cost.df) * popscale
 e.total <- as.matrix(LTBI_QALYgain.df + aTB_QALYgain.df) * popscale
 
+if (cluster & cluster_output_filename == "decisiontree-results-HALT.rds") {
 
-screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
-                    c =  -c.total,
-                    ref = 1,
-                    interventions = colnames(e.total))
+  screen.bcea <- bcea_multirefs(e = -e.total[ ,-1],
+                                c = -c.total[ ,-1])
+}else{
+
+  screen.bcea <- bcea(e = -e.total,
+                      c = -c.total,
+                      ref = 1,
+                      interventions = colnames(e.total))
+}
+
 
 #########
 # plots #

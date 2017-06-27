@@ -8,36 +8,15 @@
 # separate for uk only and all tb cases
 
 
-# if using cluster LTBI screening output separately
-if (cluster) {
-
-  N.mc <- 10000
-
-  dectree_res <- readRDS("Q:/R/cluster--LTBI-decision-tree/decisiontree-results.rds")
-
-  p_complete_screen_lookup <-
-    do.call(cbind.data.frame,
-            map(dectree_res, 3)) %>%
-    data.frame("who_prev_cat_Pareek2011" = factor(who_levels,
-                                                  levels = unique(who_levels)),
-               check.names = FALSE) %>%
-    melt(id.vars = "who_prev_cat_Pareek2011",
-         variable.name = "scenario",
-         value.name = "prob") %>%
-    arrange(who_prev_cat_Pareek2011)
-
-} else {
-
-  p_complete_screen_lookup <-
-    read.csv(file = pastef(diroutput,
-                           "prob_complete_Tx_given_LTBI_by_who.csv"),
-             header = FALSE) %>%
-    set_names(who_levels) %>%
-    mutate(scenario = rownames(.)) %>%
-    gather(key = "who_prev_cat_Pareek2011",
-           value = "prob",
-           -scenario)
-}
+p_complete_screen_lookup <-
+  read.csv(file = pastef(diroutput,
+                         "prob_complete_Tx_given_LTBI_by_who.csv"),
+           header = FALSE) %>%
+  set_names(who_levels) %>%
+  mutate(scenario = rownames(.)) %>%
+  gather(key = "who_prev_cat_Pareek2011",
+         value = "prob",
+         -scenario)
 
 
 n.tb_screen.all_tb <- vector(mode = 'list')
