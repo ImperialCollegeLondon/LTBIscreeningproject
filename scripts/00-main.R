@@ -19,11 +19,6 @@ source("scripts/01c-data-prep_modelling.R", echo = TRUE)
 source("scripts/01d-data-prep_competing-risks.R")
 
 
-# 2) decision tree --------------------------------------------------------
-## cluster?
-source("scripts/02-decision-tree-model.R")
-
-
 # 4ab) event times estimation ---------------------------------------------------
 
 source("scripts/04a_1-active-TB-extrapolation.R")
@@ -31,9 +26,14 @@ source("scripts/04a_2-active-TB-imputation.R")
 source("scripts/04b_1-include-new-tb-events.R")
 
 
+# 2) decision tree --------------------------------------------------------
+if (!cluster) source("scripts/02-decision-tree-model.R")
+
+
 # 4bc) cost-effectiveness ---------------------------------------------------
 
-source("scripts/04b_2-activeTB-postscreen-samples.R")
+if (!cluster) source("scripts/04b_2-activeTB-postscreen-samples.R")
+
 source("scripts/04c-cost-effectiveness_QALY-costs.R")
 
 

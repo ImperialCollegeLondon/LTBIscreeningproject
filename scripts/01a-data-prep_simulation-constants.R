@@ -11,7 +11,7 @@
 # number of Monte Carlo iterations
 N.mc <- 2
 
-cluster <-  FALSE
+cluster <- TRUE
 
 
 # global constants --------------------------------------------------------
@@ -49,3 +49,7 @@ diroutput <- tempdir()
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
+
+# cluster_output_filename <- "decisiontree-results.rds"
+cluster_output_filename <- "decisiontree-results-HALT.rds"
+
