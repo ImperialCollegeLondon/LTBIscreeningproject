@@ -231,6 +231,11 @@ strat_pop_year <-
 detach(IMPUTED_sample_year_cohort)
 
 
+# discount cost and QALYs in decision tree  ---------------------------------
+
+prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% table %>% prop.table
+screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = 5) %>% c()
+
 
 # mdr ---------------------------------------------------------------------
 

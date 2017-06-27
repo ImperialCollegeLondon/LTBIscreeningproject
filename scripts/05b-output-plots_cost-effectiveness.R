@@ -51,25 +51,6 @@ aTB_QALYgain.df <-
 ## LTBI screening ##
 ####################
 
-# convert LTBI screening dataframes
-LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
-LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
-
-## BCEA format
-
-# append status-quo scenario
-LTBI_cost.df <-
-  t(rbind(0, LTBI_cost_melt)) %>%
-  as.data.frame() %>%
-  set_names(scenario.names)
-
-# NB negative QALY loss is QALY gain
-LTBI_QALYgain.df <-
-  t(rbind(0, -LTBI_QALYloss_melt)) %>%
-  as.data.frame() %>%
-  set_names(scenario.names)
-
-# cluster output
 if (cluster) {
 
   LTBI_cost_melt <- do.call(cbind.data.frame,
@@ -81,7 +62,33 @@ if (cluster) {
   ## BCEA format
   LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
   LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
+
+} else {
+
+  # convert LTBI screening dataframes
+  LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
+  LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
+
+  ## BCEA format
+
+  # append status-quo scenario
+  LTBI_cost.df <-
+    t(rbind(0, LTBI_cost_melt)) %>%
+    as.data.frame() %>%
+    set_names(scenario.names)
+
+  # NB negative QALY loss is QALY gain
+  LTBI_QALYgain.df <-
+    t(rbind(0, -LTBI_QALYloss_melt)) %>%
+    as.data.frame() %>%
+    set_names(scenario.names)
 }
+
+
+# discount due to delay to screening
+LTBI_cost.df <- LTBI_cost.df * screen_discount
+LTBI_QALYgain.df <- LTBI_QALYgain.df * screen_discount
+
 
 
 ############

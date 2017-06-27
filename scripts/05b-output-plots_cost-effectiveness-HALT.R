@@ -1,5 +1,5 @@
 #
-# project: LTBI screening
+# project: LTBI screening HALT
 # N Green
 # Oct 2016
 #
@@ -83,6 +83,10 @@ if (cluster) {
     as.data.frame() %>%
     set_names(scenario.names)
 }
+
+# discount due to delay to screening
+LTBI_cost.df <- LTBI_cost.df * screen_discount
+LTBI_QALYgain.df <- LTBI_QALYgain.df * screen_discount
 
 
 ############

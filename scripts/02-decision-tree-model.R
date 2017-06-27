@@ -98,12 +98,6 @@ for (i in who_levels) {
 
 
 
-# discount cost and QALYs -------------------------------------------------
-
-prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% table %>% prop.table
-screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = 5) %>% c()
-
-
 # sensitivity analysis ----------------------------------------------------
 # iterate over each deterministic scenario of parameter values
 
@@ -197,9 +191,6 @@ for (scenario_i in seq_len(n.scenarios)) {
 
   mc.health <- treeSimR::MonteCarlo_expectedValues(osNode = osNode.health,
                                                    n = N.mc)
-
-  mc.cost$`expected values` <- mc.cost$`expected values` * screen_discount
-  mc.health$`expected values` <- mc.health$`expected values` * screen_discount
 
 
   # save --------------------------------------------------------------------
