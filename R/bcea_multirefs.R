@@ -14,10 +14,10 @@ bcea_multirefs <- function(e, c,
 
   interventions <- paste("intervention", 1:n.comparisons)
 
-  comp <- ints[-ref]
-
   odd_cols  <- seq(1, ncol(e), 2)
   even_cols <- seq(2, ncol(e), 2)
+
+  comp <- odd_cols
 
   # this is the main change to the BCEA version
   delta.e <- e[ ,odd_cols] - e[ ,even_cols]

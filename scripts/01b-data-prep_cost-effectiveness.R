@@ -43,6 +43,22 @@ rownames(cfr_age_lookup) <- cfr_age_lookup$age
 attr(cfr_age_lookup, "reference") <- "Crofts et al (2008)"
 
 
+# Horsburgh, priorities for the treatment of latent tuberculosis infection, NEJM (2004)
+annual_risk_reactivation <-
+  data.frame(age_grp = c('(0,5]', '(5,15]', '(15,35]', '(35,55]', '(55,200]'),
+             annual_risk = c(0.0054, 0.0012, 0.0056, 0.0042, 0.0017),
+             lower95 = c(0.0027, 0.0007, 0.0041, 0.0028, 0.0005),
+             upper95 = c(0.0095, 0.0023, 0.0076, 0.0062, 0.0042))
+attr(annual_risk_reactivation, "reference") <- "Horsburgh, NEJM (2004)"
+
+lifetime_risk_reactivation <-
+  data.frame(age_grp = c('(0,5]', '(5,15]', '(15,25]', '(25,35]', '(35,45]', '(45,55]', '(55,65]', '(65,200]'),
+            lifetime_risk = c(0.17, 0.08, 0.13, 0.12, 0.07, 0.06, 0.03, 0.02),
+            lower95 = c(0.12, 0.06, 0.08, 0.08, 0.05, 0.04, 0.01, 0.01),
+            upper95 = c(0.24, 0.1, 0.21, 0.19, 0.12, 0.1, 0.07, 0.05))
+attr(lifetime_risk_reactivation, "reference") <- "Horsburgh, NEJM (2004)"
+
+
 #########
 # costs #
 #########

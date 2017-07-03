@@ -16,6 +16,9 @@ cluster <- TRUE
 
 # global constants --------------------------------------------------------
 
+# time horizon for active TB progression
+FUP_MAX_YEAR <- 88 #10, 20, 50
+
 # screen_age_range <- 18:35
 screen_age_range <- 18:45
 
@@ -38,6 +41,7 @@ incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350
 # folder locations --------------------------------------------------------
 
 parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
+# parameter_values_file <- system.file("data", "scenario-parameter-values_HALT.xlsx",
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
@@ -50,6 +54,6 @@ diroutput <- tempdir()
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
 
-# cluster_output_filename <- "decisiontree-results.rds"
-cluster_output_filename <- "decisiontree-results-HALT.rds"
+cluster_output_filename <- "decisiontree-results.rds"
+# cluster_output_filename <- "decisiontree-results-HALT.rds"
 

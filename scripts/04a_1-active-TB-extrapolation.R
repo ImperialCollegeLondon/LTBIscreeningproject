@@ -59,8 +59,6 @@ year_prob.activetb_cmprsk_exituk <-
 
 # fit exponential distn to trans probs & extrapolate  ----------------------------
 
-fup_max_year <- 99
-
 max_years_obs <- length(year_prob.activetb_cmprsk_exituk)
 
 # constant prob at older ages
@@ -72,7 +70,7 @@ decreasing_years <- seq(from = 7,
                         to = max_years_obs)
 
 extrap_years <- seq(from = max_years_obs + 1,
-                    to = fup_max_year)
+                    to = FUP_MAX_YEAR)
 
 
 #  cens exit uk times ----------------------------------------------------
@@ -92,7 +90,7 @@ year_prob.cens_exp <- exp(extrap_years * fit.cens$coefficients["year"] +
 #                                     year_prob.cens_exp + offset)
 # Sutherland
 year_prob.activetb_cens_exituk <- c(year_prob.activetb_cens_exituk,
-                                    activetb_year_pmf_sutherland[max_years_obs + 1:(fup_max_year - max_years_obs)])
+                                    activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
 
 
 #  competing risk exit uk times ----------------------------------------------------
@@ -112,7 +110,7 @@ year_prob.cmprsk_exp <- exp(extrap_years * fit.cmprsk$coefficients["year"] +
 #                                       year_prob.cmprsk_exp + offset)
 # Sutherland
 year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
-                                      activetb_year_pmf_sutherland[max_years_obs + 1:(fup_max_year - max_years_obs)])
+                                      activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
 
 
 

@@ -120,9 +120,9 @@ ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
 gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
+gg + scale_colour_manual(values = cbPalette)
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 30000)
-
 gg + scale_colour_manual(values = cbPalette)
 
 gg +
@@ -195,7 +195,7 @@ plot(CDF, yaxt = 'n',
 
 # axis(side = 2, at = 1, tck = 0.01, labels = sum(IMPUTED_sample$uk_tb), las = "2")
 axis(side = 2, at = 1, tck = 0.01,
-     labels = round(n.uktb_year * unit_cost$aTB_TxDx), las = "2") # direct cost of active TB diagnosis and treatment
+     labels = round(n.uk_tb * unit_cost$aTB_TxDx), las = "2") # direct cost of active TB diagnosis and treatment
 
 
 

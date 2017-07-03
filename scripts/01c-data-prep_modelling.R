@@ -74,7 +74,7 @@ pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
                                 pLatentTB.who_18to45)
 
 
-colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(18:45))
+colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(screen_age_range))
 
 
 withr::with_options(list(warn = -1),
@@ -239,13 +239,13 @@ screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = 5) %>% c()
 
 # mdr ---------------------------------------------------------------------
 
-MDR_burden <- readr::read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/WHO/MDR_RR_TB_burden_estimates_2017-05-30.csv")
-
-sample_mdr <- left_join(IMPUTED_sample_year_cohort[,c("iso_a3_nat","iso_a3_country")],
-                MDR_burden[,c("iso3","e_rr_pct_new")],
-                by = c("iso_a3_country" = "iso3"))
-
-mdr_pct <- mean(sample_mdr$e_rr_pct_new)
+# MDR_burden <- readr::read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/WHO/MDR_RR_TB_burden_estimates_2017-05-30.csv")
+#
+# sample_mdr <- left_join(IMPUTED_sample_year_cohort[,c("iso_a3_nat","iso_a3_country")],
+#                 MDR_burden[,c("iso3","e_rr_pct_new")],
+#                 by = c("iso_a3_country" = "iso3"))
+#
+# mdr_pct <- mean(sample_mdr$e_rr_pct_new)
 
 
 # summary statistics ------------------------------------------------------
@@ -268,8 +268,8 @@ pop_year <-
   as.integer()
 
 # number of active TB cases _before_ screening i.e. status-quo
-n.tb <- sum(IMPUTED_sample$uk_tb)
-n.uktb_year <- sum(IMPUTED_sample_year_cohort$uk_tb)
+# n.tb_total <- sum(IMPUTED_sample$uk_tb)
+n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
 # probability in each who active TB category
 p.who_year <-
@@ -282,7 +282,7 @@ who_levels <- names(p.who_year)
 pLatentTB.who_year <-
   IMPUTED_sample_year_cohort %>%
   dplyr::group_by(who_prev_cat_Pareek2011) %>%
-  summarise(LTBI = mean(pLTBI)) %>%
+  dplyr::summarise(LTBI = mean(pLTBI)) %>%
   complete(who_prev_cat_Pareek2011,
            fill = list(LTBI = 0))
 

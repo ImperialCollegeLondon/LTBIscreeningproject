@@ -8,15 +8,15 @@
 
 num_all_tb_cost <-
   if (ENDPOINT_cost == "exit uk") {
-    n.uktb_year
+    n.uk_tb
   } else if (ENDPOINT_cost == "death") {
-    n.uktb_year + n.exit_tb}
+    n.uk_tb + n.exit_tb}
 
 num_all_tb_QALY <-
   if (ENDPOINT_QALY == "exit uk") {
-    n.uktb_year
+    n.uk_tb
   } else if (ENDPOINT_QALY == "death") {
-    n.uktb_year + n.exit_tb}
+    n.uk_tb + n.exit_tb}
 
 
 # combine exit uk and uk tb data ------------------------------------------

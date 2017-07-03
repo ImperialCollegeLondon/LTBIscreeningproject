@@ -1,5 +1,5 @@
 
-# LTBI screening model
+# LTBI screening model HALT
 # N Green
 # May 2017
 #
