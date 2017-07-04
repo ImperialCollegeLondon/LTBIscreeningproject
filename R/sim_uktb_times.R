@@ -1,4 +1,36 @@
 
+#' Sample active TB Progression Time After Follow-up
+#'
+#' @param fup_issdt Time to follow-up/exit UK
+#' @param death_issdt Time to all-cause death (competing risk)
+#' @param prob Incidence density of progression
+#'
+#' @return Vector of times
+#' @export
+#'
+#' @examples
+#'
+sample_tb_year <- function(fup_issdt,
+                           death_issdt,
+                           prob) {
+
+  disease_free_yrs <- 0:fup_issdt #+1?
+
+  prob_noevent <- 1 - sum(prob)
+  prob[disease_free_yrs] <- 0
+
+  tb_year <- sample(x = c(seq_along(prob), Inf),
+                    size = 1,
+                    prob = c(prob, prob_noevent))
+
+  # competing risk all-cause mortality
+  tb_year <- if_else(condition = tb_year > death_issdt,
+                     true = Inf,
+                     false = tb_year)
+  return(tb_year)
+}
+
+
 #' Simulate (Unobserved) Active TB Progression Times for UK Individuals
 #'
 #' Basic brute-force approach.
@@ -19,36 +51,73 @@ sim_uktb_times <- function(data,
 
   for (i in seq_len(pop)) {
 
-    # LTBI-free
-    if (data$LTBI[i] == 0) {
+    uk_tb_year[i] <-
 
-      uk_tb_year[i] <- Inf
+      # LTBI-free
+      if (data$LTBI[i] == 0) {
 
-    }else if (data$exit_uk1[i]) {
+        Inf
 
-      uk_tb_year[i] <- NA
+      }else if (data$exit_uk1[i]) {
 
-    }else if (as.logical(data$uk_tb[i])) {
+        NA
 
-      uk_tb_year[i] <- data$rNotificationDate_issdt.years[i]
+      }else if (as.logical(data$uk_tb[i])) {
 
-    }else {
+        data$rNotificationDate_issdt.years[i]
 
-      prob_after_fup <- prob
+      }else {
 
-      disease_free_yrs <- 0:data$fup_issdt[i]
-
-      prob_after_fup[disease_free_yrs] <- 0
-
-      uk_tb_year[i] <- sample(x = c(seq_along(prob_after_fup), Inf),
-                              size = 1,
-                              prob = c(prob_after_fup, 1 - sum(prob)))
-
-      uk_tb_year[i] <- if_else(condition = uk_tb_year[i] > data$date_death1_issdt.years[i],
-                               true = Inf,
-                               false = uk_tb_year[i])
-    }
+        sample_tb_year(data$fup_issdt[i],
+                       data$date_death1_issdt.years[i],
+                       prob)
+      }
   }
 
   return(uk_tb_year)
 }
+
+
+#' Simulate Active TB Progression Times for Exit UK Individuals
+#'
+#' Basic brute-force approach.
+#'
+#' @param data Times of events, LTBI status, event indicators
+#' @param prob Probabilities of progressing to active TB each year
+#'
+#' @return Times from UK entry to TB notification
+#' @export
+#'
+sim_exituk_tb_times <- function(data,
+                                prob) {
+
+  pop <- nrow(data)
+
+  exituk_tb_year <- vector(length = pop,
+                           mode = "double")
+
+  for (i in seq_len(pop)) {
+
+    exituk_tb_year[i] <-
+
+      # LTBI-free
+      if (data$LTBI[i] == 0) {
+
+        Inf
+
+        # not first event
+      }else if (!data$exit_uk1[i]) {
+
+        NA
+
+      }else {
+
+        sample_tb_year(data$date_exit_uk1_issdt.years[i],
+                       data$date_death1_issdt.years[i],
+                       prob)
+      }
+  }
+
+  return(exituk_tb_year)
+}
+
