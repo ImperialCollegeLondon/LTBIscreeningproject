@@ -17,7 +17,7 @@ osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
 osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml",
                                       package = "LTBIscreeningproject")
 
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
+parameter_values_file <- system.file("data", "scenario-parameter-values_QFN.xlsx",
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,

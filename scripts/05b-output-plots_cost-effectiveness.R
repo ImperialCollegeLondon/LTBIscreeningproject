@@ -114,7 +114,7 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
 
 # cost-effectiveness planes -----------------------------------------------
 
-cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(16)
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(23)
 
 ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
@@ -141,15 +141,22 @@ gg +
                                   "10: LTBI Treatment: 3m iso + rif £low",
                                   "11: LTBI Treatment: 6m iso £high",
                                   "12: LTBI Treatment: 3m iso + rif £high",
-                                  "13: Best case: screening probs = 1",
-                                  "14: Best case: probs = 1, perfect test/treat",
+                                  "13: Best case: screening probs = 1, test £20",
+                                  "14: Best case: probs = 1, perfect test/treat, test £20",
                                   "15: LTBI test cost £10, screening probs = 1",
-                                  "16: LTBI test cost £0, screening probs = 1")) +
+                                  "16: LTBI test cost £0, screening probs = 1",
+                                  "17: 90-90-70 agree-complete-effective, test £20",
+                                  "18: 90-90-80 agree-complete-effective, test £20",
+                                  "19: 90-90-90 agree-complete-effective, test £20",
+                                  "20: 90-90-100 agree-complete-effective, test £20",
+                                  "21: probs=1  sensitivity=1, test £20",
+                                  "22: probs=1  sensitivity=0.95, test £20",
+                                  "23: probs=1  sensitivity=0.9, test £20")) +
   annotate("text",
            x = apply(screen.bcea$delta.e, 2, mean),
            y = apply(screen.bcea$delta.c, 2, mean),
-           label = 1:16) +
-  theme(legend.position = c(0.2, 1))
+           label = 1:23) +
+  theme(legend.position = c(1, 0.2))
 
 
 eib.plot(screen.bcea)

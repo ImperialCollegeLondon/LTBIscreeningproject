@@ -54,8 +54,6 @@ QALY_all_tb <-
                     utility.case = utility$activeTB,
                     age = age_all_notification)
 
-QALY_tb_cured_original <- QALY_all_tb$cured
-
 E_fatalities <- with(IMPUTED_sample_year_cohort,
                      cfr[!is.na(cfr)])
 

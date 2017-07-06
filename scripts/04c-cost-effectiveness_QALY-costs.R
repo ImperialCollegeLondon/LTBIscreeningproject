@@ -91,25 +91,26 @@ for (s in seq_len(n.scenarios)) {
     # TRUE if death due to active TB
     tb_fatality <- runif(length(cfr)) < cfr
 
-    who_uk_tb_avoided <- base::sample(x = seq_along(cost_uk_notif.screened),
+    who_uk_tb_avoided  <- sample(x = seq_along(cost_uk_notif.screened),
                                       size = unlist(num_avoided.uk_tb))
+    who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
+                                 size = unlist(num_avoided.all_tb))
 
     cost_uk_notif.screened[who_uk_tb_avoided] <- 0
 
     # substitute in QALYs for active TB death
-    QALY_all_tb$cured[tb_fatality] <- QALY_all_tb$fatality[tb_fatality]
+    QALY_all_tb_statusquo <- QALY_all_tb$cured
+    QALY_all_tb_statusquo[tb_fatality] <- QALY_all_tb$fatality[tb_fatality]
 
-    aTB_QALY.statusquo[[s]][i] <- sum(QALY_all_tb$cured)
+    QALY_all_tb_screened <- QALY_all_tb_statusquo
+    QALY_all_tb_screened[who_all_tb_avoided] <- QALY_all_tb$diseasefree[who_all_tb_avoided]
 
-    aTB_QALY.screened[[s]][i] <-
-      screened_cohort_QALYs(unlist(num_avoided.all_tb),
-                            QALY_all_tb) %>% sum()
+    aTB_QALY.statusquo[[s]][i] <- sum(QALY_all_tb_statusquo)
+    aTB_QALY.screened[[s]][i]  <- sum(QALY_all_tb_screened)
 
     aTB_cost.statusquo[[s]][i] <- sum(cost_uk_notif.statusquo)
     aTB_cost.screened[[s]][i]  <- sum(cost_uk_notif.screened)
 
-    # reset to status-quo QALYs
-    QALY_all_tb$cured <- QALY_tb_cured_original
   }
 
 
