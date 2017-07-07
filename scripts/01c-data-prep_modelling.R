@@ -63,7 +63,6 @@ withr::with_options(list(warn = -1),
                        pLatentTB.who_36to45,
                        pLatentTB.who_18to45))
 
-
 # join with main data set
 
 pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
