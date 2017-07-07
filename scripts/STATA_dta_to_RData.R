@@ -28,7 +28,7 @@ IMPUTED_IOM_ETS_WHO_merged_15_2_9 <- haven::read_dta("T:\\STATA-model_incidence 
 
 # extract the column names descriptions (when they exist)
 # attr(IMPUTED_IOM_ETS_WHO_merged_15_2_9$sex, which = "label") <- "description"
-data_dic <- melt(unlist(sapply(IMPUTED_IOM_ETS_WHO_merged_15_2_9, attr, which = "label")), value.name = "description")
+data_dic <- reshape2::melt(unlist(sapply(IMPUTED_IOM_ETS_WHO_merged_15_2_9, attr, which = "label")), value.name = "description")
 data_dic$col_names <- row.names(data_dic)
 
 # reattach the missing column names

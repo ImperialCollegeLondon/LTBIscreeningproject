@@ -230,7 +230,7 @@ for (i in seq_len(n.scenarios)) {
 
 
 # all scenarios bar plot
-counts.melt <- melt(counts.scenarios)
+counts.melt <- reshape2::melt(counts.scenarios)
 
 
 # ggplot2::ggplot(data = counts.melt, aes(x = X2, color = X1, group = X1)) +

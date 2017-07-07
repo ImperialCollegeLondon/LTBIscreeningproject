@@ -66,13 +66,6 @@ withr::with_options(list(warn = -1),
 
 # join with main data set
 
-if ("reshape" %in% loadedNamespaces()) {
-
-  try(detach(
-    name = package:reshape),
-    silent = TRUE)
-}
-
 pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
                                           id.vars = "who_prev_cat_Pareek2011",
                                           value.name = "pLTBI",
