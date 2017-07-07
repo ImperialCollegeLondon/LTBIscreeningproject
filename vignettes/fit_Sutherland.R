@@ -33,7 +33,7 @@ activetb_year_pmf_sutherland <- diff(c(0, prob_estimated))/100
 # max(prob_estimated)
 
 
-save(activetb_year_pmf_sutherland, file = "data/activetb_year_pmf_sutherland")
+save(activetb_year_pmf_sutherland, file = "data/activetb_year_pmf_sutherland.RData")
 
 
 # add  to ETS plot

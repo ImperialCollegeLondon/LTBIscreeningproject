@@ -49,11 +49,11 @@ res_etm_cmprsk_exituk <- etm::etm(data = data_etm,
 
 # cdf -> pmf
 year_prob.activetb_cens_exituk <-
-  c(0, 0, res_etm_cens_exituk$est["9", "1", ]) %>%
+  c(0, res_etm_cens_exituk$est["9", "1", ]) %>%
   diff()
 
 year_prob.activetb_cmprsk_exituk <-
-  c(0, 0, res_etm_cmprsk_exituk$est["9", "1", ]) %>%
+  c(0, res_etm_cmprsk_exituk$est["9", "1", ]) %>%
   diff()
 
 
@@ -83,7 +83,7 @@ fit.cens <- lm(mf.cens.log)
 year_prob.cens_exp <- exp(extrap_years * fit.cens$coefficients["year"] +
                             fit.cens$coefficients["(Intercept)"])
 
-# append estimates to observed
+## append estimates to observed
 
 # exponential
 # year_prob.activetb_cens_exituk <- c(year_prob.activetb_cens_exituk,
@@ -103,7 +103,7 @@ fit.cmprsk <- lm(mf.cmprsk.log)
 year_prob.cmprsk_exp <- exp(extrap_years * fit.cmprsk$coefficients["year"] +
                               fit.cmprsk$coefficients["(Intercept)"])
 
-# append estimates to observed
+## append estimates to observed
 
 # exponential
 # year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,

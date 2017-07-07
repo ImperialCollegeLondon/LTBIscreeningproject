@@ -204,7 +204,7 @@ data_etm <-
              time = days_to_years(fup_issdt[ ,"fup1_issdt"]),
              LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
   dplyr::filter(LTBI_or_activeTB == TRUE,
-         time > 0) %>%
+                time > 0) %>%
   select(-LTBI_or_activeTB)
 
 data_etm_cens_exituk <-
