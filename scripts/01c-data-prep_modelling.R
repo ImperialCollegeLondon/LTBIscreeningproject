@@ -44,25 +44,6 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
 
 
-### adjust 36-45 by scaling factor ###
-
-# # age-dependent prob of LTBI
-# pLatentTB.who_18to35 <- matrix(data = pLatentTB.who,
-#                                ncol = 18,
-#                                nrow = length(pLatentTB.who))
-#
-# # ref. Lancet, tuberculosis infection in rural China: baseline results of a population-based, multicentre, prospective cohort study
-# # 36_to_45/20_to_35 years old => 16%/10%
-#
-# pLatentTB.who_36to45 <- matrix(data = pLatentTB.who*1.65,
-#                                ncol = 10,
-#                                nrow = length(pLatentTB.who))
-#
-# pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
-#                                 pLatentTB.who_18to35,
-#                                 pLatentTB.who_36to45)
-
-### or
 ### assume >35 == 35 year olds ###
 # i.e. age independent
 
