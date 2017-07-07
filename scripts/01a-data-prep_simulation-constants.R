@@ -13,6 +13,8 @@ N.mc <- 2
 
 cluster <- TRUE
 
+study <- "QFT"  #"TSPOT" "HALT"
+
 
 # global constants --------------------------------------------------------
 
@@ -40,8 +42,7 @@ incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350
 
 # folder locations --------------------------------------------------------
 
-parameter_values_file <- system.file("data", "scenario-parameter-values_range-limits_with-LTBI-Tx-costs.xlsx",
-# parameter_values_file <- system.file("data", "scenario-parameter-values_HALT.xlsx",
+parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
@@ -54,6 +55,5 @@ diroutput <- tempdir()
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
 
-cluster_output_filename <- "decisiontree-results.rds"
-# cluster_output_filename <- "decisiontree-results-HALT.rds"
+cluster_output_filename <- sprintf("decisiontree-results-%s.rds", study)
 

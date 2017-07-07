@@ -10,6 +10,7 @@ library(data.tree)
 library(dplyr)
 library(plyr)
 
+study <- "QFT"  #"TSPOT", "HALT"
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
                                     package = "LTBIscreeningproject")
@@ -17,7 +18,7 @@ osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
 osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml",
                                       package = "LTBIscreeningproject")
 
-parameter_values_file <- system.file("data", "scenario-parameter-values_QFN.xlsx",
+parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
@@ -37,7 +38,7 @@ osNode.health <- costeff.health$osNode
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 
-#2009
+#2009 cohort
 p.who_year <- c("(0,50]" = 0,
                 "(50,150]" = 0.02505289,
                 "(150,250]" = 0.09000483,
@@ -45,7 +46,7 @@ p.who_year <- c("(0,50]" = 0,
                 "(350,1e+05]" = 0.86447315)
 
 pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p.who_year),
-                                 LTBI = c(0, 0.13, 0.2, 0.3, 0.3))
+                                 LTBI = c(0.001, 0.13, 0.2, 0.3, 0.3))
 
 
 # insert probs in incidence group for given year (2009)

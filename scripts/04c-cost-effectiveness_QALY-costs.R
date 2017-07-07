@@ -93,6 +93,7 @@ for (s in seq_len(n.scenarios)) {
 
     who_uk_tb_avoided  <- sample(x = seq_along(cost_uk_notif.screened),
                                       size = unlist(num_avoided.uk_tb))
+
     who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
                                  size = unlist(num_avoided.all_tb))
 
