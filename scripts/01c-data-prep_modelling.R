@@ -65,14 +65,15 @@ withr::with_options(list(warn = -1),
 
 # join with main data set
 
-pLatentTB.who_age.long <- reshape2:::melt(data = pLatentTB.who_age,
-                                          id.vars = "who_prev_cat_Pareek2011",
-                                          value.name = "pLTBI",
-                                          variable.name = "age_at_entry")
+pLatentTB.who_age.long <- reshape2:::melt.data.frame(data = pLatentTB.who_age,
+                                                     id.vars = "who_prev_cat_Pareek2011",
+                                                     value.name = "pLTBI",
+                                                     variable.name = "age_at_entry")
 
 IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
-                        by = c("age_at_entry", "who_prev_cat_Pareek2011"))
+                        by = c("age_at_entry",
+                               "who_prev_cat_Pareek2011"))
 
 # sample LTBI status
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
@@ -202,6 +203,15 @@ strat_pop_year <-
   count_comprsk_events()
 
 detach(IMPUTED_sample_year_cohort)
+
+
+# entry to follow-up days -------------------------------------------------
+
+IMPUTED_sample_year_cohort <-
+  IMPUTED_sample_year_cohort %>%
+  mutate(issdt.asnumeric = issdt - as.Date("1960-01-01"),
+         fup_issdt_days = fup1 - issdt.asnumeric,
+         fup_issdt = days_to_years(fup_issdt_days))
 
 
 # discount cost and QALYs in decision tree  ---------------------------------

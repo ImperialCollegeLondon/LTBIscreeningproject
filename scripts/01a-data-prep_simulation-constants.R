@@ -19,7 +19,7 @@ study <- "QFT"  #"TSPOT" "HALT"
 # global constants --------------------------------------------------------
 
 # time horizon for active TB progression
-FUP_MAX_YEAR <- 88 #10, 20, 50
+FUP_MAX_YEAR <- 100 #10, 20, 50
 
 # screen_age_range <- 18:35
 screen_age_range <- 18:45

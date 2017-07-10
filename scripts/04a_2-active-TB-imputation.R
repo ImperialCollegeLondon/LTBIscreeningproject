@@ -27,17 +27,14 @@ LTBI_ukexit_year_pop <-
 LTBI_ukexit_year_pop <- remove_duplicates(LTBI_ukexit_year_pop)
 
 
-# individually SIMULATE active TB progression times after exit uk ----------------------
+# individually SIMULATE active TB progression times after exit uk ----------------
 
-IMPUTED_sample_year_cohort$exituk_tb.years <-
-  sim_exituk_tb_times(data = IMPUTED_sample_year_cohort,
-                      prob = year_prob.activetb_cens_exituk)
-
-# active tb status
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
-  mutate(exituk_tb = !is.na(exituk_tb.years) &
-                     !is.infinite(exituk_tb.years))
+  mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
+                                               prob = year_prob.activetb_cens_exituk),
+         exituk_tb = !is.na(exituk_tb.years) &
+           !is.infinite(exituk_tb.years))
 
 table(IMPUTED_sample_year_cohort$exituk_tb.years, useNA = "always")
 
@@ -87,37 +84,12 @@ n.exit_tb <-
   dplyr::count()
 
 
-# multiple samples
-# for (i in 1:5) {
-#
-#   exituk_tb.years <- sim_aTB_times(pop = pop_year,
-#                                    data = IMPUTED_sample_year_cohort,
-#                                    prob = year_prob.activetb_cens_exituk)
-#
-#   x <- hist(exituk_tb.years,
-#             breaks = 100, xlim = c(0, 20), ylim = c(0,25),
-#             xlab = "year", main = "", plot = F)
-#
-#   points(x$mids[x$counts > 0] + rnorm(sum(x$counts > 0), 0, 0.5),
-#          x$counts[x$counts > 0] + rnorm(sum(x$counts > 0), 0, 0.5),
-#          pch = 16, col = rgb(0, 0, 0, 0.3))
-# }
-
-
-
 # individually SIMULATE active TB progression times uk tb after followup ----------------------
 
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
-  mutate(issdt.asnumeric = issdt - as.Date("1960-01-01"),
-         fup_issdt_days = fup1 - issdt.asnumeric,
-         fup_issdt = days_to_years(fup_issdt_days)) %>%
   mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
                                                         prob = year_prob.activetb_cmprsk_exituk),
-         age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
-         agegroup_uk_notification = cut(age_uk_notification,
-                                        breaks = cfr_age_breaks,
-                                        right = FALSE),
          uk_tb = !is.na(rNotificationDate_issdt.years) &
                  !is.infinite(rNotificationDate_issdt.years))
 
@@ -136,7 +108,13 @@ n.uk_tb <-
   dplyr::filter(uk_tb) %>%
   dplyr::count()
 
+
+
 num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
+
+
+
+
 
 notifDate_issdt.years <- remove_duplicates(strat_pop_year["tb", ])
 

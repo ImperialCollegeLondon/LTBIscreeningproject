@@ -13,6 +13,7 @@
 
 
 data("activetb_year_pmf_sutherland")
+data("incidence_Lancet")
 
 
 # sensitivity analysis scenario:
@@ -85,15 +86,17 @@ year_prob.cens_exp <- exp(extrap_years * fit.cens$coefficients["year"] +
 
 ## append estimates to observed
 
-# exponential
+## fit + exponential
 # year_prob.activetb_cens_exituk <- c(year_prob.activetb_cens_exituk,
 #                                     year_prob.cens_exp + offset)
-# Sutherland
-year_prob.activetb_cens_exituk <- c(year_prob.activetb_cens_exituk,
-                                    activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
+## fit + Sutherland
+# year_prob.activetb_cens_exituk <- c(year_prob.activetb_cens_exituk,
+#                                     activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
+## Sutherland only
+year_prob.activetb_cens_exituk <- activetb_year_pmf_sutherland
 
 
-#  competing risk exit uk times ----------------------------------------------------
+#  competing risk times ----------------------------------------------------
 
 mf.cmprsk.log <- model.frame(formula = logy ~ year,
                              data = data.frame(logy = log(year_prob.activetb_cmprsk_exituk - offset)[decreasing_years],
@@ -105,12 +108,16 @@ year_prob.cmprsk_exp <- exp(extrap_years * fit.cmprsk$coefficients["year"] +
 
 ## append estimates to observed
 
-# exponential
+## fit + exponential
 # year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
 #                                       year_prob.cmprsk_exp + offset)
-# Sutherland
+## fit + Sutherland
 year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
                                       activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
+## Rob's Lancet paper plot
+year_prob.activetb_cmprsk_exituk <- c(incidence_Lancet$mean/100000,
+                                      activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
+
 
 
 
@@ -120,7 +127,7 @@ year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
 # year_prob.activetb <- rep(0.001, 100)
 
 
-# # post-follow-up estimate active TB transition probabilities -----------------------------
+# # post-follow-up estimate active TB transition probabilities -----------------
 #
 # res_etm_cmprsk_exituk_imputed_uk_tb <- etm::etm(data = dat_surv_etm_imputed_uk_tb,
 #                                                 state.names = c(9, 1, 2, 3),

@@ -22,7 +22,7 @@ if (cluster) {
 }
 
 n.diseasefree.all_tb <- map(n.tb_screen.all_tb, function(x) dplyr::filter(x, status == "disease-free"))
-n.diseasefree.uk_tb  <- map(n.tb_screen.uk_tb, function(x) dplyr::filter(x, status == "disease-free"))
+n.diseasefree.uk_tb  <- map(n.tb_screen.uk_tb,  function(x) dplyr::filter(x, status == "disease-free"))
 
 
 aTB_cost.screened <- aTB_QALY.screened <- list()
@@ -30,7 +30,7 @@ aTB_cost_incur <- aTB_cost_incur_person <- list()
 aTB_QALYgain <- aTB_QALYgain_person <- list()
 aTB_ICER <- aTB_INMB <- list()
 aTB_p.costEffective <- list()
-aTB_QALY.statusquo <- aTB_cost.statusquo <- list()
+aTB_QALY.statusquo  <- aTB_cost.statusquo <- list()
 
 E.aTB_cost.screened <- NA
 E.aTB_QALY.screened <- NA
@@ -111,7 +111,6 @@ for (s in seq_len(n.scenarios)) {
 
     aTB_cost.statusquo[[s]][i] <- sum(cost_uk_notif.statusquo)
     aTB_cost.screened[[s]][i]  <- sum(cost_uk_notif.screened)
-
   }
 
 

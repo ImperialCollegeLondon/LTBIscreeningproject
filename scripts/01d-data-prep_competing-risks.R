@@ -275,10 +275,10 @@ dat_surv_impute <-
 
 times_temp <-
   dat_surv_impute %>%
-  reshape2::melt(measure.vars = c("date_death1_issdt",
-                                  "date_exit_uk1_issdt",
-                                  "tb_issdt"),
-                 id.vars = c("id")) %>%
+  reshape2:::melt.data.frame(measure.vars = c("date_death1_issdt",
+                                              "date_exit_uk1_issdt",
+                                              "tb_issdt"),
+                             id.vars = c("id")) %>%
   dplyr::rename(to = variable,
                 time = value) %>%
   arrange(id)
@@ -286,10 +286,10 @@ times_temp <-
 
 status_temp <-
   dat_surv_impute %>%
-  reshape2::melt(measure.vars = c("death1",
-                                  "exit_uk1",
-                                  "uk_tb_orig"),
-                 id.vars = c("id")) %>%
+  reshape2:::melt.data.frame(measure.vars = c("death1",
+                                              "exit_uk1",
+                                              "uk_tb_orig"),
+                             id.vars = c("id")) %>%
   dplyr::rename(to = variable,
                 status = value) %>%
   mutate(from = "disease-free",
