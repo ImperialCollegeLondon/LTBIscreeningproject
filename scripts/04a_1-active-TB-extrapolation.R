@@ -112,12 +112,11 @@ year_prob.cmprsk_exp <- exp(extrap_years * fit.cmprsk$coefficients["year"] +
 # year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
 #                                       year_prob.cmprsk_exp + offset)
 ## fit + Sutherland
-year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
-                                      activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
+# year_prob.activetb_cmprsk_exituk <- c(year_prob.activetb_cmprsk_exituk,
+#                                       activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
 ## Rob's Lancet paper plot
 year_prob.activetb_cmprsk_exituk <- c(incidence_Lancet$mean/100000,
                                       activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
-
 
 
 

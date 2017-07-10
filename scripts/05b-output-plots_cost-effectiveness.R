@@ -114,7 +114,32 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
 
 # cost-effectiveness planes -----------------------------------------------
 
-cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(23)
+SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
+                     "2: Agree to screen prob 0.1",
+                     "3: Agree to screen prob 1",
+                     "4: Start treatment prob 0.25",
+                     "5: Start treatment prob 1",
+                     "6: Complete treatment prob 0.5",
+                     "7: Complete treatment prob 1",
+                     "8: LTBI test cost £20",
+                     "9: LTBI test cost £100",
+                     "10: LTBI Treatment: 3m iso + rif £low",
+                     "11: LTBI Treatment: 6m iso £high",
+                     "12: LTBI Treatment: 3m iso + rif £high",
+                     "13: Best case: screening probs = 1, test £20",
+                     "14: Best case: probs = 1, perfect test/treat, test £20",
+                     "15: LTBI test cost £10, screening probs = 1",
+                     "16: LTBI test cost £0, screening probs = 1",
+                     "17: 90-90-70 agree-complete-effective & £20 test",
+                     "18: 90-90-90 agree-complete-effective  & £20 test & spec=1  & sens=0.95",
+                     "19: 90-90-100 agree-complete-effective  & £20 test & spec=1",
+                     "20: 90-90-100 agree-complete-effective & £20 test",
+                     "21: probs=1  sensitivity=1 & £20 test",
+                     "22: probs=1  sensitivity=0.95 & £20 test",
+                     "23: probs=1  sensitivity=0.9 & £20 test",
+                     "24: Best case: probs = 1, perfect test/treat, test £0")
+
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(length(SCENARIO_LABELS))
 
 ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
@@ -129,33 +154,11 @@ gg +
   # scale_color_brewer(palette = "Dark2") +
   # scale_colour_manual(values = cbPalette) +
   # xlim(0, 0.008) +
-  scale_color_discrete(labels = c("1: Baseline (6m iso £low)",
-                                  "2: Agree to screen prob 0.1",
-                                  "3: Agree to screen prob 1",
-                                  "4: Start treatment prob 0.25",
-                                  "5: Start treatment prob 1",
-                                  "6: Complete treatment prob 0.5",
-                                  "7: Complete treatment prob 1",
-                                  "8: LTBI test cost £20",
-                                  "9: LTBI test cost £100",
-                                  "10: LTBI Treatment: 3m iso + rif £low",
-                                  "11: LTBI Treatment: 6m iso £high",
-                                  "12: LTBI Treatment: 3m iso + rif £high",
-                                  "13: Best case: screening probs = 1, test £20",
-                                  "14: Best case: probs = 1, perfect test/treat, test £20",
-                                  "15: LTBI test cost £10, screening probs = 1",
-                                  "16: LTBI test cost £0, screening probs = 1",
-                                  "17: 90-90-70 agree-complete-effective & £20 test",
-                                  "18: 90-90-90 agree-complete-effective  & £20 test & spec=1  & sens=0.95",
-                                  "19: 90-90-100 agree-complete-effective  & £20 test & spec=1",
-                                  "20: 90-90-100 agree-complete-effective & £20 test",
-                                  "21: probs=1  sensitivity=1 & £20 test",
-                                  "22: probs=1  sensitivity=0.95 & £20 test",
-                                  "23: probs=1  sensitivity=0.9 & £20 test")) +
+  scale_color_discrete(labels = SCENARIO_LABELS) +
   annotate("text",
            x = apply(screen.bcea$delta.e, 2, mean),
            y = apply(screen.bcea$delta.c, 2, mean),
-           label = 1:23) +
+           label = seq_along(SCENARIO_LABELS)) +
   theme(legend.position = c(1, 0.2))
 
 
@@ -165,22 +168,7 @@ BCEA::ceac.plot(screen.bcea)
 
 BCEA::ceac.plot(screen.bcea, graph = "ggplot2") + theme(legend.position = c(0.2, 0.4)) +
   geom_abline(slope = 0, intercept = 0.5) +
-  scale_color_discrete(labels = c("1: Baseline (6m iso £low)",
-                                  "2: Agree to screen prob 0.1",
-                                  "3: Agree to screen prob 1",
-                                  "4: Start treatment prob 0.25",
-                                  "5: Start treatment prob 1",
-                                  "6: Complete treatment prob 0.5",
-                                  "7: Complete treatment prob 1",
-                                  "8: LTBI test cost £20",
-                                  "9: LTBI test cost £100",
-                                  "10: LTBI Treatment: 3m iso + rif £low",
-                                  "11: LTBI Treatment: 6m iso £high",
-                                  "12: LTBI Treatment: 3m iso + rif £high",
-                                  "13: Best case: screening probs = 1",
-                                  "14: Best case: probs = 1, perfect test/treat",
-                                  "15: LTBI test cost £10, screening probs = 1",
-                                  "16: LTBI test cost £0, screening probs = 1"))
+  scale_color_discrete(labels = SCENARIO_LABELS)
 
 
 ICER <- apply(screen.bcea$delta.c, 2, mean)/apply(screen.bcea$delta.e, 2, mean)

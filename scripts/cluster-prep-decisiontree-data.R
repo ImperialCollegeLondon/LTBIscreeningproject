@@ -103,7 +103,9 @@ scenario_parameters <- plyr::dlply(scenario_parameters, .(scenario))
 
 #  ------------------------------------------------------------------------
 
-save(scenario_parameters, file = "data/scenario_parameters.RData")
-save(osNode.cost, file = "data/osNode_cost_2009.RData")
-save(osNode.health, file = "data/osNode_health_2009.RData")
+data_folder <- system.file("data", package = "LTBIscreeningproject")
+
+save(scenario_parameters, file = paste0(data_folder, "/scenario_parameters.RData"))
+save(osNode.cost, file = paste0(data_folder, "/osNode_cost_2009.RData"))
+save(osNode.health, file = paste0(data_folder, "/osNode_health_2009.RData"))
 
