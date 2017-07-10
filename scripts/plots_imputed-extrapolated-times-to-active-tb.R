@@ -44,3 +44,18 @@ legend = c("Estimated uk", "Estimated exit", "Total"),
 col = c("black", "green", "blue"), lty = c(1,2,3))
 
 
+# multiple samples
+# for (i in 1:5) {
+#
+#   exituk_tb.years <- sim_aTB_times(pop = pop_year,
+#                                    data = IMPUTED_sample_year_cohort,
+#                                    prob = year_prob.activetb_cens_exituk)
+#
+#   x <- hist(exituk_tb.years,
+#             breaks = 100, xlim = c(0, 20), ylim = c(0,25),
+#             xlab = "year", main = "", plot = F)
+#
+#   points(x$mids[x$counts > 0] + rnorm(sum(x$counts > 0), 0, 0.5),
+#          x$counts[x$counts > 0] + rnorm(sum(x$counts > 0), 0, 0.5),
+#          pch = 16, col = rgb(0, 0, 0, 0.3))
+# }
