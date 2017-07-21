@@ -62,15 +62,21 @@ sim_uktb_times <- function(data,
 
         NA
 
+      }else if (data$death1[i]) {
+
+        NA
+
       }else if (as.logical(data$uk_tb[i])) {
 
         data$rNotificationDate_issdt.years[i]
 
-      }else {
+      }else if (data$cens1[i]) {
 
         sample_tb_year(data$fup_issdt[i],
                        data$date_death1_issdt.years[i],
                        prob)
+      }else{
+        stop("Don't know what's first event type.")
       }
   }
 
@@ -105,7 +111,7 @@ sim_exituk_tb_times <- function(data,
 
         Inf
 
-        # not first event
+      # not first event
       }else if (!data$exit_uk1[i]) {
 
         NA

@@ -34,7 +34,7 @@ IMPUTED_sample_year_cohort <-
   mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
                                                prob = year_prob.activetb_cens_exituk),
          exituk_tb = !is.na(exituk_tb.years) &
-           !is.infinite(exituk_tb.years))
+                      !is.infinite(exituk_tb.years))
 
 table(IMPUTED_sample_year_cohort$exituk_tb.years, useNA = "always")
 
@@ -100,7 +100,7 @@ table(
 # calc number tb_uk (extrapolated) using _proportions_ -----------------------------
 # straight forward, direct method
 
-num_uk_tb_year <- pop_year * year_prob.activetb_cmprsk_exituk * PROB_LTBI
+# num_uk_tb_year <- pop_year * year_prob.activetb_cmprsk_exituk * PROB_LTBI
 
 # n.uk_tb <- sum(num_uk_tb_year)
 n.uk_tb <-
@@ -109,11 +109,7 @@ n.uk_tb <-
   dplyr::count()
 
 
-
-num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
-
-
-
+# num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
 
 
 notifDate_issdt.years <- remove_duplicates(strat_pop_year["tb", ])

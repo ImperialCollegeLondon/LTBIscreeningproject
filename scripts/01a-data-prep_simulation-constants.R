@@ -9,11 +9,11 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2
+N.mc <- 200
 
 cluster <- TRUE
 
-study <- "QFT"  #"TSPOT" "HALT"
+study <-  "TSPOT" #"oneway" #"TSPOT" "QFT" "HALT"
 
 
 # global constants --------------------------------------------------------
@@ -46,11 +46,11 @@ parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
-# diroutput <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
-# dir.create(diroutput)
+diroutput <- sprintf("ext-data/%d_to_%d_in_%s_using_%s", min(screen_age_range), max(screen_age_range), year_cohort, study)
+dir.create(diroutput)
 
 # create temporary output folder
-diroutput <- tempdir()
+# diroutput <- tempdir()
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")

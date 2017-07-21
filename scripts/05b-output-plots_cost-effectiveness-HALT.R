@@ -157,5 +157,6 @@ ICER <- apply(screen.bcea$delta.c, 2, mean)/apply(screen.bcea$delta.e, 2, mean)
 
 ## table
 
+apply(e.total, 2, mean) * 100000
 
 

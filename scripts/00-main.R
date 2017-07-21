@@ -28,12 +28,9 @@ source("scripts/04b_1-include-new-tb-events.R")
 
 # 2) decision tree --------------------------------------------------------
 if (!cluster) source("scripts/02-decision-tree-model.R")
-if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
-
-
-# 4bc) cost-effectiveness ---------------------------------------------------
-
 if (!cluster) source("scripts/04b_2-activeTB-postscreen-samples.R")
+
+if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
 source("scripts/04c-cost-effectiveness_QALY-costs.R")
 
