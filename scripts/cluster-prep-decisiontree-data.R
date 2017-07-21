@@ -6,11 +6,13 @@
 # create data in a format to use in DIDE computer cluster functions
 # run jobs using network drive Q:\R\cluster--LTBI-decision-tree
 
+
 library(data.tree)
 library(dplyr)
 library(plyr)
 
-study <- "QFT"  #"TSPOT", "HALT"
+
+if (!exists("study")) study <- "oneway" #"twoway" TSPOT"  #"QFT", "HALT"
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
                                     package = "LTBIscreeningproject")
