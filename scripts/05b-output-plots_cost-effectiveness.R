@@ -131,14 +131,14 @@ SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
                      "14: Best case: probs = 1, perfect test/treat, test £20",
                      "15: LTBI test cost £10, screening probs = 1",
                      "16: LTBI test cost £0, screening probs = 1",
-                     "17: 90-90-70 agree-complete-effective & £20 test",
-                     "18: 90-90-90 agree-complete-effective  & £20 test & spec=1  & sens=0.95",
-                     "19: 90-90-100 agree-complete-effective  & £20 test & spec=1",
-                     "20: 90-90-100 agree-complete-effective & £20 test",
-                     "21: probs=1  sensitivity=1 & £20 test",
-                     "22: probs=1  sensitivity=0.95 & £20 test",
-                     "23: probs=1  sensitivity=0.9 & £20 test",
-                     "24: Best case: probs = 1, perfect test/treat, test £0")
+                     "17: 90-90-90-90 agree-start-complete-effective & £20 test",
+                     "18: 90-90-90-95 agree-start-complete-effective  & £20 test & spec=1  & sens=0.95",
+                     "19: 90-90-100 start-complete-effective  & £20 test & spec=1",
+                     "20: 90-90-100 start-complete-effective & £20 test",
+                     "21: screen probs=1 sensitivity=1 & £20 test",
+                     "22: screen probs=1 sensitivity=0.95 & £20 test",
+                     "23: screen probs=1 sensitivity=0.98 & £20 test",
+                     "24: Best case: screen probs = 1, perfect test/treat, test £0")
 
 cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(length(SCENARIO_LABELS))
 
@@ -148,7 +148,7 @@ ceplane.plot(screen.bcea, pos = "bottomright")
 gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 gg + scale_colour_manual(values = cbPalette)
 
-gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 30000)
+gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
 
 gg +
@@ -163,13 +163,18 @@ gg +
   theme(legend.position = c(1, 0.2))
 
 
-eib.plot(screen.bcea)
+# with ICER values
+# gg + annotate("text",
+#            x = apply(screen.bcea$delta.e, 2, mean),
+#            y = apply(screen.bcea$delta.c, 2, mean),
+#            label = round(screen.bcea$ICER, 0))
 
-BCEA::ceac.plot(screen.bcea)
 
-BCEA::ceac.plot(screen.bcea, graph = "ggplot2") + theme(legend.position = c(0.2, 0.4)) +
-  geom_abline(slope = 0, intercept = 0.5) +
-  scale_color_discrete(labels = SCENARIO_LABELS)
+
+
+#  ------------------------------------------------------------------------
+
+# eib.plot(screen.bcea)
 
 
 ICER <- apply(screen.bcea$delta.c, 2, mean)/apply(screen.bcea$delta.e, 2, mean)
