@@ -13,7 +13,12 @@ N.mc <- 200
 
 cluster <- TRUE
 
-study <-  "TSPOT" #"oneway" #"TSPOT" "QFT" "HALT"
+study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"
+
+# LIFETIME_RISK <- 1
+LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
+# LIFETIME_RISK <- 0.18   #2006 NICE economic appraisal
+# LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 
 # global constants --------------------------------------------------------
