@@ -162,14 +162,15 @@ n.popyear <-
   set_names(c("year", "pop"))
 
 
-# coverage: sample only if indiv screened  ------------------------------------
+# coverage: keep only if indiv screened  ------------------------------------
 
-IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
 
 IMPUTED_sample %<>%
   mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
-                           date_exit_uk1_issdt.years >= screen_year &
-                           (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)), 1, 0))
+                           date_exit_uk1_issdt.years >= pmax(screen_year, min_screen_length_of_stay) &
+                           (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)),
+                         1, 0))
 
 if (screen_0_to_5_year) {
 

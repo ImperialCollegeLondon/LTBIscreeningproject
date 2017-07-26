@@ -13,15 +13,34 @@ N.mc <- 200
 
 cluster <- TRUE
 
+
+# global variables --------------------------------------------------------
+
+# select which paramter file for decision tree
 study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"
 
-# LIFETIME_RISK <- 1
-LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
-# LIFETIME_RISK <- 0.18   #2006 NICE economic appraisal
-# LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
+# which incidence groups to screen
+incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
+# incidence_grps_screen <- c("(150,250]", "(250,350]", "(350,1e+05]")
+# incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
+
+min_screen_length_of_stay <- 5 #years #0
+
+
+# or read in scenarios environments
+data("global-parameters-scenarios")
+data("global-parameters-scenarios_ls")
+
+attach(eval(parse(text = ls_global_params_scenarios[1])))
 
 
 # global constants --------------------------------------------------------
+
+# rather than screen _everyone_ on entry
+# screen at random 0-5 years from entry
+screen_0_to_5_year <- TRUE
+
+MAX_SCREEN_DELAY <- 5
 
 # time horizon for active TB progression
 FUP_MAX_YEAR <- 100 #10, 20, 50
@@ -36,13 +55,10 @@ year_cohort <- '2009' #largest cohort
 ENDPOINT_QALY <- "death" #"exit uk"
 ENDPOINT_cost <- "exit uk" #"death"
 
-# rather than screen _everyone_ on entry
-# screen at random 0-5 years from entry
-screen_0_to_5_year <- TRUE
-
-# which incidence groups to screen
-incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
-# incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
+# LIFETIME_RISK <- 1
+LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
+# LIFETIME_RISK <- 0.18   #2006 NICE economic appraisal
+# LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 
 # folder locations --------------------------------------------------------
@@ -51,7 +67,10 @@ parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
-diroutput <- sprintf("ext-data/%d_to_%d_in_%s_using_%s", min(screen_age_range), max(screen_age_range), year_cohort, study)
+parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
+diroutput <- sprintf("%s/%s-%d_incid_grps-minLoS_%d-max_screen_delay_%d-endpointcost_%s",
+                     parent_folder, study, length(incidence_grps_screen), min_screen_length_of_stay, MAX_SCREEN_DELAY, ENDPOINT_cost)
+dir.create(parent_folder)
 dir.create(diroutput)
 
 # create temporary output folder
@@ -59,6 +78,9 @@ dir.create(diroutput)
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
+plots_folder_scenario <- sprintf("%s/%s-%d_incid_grps-minLoS_%d-max_screen_delay_%d-endpointcost_%s",
+                                 plots_folder, study, length(incidence_grps_screen), min_screen_length_of_stay, MAX_SCREEN_DELAY, ENDPOINT_cost)
+dir.create(plots_folder_scenario)
 
 cluster_output_filename <- sprintf("decisiontree-results-%s.rds", study)
 

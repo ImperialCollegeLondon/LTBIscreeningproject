@@ -109,10 +109,6 @@ screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
 # plots #
 #########
 
-##TODO: how to get more than 8 colours in ggplot??
-# COL <- colorRampPalette(brewer.pal(11, "Spectral"))(10)
-
-
 # cost-effectiveness planes -----------------------------------------------
 
 SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
@@ -142,25 +138,31 @@ SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
 
 cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(length(SCENARIO_LABELS))
 
-ceplane.plot(screen.bcea, pos = "bottomright")
+# ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
-gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
-gg + scale_colour_manual(values = cbPalette)
+# gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
+# gg + scale_colour_manual(values = cbPalette)
+
+
+png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
+
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
 
-gg +
-  # scale_color_brewer(palette = "Dark2") +
-  # scale_colour_manual(values = cbPalette) +
-  # xlim(0, 0.008) +
-  scale_color_discrete(labels = SCENARIO_LABELS) +
-  annotate("text",
-           x = apply(screen.bcea$delta.e, 2, mean),
-           y = apply(screen.bcea$delta.c, 2, mean),
-           label = seq_along(SCENARIO_LABELS)) +
-  theme(legend.position = c(1, 0.2))
+dev.off()
+
+# gg +
+#   # scale_color_brewer(palette = "Dark2") +
+#   # scale_colour_manual(values = cbPalette) +
+#   # xlim(0, 0.008) +
+#   scale_color_discrete(labels = SCENARIO_LABELS) +
+#   annotate("text",
+#            x = apply(screen.bcea$delta.e, 2, mean),
+#            y = apply(screen.bcea$delta.c, 2, mean),
+#            label = seq_along(SCENARIO_LABELS)) +
+#   theme(legend.position = c(1, 0.2))
 
 
 # with ICER values
@@ -169,13 +171,4 @@ gg +
 #            y = apply(screen.bcea$delta.c, 2, mean),
 #            label = round(screen.bcea$ICER, 0))
 
-
-
-
-#  ------------------------------------------------------------------------
-
-# eib.plot(screen.bcea)
-
-
-ICER <- apply(screen.bcea$delta.c, 2, mean)/apply(screen.bcea$delta.e, 2, mean)
 

@@ -57,10 +57,10 @@ IMPUTED_sample_year_cohort <-
 QALY_all_tb <-
   IMPUTED_sample_year_cohort %>%
   subset(all_tb == TRUE) %$%
-       calc_QALY_tb(timetoevent = all_death_rNotificationDate,
-                    utility.disease_free = utility$disease_free,
-                    utility.case = utility$activeTB,
-                    age = age_all_notification)
+  calc_QALY_tb(timetoevent = all_death_rNotificationDate,
+               utility.disease_free = utility$disease_free,
+               utility.case = utility$activeTB,
+               age = age_all_notification)
 
 E_fatalities <- with(IMPUTED_sample_year_cohort,
                      cfr[!is.na(cfr)])
