@@ -30,14 +30,14 @@ source("scripts/04b_1-include-new-tb-events.R")
 if (!cluster) source("scripts/02-decision-tree-model.R")
 if (!cluster) source("scripts/04b_2-activeTB-postscreen-samples.R")
 
-if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
+if (cluster) source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
 source("scripts/04c-cost-effectiveness_QALY-costs.R")
 
 
 # 5) output plots/tables --------------------------------------------------
 
-source("scripts/05b-output-plots_cost-effectiveness.R")
+source("scripts/05b-output-plots_cost-effe tiveness.R")
 source("scripts/05i-output-tables.R")
 # source("scripts/05a-output-plots_competing-risks.R")
 # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")

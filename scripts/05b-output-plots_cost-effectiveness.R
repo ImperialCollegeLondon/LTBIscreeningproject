@@ -136,7 +136,7 @@ SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
                      "23: screen probs=1 sensitivity=0.98 & £20 test",
                      "24: Best case: screen probs = 1, perfect test/treat, test £0")
 
-cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(length(SCENARIO_LABELS))
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n.comparisons)
 
 # ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
@@ -144,9 +144,9 @@ cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(length(SCENAR
 # gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 # gg + scale_colour_manual(values = cbPalette)
 
+my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000) + scale_colour_manual(values = cbPalette)
 
 png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
-
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
