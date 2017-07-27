@@ -54,7 +54,7 @@ cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
 
 for (s in seq_len(n.scenarios)) {
 
-  print(sprintf("scenario: %d", s))
+  print(sprintf("[ population model ] scenario: %d", s))
 
   aTB_cost.screened[[s]] <- aTB_QALY.screened[[s]] <- NA
   aTB_cost_incur[[s]] <- aTB_cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
