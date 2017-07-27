@@ -6,6 +6,16 @@
 # calculate cost-effectiveness statistics for results tables
 
 
+# expected total aTB screening cost over all simulations in scenario
+E.aTB_cost.screened[s] <-
+  aTB_cost.screened[[s]] %>%
+  mean(na.rm = TRUE)
+
+# expected total aTB screening QALYs over all simulations in scenario
+E.aTB_QALY.screened[s] <-
+  aTB_QALY.screened[[s]] %>%
+  mean(na.rm = TRUE)
+
 
 # create a single 'long/tidy' output array
 

@@ -10,7 +10,7 @@ incidence_list <-  list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,
                         c("(150,250]", "(250,350]", "(350,1e+05]"),
                         c("(250,350]", "(350,1e+05]"))
 
-for (s in c("QFT", "TST")) {
+for (s in c("QFT", "TSPOT")) {
   for (m in c(0,5)) {
     for (i in 1:length(incidence_list)) {
 

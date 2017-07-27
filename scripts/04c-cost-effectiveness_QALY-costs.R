@@ -4,6 +4,7 @@
 # Oct 2016
 #
 # QALY gain and cost incurred due to active TB
+# random sampling
 
 
 if (cluster) {
@@ -91,7 +92,7 @@ for (s in seq_len(n.scenarios)) {
     # TRUE if death due to active TB
     tb_fatality <- runif(length(cfr)) < cfr
 
-    who_uk_tb_avoided  <- sample(x = seq_along(cost_uk_notif.screened), #############
+    who_uk_tb_avoided  <- sample(x = seq_along(cost_uk_notif.screened),
                                       size = unlist(num_avoided.uk_tb))
 
     who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
@@ -131,16 +132,6 @@ for (s in seq_len(n.scenarios)) {
   aTB_cost_incur[[s]] <- aTB_cost.screened[[s]] - aTB_cost.statusquo[[s]]
   aTB_cost_incur_person[[s]] <- aTB_cost_incur[[s]]/pop_year
 
-  # expected total aTB screening cost over all simulations in scenario
-  E.aTB_cost.screened[s] <-
-    aTB_cost.screened[[s]] %>%
-    mean(na.rm = TRUE)
-
-  # expected total aTB screening QALYs over all simulations in scenario
-  E.aTB_QALY.screened[s] <-
-    aTB_QALY.screened[[s]] %>%
-    mean(na.rm = TRUE)
-
   # proportion CE at wtp_threshold/QALY
   aTB_p.costEffective[[s]] <- prop.table(table(aTB_INMB[[s]] > 0, useNA = "no"))
 }
@@ -150,18 +141,14 @@ for (s in seq_len(n.scenarios)) {
 
 aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      aTB_cost.statusquo = aTB_cost.statusquo,
+                     aTB_QALY.screened = aTB_QALY.screened,
+                     aTB_cost.screened = aTB_cost.screened,
                      aTB_cost_incur = aTB_cost_incur,
                      aTB_QALYgain = aTB_QALYgain,
                      aTB_cost_incur_person = aTB_cost_incur_person,
                      aTB_QALYgain_person = aTB_QALYgain_person,
                      aTB_p.costEffective = aTB_p.costEffective)
 
-aTB_CE_stats_scenario <- cbind(E.aTB_cost.screened,
-                               E.aTB_QALY.screened)
-
 save(aTB_CE_stats,
      file = pastef(diroutput, "aTB_CE_stats.RData"))
-
-save(aTB_CE_stats_scenario,
-     file = pastef(diroutput, "aTB_CE_stats_scenario.RData"))
 

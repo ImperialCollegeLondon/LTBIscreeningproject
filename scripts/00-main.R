@@ -6,7 +6,8 @@
 # Main top-level script
 
 
-devtools::load_all(".")
+# devtools::load_all(".")
+
 
 data("051206 - IMPUTED_sample")
 
@@ -37,7 +38,7 @@ source("scripts/04c-cost-effectiveness_QALY-costs.R")
 
 # 5) output plots/tables --------------------------------------------------
 
-source("scripts/05b-output-plots_cost-effe tiveness.R")
+source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05i-output-tables.R")
 # source("scripts/05a-output-plots_competing-risks.R")
 # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")

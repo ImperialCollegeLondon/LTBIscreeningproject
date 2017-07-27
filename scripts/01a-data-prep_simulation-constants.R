@@ -16,22 +16,29 @@ cluster <- TRUE
 
 # global variables --------------------------------------------------------
 
-# select which paramter file for decision tree
-study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"
-
-# which incidence groups to screen
-incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
-# incidence_grps_screen <- c("(150,250]", "(250,350]", "(350,1e+05]")
-# incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
-
-min_screen_length_of_stay <- 5 #years #0
-
-
 # or read in scenarios environments
-data("global-parameters-scenarios")
-data("global-parameters-scenarios_ls")
+if (exists("global_run")) {
 
-attach(eval(parse(text = ls_global_params_scenarios[1])))
+  ##TODO: more generalisable but doesn't work
+  # rm(list = ls(eval(parse(text = ls_global_params_scenarios[global_run]))))
+  # attach(eval(parse(text = ls_global_params_scenarios[global_run])), pos = 1L)
+
+  study <- get("study", envir = eval(parse(text = ls_global_params_scenarios[global_run])))
+  incidence_grps_screen <- get("incidence_grps_screen", envir = eval(parse(text = ls_global_params_scenarios[global_run])))
+  min_screen_length_of_stay <- get("min_screen_length_of_stay", envir = eval(parse(text = ls_global_params_scenarios[global_run])))
+
+}else{
+
+  # select which paramter file for decision tree
+  study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"
+
+  # which incidence groups to screen
+  incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
+  # incidence_grps_screen <- c("(150,250]", "(250,350]", "(350,1e+05]")
+  # incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
+
+  min_screen_length_of_stay <- 0 #years #5
+}
 
 
 # global constants --------------------------------------------------------

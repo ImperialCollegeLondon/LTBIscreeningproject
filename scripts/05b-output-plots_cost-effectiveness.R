@@ -144,12 +144,14 @@ cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n
 # gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
 # gg + scale_colour_manual(values = cbPalette)
 
-my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000) + scale_colour_manual(values = cbPalette)
 
-png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
+
+png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
+
+print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000) + scale_colour_manual(values = cbPalette))
 
 dev.off()
 
