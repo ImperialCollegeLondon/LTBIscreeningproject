@@ -28,14 +28,14 @@ n.tb_screen.uk_tb  <- vector(mode = 'list')
 who_prev_cat.all_tb <-
   IMPUTED_sample_year_cohort %>%
   dplyr::filter(all_tb == TRUE) %>%
-  select(who_prev_cat_Pareek2011) %>%
+  dpylr::select(who_prev_cat_Pareek2011) %>%
   unlist() %>%
   as.character()
 
 who_prev_cat.uk_tb <-
   IMPUTED_sample_year_cohort %>%
   dplyr::filter(as.logical(uk_tb) == TRUE) %>%
-  select(who_prev_cat_Pareek2011) %>%
+  dplyr::select(who_prev_cat_Pareek2011) %>%
   unlist() %>%
   as.character()
 

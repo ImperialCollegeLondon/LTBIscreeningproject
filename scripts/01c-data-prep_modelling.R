@@ -248,7 +248,7 @@ n.popyear_screen <-
 pop_year <-
   n.popyear_screen %>%
   dplyr::filter(year == year_cohort) %>%
-  select(pop) %>%
+  dplyr::select(pop) %>%
   as.integer()
 
 # number of active TB cases _before_ screening i.e. status-quo

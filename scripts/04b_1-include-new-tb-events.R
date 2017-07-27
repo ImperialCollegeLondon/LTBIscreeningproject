@@ -51,7 +51,7 @@ IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
   left_join(cfr_age_lookup,
             by = c("agegroup_all_notification" = "age")) %>%
-  select(-distn, -a, -b)
+  dplyr::select(-distn, -a, -b)
 
 
 QALY_all_tb <-

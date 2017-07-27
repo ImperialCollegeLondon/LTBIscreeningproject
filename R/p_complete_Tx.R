@@ -25,7 +25,7 @@ p_complete_Tx <- function(osNode.cost,
     aggregate(osNode.p_complete_Tx,
               by = list(effective.groups),
               FUN = sum) %>%
-    select(x) %>%
+    dplyr::select(x) %>%
     unlist()
 
   p_complete_Tx <- set_names(x = p_effective/p_LTBI,

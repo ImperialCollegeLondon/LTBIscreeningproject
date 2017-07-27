@@ -205,7 +205,7 @@ data_etm <-
              LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
   dplyr::filter(LTBI_or_activeTB == TRUE,
                 time > 0) %>%
-  select(-LTBI_or_activeTB)
+  dplyr::select(-LTBI_or_activeTB)
 
 data_etm_cens_exituk <-
   data_etm %>%
@@ -228,7 +228,7 @@ dat_surv <-
             event1 = as.numeric(event == 1), #uk_tb
             LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
   dplyr::filter(LTBI_or_activeTB == TRUE) %>%
-  select(-LTBI_or_activeTB)
+  dplyr::select(-LTBI_or_activeTB)
 
 
 # fup1_issdt fup1_issdt_year age_at_entry id         from     to status trans

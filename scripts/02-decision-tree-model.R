@@ -176,7 +176,7 @@ for (scenario_i in seq_len(n.scenarios)) {
     aggregate(p.complete_Tx,
               by = list(Effective.groups),
               FUN = sum) %>%
-    select(x) %>%
+    dplyr::select(x) %>%
     unlist()
 
   p.complete_Tx_given_LTBI_by_who <- set_names(x = p.Effective/p.LTBI,

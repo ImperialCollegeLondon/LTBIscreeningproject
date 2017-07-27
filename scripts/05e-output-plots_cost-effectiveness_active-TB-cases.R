@@ -218,7 +218,7 @@ dev.off()
 
 p.completeTx_scenarios <- LTBI_prob_lookup %>%
                             filter(who_prev_cat_Pareek2011 == "(50,150]") %>%
-                            select(value)
+                            dplyr::select(value)
 
 counts.scenarios <- matrix(data = obs_uk_tb_year,
                            nrow = n.scenarios,
