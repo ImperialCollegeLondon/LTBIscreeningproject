@@ -19,7 +19,6 @@ cluster <- TRUE
 # or read in scenarios environments
 if (exists("global_run")) {
 
-  study <- get("study", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
   incidence_grps_screen <- get("incidence_grps_screen", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
   min_screen_length_of_stay <- get("min_screen_length_of_stay", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
 
@@ -66,13 +65,14 @@ LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
 
 # folder locations --------------------------------------------------------
 
-parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
+# parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
+#                                      package = "LTBIscreeningproject")
+
+parameter_values_file <- system.file("data", "scenario-parameter-values.xlsx",
                                      package = "LTBIscreeningproject")
 
 # # create permanent output folder
 parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
-# diroutput <- sprintf("%s/%s-%d_incid_grps-minLoS_%d-max_screen_delay_%d-endpointcost_%s",
-#                      parent_folder, study, length(incidence_grps_screen), min_screen_length_of_stay, MAX_SCREEN_DELAY, ENDPOINT_cost)
 diroutput <- sprintf("%s/%s", parent_folder, global_params_scenarios_ls[global_run])
 dir.create(parent_folder)
 dir.create(diroutput)
@@ -82,10 +82,8 @@ dir.create(diroutput)
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
-# plots_folder_scenario <- sprintf("%s/%s-%d_incid_grps-minLoS_%d-max_screen_delay_%d-endpointcost_%s",
-#                                  plots_folder, study, length(incidence_grps_screen), min_screen_length_of_stay, MAX_SCREEN_DELAY, ENDPOINT_cost)
 plots_folder_scenario <- sprintf("%s/%s", plots_folder, global_params_scenarios_ls[global_run])
 dir.create(plots_folder_scenario)
 
-cluster_output_filename <- sprintf("decisiontree-results-%s.rds", study)
+cluster_output_filename <- sprintf("decisiontree-results_%s.rds", format(Sys.time(), "%Y-%m-%d %I-%p"))
 

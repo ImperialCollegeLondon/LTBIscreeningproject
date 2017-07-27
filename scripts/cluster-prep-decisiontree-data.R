@@ -12,15 +12,16 @@ library(dplyr)
 library(plyr)
 
 
-if (!exists("study")) study <- "oneway" #"twoway" TSPOT"  #"QFT", "HALT"
-
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
                                     package = "LTBIscreeningproject")
 
 osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml",
                                       package = "LTBIscreeningproject")
 
-parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
+# parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
+#                                      package = "LTBIscreeningproject")
+
+parameter_values_file <- system.file("data", "scenario-parameter-values.xlsx",
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
