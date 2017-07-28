@@ -26,7 +26,8 @@ Imports:
     reshape2,
     magrittr,
     purrr,
-    readr
+    readr,
+    logging
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown,

@@ -9,7 +9,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 200
+N.mc <- 2000
 
 cluster <- TRUE
 
@@ -40,7 +40,7 @@ if (exists("global_run")) {
 
 # rather than screen _everyone_ on entry
 # screen at random 0-5 years from entry
-screen_0_to_5_year <- TRUE
+screen_with_delay <- TRUE
 
 MAX_SCREEN_DELAY <- 5
 
@@ -59,7 +59,7 @@ ENDPOINT_cost <- "exit uk" #"death"
 
 # LIFETIME_RISK <- 1
 LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
-# LIFETIME_RISK <- 0.18   #2006 NICE economic appraisal
+# LIFETIME_RISK <- 0.18   #NICE economic appraisal (2006)
 # LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 

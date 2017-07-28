@@ -41,24 +41,29 @@ osNode.health <- costeff.health$osNode
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 
-#2009 cohort
-p.who_year <- c("(0,50]" = 0,
-                "(50,150]" = 0.02505289,
-                "(150,250]" = 0.09000483,
-                "(250,350]" = 0.02046914,
-                "(350,1e+05]" = 0.86447315)
+# 2009 cohort
+##TODO: hardcoded
+p_incid_grp <- c("(0,50]" = 0,
+                 "(50,150]" = 0.02505289,
+                 "(150,250]" = 0.09000483,
+                 "(250,350]" = 0.02046914,
+                 "(350,1e+05]" = 0.86447315)
 
-pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p.who_year),
+# drop incidence group not screened
+p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
+p_incid_grp <- p_incid_grp/sum(p_incid_grp)
+
+pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
                                  LTBI = c(0.001, 0.13, 0.2, 0.3, 0.3))
 
 
 # insert probs in incidence group for given year (2009)
 for (i in seq_along(who_levels)) {
 
-  osNode.cost$Set(p = p.who_year[i],
+  osNode.cost$Set(p = p_incid_grp[i],
                   filterFun = function(x) x$name == who_levels[i])
 
-  osNode.health$Set(p = p.who_year[i],
+  osNode.health$Set(p = p_incid_grp[i],
                     filterFun = function(x) x$name == who_levels[i])
 }
 

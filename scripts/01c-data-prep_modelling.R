@@ -172,7 +172,7 @@ IMPUTED_sample %<>%
                            (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)),
                          1, 0))
 
-if (screen_0_to_5_year) {
+if (screen_with_delay) {
 
   IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                   screen == 1)
