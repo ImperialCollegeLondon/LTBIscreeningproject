@@ -1,9 +1,9 @@
-#
+#****************************************************
 # project: LTBI screening
 # N Green
 # May 2017
 #
-# incorporate the imputated events into analysis
+# incorporate the imputed events into analysis
 
 
 num_all_tb_cost <-

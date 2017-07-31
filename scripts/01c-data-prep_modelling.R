@@ -109,7 +109,7 @@ date_death1_issdt <- date_death1.asnumeric - issdt.asnumeric
 date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
 
 
-# days from uk entry to uk exit
+# days from uk entry to exit uk
 date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - as.Date("1960-01-01")
 date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
 
@@ -225,9 +225,10 @@ IMPUTED_sample_year_cohort <-
 
 
 # discount cost and QALYs in decision tree  ---------------------------------
+## due to delayed start
 
 prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% table %>% prop.table
-screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = 5) %>% c()
+screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
 
 # mdr ---------------------------------------------------------------------

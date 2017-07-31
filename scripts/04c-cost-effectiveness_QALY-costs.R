@@ -41,13 +41,21 @@ E.aTB_QALY.screened <- NA
 
 uk_notif_dates <-
   IMPUTED_sample_year_cohort$rNotificationDate_issdt.years %>%
-  keep(function(x) !is.na(x) & x < Inf)
+  keep(function(x) !is.na(x) & x < Inf) %>%
+  ceiling()
 
-ceiling_notif_dates <- ceiling(uk_notif_dates)
+all_notif_dates <-
+  IMPUTED_sample_year_cohort$all_tb_issdt %>%
+  keep(function(x) !is.na(x) & x < Inf) %>%
+  ceiling()
 
-ydiscounts <- QALY::discount(t_limit = max(ceiling_notif_dates) + 1)
-uk_notif_discounts <- ydiscounts[ceiling_notif_dates]
-secondary_inf_discounts <- ydiscounts[ceiling_notif_dates + 1]
+ydiscounts <- QALY::discount(t_limit = max(all_notif_dates) + 1)
+
+uk_notif_discounts <- ydiscounts[uk_notif_dates]
+all_notif_discounts <- ydiscounts[all_notif_dates]
+
+uk_secondary_inf_discounts <- ydiscounts[uk_notif_dates + 1]
+all_secondary_inf_discounts <- ydiscounts[all_notif_dates + 1]
 
 cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
 
@@ -81,10 +89,13 @@ for (s in seq_len(n.scenarios)) {
       sample_distributions() %>%
       unlist()
 
-    cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * secondary_inf_discounts
-
-    cost_uk_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
+    cost_uk_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * uk_secondary_inf_discounts
+    cost_uk_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_uk_secondary_inf
     cost_uk_notif.screened  <- cost_uk_notif.statusquo
+
+    cost_all_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * all_secondary_inf_discounts
+    cost_all_notif.statusquo <- (all_notif_discounts * unit_cost.aTB_TxDx) + cost_all_secondary_inf
+    cost_all_notif.screened  <- cost_all_notif.statusquo
 
     num_avoided.all_tb <- n.diseasefree.all_tb[[s]][i, 'n']
     num_avoided.uk_tb  <- n.diseasefree.uk_tb[[s]][i, 'n']
@@ -93,12 +104,13 @@ for (s in seq_len(n.scenarios)) {
     tb_fatality <- runif(length(cfr)) < cfr
 
     who_uk_tb_avoided  <- sample(x = seq_along(cost_uk_notif.screened),
-                                      size = unlist(num_avoided.uk_tb))
+                                      size = unlist(num_avoided.uk_tb), replace = FALSE)
 
     who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
-                                 size = unlist(num_avoided.all_tb))
+                                 size = unlist(num_avoided.all_tb), replace = FALSE)
 
     cost_uk_notif.screened[who_uk_tb_avoided] <- 0
+    cost_all_notif.screened[who_all_tb_avoided] <- 0
 
     # substitute in QALYs for active TB death
     QALY_all_tb_statusquo <- QALY_all_tb$cured
@@ -110,8 +122,13 @@ for (s in seq_len(n.scenarios)) {
     aTB_QALY.statusquo[[s]][i] <- sum(QALY_all_tb_statusquo)
     aTB_QALY.screened[[s]][i]  <- sum(QALY_all_tb_screened)
 
-    aTB_cost.statusquo[[s]][i] <- sum(cost_uk_notif.statusquo)
-    aTB_cost.screened[[s]][i]  <- sum(cost_uk_notif.screened)
+    if (ENDPOINT_cost == "exit uk") {
+      aTB_cost.statusquo[[s]][i] <- sum(cost_uk_notif.statusquo)
+      aTB_cost.screened[[s]][i]  <- sum(cost_uk_notif.screened)
+    }else{
+      aTB_cost.statusquo[[s]][i] <- sum(cost_all_notif.statusquo)
+      aTB_cost.screened[[s]][i]  <- sum(cost_all_notif.screened)
+    }
   }
 
 

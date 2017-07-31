@@ -9,7 +9,7 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 20
+N.mc <- 2
 
 cluster <- TRUE
 
