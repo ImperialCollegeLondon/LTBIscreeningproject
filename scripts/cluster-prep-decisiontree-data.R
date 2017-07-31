@@ -54,10 +54,11 @@ p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
 p_incid_grp <- p_incid_grp/sum(p_incid_grp)
 
 pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
-                                 LTBI = c(0.001, 0.13, 0.2, 0.3, 0.3))
+                                 LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
 
 
-# insert probs in incidence group for given year (2009)
+# insert probs in incidence group for given year (2009) -----------------
+
 for (i in seq_along(who_levels)) {
 
   osNode.cost$Set(p = p_incid_grp[i],
@@ -70,7 +71,9 @@ for (i in seq_along(who_levels)) {
 
 pastef <- purrr::partial(...f = paste, sep = "/")
 
-# insert LTBI probs
+
+# insert LTBI probs -----------------------------------------------------
+
 for (i in who_levels) {
 
   pLTBI <- subset(pLatentTB.who_year,

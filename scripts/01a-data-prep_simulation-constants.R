@@ -1,4 +1,4 @@
-#
+#**************************************************************************
 # project: LTBI screening
 # N Green
 # Oct 2016
@@ -9,18 +9,19 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2000
+N.mc <- 20
 
 cluster <- TRUE
 
 
-# global variables --------------------------------------------------------
+# global sensitivity parameters -------------------------------------------
 
 # or read in scenarios environments
 if (exists("global_run")) {
 
   incidence_grps_screen <- get("incidence_grps_screen", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
   min_screen_length_of_stay <- get("min_screen_length_of_stay", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
+  ENDPOINT_cost <- get("ENDPOINT_cost", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
 
 }else{
 
@@ -33,10 +34,17 @@ if (exists("global_run")) {
   # incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
 
   min_screen_length_of_stay <- 0 #years #5
+
+  # include costs for individuals once they've left (i.e. to death)?
+  ENDPOINT_cost <- "exit uk" #"death"
 }
 
 
 # global constants --------------------------------------------------------
+
+force_everyone_stays <- FALSE
+
+ENDPOINT_QALY <- "death" #"exit uk"
 
 # rather than screen _everyone_ on entry
 # screen at random 0-5 years from entry
@@ -52,10 +60,6 @@ screen_age_range <- 18:45
 
 # year_cohort <- '2012' #most recent complete year
 year_cohort <- '2009' #largest cohort
-
-# include QALYs and costs for individuals once they've left (i.e. to death)?
-ENDPOINT_QALY <- "death" #"exit uk"
-ENDPOINT_cost <- "exit uk" #"death"
 
 # LIFETIME_RISK <- 1
 LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years

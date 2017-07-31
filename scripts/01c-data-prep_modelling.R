@@ -32,6 +32,15 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_entry %in% screen_age_range)
 
 
+
+# assume that no-one leaves EWNI ------------------------------------------
+## exit date after latest death
+
+if (force_everyone_stays) {
+  IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
+}
+
+
 # create LTBI probs by WHO active TB group ---------------------------------
 
 # match active TB prevalence groups in dataset to Pareek (2011)
@@ -181,7 +190,7 @@ if (screen_with_delay) {
 rm(rNotificationDate_issdt.years)
 
 
-# remove individuals from low incidence countries
+# remove individuals from 'low' incidence countries
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 who_prev_cat_Pareek2011 %in% incidence_grps_screen)
 
