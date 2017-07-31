@@ -160,17 +160,6 @@ IMPUTED_sample <-
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 
-# total sample size
-n.pop <- nrow(IMPUTED_sample)
-
-# total sample sizes for each yearly cohort
-n.popyear <-
-  aggregate(x = rep(1, n.pop),
-            by = list(IMPUTED_sample$issdt_year),
-            sum) %>%
-  set_names(c("year", "pop"))
-
-
 # coverage: keep only if indiv screened  ------------------------------------
 
 IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
