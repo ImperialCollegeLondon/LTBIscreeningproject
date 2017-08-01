@@ -15,8 +15,10 @@ if (cluster) {
       purrr::map(dectree_res, 3) %>%
       purrr::transpose() #previously calc'd scenario-wise
 
-    n.tb_screen.all_tb <- n.tb_screen[[1]]
-    n.tb_screen.uk_tb  <- n.tb_screen[[2]]
+    n.tb_screen.all_tb <- n.tb_screen[["n.tb_screen.all_tb"]]
+    n.tb_screen.uk_tb  <- n.tb_screen[["n.tb_screen.uk_tb"]]
+
+    p_complete_Tx <-  purrr::map(dectree_res, c("p_complete_Tx", "(350,1e+05]")) %>% unlist()
 
     n.scenarios <- length(n.tb_screen.all_tb)
     N.mc <- dectree_res[[1]][["mc_cost"]] %>% length()
@@ -30,12 +32,10 @@ aTB_cost.screened <- aTB_QALY.screened <- list()
 aTB_cost_incur <- aTB_cost_incur_person <- list()
 aTB_QALYgain <- aTB_QALYgain_person <- list()
 aTB_ICER <- aTB_INMB <- list()
-aTB_p.costEffective <- list()
 aTB_QALY.statusquo  <- aTB_cost.statusquo <- list()
 
-E.aTB_cost.screened <- NA
-E.aTB_QALY.screened <- NA
-
+E_cost_notif.screened <- NA
+E_cost_incur <- E_cost_incur_person <- NA
 
 # discounts for costs
 
@@ -60,6 +60,15 @@ all_secondary_inf_discounts <- ydiscounts[all_notif_dates + 1]
 cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
 
 
+# average statistics for reproducability and comparison
+
+mean_cost.aTB_TxDx <- means_distributions(unit_cost$aTB_TxDx) %>% sum()
+mean_num_sec_inf <- means_distributions(NUM_SECONDARY_INF) %>% unlist()
+
+E_cost_secondary_inf <- mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts
+E_cost_notif.statusquo <- (all_notif_discounts * mean_cost.aTB_TxDx) + cost_secondary_inf
+
+
 for (s in seq_len(n.scenarios)) {
 
   print(sprintf("[ population model ] scenario: %d", s))
@@ -68,7 +77,6 @@ for (s in seq_len(n.scenarios)) {
   aTB_cost_incur[[s]] <- aTB_cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
   aTB_QALYgain[[s]]  <- aTB_QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
   aTB_ICER[[s]] <- aTB_INMB[[s]] <- NA
-  aTB_p.costEffective[[s]] <- NA
   aTB_QALY.statusquo[[s]]  <- aTB_cost.statusquo[[s]] <- NA
 
 
@@ -130,6 +138,8 @@ for (s in seq_len(n.scenarios)) {
 
     aTB_QALY.statusquo[[s]][i] <- sum(QALY_all_tb_statusquo)
     aTB_QALY.screened[[s]][i]  <- sum(QALY_all_tb_screened)
+
+    E_cost_notif.screened[s] <- (1 - p_complete_Tx[s]) * sum(E_cost_notif.statusquo)
   }
 
 
@@ -150,8 +160,8 @@ for (s in seq_len(n.scenarios)) {
   aTB_cost_incur[[s]] <- aTB_cost.screened[[s]] - aTB_cost.statusquo[[s]]
   aTB_cost_incur_person[[s]] <- aTB_cost_incur[[s]]/pop_year
 
-  # proportion CE at wtp_threshold/QALY
-  aTB_p.costEffective[[s]] <- prop.table(table(aTB_INMB[[s]] > 0, useNA = "no"))
+  E_cost_incur[s] <- E_cost_notif.screened[s] - sum(E_cost_notif.statusquo)
+  E_cost_incur_person[s] <- E_cost_incur[s]/pop_year
 }
 
 
@@ -165,7 +175,8 @@ aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      aTB_QALYgain = aTB_QALYgain,
                      aTB_cost_incur_person = aTB_cost_incur_person,
                      aTB_QALYgain_person = aTB_QALYgain_person,
-                     aTB_p.costEffective = aTB_p.costEffective)
+                     E_cost_incur = E_cost_incur,
+                     E_cost_incur_person = E_cost_incur_person)
 
 save(aTB_CE_stats,
      file = pastef(diroutput, "aTB_CE_stats.RData"))
