@@ -1,3 +1,9 @@
+#************************************************
+# LTBI screening
+# N Green
+#
+# plot QALY loss over time
+#
 
 
 sapply(QALY_diseasefree,
