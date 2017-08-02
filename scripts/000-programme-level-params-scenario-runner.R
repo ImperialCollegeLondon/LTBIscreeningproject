@@ -9,6 +9,8 @@
 
 devtools::load_all(".")
 
+home_dir <- find.package("LTBIscreeningproject")
+
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")
 
@@ -18,7 +20,11 @@ for (global_run in 1:length(global_params_scenarios_ls)) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))
 
-  try_error <- try(source("scripts/00-main.R"))
+  try_out <- try(source("scripts/00-main.R"))
 
-  sources_correctly <- c(try_error, !inherits(sources_correctly, "try-error"))
+  if (inherits(try_out, "try-error")) {
+    setwd(home_dir)
+  }
+
+  sources_correctly <- c(sources_correctly, !inherits(try_out, "try-error"))
 }
