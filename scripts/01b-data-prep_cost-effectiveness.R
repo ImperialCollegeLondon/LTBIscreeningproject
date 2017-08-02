@@ -18,8 +18,7 @@
 
 
 # willingness to pay (£)
-wtp_threshold <- 20000
-
+wtp_threshold <- 2e+04
 
 NUM_SECONDARY_INF <- list(distn = "pert",
                           params = c(mode = 0.2,

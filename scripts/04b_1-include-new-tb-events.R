@@ -19,7 +19,7 @@ num_all_tb_QALY <-
     n.uk_tb + n.exit_tb}
 
 
-# combine exit uk and uk tb data ------------------------------------------
+# combine exit_uk tb and uk tb data ------------------------------------------
 
 IMPUTED_sample_year_cohort <-
   IMPUTED_sample_year_cohort %>%
@@ -30,13 +30,14 @@ IMPUTED_sample_year_cohort <-
          # progression to death days
          uk_death_rNotificationDate = (date_death1_issdt.years - rNotificationDate_issdt.years),
          all_death_rNotificationDate = (date_death1_issdt.years - all_tb_issdt),
+
          # progression ages
          age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
          age_exituk_notification = age_at_entry + exituk_tb.years,
          age_all_notification = ifelse(uk_tb,
                                        age_uk_notification,
                                        age_exituk_notification),
-         #progression age groups
+         # progression age groups
          agegroup_uk_notification = cut(age_uk_notification,
                                         breaks = cfr_age_breaks,
                                         right = FALSE),
@@ -54,6 +55,8 @@ IMPUTED_sample_year_cohort <-
   dplyr::select(-distn, -a, -b)
 
 
+# calculate QALYs for all tb cases for all situations
+# so can sample later
 QALY_all_tb <-
   IMPUTED_sample_year_cohort %>%
   subset(all_tb == TRUE) %$%

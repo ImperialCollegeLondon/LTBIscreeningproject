@@ -6,6 +6,7 @@
 # pre-process imputed dataset, from Aldridge (2016) Lancet
 
 
+set.seed(23456)
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
@@ -243,14 +244,14 @@ n.popyear_screen <-
             sum) %>%
   set_names(c("year", "pop"))
 
-# cohort size at arrival to uk
+# year cohort size
 pop_year <-
   n.popyear_screen %>%
   dplyr::filter(year == year_cohort) %>%
   dplyr::select(pop) %>%
   as.integer()
 
-# number of active TB cases _before_ screening i.e. status-quo
+# number of active TB cases _without_ screening i.e. status-quo
 # n.tb_total <- sum(IMPUTED_sample$uk_tb)
 n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
