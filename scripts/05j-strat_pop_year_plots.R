@@ -1,14 +1,15 @@
-
+#*************************************************************
+#
 # gridded plots of the subpopulation sizes over time
 # can do this on the raw, fitted, extrapolated, subsample data
 
-par(mfrow=c(2,2))
+par(mfrow = c(2,2))
 
 strat_plot <- pryr::partial(plot,
-                            type = "s", xlim=c(0,20), xlab = "Year")
+                            type = "s", xlim = c(0,20), xlab = "Year")
 
 strat_plot(unlist(strat_pop_year["tb", ]),
-     ylim = c(0,500), ylab="active TB")
+     ylim = c(0,500), ylab = "active TB")
 
 strat_plot(unlist(strat_pop_year["death", ]),
      ylab = "all-cause death")

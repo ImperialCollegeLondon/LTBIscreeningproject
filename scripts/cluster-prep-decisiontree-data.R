@@ -1,4 +1,4 @@
-
+#*******************************************************************
 # LTBI screening model
 # N Green
 # May 2017
@@ -83,12 +83,12 @@ for (i in who_levels) {
   osNode.cost$Set(p = pLTBI,
                   filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
   osNode.health$Set(p = pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
+                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
 
   osNode.cost$Set(p = 1 - pLTBI,
                   filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
   osNode.health$Set(p = 1 - pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
+                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "non-LTBI"))
 }
 
 
