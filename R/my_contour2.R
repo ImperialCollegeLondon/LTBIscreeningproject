@@ -6,14 +6,20 @@
 #' @param ylim
 #' @param comparison
 #' @param graph
+#' @param CONTOUR_PC
 #' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
-my_contour2 <- function(he, wtp = 25000, xlim = NULL, ylim = NULL, comparison = NULL, withpoints = FALSE,
-                        graph = c("base", "ggplot2"), ...) {
+my_contour2 <- function(he,
+                        wtp = 20000,
+                        xlim = NULL, ylim = NULL,
+                        comparison = NULL,
+                        withpoints = FALSE,
+                        graph = c("base", "ggplot2"),
+                        CONTOUR_PC = "5%", ...) {
   options(scipen = 10)
   exArgs <- list(...)
   if (!exists("xlab", where = exArgs)) {
@@ -83,6 +89,7 @@ my_contour2 <- function(he, wtp = 25000, xlim = NULL, ylim = NULL, comparison = 
     }
     plot(xx, yy, col = "white", xlim = c(m.e, M.e), ylim = c(m.c, M.c),
          xlab = xlab, ylab = ylab, main = title, axes = F)
+
     polygon(c(min(xx), seq(min(xx), max(xx), step), max(xx)),
             c(min(yy), wtp * seq(min(xx), max(xx), step), min(yy)),
             col = "grey95", border = "black")
@@ -152,7 +159,7 @@ my_contour2 <- function(he, wtp = 25000, xlim = NULL, ylim = NULL, comparison = 
 
         contour_s <-
           with(kd, contourLines(x = eval.points[[1]], y = eval.points[[2]],
-                                z = estimate, levels = cont["5%"])[[1]]) %>%
+                                z = estimate, levels = cont[CONTOUR_PC])[[1]]) %>%
           data.frame(s = as.character(i))
 
         contour_df <- rbind(contour_df, contour_s)
