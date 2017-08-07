@@ -3,35 +3,22 @@
 # N Green
 # Oct 2016
 #
-# Main top-level script
+# high-level script
 
 
-# devtools::load_all(".")
+# model run set-up --------------------------------------------------------
 
-
-data("051206 - IMPUTED_sample")
-
-
-# 1) define and clean data ------------------------------------------------
-
-source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
-source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
-source("scripts/01c-data-prep_modelling.R", echo = TRUE)
-source("scripts/01d-data-prep_competing-risks.R")
-
-
-# 4ab) event times estimation ---------------------------------------------------
-
-source("scripts/04a_1-active-TB-extrapolation.R")
-source("scripts/04a_2-active-TB-imputation.R")
+source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
+source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
 source("scripts/04b_1-include-new-tb-events.R")
 
 
 # 2) decision tree --------------------------------------------------------
+
 if (!cluster) source("scripts/02-decision-tree-model.R")
 if (!cluster) source("scripts/04b_2-activeTB-postscreen-samples.R")
 
-if (cluster) source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
+if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
 source("scripts/04c-cost-effectiveness_QALY-costs.R")
 

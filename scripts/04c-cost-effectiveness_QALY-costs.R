@@ -6,6 +6,8 @@
 # QALY gain and cost incurred due to active TB
 # random sampling
 
+# cluster_output_filename <- "decisiontree-results_programme_level_scenario_002_2017-08-03 03-PM.rds"
+cluster_output_filename <- "decisiontree-results_programme_level_scenario_006_2017-08-03 11-AM.rds"
 
 if (cluster) {
 
@@ -34,6 +36,7 @@ aTB_QALYgain <- aTB_QALYgain_person <- list()
 aTB_QALY.statusquo  <- aTB_cost.statusquo <- list()
 
 E_cost_notif.screened <- NA
+E_QALY_notif.screened <- NA
 E_cost_incur <- E_cost_incur_person <- NA
 E_QALYgain <- E_QALYgain_person <- NA
 
@@ -61,16 +64,16 @@ all_secondary_inf_discounts <- ydiscounts[all_notif_dates + 1]
 cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
 
 
-# average statistics ------------------------------------------------------
+# expected statistics ------------------------------------------------------
 # for reproducability and comparison
 
 mean_cost.aTB_TxDx <- means_distributions(unit_cost$aTB_TxDx) %>% sum()
 mean_num_sec_inf <- means_distributions(NUM_SECONDARY_INF) %>% unlist()
 
 E_cost_secondary_inf <- mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts
-E_cost_notif.statusquo <- (all_notif_discounts * mean_cost.aTB_TxDx) + cost_secondary_inf
+E_cost_notif.statusquo <- (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_secondary_inf
 
-E_QALY_notif.statusquo <- cfr * QALY_all_tb$fatality + (1 - cfr) * QALY_all_tb$cured
+E_QALY_notif.statusquo <- (cfr * QALY_all_tb$fatality) + ((1 - cfr) * QALY_all_tb$cured)
 
 
 for (s in seq_len(n.scenarios)) {
@@ -155,7 +158,6 @@ for (s in seq_len(n.scenarios)) {
   # C1 - C0: +ve bad
 
   aTB_QALYgain[[s]] <- aTB_QALY.screened[[s]] - aTB_QALY.statusquo[[s]]
-  aTB_QALYgain[[s]] <- rm_na(aTB_QALYgain[[s]])
 
   # per person
   aTB_QALYgain_person[[s]] <- aTB_QALYgain[[s]]/pop_year

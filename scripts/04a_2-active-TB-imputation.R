@@ -9,19 +9,35 @@
 
 # individually SIMULATE active TB progression times after exit uk ----------------
 
-IMPUTED_sample_year_cohort <-
-  IMPUTED_sample_year_cohort %>%
+IMPUTED_sample <-
+  IMPUTED_sample %>%
   mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
                                                prob = year_prob.activetb_cens_exituk),
          exituk_tb = !is.na(exituk_tb.years) &
            !is.infinite(exituk_tb.years))
 
-table(IMPUTED_sample_year_cohort$exituk_tb.years, useNA = "always")
 
-n.exit_tb <-
-  IMPUTED_sample_year_cohort %>%
-  dplyr::filter(exituk_tb) %>%
-  dplyr::count()
+# individually SIMULATE active TB progression times uk tb after followup ----------------------
+
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
+                                                        prob = year_prob.activetb_cmprsk_exituk),
+         uk_tb = !is.na(rNotificationDate_issdt.years) &
+           !is.infinite(rNotificationDate_issdt.years))
+
+
+
+x <- sim_uktb_times(data = IMPUTED_sample,
+                    prob = year_prob.activetb_cmprsk_exituk)
+
+# table(IMPUTED_sample$exituk_tb.years, useNA = "always")
+# table(round(IMPUTED_sample$rNotificationDate_issdt.years), useNA = "always")
+
+
+# include a year 0 baseline
+strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
+                        strat_pop_year)
 
 
 # # _proportion_ calc for exit_uk tb ------------------------------------------
@@ -49,25 +65,6 @@ n.exit_tb <-
 # n.exit_tb <- sum(num_exituk_tb_year)
 
 
-
-# individually SIMULATE active TB progression times uk tb after followup ----------------------
-
-IMPUTED_sample_year_cohort <-
-  IMPUTED_sample_year_cohort %>%
-  mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
-                                                        prob = year_prob.activetb_cmprsk_exituk),
-         uk_tb = !is.na(rNotificationDate_issdt.years) &
-           !is.infinite(rNotificationDate_issdt.years))
-
-table(
-  round(IMPUTED_sample_year_cohort$rNotificationDate_issdt.years), useNA = "always")
-
-n.uk_tb <-
-  IMPUTED_sample_year_cohort %>%
-  dplyr::filter(uk_tb) %>%
-  dplyr::count()
-
-
 # calc number tb_uk (extrapolated) using _proportions_ -----------------------------
 # straight forward, direct method
 #
@@ -77,7 +74,4 @@ n.uk_tb <-
 # num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
 
 
-# include a year 0 baseline
-strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
-                        strat_pop_year)
 

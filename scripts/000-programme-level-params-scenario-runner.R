@@ -9,14 +9,35 @@
 
 devtools::load_all(".")
 
-home_dir <- find.package("LTBIscreeningproject")
+data("051206 - IMPUTED_sample")
+
+
+# 1) define and clean data ------------------------------------------------
+
+source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
+source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
+source("scripts/01c-data-prep_modelling.R", echo = TRUE)
+
+
+# 4) event times estimation -----------------------------------------------
+
+source("scripts/04a_1-active-TB-extrapolation.R")
+source("scripts/04a_2-active-TB-imputation.R")
+source("scripts/04bb-include-new-tb-events.R")
+
+save.image(file = "data-ext/LTBI_input_workspace.RData")
+
+
+#  ------------------------------------------------------------------------
 
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")
 
+home_dir <- find.package("LTBIscreeningproject")
+
 sources_correctly <- NULL
 
-for (global_run in 1:length(global_params_scenarios_ls)) {
+for (global_run in 2) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))
 
@@ -28,3 +49,4 @@ for (global_run in 1:length(global_params_scenarios_ls)) {
 
   sources_correctly <- c(sources_correctly, !inherits(try_out, "try-error"))
 }
+

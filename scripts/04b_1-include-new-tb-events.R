@@ -3,7 +3,17 @@
 # N Green
 # May 2017
 #
-# incorporate the imputed events into analysis
+
+
+n.exit_tb <-
+  IMPUTED_sample_year_cohort %>%
+  dplyr::filter(exituk_tb) %>%
+  dplyr::count()
+
+n.uk_tb <-
+  IMPUTED_sample_year_cohort %>%
+  dplyr::filter(uk_tb) %>%
+  dplyr::count()
 
 
 num_all_tb_cost <-
@@ -17,42 +27,6 @@ num_all_tb_QALY <-
     n.uk_tb
   } else if (ENDPOINT_QALY == "death") {
     n.uk_tb + n.exit_tb}
-
-
-# combine exit_uk tb and uk tb data ------------------------------------------
-
-IMPUTED_sample_year_cohort <-
-  IMPUTED_sample_year_cohort %>%
-  mutate(all_tb = uk_tb | exituk_tb,
-         all_tb_issdt = ifelse(uk_tb,
-                               rNotificationDate_issdt.years,
-                               exituk_tb.years),
-         # progression to death days
-         uk_death_rNotificationDate = (date_death1_issdt.years - rNotificationDate_issdt.years),
-         all_death_rNotificationDate = (date_death1_issdt.years - all_tb_issdt),
-
-         # progression ages
-         age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
-         age_exituk_notification = age_at_entry + exituk_tb.years,
-         age_all_notification = ifelse(uk_tb,
-                                       age_uk_notification,
-                                       age_exituk_notification),
-         # progression age groups
-         agegroup_uk_notification = cut(age_uk_notification,
-                                        breaks = cfr_age_breaks,
-                                        right = FALSE),
-         agegroup_all_notification = cut(age_all_notification,
-                                         breaks = cfr_age_breaks,
-                                         right = FALSE))
-
-
-# case fatality rate for each active TB case
-
-IMPUTED_sample_year_cohort <-
-  IMPUTED_sample_year_cohort %>%
-  left_join(cfr_age_lookup,
-            by = c("agegroup_all_notification" = "age")) %>%
-  dplyr::select(-distn, -a, -b)
 
 
 # calculate QALYs for all tb cases for all situations
@@ -91,9 +65,4 @@ QALY_diseasefree <-
             utility = utility$disease_free,
             discount_rate = 0.035) %>%
   map(QALY::total_QALYs)
-
-# QALYloss_diseasefree <- map_dbl(QALY_diseasefree, 1)
-# QALY_all_tb$diseasefree
-
-mean_QALYloss_fatality <- mean(QALY_all_tb$diseasefree - QALY_all_tb$fatality)
 
