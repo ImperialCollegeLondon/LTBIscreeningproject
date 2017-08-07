@@ -40,3 +40,9 @@ legend('topleft',
 abline(v = 20000, col = "grey")
 
 
+
+# multiple comparisons/ranking --------------------------------------------
+
+sim.table(bcea_obj, wtp = 25000)
+mce.plot(multice)
+multice <- multi.ce(bcea_obj)

@@ -91,7 +91,6 @@ LTBI_cost.df <- LTBI_cost.df * screen_discount
 LTBI_QALYgain.df <- LTBI_QALYgain.df * screen_discount
 
 
-
 ############
 ## totals ##
 ############
@@ -151,7 +150,7 @@ gg + scale_colour_manual(values = cbPalette)
 
 png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
 
-print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000) + scale_colour_manual(values = cbPalette))
+print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") + scale_colour_manual(values = cbPalette))
 
 dev.off()
 

@@ -12,6 +12,9 @@ library(dplyr)
 library(plyr)
 
 
+pastef <- purrr::partial(...f = paste, sep = "/")
+
+
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
                                     package = "LTBIscreeningproject")
 
@@ -67,9 +70,6 @@ for (i in seq_along(who_levels)) {
   osNode.health$Set(p = p_incid_grp[i],
                     filterFun = function(x) x$name == who_levels[i])
 }
-
-
-pastef <- purrr::partial(...f = paste, sep = "/")
 
 
 # insert LTBI probs -----------------------------------------------------
