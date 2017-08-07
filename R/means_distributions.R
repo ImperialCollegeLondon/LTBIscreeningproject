@@ -1,6 +1,14 @@
 
-# means_distributions(unit_cost$aTB_TxDx)
-#
+#' means_distributions
+#'
+#' @param param.distns
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' means_distributions(unit_cost$aTB_TxDx)
+#'
 means_distributions <- function(param.distns){
 
   if (plotrix::listDepth(param.distns) == 1) {param.distns <- list(param.distns)}
