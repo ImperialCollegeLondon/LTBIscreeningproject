@@ -53,11 +53,12 @@ p_incid_grp <- c("(0,50]" = 0,
                  "(350,1e+05]" = 0.86447315)
 
 # drop incidence group not screened
+# and rescale to 1
 p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
 p_incid_grp <- p_incid_grp/sum(p_incid_grp)
 
-pLatentTB.who_year <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
-                                 LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
+pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
+                            LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
 
 
 # insert probs in incidence group for given year (2009) -----------------
@@ -76,7 +77,7 @@ for (i in seq_along(who_levels)) {
 
 for (i in who_levels) {
 
-  pLTBI <- subset(pLatentTB.who_year,
+  pLTBI <- subset(pLatentTB.who,
                   who_prev_cat_Pareek2011 == i,
                   select = LTBI)
 

@@ -1,9 +1,9 @@
-#
+#******************************************
 # project: LTBI screening
 # N Green
 # April 2017
 #
-# impute missing/unobserved values
+# impute missing/unobserved time to active tb
 
 
 
@@ -27,17 +27,9 @@ IMPUTED_sample <-
            !is.infinite(rNotificationDate_issdt.years))
 
 
-
-x <- sim_uktb_times(data = IMPUTED_sample,
-                    prob = year_prob.activetb_cmprsk_exituk)
-
 # table(IMPUTED_sample$exituk_tb.years, useNA = "always")
 # table(round(IMPUTED_sample$rNotificationDate_issdt.years), useNA = "always")
 
-
-# include a year 0 baseline
-strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
-                        strat_pop_year)
 
 
 # # _proportion_ calc for exit_uk tb ------------------------------------------
@@ -72,6 +64,3 @@ strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
 #
 # n.uk_tb <- sum(num_uk_tb_year)
 # num_all_tb_year <- num_exituk_tb_year + num_uk_tb_year
-
-
-

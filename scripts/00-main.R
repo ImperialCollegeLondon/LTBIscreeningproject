@@ -10,7 +10,7 @@
 
 source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
 source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
-source("scripts/04b_1-include-new-tb-events.R")
+source("scripts/04bb-calc_outcomes-GLOBAL.R", echo = TRUE)
 
 
 # 2) decision tree --------------------------------------------------------

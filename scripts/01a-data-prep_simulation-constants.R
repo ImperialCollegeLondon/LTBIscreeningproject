@@ -9,12 +9,12 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 200
+N.mc <- 20
 
 cluster <- TRUE
 
 
-# global constants --------------------------------------------------------
+# global fixed constants --------------------------------------------------
 
 force_everyone_stays <- FALSE
 

@@ -43,8 +43,8 @@ parameter_values_file <- system.file("data", "scenario-parameter-values.xlsx",
 # # create permanent output folder
 parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
 diroutput <- sprintf("%s/%s", parent_folder, global_params_scenarios_ls[global_run])
-dir.create(parent_folder)
-dir.create(diroutput)
+dir.create(parent_folder, showWarnings = FALSE)
+dir.create(diroutput, showWarnings = FALSE)
 
 # create temporary output folder
 # diroutput <- tempdir()
@@ -52,7 +52,8 @@ dir.create(diroutput)
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
 plots_folder_scenario <- sprintf("%s/%s", plots_folder, global_params_scenarios_ls[global_run])
-dir.create(plots_folder_scenario)
+dir.create(plots_folder_scenario, showWarnings = FALSE)
 
-cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", global_params_scenarios_ls[global_run], format(Sys.time(), "%Y-%m-%d %I-%p"))
+cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", global_params_scenarios_ls[global_run],
+                                   format(Sys.time(), "%Y-%m-%d %I-%p"))
 

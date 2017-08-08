@@ -11,27 +11,6 @@
 ##TODO: could use imputed exit uk and death times instead of followup censoring?
 
 
-# entry to follow-up days -------------------------------------------------
-
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  mutate(issdt.asnumeric = issdt - date_origin,
-         fup_issdt_days = fup1 - issdt.asnumeric,
-         fup_issdt = days_to_years(fup_issdt_days),
-         LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1)
-
-# days to arrival in uk from time origin
-issdt.asnumeric <- IMPUTED_sample$issdt - as.Date("1960-01-01")
-
-fup_limit <- 19723  #days from 1960-01-01 to 2013-12-31
-
-IMPUTED_sample$fup_limit_issdt <- fup_limit - issdt.asnumeric
-
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  mutate(cens1  = fup1 == fup_limit,
-         death1  = date_death1_issdt == fup_issdt_days,
-         exit_uk1  = date_exit_uk1_issdt == fup_issdt_days)
 
 
 ## orginally determine for all 10 imputation samples

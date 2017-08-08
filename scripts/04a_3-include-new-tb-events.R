@@ -1,5 +1,5 @@
 
-# combine exit_uk tb and uk tb data ------------------------------------------
+# combine (imputed) exit_uk tb and uk tb data ------------------------------------------
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
@@ -7,7 +7,8 @@ IMPUTED_sample <-
          all_tb_issdt = ifelse(uk_tb,
                                rNotificationDate_issdt.years,
                                exituk_tb.years),
-         # progression to death days
+
+         # progression to death times
          uk_death_rNotificationDate = (date_death1_issdt.years - rNotificationDate_issdt.years),
          all_death_rNotificationDate = (date_death1_issdt.years - all_tb_issdt),
 

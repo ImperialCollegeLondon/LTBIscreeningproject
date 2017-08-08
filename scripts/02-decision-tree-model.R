@@ -81,7 +81,7 @@ for (i in seq_along(who_levels)) {
 
 for (i in who_levels) {
 
-  pLTBI <- subset(pLatentTB.who_year,
+  pLTBI <- subset(pLatentTB.who,
                   who_prev_cat_Pareek2011 == i,
                   select = LTBI)
 

@@ -28,6 +28,11 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 !is.na(issdt))
 
+# remove death before entry to UK
+##TODO: are deaths before entry the same for all imputation samples?
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                date_death1 >= issdt)
+
 # eligible screening age range only
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_entry %in% screen_age_range)
@@ -44,6 +49,8 @@ if (force_everyone_stays) {
 
 # create LTBI probs by WHO active TB group ---------------------------------
 
+who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
+
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
@@ -51,7 +58,7 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 
 # ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
-pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3)
+pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3) %>% setNames(who_levels)
 
 
 ### assume >35 == 35 year olds ###
@@ -142,11 +149,6 @@ rm(issdt.asnumeric,
 
 # create misc variables ---------------------------------------------------
 
-# remove death before entry to UK
-##TODO: are deaths before entry the same for all imputation samples?
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                date_death1_issdt >= 0)
-
 # keep original TB status
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
@@ -178,5 +180,25 @@ IMPUTED_sample <-
          death1 = date_death1_issdt == fup_issdt_days,
          exit_uk1 = date_exit_uk1_issdt == fup_issdt_days)
 
+
+# mdr ---------------------------------------------------------------------
+
+# MDR_burden <- readr::read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/WHO/MDR_RR_TB_burden_estimates_2017-05-30.csv")
+#
+# sample_mdr <- left_join(IMPUTED_sample_year_cohort[,c("iso_a3_nat","iso_a3_country")],
+#                 MDR_burden[,c("iso3","e_rr_pct_new")],
+#                 by = c("iso_a3_country" = "iso3"))
+#
+# mdr_pct <- mean(sample_mdr$e_rr_pct_new)
+
+# total sample size
+n.pop_screen <- nrow(IMPUTED_sample)
+
+# total sample sizes for each yearly cohort
+n.popyear_screen <-
+  aggregate(x = rep(1, n.pop_screen),
+            by = list(IMPUTED_sample$issdt_year),
+            sum) %>%
+  set_names(c("year", "pop"))
 
 

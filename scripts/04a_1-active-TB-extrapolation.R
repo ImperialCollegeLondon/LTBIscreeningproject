@@ -7,6 +7,11 @@
 # numbers of LTBI to active TB progression for
 #   - individuals who leave the UK
 #   - remain in EWNI after followup date
+#
+# commented-out different ways to produce curves
+#   - Sutherland
+#   - etm estimated
+#   - Aldridge Lancet
 
 
 ##TODO: add error to survival estimates
@@ -39,6 +44,31 @@ trans_mat_cens_exituk <-
 activetb_year_pmf_sutherland <-
   activetb_year_pmf_sutherland/sum(activetb_year_pmf_sutherland)*LIFETIME_RISK
 
+# create final state vectors full sample
+event <- rep(0, nrow(IMPUTED_sample))                          #event-free i.e. censored at followup
+event[IMPUTED_sample$death1] <- 3
+event[IMPUTED_sample$exit_uk1] <- 2
+event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
+
+# etm:: format
+# id from to time_days time
+# 4   9   2  1436.080    4
+# 14  9   0  1961.000    6
+
+data_etm <-
+  data.frame(id = seq_len(nrow(IMPUTED_sample)),
+             from = 9,
+             to = event,
+             time_days = IMPUTED_sample$fup_issdt_days,
+             time = as.numeric(IMPUTED_sample$fup_issdt),
+             LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
+  dplyr::filter(LTBI_or_activeTB == TRUE,
+                time > 0) %>%
+  dplyr::select(-LTBI_or_activeTB)
+
+data_etm_cens_exituk <-
+  data_etm %>%
+  mutate(to = ifelse(to == 2, 0, to))
 
 # empirical transition probabilities --------------------------------------
 

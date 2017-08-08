@@ -1,8 +1,11 @@
-#****************************************************
+#***************************************************************
 # project: LTBI screening
 # N Green
 # May 2017
 #
+# calculate outcomes
+#   - numbers of active TB cases
+#   - QALYs per person for each outcome (death, avoided, cured)
 
 
 n.exit_tb <-
