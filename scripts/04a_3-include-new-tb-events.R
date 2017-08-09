@@ -34,3 +34,7 @@ IMPUTED_sample <-
   left_join(cfr_age_lookup,
             by = c("agegroup_all_notification" = "age")) %>%
   dplyr::select(-distn, -a, -b)
+
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  dplyr::mutate(tb_fatality = ifelse(is.na(cfr), NA, runif(n = n())))

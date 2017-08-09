@@ -6,29 +6,29 @@
 # QALY gain and cost incurred due to active TB
 # random sampling
 
-# cluster_output_filename <- "decisiontree-results_programme_level_scenario_002_2017-08-03 03-PM.rds"
-# cluster_output_filename <- "decisiontree-results_programme_level_scenario_002_2017-08-03 03-PM.rds"
 
-if (cluster) {
+#interactive
+# dectree_res <- readRDS(file.choose())
 
-    dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
 
-    n.tb_screen <-
-      purrr::map(dectree_res, 3) %>%
-      purrr::transpose() #previously calc'd scenario-wise
+# dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
 
-    n.tb_screen.all_tb <- n.tb_screen[["n.tb_screen.all_tb"]]
-    n.tb_screen.uk_tb  <- n.tb_screen[["n.tb_screen.uk_tb"]]
+n.tb_screen <-
+  purrr::map(dectree_res, 3) %>%
+  purrr::transpose() #previously calc'd scenario-wise
 
-    p_complete_Tx <-  purrr::map(dectree_res, c("p_complete_Tx", "(350,1e+05]")) %>% unlist()
+n.tb_screen.all_tb <- n.tb_screen[["n.tb_screen.all_tb"]]
+n.tb_screen.uk_tb  <- n.tb_screen[["n.tb_screen.uk_tb"]]
 
-    n.scenarios <- length(n.tb_screen.all_tb)
-    N.mc <- dectree_res[[1]][["mc_cost"]] %>% length()
-}
+p_complete_Tx <-  purrr::map(dectree_res, "p_complete_Tx") %>% unlist() %>% unname()
+
+n.scenarios <- length(n.tb_screen.all_tb)
+N.mc <- dectree_res[[1]][["mc_cost"]] %>% length()
 
 n.diseasefree.all_tb <- map(n.tb_screen.all_tb, function(x) dplyr::filter(x, status == "disease-free"))
 n.diseasefree.uk_tb  <- map(n.tb_screen.uk_tb,  function(x) dplyr::filter(x, status == "disease-free"))
 
+#  ------------------------------------------------------------------------
 
 aTB_cost.screened <- aTB_QALY.screened <- list()
 aTB_cost_incur <- aTB_cost_incur_person <- list()
@@ -61,7 +61,7 @@ all_notif_discounts <- ydiscounts[all_notif_dates]
 uk_secondary_inf_discounts <- ydiscounts[uk_notif_dates + 1]
 all_secondary_inf_discounts <- ydiscounts[all_notif_dates + 1]
 
-cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
+tb_fatality <- discard(IMPUTED_sample_year_cohort$tb_fatality, is.na)
 
 
 # expected statistics ------------------------------------------------------
@@ -105,9 +105,6 @@ for (s in seq_len(n.scenarios)) {
 
     num_avoided.all_tb <- n.diseasefree.all_tb[[s]][i, 'n']
     num_avoided.uk_tb  <- n.diseasefree.uk_tb[[s]][i, 'n']
-
-    # TRUE if death due to active TB
-    tb_fatality <- runif(length(cfr)) < cfr
 
     if (ENDPOINT_cost == "exit uk") {
 
@@ -190,7 +187,7 @@ aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      E_cost_incur_person = E_cost_incur_person,
                      E_QALYgain = E_QALYgain,
                      E_QALYgain_person = E_QALYgain_person)
-
-save(aTB_CE_stats,
-     file = pastef(diroutput, "aTB_CE_stats.RData"))
+#
+# save(aTB_CE_stats,
+#      file = pastef(diroutput, "aTB_CE_stats.RData"))
 
