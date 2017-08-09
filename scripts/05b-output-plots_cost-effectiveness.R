@@ -52,38 +52,15 @@ aTB_QALYgain.df <-
 ## LTBI screening ##
 ####################
 
-if (cluster) {
+LTBI_cost_melt <- do.call(cbind.data.frame,
+                          map(dectree_res, 1))
 
-  LTBI_cost_melt <- do.call(cbind.data.frame,
-                            map(dectree_res, 1))
+LTBI_QALYloss_melt <- do.call(cbind.data.frame,
+                              map(dectree_res, 2))
 
-  LTBI_QALYloss_melt <- do.call(cbind.data.frame,
-                                map(dectree_res, 2))
-
-  ## BCEA format
-  LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
-  LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
-
-} else {
-
-  # convert LTBI screening dataframes
-  LTBI_cost_melt <- read.csv(file = pastef(diroutput, "mc_cost.csv"), header = FALSE)
-  LTBI_QALYloss_melt <- read.csv(file = pastef(diroutput, "mc_health.csv"), header = FALSE)
-
-  ## BCEA format
-
-  # append status-quo scenario
-  LTBI_cost.df <-
-    t(rbind(0, LTBI_cost_melt)) %>%
-    as.data.frame() %>%
-    set_names(scenario.names)
-
-  # NB negative QALY loss is QALY gain
-  LTBI_QALYgain.df <-
-    t(rbind(0, -LTBI_QALYloss_melt)) %>%
-    as.data.frame() %>%
-    set_names(scenario.names)
-}
+## BCEA format
+LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
+LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
 
 
 # discount due to delay to screening
@@ -150,7 +127,8 @@ gg + scale_colour_manual(values = cbPalette)
 
 png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
 
-print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") + scale_colour_manual(values = cbPalette))
+print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") +
+        scale_colour_manual(values = cbPalette))
 
 dev.off()
 
