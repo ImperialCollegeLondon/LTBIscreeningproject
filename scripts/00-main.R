@@ -15,12 +15,10 @@ source("scripts/04bb-calc_outcomes-GLOBAL.R", echo = TRUE)
 
 # 2) decision tree --------------------------------------------------------
 
-if (!cluster) source("scripts/02-decision-tree-model.R")
-if (!cluster) source("scripts/04b_2-activeTB-postscreen-samples.R")
-
+if (!cluster) source("scripts/parallel-decision-tree.R", echo = TRUE)
 if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
-source("scripts/04c-cost-effectiveness_QALY-costs.R")
+source("scripts/04c-cost-effectiveness_QALY-costs.R", echo = TRUE)
 
 
 # 5) output plots/tables --------------------------------------------------

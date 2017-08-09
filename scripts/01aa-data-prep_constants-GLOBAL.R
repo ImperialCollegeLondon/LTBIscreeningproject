@@ -6,6 +6,14 @@
 # simulation specific constants
 
 
+# computation -------------------------------------------------------------
+
+# number of Monte Carlo iterations
+N.mc <- 2
+
+cluster <- FALSE
+
+
 # global sensitivity parameters -------------------------------------------
 
 # or read in scenarios environments

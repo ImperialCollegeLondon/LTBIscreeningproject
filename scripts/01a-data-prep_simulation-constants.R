@@ -6,14 +6,6 @@
 # simulation specific constants
 
 
-# computation -------------------------------------------------------------
-
-# number of Monte Carlo iterations
-N.mc <- 20
-
-cluster <- TRUE
-
-
 # global fixed constants --------------------------------------------------
 
 force_everyone_stays <- FALSE

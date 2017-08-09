@@ -34,9 +34,10 @@ load(file = "ext-data/LTBI_input_workspace.RData")
 
 home_dir <- find.package("LTBIscreeningproject")
 
+
 sources_correctly <- NULL
 
-for (global_run in c(2,4,6)) {
+for (global_run in 3) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))
 
