@@ -147,6 +147,10 @@ rm(issdt.asnumeric,
    date_exit_uk1_issdt.years)
 
 
+##TODO: could use a more realistic distn
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
+
+
 # create misc variables ---------------------------------------------------
 
 # keep original TB status
