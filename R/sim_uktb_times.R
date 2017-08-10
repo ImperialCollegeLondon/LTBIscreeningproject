@@ -64,12 +64,20 @@ sample_tb_year <- function(fup_issdt,
     return(tb_year)
 
   }else{
+    i <- 1
 
-    while (tb_year > death_issdt) {
+    if (fup_issdt == ceiling(death_issdt)) {
+      return(fup_issdt)
+    }
+
+    while (tb_year > ceiling(death_issdt)) {
+
+      if (i > 100) browser()
 
       tb_year <- sample(x = seq_along(prob),
                         size = 1,
                         prob = prob)
+      i <- i + 1
     }
 
     return(tb_year)
@@ -110,21 +118,15 @@ sim_uktb_times <- function(data,
 
         NA
 
-      }else if (data$death1[i]) {
-
-        NA
-
       }else if (as.logical(data$uk_tb[i])) {
 
         data$rNotificationDate_issdt.years[i]
 
-      }else if (data$cens1[i]) {
+      }else {
 
         sample_tb_year(data$fup_issdt[i],
                        data$date_death1_issdt.years[i],
                        prob)
-      }else{
-        stop("Don't know what's first event type.")
       }
   }
 
