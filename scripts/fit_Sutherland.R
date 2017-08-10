@@ -1,4 +1,4 @@
-#
+#******************************************
 # active TB progression probs
 # extraplation from
 # Sutherland journal paper values
@@ -22,10 +22,10 @@ fit.lm <- lm(prob.log)
 years <- seq(1, 100)
 prob_estimated <- log(years*fit.lm$coefficients["year"] + fit.lm$coefficients["(Intercept)"])
 
-Sutherland_yearly <- sapply(1:MAX_SUTHERLAND, function(x)max(Sutherland$X2[Sutherland$X1 < x]))
+Sutherland_yearly <- sapply(1:MAX_SUTHERLAND, function(x) max(Sutherland$X2[Sutherland$X1 < x]))
 
 prob_estimated <- c(Sutherland_yearly,
-                    prob_estimated[-(1:MAX_SUTHERLAND)])
+                    prob_estimated[-(1:4)])
 
 activetb_year_pmf_sutherland <- diff(c(0, prob_estimated))/100
 
@@ -36,7 +36,7 @@ activetb_year_pmf_sutherland <- diff(c(0, prob_estimated))/100
 save(activetb_year_pmf_sutherland, file = "data/activetb_year_pmf_sutherland.RData")
 
 
-# add  to ETS plot
+# add to ETS plot
 # plot(years[-1][years[-1] > 7],
 #      activetb_year_pmf_sutherland[years[-1] > 7],
 #      type = 'l', col = "orange")
@@ -62,4 +62,4 @@ lines(years, prob_estimated, type = "l", col = "red")
 plot(prob_estimated, type = 'o', pch = 19)
 points(Sutherland_yearly, col = "red", pch = 19)
 legend(x = 80, y = 6, legend = c("Sutherland (1980)", "Exponential extrapolation"),
-       col = c("black", "red"), pch = c(19,19), bty = "n")
+       col = c("red", "black"), pch = c(19,19), bty = "n")

@@ -41,16 +41,16 @@ set.seed(12345)
 
 ptm <- proc.time()
 
-res <- parLapply(cl, scenario_parameters, decision_tree_cluster,
-                 N.mc = N.mc,
-                 n.uk_tb = n.uk_tb,
-                 n.exit_tb = n.exit_tb)
+dectree_res <- parLapply(cl, scenario_parameters, decision_tree_cluster,
+                         N.mc = N.mc,
+                         n.uk_tb = n.uk_tb,
+                         n.exit_tb = n.exit_tb)
 
 proc.time() - ptm
 
 stopCluster(cl)
 
-saveRDS(res, file = cluster_output_filename)
+saveRDS(dectree_res, file = cluster_output_filename)
 
 setwd(exit_wd)
 

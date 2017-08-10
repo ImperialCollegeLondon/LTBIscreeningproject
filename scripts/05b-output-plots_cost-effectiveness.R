@@ -117,9 +117,8 @@ cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n
 # ceplane.plot(screen.bcea, pos = "bottomright")
 # contour(screen.bcea)
 
-# gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
-# gg + scale_colour_manual(values = cbPalette)
-
+gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
+gg + scale_colour_manual(values = cbPalette)
 
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
@@ -127,8 +126,11 @@ gg + scale_colour_manual(values = cbPalette)
 
 png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
 
-print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") +
-        scale_colour_manual(values = cbPalette))
+##TODO: error when matrix isnt symmetric. Think its lack of varibaility...
+try(
+  print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") +
+        scale_colour_manual(values = cbPalette)),
+  silent = TRUE)
 
 dev.off()
 
