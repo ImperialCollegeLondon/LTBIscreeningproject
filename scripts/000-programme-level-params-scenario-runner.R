@@ -7,24 +7,26 @@
 # of screening programme
 
 
+rm(list = ls())
+
 devtools::load_all(".")
 
 # data("051206 - IMPUTED_sample")
 #
-# # 1) define and clean data ------------------------------------------------
-#
-# source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
-# source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
-# source("scripts/01c-data-prep_modelling.R", echo = TRUE)
-#
-# # 4) event times estimation -----------------------------------------------
-#
-# source("scripts/04a_1-active-TB-extrapolation.R")
-# source("scripts/04a_2-active-TB-imputation.R")
-# source("scripts/04a_3-include-new-tb-events.R")
-#
-# save.image(file = "ext-data/LTBI_input_workspace.RData")
+# 1) define and clean data ------------------------------------------------
 
+source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
+source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
+source("scripts/01c-data-prep_modelling.R", echo = TRUE)
+
+# 4) event times estimation -----------------------------------------------
+
+source("scripts/04a_1-active-TB-extrapolation.R")
+source("scripts/04a_2-active-TB-imputation.R")
+source("scripts/04a_3-include-new-tb-events.R")
+
+# save.image(file = "ext-data/LTBI_input_workspace.RData")
+#
 #  ------------------------------------------------------------------------
 
 data("global-parameters-scenarios")
@@ -34,10 +36,9 @@ load(file = "ext-data/LTBI_input_workspace.RData")
 
 home_dir <- find.package("LTBIscreeningproject")
 
-
 sources_correctly <- NULL
 
-for (global_run in 3) {
+for (global_run in 1:12) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))
 

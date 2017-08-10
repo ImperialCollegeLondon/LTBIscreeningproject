@@ -11,7 +11,7 @@
 # dectree_res <- readRDS(file.choose())
 
 
-# dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
+dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
 
 n.tb_screen <-
   purrr::map(dectree_res, 3) %>%
@@ -61,6 +61,8 @@ all_notif_discounts <- ydiscounts[all_notif_dates]
 uk_secondary_inf_discounts <- ydiscounts[uk_notif_dates + 1]
 all_secondary_inf_discounts <- ydiscounts[all_notif_dates + 1]
 
+
+cfr <- discard(IMPUTED_sample_year_cohort$cfr, is.na)
 tb_fatality <- discard(IMPUTED_sample_year_cohort$tb_fatality, is.na)
 
 
@@ -90,6 +92,8 @@ for (s in seq_len(n.scenarios)) {
 
   for (i in seq_len(N.mc)) {
 
+    ##TODO: removed randomness
+    # unit_cost.aTB_TxDx <- mean_cost.aTB_TxDx
     unit_cost.aTB_TxDx <-
       unit_cost$aTB_TxDx %>%
       sample_distributions() %>%
@@ -97,7 +101,8 @@ for (s in seq_len(n.scenarios)) {
 
     # secondary infections
     # in following year
-
+    ##TODO: removed randomness
+    # num_sec_inf <- mean_num_sec_inf
     num_sec_inf <-
       NUM_SECONDARY_INF %>%
       sample_distributions() %>%
@@ -112,16 +117,26 @@ for (s in seq_len(n.scenarios)) {
       cost_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
       cost_notif.screened  <- cost_notif.statusquo
 
-      who_tb_avoided  <- sample(x = seq_along(cost_notif.screened),
-                                size = unlist(num_avoided.uk_tb), replace = FALSE)
+      ##TODO: remove randomness
+      # # random sample individuals
+      # who_tb_avoided  <- sample(x = seq_along(cost_notif.screened),
+      #                           size = unlist(num_avoided.uk_tb), replace = FALSE)
+
+      # use this so that more cases avoided is always more QALYs gained
+      who_tb_avoided <- seq(1, unlist(num_avoided.uk_tb))
+
     }else{
 
       cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * all_secondary_inf_discounts
       cost_notif.statusquo <- (all_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
       cost_notif.screened  <- cost_notif.statusquo
 
-      who_tb_avoided <- sample(x = seq_along(cost_notif.screened),
-                               size = unlist(num_avoided.all_tb), replace = FALSE)
+      # # random sample individuals
+      # who_tb_avoided <- sample(x = seq_along(cost_notif.screened),
+      #                          size = unlist(num_avoided.all_tb), replace = FALSE)
+
+      # use this so that more cases avoided is always more QALYs gained
+      who_tb_avoided <- seq(1, unlist(num_avoided.all_tb))
     }
 
     cost_notif.screened[who_tb_avoided] <- 0
@@ -129,8 +144,13 @@ for (s in seq_len(n.scenarios)) {
     aTB_cost.statusquo[[s]][i] <- sum(cost_notif.statusquo)
     aTB_cost.screened[[s]][i]  <- sum(cost_notif.screened)
 
-    who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
-                                 size = unlist(num_avoided.all_tb), replace = FALSE)
+    ##TODO:
+    # # random sample individuals
+    # who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
+    #                              size = unlist(num_avoided.all_tb), replace = FALSE)
+
+    # use this so that more cases avoided is always more QALYs gained
+    who_all_tb_avoided <- seq(1, unlist(num_avoided.all_tb))
 
     # substitute in QALYs for active TB death
     QALY_all_tb_statusquo <- QALY_all_tb$cured
@@ -187,7 +207,7 @@ aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
                      E_cost_incur_person = E_cost_incur_person,
                      E_QALYgain = E_QALYgain,
                      E_QALYgain_person = E_QALYgain_person)
-#
-# save(aTB_CE_stats,
-#      file = pastef(diroutput, "aTB_CE_stats.RData"))
+
+save(aTB_CE_stats,
+     file = pastef(diroutput, "aTB_CE_stats.RData"))
 

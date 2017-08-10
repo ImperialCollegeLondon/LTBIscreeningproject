@@ -37,4 +37,6 @@ IMPUTED_sample <-
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  dplyr::mutate(tb_fatality = ifelse(is.na(cfr), NA, runif(n = n())))
+  dplyr::mutate(tb_fatality = ifelse(is.na(cfr),
+                                     NA,
+                                     runif(n = n()) < cfr))

@@ -28,7 +28,6 @@ if (screen_with_delay) {
 
 rm(rNotificationDate_issdt.years)
 
-
 # remove individuals from 'low' incidence countries
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                             who_prev_cat_Pareek2011 %in% incidence_grps_screen)
