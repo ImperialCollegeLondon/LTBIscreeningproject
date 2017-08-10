@@ -1,6 +1,9 @@
 
 #' Sample active TB Progression Time After Follow-up
 #'
+#' This approach samples active TB time once and if its
+#' after the death date assumes no pogression.
+#'
 #' @param fup_issdt Time to follow-up/exit UK
 #' @param death_issdt Time to all-cause death (competing risk)
 #' @param prob Incidence density of progression
@@ -10,9 +13,9 @@
 #'
 #' @examples
 #'
-sample_tb_year <- function(fup_issdt,
-                           death_issdt,
-                           prob) {
+sample_tb_year2 <- function(fup_issdt,
+                                death_issdt,
+                                prob) {
 
   disease_free_yrs <- 0:fup_issdt #+1?
 
@@ -27,8 +30,53 @@ sample_tb_year <- function(fup_issdt,
   tb_year <- if_else(condition = tb_year > death_issdt,
                      true = Inf,
                      false = tb_year)
+
   return(tb_year)
 }
+
+#' Sample active TB Progression Time After Follow-up
+#'
+#' Given that an individual progresses then this approach
+#' samples active TB times until one is before the death date.
+#'
+#' @param fup_issdt Time to follow-up/exit UK
+#' @param death_issdt Time to all-cause death (competing risk)
+#' @param prob Incidence density of progression
+#'
+#' @return Vector of times
+#' @export
+#'
+#' @examples
+#'
+sample_tb_year <- function(fup_issdt,
+                           death_issdt,
+                           prob) {
+
+  tb_year <- Inf
+
+  disease_free_yrs <- 0:fup_issdt
+  prob[disease_free_yrs] <- 0
+
+  noevent <- sum(prob) < runif(1)
+
+  if (noevent) {
+
+    return(tb_year)
+
+  }else{
+
+    while (tb_year > death_issdt) {
+
+      tb_year <- sample(x = seq_along(prob),
+                        size = 1,
+                        prob = prob)
+    }
+
+    return(tb_year)
+
+  }
+}
+
 
 
 #' Simulate (Unobserved) Active TB Progression Times for UK Individuals
