@@ -9,8 +9,8 @@ IMPUTED_sample <-
                                exituk_tb.years),
 
          # progression to death times
-         uk_death_rNotificationDate = (date_death1_issdt.years - rNotificationDate_issdt.years),
-         all_death_rNotificationDate = (date_death1_issdt.years - all_tb_issdt),
+         uk_death_rNotificationDate = date_death1_issdt.years - rNotificationDate_issdt.years,
+         all_death_rNotificationDate = date_death1_issdt.years - all_tb_issdt,
 
          # progression ages
          age_uk_notification = age_at_entry + rNotificationDate_issdt.years,

@@ -9,9 +9,9 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 300
+N.mc <- 2000
 
-cluster <- FALSE
+cluster <- TRUE
 
 
 # global sensitivity parameters -------------------------------------------

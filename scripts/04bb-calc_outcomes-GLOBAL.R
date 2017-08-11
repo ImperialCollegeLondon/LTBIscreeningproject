@@ -37,7 +37,7 @@ num_all_tb_QALY <-
 QALY_all_tb <-
   IMPUTED_sample_year_cohort %>%
   subset(all_tb == TRUE) %$%
-  calc_QALY_tb(timetoevent = all_death_rNotificationDate,
+  calc_QALY_tb(timetoevent = pmax(0.5, all_death_rNotificationDate), #assume at least 6 month between progression and all-cause death
                utility.disease_free = utility$disease_free,
                utility.case = utility$activeTB,
                age = age_all_notification)
@@ -54,18 +54,19 @@ E_total_fatality_QALYloss <- sum(E_fatality_QALYloss)
 
 # adjusted_life_years type object equivalent calc
 # useful for plotting...
-
-QALY_diseasefree <- list()
-
-QALY_diseasefree <-
-  IMPUTED_sample_year_cohort %>%
-  subset(all_tb == TRUE) %$%
-       map2(.x = age_all_notification,
-            .y = all_death_rNotificationDate,
-            .f = QALY::adjusted_life_years,
-            start_year = 0,
-            end_year = NA,
-            utility = utility$disease_free,
-            discount_rate = 0.035) %>%
-  map(QALY::total_QALYs)
+##TODO: may need to pmax(0, .) in all_death_rNotificationDate definition...
+#
+# QALY_diseasefree <- list()
+#
+# QALY_diseasefree <-
+#   IMPUTED_sample_year_cohort %>%
+#   subset(all_tb == TRUE) %$%
+#        map2(.x = age_all_notification,
+#             .y = all_death_rNotificationDate,
+#             .f = QALY::adjusted_life_years,
+#             start_year = 0,
+#             end_year = NA,
+#             utility = utility$disease_free,
+#             discount_rate = 0.035) %>%
+#   map(QALY::total_QALYs)
 

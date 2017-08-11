@@ -8,7 +8,7 @@
 
 # model run set-up --------------------------------------------------------
 
-source("scripts/01aa-data-prep_consta %>% nts-GLOBAL.R", echo = TRUE)
+source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
 source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
 source("scripts/04bb-calc_outcomes-GLOBAL.R", echo = TRUE)
 
