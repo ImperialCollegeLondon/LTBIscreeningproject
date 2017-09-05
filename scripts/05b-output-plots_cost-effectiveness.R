@@ -8,8 +8,8 @@
 # costs incurred and QALY gains
 
 
-if (!exists("aTB_CE_stats")) load(pastef(diroutput, "aTB_CE_stats.RData"))
-if (!exists("dectree_res")) dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
+if (!exists("aTB_CE_stats")) load(choose.files()) #load(pastef(diroutput, "aTB_CE_stats.RData"))
+if (!exists("dectree_res")) dectree_res <- readRDS(choose.files()) #dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
 
 popscale <- 1#00000
 
@@ -124,15 +124,19 @@ gg + scale_colour_manual(values = cbPalette)
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
 
-png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
+# png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
 
-##TODO: error when matrix isnt symmetric. Think its lack of varibaility...
+##TODO: error when matrix isnt symmetric. Think its lack of variability/multimodal...
 try(
   print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") +
         scale_colour_manual(values = cbPalette)),
   silent = TRUE)
 
-dev.off()
+ggsave(file = paste(plots_folder_scenario, "CE_plane2.png", sep = "/"))
+
+# dev.off()
+
+## annotations
 
 # gg +
 #   # scale_color_brewer(palette = "Dark2") +
