@@ -17,3 +17,12 @@ rm_last <- function(prob)
 
 rm_na <- function(dat)
   dat[!is.na(dat)]
+
+
+syncr_fixed_paths <- function(from_folder_path, to_folder_path){
+
+  function(filename){
+    syncr::syncr(src = paste(from_folder_path, filename, sep = ""),
+                 dest = to_folder_path)
+  }
+}
