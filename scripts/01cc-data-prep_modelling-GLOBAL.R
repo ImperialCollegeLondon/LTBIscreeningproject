@@ -28,7 +28,7 @@ if (screen_with_delay) {
 
 rm(rNotificationDate_issdt.years)
 
-# remove individuals from 'low' incidence countries
+# remove individuals from 'lower' incidence countries
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                             who_prev_cat_Pareek2011 %in% incidence_grps_screen)
 
@@ -48,7 +48,7 @@ pop_year <- nrow(IMPUTED_sample_year_cohort)
 # number of active TB cases _without_ screening i.e. status-quo
 n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
-# probability cohort in each who active TB category
+# probability cohort in each WHO TB category
 p.who_year <-
   table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011) %>%
   prop.table()
@@ -57,15 +57,14 @@ p.who_year <-
 # calc yearly counts for cohort year  -------------------------------------
 # active tb, exit uk, death sub-pops
 
-attach(IMPUTED_sample_year_cohort)
-
 strat_pop_year <-
-  list(tb = rNotificationDate_issdt.years,
-       exit_uk = date_exit_uk1_issdt.years,
-       death = date_death1_issdt.years) %>%
-  count_comprsk_events()
+  with(IMPUTED_sample_year_cohort,
+         list(tb = rNotificationDate_issdt.years,
+              exit_uk = date_exit_uk1_issdt.years,
+              death = date_death1_issdt.years) %>%
+           count_comprsk_events()
+  )
 
-detach(IMPUTED_sample_year_cohort)
 
 # include a year 0 baseline
 strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),

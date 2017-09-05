@@ -9,9 +9,9 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2000
+N.mc <- 2#00
 
-cluster <- TRUE
+cluster <- FALSE
 
 
 # global sensitivity parameters -------------------------------------------
@@ -23,7 +23,7 @@ if (exists("global_run")) {
   min_screen_length_of_stay <- get("min_screen_length_of_stay", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
   ENDPOINT_cost <- get("ENDPOINT_cost", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
 
-}else{
+}else{# hard code
 
   # select which paramter file for decision tree
   study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"

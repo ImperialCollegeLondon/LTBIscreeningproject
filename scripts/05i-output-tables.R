@@ -1,4 +1,7 @@
-
+#
+# LTBI screening
+# N Green
+# July 2017
 
 out_tab <- table_costeffectiveness(screen.bcea,
                                    wtp_threshold = wtp_threshold)
