@@ -89,8 +89,8 @@ for (s in seq_len(n.scenarios)) {
 
   aTB_cost.screened[[s]] <- aTB_QALY.screened[[s]] <- NA
   aTB_cost_incur[[s]] <- aTB_cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
-  aTB_QALYgain[[s]]  <- aTB_QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
-  aTB_QALY.statusquo[[s]]  <- aTB_cost.statusquo[[s]] <- NA
+  aTB_QALYgain[[s]] <- aTB_QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
+  aTB_QALY.statusquo[[s]] <- aTB_cost.statusquo[[s]] <- NA
 
 
   # QALYs and cost with screening -------------------------------------------

@@ -25,11 +25,18 @@ source("scripts/04c-cost-effectiveness_QALY-costs.R", echo = TRUE)
 
 source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05i-output-tables.R")
+# source("scripts/05f-tornado_plots.R")
+# source("scripts/05-ceac-plot.R")
+# source("scripts/05-aTB_histograms.R")
 # source("scripts/05a-output-plots_competing-risks.R")
 # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")
-# source("scripts/05f-tornado_plots.R")
-# source("scripts/05g-histograms.R")
+# source("scripts/05g-INMB_ICER_histograms.R")
 # source("scripts/05h-CE_summary_stats.R")
+# source("scripts/05j-stat_pop_year_plots.R")
+# source("scripts/05k-other-C-E-plots.R")
+# source("scripts/05l-output-plots_twoway-sensitivity-analysis.R")
+# source("scripts/05-pop_count_histograms.R")
+# source("scripts/05-plot-pop_QALYloss_over_time.R")
 
 
 # clean-up session --------------------------------------------------------

@@ -54,10 +54,10 @@ sample_tb_year <- function(fup_issdt,
 
   tb_year <- Inf
 
+  noevent <- sum(prob) < runif(1)
+
   disease_free_yrs <- 0:fup_issdt
   prob[disease_free_yrs] <- 0
-
-  noevent <- sum(prob) < runif(1)
 
   if (noevent) {
 
@@ -72,7 +72,7 @@ sample_tb_year <- function(fup_issdt,
 
     while (tb_year > ceiling(death_issdt)) {
 
-      if (i > 100) browser()
+      if (i > 100)
 
       tb_year <- sample(x = seq_along(prob),
                         size = 1,
@@ -99,7 +99,6 @@ sample_tb_year <- function(fup_issdt,
 #'
 sim_uktb_times <- function(data,
                            prob) {
-
   pop <-  nrow(data)
 
   uk_tb_year <- vector(length = pop,
@@ -114,7 +113,8 @@ sim_uktb_times <- function(data,
 
         Inf
 
-      }else if (data$exit_uk1[i]) {
+      # if other event before end of follow-up
+      }else if (data$exit_uk1[i] | data$death1[i]) {
 
         NA
 

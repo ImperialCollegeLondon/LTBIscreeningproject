@@ -133,7 +133,6 @@ year_prob.cens_exp <- exp(extrap_years * fit.cens$coefficients["year"] +
 ## Sutherland only
 year_prob.activetb_cens_exituk <- activetb_year_pmf_sutherland
 
-save(year_prob.activetb_cens_exituk, file = "ext-data/year_prob.activetb_cens_exituk.RData")
 
 
 #  competing risk times ----------------------------------------------------
@@ -161,6 +160,10 @@ year_prob.cmprsk_exp <- exp(extrap_years * fit.cmprsk$coefficients["year"] +
 year_prob.activetb_cmprsk_exituk <- c(incidence_Lancet$mean/100000,
                                       activetb_year_pmf_sutherland[max_years_obs + 1:(FUP_MAX_YEAR - max_years_obs)])
 
+
+# save
+
+save(year_prob.activetb_cens_exituk, file = "ext-data/year_prob.activetb_cens_exituk.RData")
 save(year_prob.activetb_cmprsk_exituk, file = "ext-data/year_prob.activetb_cmprsk_exituk.RData")
 
 

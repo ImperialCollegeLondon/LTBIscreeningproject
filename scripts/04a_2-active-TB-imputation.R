@@ -28,7 +28,7 @@ IMPUTED_sample <-
 
 
 # table(IMPUTED_sample$exituk_tb.years, useNA = "always")
-# table(round(IMPUTED_sample$rNotificationDate_issdt.years), useNA = "always")
+# table(ceiling(IMPUTED_sample$rNotificationDate_issdt.years), useNA = "always")
 
 
 

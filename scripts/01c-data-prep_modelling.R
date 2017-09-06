@@ -99,6 +99,9 @@ IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 # create time-to-events in days --------------------------
 # from uk entry to event dates
 
+# date_origin <- lubridate::origin
+# "1970-01-01 UTC"
+
 date_origin <- as.Date("1960-01-01")
 
 IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
@@ -135,6 +138,17 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
                              date_death1_issdt.years,
                              date_exit_uk1_issdt,
                              date_exit_uk1_issdt.years)
+# remove tb before entry
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(uk_tb = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
+                        yes = 0, no = 1),
+         rNotificationDate_issdt.years = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
+                                                yes = NA,
+                                                no = rNotificationDate_issdt.years),
+         rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
+                                          yes = NA,
+                                          no = rNotificationDate_issdt))
 
 rm(issdt.asnumeric,
    rNotificationDate.asnumeric,
@@ -171,7 +185,9 @@ IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 # uk entry to follow-up days -------------------------------------------------
 
-fup_limit <- 19723  #days from 1960-01-01 to 2013-12-31
+FUP_DATE <- as.Date("2013-12-31")
+
+fup_limit <- FUP_DATE - date_origin #days from 1960-01-01 to 2013-12-31
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
@@ -183,6 +199,11 @@ IMPUTED_sample <-
          cens1 = fup1 == fup_limit,
          death1 = date_death1_issdt == fup_issdt_days,
          exit_uk1 = date_exit_uk1_issdt == fup_issdt_days)
+
+# remove indiv follow-up date before entry
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                fup_issdt_days >= 0)
+
 
 
 # mdr ---------------------------------------------------------------------
