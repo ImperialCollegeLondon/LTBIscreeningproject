@@ -20,12 +20,12 @@ popscale <- 1#00000
 # convert active TB lists to dataframes
 aTB_cost_melt <-
   Reduce(rbind,
-         aTB_CE_stats$aTB_cost_incur_person) %>%
+         aTB_CE_stats$cost_incur_person) %>%
   data.frame(row.names = NULL)
 
 aTB_QALYgain_melt <-
   Reduce(rbind,
-         aTB_CE_stats$aTB_QALYgain_person) %>%
+         aTB_CE_stats$QALYgain_person) %>%
   data.frame(row.names = NULL)
 
 # with status-quo

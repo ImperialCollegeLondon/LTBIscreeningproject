@@ -35,10 +35,13 @@ n.diseasefree.uk_tb  <- map(n.tb_screen.uk_tb,  function(x) dplyr::filter(x, sta
 
 #  ------------------------------------------------------------------------
 
-aTB_cost.screened <- aTB_QALY.screened <- list()
-aTB_cost_incur <- aTB_cost_incur_person <- list()
-aTB_QALYgain <- aTB_QALYgain_person <- list()
-aTB_QALY.statusquo  <- aTB_cost.statusquo <- list()
+cost.screened <- QALY.screened <- list()
+cost.screened_person <- QALY.screened_person <- list()
+cost_incur <- cost_incur_person <- list()
+
+cost.statusquo <- QALY.statusquo <- list()
+cost.statusquo_person <- QALY.statusquo_person <- list()
+QALYgain <- QALYgain_person <- list()
 
 E_cost_notif.screened <- NA
 E_QALY_notif.screened <- NA
@@ -87,10 +90,12 @@ for (s in seq_len(n.scenarios)) {
 
   print(sprintf("[ population model ] scenario: %d", s))
 
-  aTB_cost.screened[[s]] <- aTB_QALY.screened[[s]] <- NA
-  aTB_cost_incur[[s]] <- aTB_cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
-  aTB_QALYgain[[s]] <- aTB_QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
-  aTB_QALY.statusquo[[s]] <- aTB_cost.statusquo[[s]] <- NA
+  cost.screened[[s]] <- QALY.screened[[s]] <- NA
+  cost_incur[[s]] <- cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
+  QALYgain[[s]] <- QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
+  QALY.statusquo[[s]] <- cost.statusquo[[s]] <- NA
+  QALY.statusquo_person[[s]] <- cost.statusquo_person[[s]] <- NA
+  QALY.screened_person[[s]] <- cost.screened_person[[s]] <- NA
 
 
   # QALYs and cost with screening -------------------------------------------
@@ -151,8 +156,8 @@ for (s in seq_len(n.scenarios)) {
 
     cost_notif.screened[who_tb_avoided_cost] <- 0
 
-    aTB_cost.statusquo[[s]][i] <- sum(cost_notif.statusquo)
-    aTB_cost.screened[[s]][i]  <- sum(cost_notif.screened)
+    cost.statusquo[[s]][i] <- sum(cost_notif.statusquo)
+    cost.screened[[s]][i]  <- sum(cost_notif.screened)
 
     # use this so that more cases avoided is always more QALYs gained
     # who_all_tb_avoided <- seq(1, unlist(num_avoided.all_tb))
@@ -164,8 +169,8 @@ for (s in seq_len(n.scenarios)) {
     QALY_all_tb_screened <- QALY_all_tb_statusquo
     QALY_all_tb_screened[who_all_tb_avoided] <- QALY_all_tb$diseasefree[who_all_tb_avoided]
 
-    aTB_QALY.statusquo[[s]][i] <- sum(QALY_all_tb_statusquo)
-    aTB_QALY.screened[[s]][i]  <- sum(QALY_all_tb_screened)
+    QALY.statusquo[[s]][i] <- sum(QALY_all_tb_statusquo)
+    QALY.screened[[s]][i]  <- sum(QALY_all_tb_screened)
 
   }
 
@@ -176,19 +181,25 @@ for (s in seq_len(n.scenarios)) {
 
   # final cost-effectiveness statistics  ----------------------------------------------------
 
+  QALY.screened_person[[s]]  <- QALY.screened[[s]]/pop_year
+  QALY.statusquo_person[[s]] <- QALY.statusquo[[s]]/pop_year
+
   # Q1 - Q0: +ve good
   # C1 - C0: +ve bad
 
-  aTB_QALYgain[[s]] <- aTB_QALY.screened[[s]] - aTB_QALY.statusquo[[s]]
+  QALYgain[[s]] <- QALY.screened[[s]] - QALY.statusquo[[s]]
 
   # per person
-  aTB_QALYgain_person[[s]] <- aTB_QALYgain[[s]]/pop_year
+  QALYgain_person[[s]] <- QALYgain[[s]]/pop_year
 
   # cost incurred per person for each simulation
-  aTB_cost.screened[[s]] <- rm_na(aTB_cost.screened[[s]])
+  cost.screened[[s]] <- rm_na(cost.screened[[s]])
 
-  aTB_cost_incur[[s]] <- aTB_cost.screened[[s]] - aTB_cost.statusquo[[s]]
-  aTB_cost_incur_person[[s]] <- aTB_cost_incur[[s]]/pop_year
+  cost.screened_person[[s]]  <- cost.screened[[s]]/pop_year
+  cost.statusquo_person[[s]] <- cost.statusquo[[s]]/pop_year
+
+  cost_incur[[s]] <- cost.screened[[s]] - cost.statusquo[[s]]
+  cost_incur_person[[s]] <- cost_incur[[s]]/pop_year
 
   E_cost_incur[s] <- E_cost_notif.screened[s] - sum(E_cost_notif.statusquo)
   E_cost_incur_person[s] <- E_cost_incur[s]/pop_year
@@ -200,14 +211,18 @@ for (s in seq_len(n.scenarios)) {
 
 #  save --------------------------------------------------------------------
 
-aTB_CE_stats <- list(aTB_QALY.statusquo = aTB_QALY.statusquo,
-                     aTB_cost.statusquo = aTB_cost.statusquo,
-                     aTB_QALY.screened = aTB_QALY.screened,
-                     aTB_cost.screened = aTB_cost.screened,
-                     aTB_cost_incur = aTB_cost_incur,
-                     aTB_QALYgain = aTB_QALYgain,
-                     aTB_cost_incur_person = aTB_cost_incur_person,
-                     aTB_QALYgain_person = aTB_QALYgain_person,
+aTB_CE_stats <- list(QALY.statusquo = QALY.statusquo,
+                     cost.statusquo = cost.statusquo,
+                     QALY.screened = QALY.screened,
+                     cost.screened = cost.screened,
+                     QALY.screened_person = QALY.screened_person,
+                     QALY.statusquo_person = QALY.statusquo_person,
+                     cost.screened_person = cost.screened_person,
+                     cost.statusquo_person = cost.statusquo_person,
+                     cost_incur = cost_incur,
+                     QALYgain = QALYgain,
+                     cost_incur_person = cost_incur_person,
+                     QALYgain_person = QALYgain_person,
                      E_cost_incur = E_cost_incur,
                      E_cost_incur_person = E_cost_incur_person,
                      E_QALYgain = E_QALYgain,

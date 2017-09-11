@@ -21,12 +21,12 @@ popscale <- 1#00000
 # convert active TB lists to dataframes
 aTB_cost_melt <-
   Reduce(rbind,
-         aTB_CE_stats$aTB_cost_incur_person) %>%
+         aTB_CE_stats$cost_incur_person) %>%
   data.frame(row.names = NULL)
 
 aTB_QALYgain_melt <-
   Reduce(rbind,
-         aTB_CE_stats$aTB_QALYgain_person) %>%
+         aTB_CE_stats$QALYgain_person) %>%
   data.frame(row.names = NULL)
 
 # with status-quo
@@ -53,10 +53,10 @@ aTB_QALYgain.df <-
 ####################
 
 LTBI_cost_melt <- do.call(cbind.data.frame,
-                          map(dectree_res, 1))
+                          map(dectree_res, "mc_cost"))
 
 LTBI_QALYloss_melt <- do.call(cbind.data.frame,
-                              map(dectree_res, 2))
+                              map(dectree_res, "mc_health"))
 
 ## BCEA format
 LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
