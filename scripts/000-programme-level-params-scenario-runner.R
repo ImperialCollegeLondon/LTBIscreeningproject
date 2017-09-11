@@ -13,7 +13,7 @@ rm(list = ls())
 
 devtools::load_all(".")
 
-# source("create_LTBI_input_workspace.R")
+# source("scripts/create_LTBI_input_workspace.R")
 
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")

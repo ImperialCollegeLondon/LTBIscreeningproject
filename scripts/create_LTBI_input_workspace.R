@@ -1,6 +1,11 @@
-
+# *****************************
+# LTBI screening
+# N Green
+# 2017
+#
 # generate a fixed cohort
 # only need to run this once
+
 
 data("051206 - IMPUTED_sample")
 
