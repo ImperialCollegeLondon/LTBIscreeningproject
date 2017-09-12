@@ -24,7 +24,7 @@ home_dir <- find.package("LTBIscreeningproject")
 
 sources_correctly <- NULL
 
-# global_run <- 1
+# global_run <- 2
 for (global_run in 1:6) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))

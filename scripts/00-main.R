@@ -15,7 +15,7 @@ source("scripts/04bb-calc_outcomes-GLOBAL.R", echo = TRUE)
 
 # 2) decision tree --------------------------------------------------------
 
-if (!cluster) source("scripts/parallel-decision-tree.R", echo = TRUE)
+if (!cluster) source("scripts/02-parallel-decision-tree.R", echo = TRUE)
 if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
 source("scripts/04c-cost-effectiveness_QALY-costs.R", echo = TRUE)
@@ -37,6 +37,7 @@ source("scripts/05i-output-tables.R")
 # source("scripts/05l-output-plots_twoway-sensitivity-analysis.R")
 # source("scripts/05-pop_count_histograms.R")
 # source("scripts/05-plot-pop_QALYloss_over_time.R")
+# source("scripts/net-benefit.R")
 
 
 # clean-up session --------------------------------------------------------
