@@ -3,8 +3,9 @@
 # N Green
 # Aug 2017
 #
-# the output is saved in Q:/R/cluster--LTBI-decision-tree because the alternative
-# way of running is on the DIDE cluster so all of the results are in the same place
+# the output is saved in Q:/R/cluster--LTBI-decision-tree
+# because the alternative way of running is on the DIDE cluster
+# so all of the results are in the same place
 #
 # https://www.r-bloggers.com/how-to-go-parallel-in-r-basics-tips/
 
@@ -21,6 +22,9 @@ setwd("Q:/R/cluster--LTBI-decision-tree")
 sources <- list.files(pattern = "[.]R$")[!grepl(x = list.files(pattern = "[.]R$"), pattern = "^cluster-master")]
 
 source("decision_tree_cluster.R")
+
+
+# parallel config ---------------------------------------------------------
 
 # Calculate the number of cores
 no_cores <- detectCores() - 1

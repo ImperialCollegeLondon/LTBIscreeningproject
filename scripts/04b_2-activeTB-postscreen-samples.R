@@ -13,7 +13,7 @@ p_complete_screen_lookup <-
                          "prob_complete_Tx_given_LTBI_by_who.csv"),
            header = FALSE) %>%
   set_names(who_levels) %>%
-  mutate(scenario = rownames(.)) %>%
+  dplyr::mutate(scenario = rownames(.)) %>%
   gather(key = "who_prev_cat_Pareek2011",
          value = "prob",
          -scenario)

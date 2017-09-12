@@ -33,3 +33,6 @@ LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
 # LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 
+# deterministic sensitivity analysis
+# grid of parameter values
+scenario_file_tag <- "_high-low" #"" #paste0("_", study)

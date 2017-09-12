@@ -42,8 +42,8 @@ for (SCENARIO in seq_len(num_scenarios)) {
 
     try(plot_dat <-
       IMPUTED_sample_scenarios %>%
-        mutate(fatality = runif(n()) < cfr,
-               screen_success = runif(n()) < prob) %>%
+        dplyr::mutate(fatality = runif(n()) < cfr,
+                      screen_success = runif(n()) < prob) %>%
         dplyr::filter(fatality == TRUE,
                       scenario == SCENARIO,
                       screen_success == TRUE) %$%

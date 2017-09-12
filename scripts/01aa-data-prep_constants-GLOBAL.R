@@ -39,18 +39,17 @@ if (exists("global_run")) {
   ENDPOINT_cost <- "exit uk" #"death"
 }
 
+sprintf("Input parameters WHO groups:%s, min stay:%s, endpoint:%s",
+        incidence_grps_screen, min_screen_length_of_stay, ENDPOINT_cost)
+
 
 # folder locations --------------------------------------------------------
 
-# parameter_values_file <- system.file("data", sprintf("scenario-parameter-values_%s.xlsx", study),
-#                                      package = "LTBIscreeningproject")
-
-parameter_values_file <- system.file("data", "scenario-parameter-values.xlsx",
-                                     package = "LTBIscreeningproject")
+scenario_name <- global_params_scenarios_ls[global_run]
 
 # # create permanent output folder
 parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
-diroutput <- sprintf("%s/%s", parent_folder, global_params_scenarios_ls[global_run])
+diroutput <- sprintf("%s/%s", parent_folder, scenario_name)
 dir.create(parent_folder, showWarnings = FALSE)
 dir.create(diroutput, showWarnings = FALSE)
 
@@ -59,9 +58,9 @@ dir.create(diroutput, showWarnings = FALSE)
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
-plots_folder_scenario <- sprintf("%s/%s", plots_folder, global_params_scenarios_ls[global_run])
+plots_folder_scenario <- sprintf("%s/%s", plots_folder, scenario_name)
 dir.create(plots_folder_scenario, showWarnings = FALSE)
 
-cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", global_params_scenarios_ls[global_run],
+cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", scenario_name,
                                    format(Sys.time(), "%Y-%m-%d %I-%p"))
 

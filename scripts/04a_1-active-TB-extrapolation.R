@@ -68,7 +68,7 @@ data_etm <-
 
 data_etm_cens_exituk <-
   data_etm %>%
-  mutate(to = ifelse(to == 2, 0, to))
+  dplyr::mutate(to = ifelse(to == 2, 0, to))
 
 # empirical transition probabilities --------------------------------------
 

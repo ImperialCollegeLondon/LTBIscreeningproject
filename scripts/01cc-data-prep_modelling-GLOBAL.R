@@ -15,7 +15,7 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
 # coverage: keep only if indiv screened  ------------------------------------
 
 IMPUTED_sample_year_cohort %<>%
-  mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
+  dplyr::mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
                            date_exit_uk1_issdt.years >= pmax(screen_year, min_screen_length_of_stay) &
                            (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)),
                          1, 0))

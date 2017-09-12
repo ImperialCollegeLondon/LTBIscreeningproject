@@ -5,6 +5,8 @@
 #
 # individual cost incurred and QALY loss using decision tree model
 
+##TODO: tidy
+
 
 # sample tree cost incurred per individual -------------------------------
 

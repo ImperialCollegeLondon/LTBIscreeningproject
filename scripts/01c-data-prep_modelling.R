@@ -141,14 +141,14 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
 # remove tb before entry
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(uk_tb = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
-                        yes = 0, no = 1),
-         rNotificationDate_issdt.years = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
-                                                yes = NA,
-                                                no = rNotificationDate_issdt.years),
-         rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
-                                          yes = NA,
-                                          no = rNotificationDate_issdt))
+  dplyr::mutate(uk_tb = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
+                               yes = 0, no = 1),
+                rNotificationDate_issdt.years = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
+                                                       yes = NA,
+                                                       no = rNotificationDate_issdt.years),
+                rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
+                                                 yes = NA,
+                                                 no = rNotificationDate_issdt))
 
 rm(issdt.asnumeric,
    rNotificationDate.asnumeric,
@@ -174,10 +174,10 @@ IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
-         agegroup_uk_notification = cut(age_uk_notification,
-                                        breaks = cfr_age_breaks,
-                                        right = FALSE))
+  dplyr::mutate(age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
+                agegroup_uk_notification = cut(age_uk_notification,
+                                               breaks = cfr_age_breaks,
+                                               right = FALSE))
 
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
@@ -191,14 +191,14 @@ fup_limit <- FUP_DATE - date_origin #days from 1960-01-01 to 2013-12-31
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(issdt.asnumeric = issdt - date_origin,
-         fup_limit_issdt = fup_limit - issdt.asnumeric,
-         fup_issdt_days = fup1 - issdt.asnumeric,
-         fup_issdt = days_to_years(fup_issdt_days),
-         LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1,
-         cens1 = fup1 == fup_limit,
-         death1 = date_death1_issdt == fup_issdt_days,
-         exit_uk1 = date_exit_uk1_issdt == fup_issdt_days)
+  dplyr::mutate(issdt.asnumeric = issdt - date_origin,
+                fup_limit_issdt = fup_limit - issdt.asnumeric,
+                fup_issdt_days = fup1 - issdt.asnumeric,
+                fup_issdt = days_to_years(fup_issdt_days),
+                LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1,
+                cens1 = fup1 == fup_limit,
+                death1 = date_death1_issdt == fup_issdt_days,
+                exit_uk1 = date_exit_uk1_issdt == fup_issdt_days)
 
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,

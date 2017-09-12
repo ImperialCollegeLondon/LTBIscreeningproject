@@ -14,6 +14,7 @@ data("051206 - IMPUTED_sample")
 source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 source("scripts/01c-data-prep_modelling.R", echo = TRUE)
+source("scripts/01-prep-scenario-decisiontree-data.R", echo = TRUE)
 
 # 4) event times estimation --------------------------------------------
 

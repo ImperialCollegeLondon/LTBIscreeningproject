@@ -11,20 +11,20 @@
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
-                                               prob = year_prob.activetb_cens_exituk),
-         exituk_tb = !is.na(exituk_tb.years) &
-           !is.infinite(exituk_tb.years))
+  dplyr::mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
+                                                      prob = year_prob.activetb_cens_exituk),
+                exituk_tb = !is.na(exituk_tb.years) &
+                  !is.infinite(exituk_tb.years))
 
 
 # individually SIMULATE active TB progression times uk tb after followup ----------------------
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
-                                                        prob = year_prob.activetb_cmprsk_exituk),
-         uk_tb = !is.na(rNotificationDate_issdt.years) &
-           !is.infinite(rNotificationDate_issdt.years))
+  dplyr::mutate(rNotificationDate_issdt.years = sim_uktb_times(data = .,
+                                                               prob = year_prob.activetb_cmprsk_exituk),
+                uk_tb = !is.na(rNotificationDate_issdt.years) &
+                  !is.infinite(rNotificationDate_issdt.years))
 
 
 # table(IMPUTED_sample$exituk_tb.years, useNA = "always")
@@ -57,7 +57,7 @@ IMPUTED_sample <-
 # n.exit_tb <- sum(num_exituk_tb_year)
 
 
-# calc number tb_uk (extrapolated) using _proportions_ -----------------------------
+# # _proportions_ calc number tb_uk (extrapolated) -----------------------------
 # straight forward, direct method
 #
 # num_uk_tb_year <- pop_year * year_prob.activetb_cmprsk_exituk * 0.3
