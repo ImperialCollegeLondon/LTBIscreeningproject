@@ -27,12 +27,13 @@ screen_age_range <- 18:45
 # year_cohort <- '2012' #most recent complete year
 year_cohort <- '2009' #largest cohort
 
-# LIFETIME_RISK <- 1
-LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
+LIFETIME_RISK <- 0.10
+# LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
 # LIFETIME_RISK <- 0.18   #NICE economic appraisal (2006)
 # LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 
 # deterministic sensitivity analysis
 # grid of parameter values
-scenario_file_tag <- "_high-low" #"" #paste0("_", study)
+# scenario_file_tag <- "_high-low"
+scenario_file_tag <- "_main" #paste0("_", study) #_oneway
