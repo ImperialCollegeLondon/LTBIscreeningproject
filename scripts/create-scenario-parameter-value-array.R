@@ -1,34 +1,54 @@
-#
+# ********************************************
 # project: LTBI screening
 # N Green
 # Nov 2016
 #
-# create grid of parameter values representing each scenario
+# create grid of parameter values
+# representing each scenario
 
 
 library(xlsx)
 
 
-scenario_parameter_p <- expand.grid('Start Treatment' = seq(0, 1, by = 0.05),
-                                    'Complete Treatment' = seq(0, 1, by = 0.05))
+parameter_p <-
+  expand.grid('Start Treatment' = c(0.6, 0.8, 1),
+              'Complete Treatment' = c(0.6, 0.8, 1),
+              'Agree to Screen' = c(0.6, 0.8, 1),
+              'Effective' = c(0.6, 0.8, 1),
+              'Sensitivity' = 0.84,
+              'Specificity' = 0.99) %>%
+  mutate('Not Start Treatment' = 1 - `Start Treatment`,
+             'Not Complete Treatment' = 1 - `Complete Treatment`,
+             'Not Agree to Screen' = 1 - `Agree to Screen`,
+             'Not Effective' = 1 - `Effective`,
+             '1 - Sensitivity' = 1 - `Sensitivity`,
+             '1 - Specificity' = 1 - `Specificity`,
+             'scenario' = seq_len(nrow(.)))
 
-scenario_parameter_p <- data.frame(scenario_parameter_p,
-                                   'Not Start Treatment' = 1-scenario_parameter_p$`Start Treatment`,
-                                   'Not Complete Treatment' = 1-scenario_parameter_p$`Complete Treatment`,
-                                   'Agree to Screen' = 0.9,
-                                   'Not Agree to Screen' = 0.1,
-                                   'scenario' = seq_len(nrow(scenario_parameter_p)))
+agreetoscreen <- data.frame('node' = 'Agree to Screen',
+                             'min' = 20,
+                             'max' = 20,
+                             'distn' = "unif",
+                             'scenario' = seq_len(nrow(parameter_p)))
+completeTx <- data.frame('node' = 'Complete Treatment',
+                             'min' = 531,
+                             'max' = 531,
+                             'distn' = "unif",
+                             'scenario' = seq_len(nrow(parameter_p)))
+notcompleteTx <- data.frame('node' = 'Not Complete Treatment',
+                             'min' = 88.5,
+                             'max' = 88.5,
+                             'distn' = "unif",
+                             'scenario' = seq_len(nrow(parameter_p)))
 
-scenario_parameter_cost <- data.frame('Agree to Screen' = 50,
-                                      'scenario' = seq_len(nrow(scenario_parameter_p)))
-
-names(scenario_parameter_cost) <- gsub("\\.", " ", names(scenario_parameter_cost))
-names(scenario_parameter_p) <- gsub("\\.", " ", names(scenario_parameter_p))
+parameter_cost <- rbind(agreetoscreen, completeTx, notcompleteTx)
 
 
-write.xlsx(scenario_parameter_p, sheetName = "p",
-           file = "data/scenario-parameter-values_adherence_completion.xlsx", row.names = FALSE)
+filename <- "data/scenario-parameter-values_fullfactorial.xlsx"
 
-write.xlsx(scenario_parameter_cost, sheetName = "cost",
-           file = "data/scenario-parameter-values_adherence_completion.xlsx", row.names = FALSE, append = TRUE)
+write.xlsx(parameter_p, sheetName = "p",
+           file = filename, row.names = FALSE)
+
+write.xlsx(parameter_cost, sheetName = "cost",
+           file = filename, row.names = FALSE, append = TRUE)
 

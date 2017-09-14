@@ -124,7 +124,10 @@ gg + scale_colour_manual(values = cbPalette)
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 gg + scale_colour_manual(values = cbPalette)
 
-# png(paste(plots_folder_scenario, "CE_plane.png", sep = "/"))
+
+filename <- paste(plots_folder_scenario, "CE_plane2.png", sep = "/")
+
+# png(filename)
 
 ##TODO: error when matrix isnt symmetric. Think its lack of variability/multimodal...
 try(
@@ -132,9 +135,10 @@ try(
         scale_colour_manual(values = cbPalette)),
   silent = TRUE)
 
-ggsave(file = paste(plots_folder_scenario, "CE_plane2.png", sep = "/"))
+ggsave(file = filename, width = 30, height = 20, units = "cm")
 
 # dev.off()
+
 
 ## annotations
 

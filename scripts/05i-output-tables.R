@@ -7,6 +7,7 @@
 
 
 # INMB --------------------------------------------------------------------
+# compare with lm_multi
 
 out_tab <- table_costeffectiveness(screen.bcea,
                                    wtp_threshold = wtp_threshold)
