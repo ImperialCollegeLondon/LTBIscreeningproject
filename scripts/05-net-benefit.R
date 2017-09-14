@@ -53,8 +53,18 @@ bayeslm_wtp <- function(nmb_formula,
 }
 
 
-design_matrix <- apply(scenario_parameter_p, 2, as.factor)
+# create design matrix ----------------------------------------------------
 
+# convert to percentages
+scenario_numbers <- scenario_parameter_p$scenario
+design_matrix <-
+  (scenario_parameter_p*100) %>%
+  mutate(scenario = scenario_numbers)
+
+# convert to discrete levels
+# design_matrix <- apply(scenario_parameter_p, 2, as.factor)
+
+# conmbine decision tree and pop model output
 e_screened <- map2(aTB_CE_stats$QALY.screened_person,
                    map(dectree_res, "mc_health"), `-`)
 
@@ -64,7 +74,7 @@ c_screened <- map2(aTB_CE_stats$cost.screened_person,
 e_statusquo <- aTB_CE_stats$QALY.statusquo_person
 c_statusquo <- aTB_CE_stats$cost.statusquo_person
 
-wtp_seq <- seq(10000, 15000, by = 250)
+wtp_seq <- seq(10000, 20000, by = 250)
 
 nmb_long <-
   lapply(wtp_seq,
@@ -93,7 +103,12 @@ design_matrix <- within(design_matrix,
 # bayesian
 lm_basic_wtp <- bayeslm_wtp(as.formula(NMB ~ policy), design_matrix)
 
-lm_basic <- lapply(wtp_seq, lm_basic_wtp)
+lm_basic <-
+  lapply(wtp_seq, lm_basic_wtp) %>%
+  set_names(wtp_seq)
+
+
+# create cea curves
 
 beta_pos <- sapply(lm_basic,
                    function(x) summary(x)$coefficients["policyscreened", "Estimate"] > 0)
@@ -105,7 +120,7 @@ ceac <- ifelse(beta_pos, 1 - pvalue/2, pvalue/2)  #https://bmchealthservres.biom
 plot(y = ceac, x = wtp_seq, type = "o")
 
 
-# multiple dichotomous covariates -----------------------------------------
+# multiariate -----------------------------------------------
 
 nmb_formula <- as.formula(NMB ~ policy*Agree*Start +
                             policy*Agree*Complete +
@@ -116,20 +131,59 @@ nmb_formula <- as.formula(NMB ~ policy*Agree*Start +
 
 # lm_multi_wtp <- lm_wtp(nmb_formula, design_matrix)
 lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
-
 lm_multi <- lapply(wtp_seq, lm_multi_wtp)
 
 
 
-##TODO:
-# continuous covariates
-# lm(NMB ~ screen*agree*start +
-#      screen*agree*complete +
-#      screen*agree*effective +
-#      screen*start*complete +
-#      screen*start*effective +
-#      screen*complete*effective)
-#
+# note: covariates are bounded [0,100]
+# is this a big problem?
+
+# centred for easier coefficient interpretation
+
+# one variable
+nmb_formula <- as.formula(NMB ~ policy*I(Agree - 50))
+lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+lm_multi_agree <- lapply(wtp_seq, lm_multi_wtp)
+
+nmb_formula <- as.formula(NMB ~ policy*I(Start - 50))
+lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+lm_multi_start <- lapply(wtp_seq, lm_multi_wtp)
+
+nmb_formula <- as.formula(NMB ~ policy*I(Complete - 50))
+lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+lm_multi_complete <- lapply(wtp_seq, lm_multi_wtp)
+
+nmb_formula <- as.formula(NMB ~ policy*I(Effective - 50))
+lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+lm_multi_effective <- lapply(wtp_seq, lm_multi_wtp)
+
+
+optimal_thresholds <- function(lm_multi, covar, centre) {
+
+  opt <-
+    sapply(lm_multi,
+           function(x) centre - x$coefficients["policyscreened"]/x$coefficients[sprintf("policyscreened:I(%s - %s)", covar, centre)])
+
+  # remove out-of-bounds
+  opt <-
+    opt %>%
+    set_names(wtp_seq) %>%
+    ifelse(test = . < 100 & . > 0,
+           yes =  .,
+           no =  NA)
+
+  return(opt)
+}
+
+opt_thesholds_agree <- optimal_thresholds(lm_multi_agree, covar = "Agree", centre = 50)
+opt_thesholds_start <- optimal_thresholds(lm_multi_start, "Start", centre = 50)
+opt_thesholds_complete <- optimal_thresholds(lm_multi_complete, "Complete", centre = 50)
+opt_thesholds_effective <- optimal_thresholds(lm_multi_effective, "Effective", centre = 50)
+
+plot(wtp_seq, opt_thesholds_agree, type = 'l', ylim = c(0, 100), col = "red")
+lines(wtp_seq, opt_thesholds_start, type = 'l', ylim = c(0, 100), col = "blue")
+lines(wtp_seq, opt_thesholds_complete, type = 'l', ylim = c(0, 100), col = "green")
+lines(wtp_seq, opt_thesholds_effective, type = 'l', ylim = c(0, 100), col = "black")
 
 
 # output tables -----------------------------------------------------------
@@ -138,21 +192,29 @@ library(broom)
 library(stargazer)
 
 # INMB estimate
-lapply(lm_basic, function(x) tidy(x)[2, ]) %>%
-  do.call(rbind, .)
+# lapply(lm_basic, function(x) tidy(x)[2, ]) %>%
+#   do.call(rbind, .)
 
-lapply(lm_multi, function(x) tidy(x)) %>%
-  join_all(by = "term")
+lm_multi_all <-
+  lapply(lm_multi, function(x) tidy(x)) %>%
+  plyr::join_all(by = "term")
 
+lm_multi_all <-
+  lapply(lm_multi_agree, function(x) tidy(x)) %>%
+  plyr::join_all(by = "term")
+
+##TODO:
 # doesnt like bayesglm
-stargazer(lm_basic,
-          type = "text",
-          column.labels = as.character(wtp_seq))
+# stargazer(lm_basic,
+#           type = "text",
+#           column.labels = as.character(wtp_seq))
+#
+# stargazer(lm_multi,
+#           type = "text",
+#           column.labels = as.character(wtp_seq))
+#
+# cat(paste(xx, collapse = "\n"), "\n", file = "output/lm_table.txt", append = TRUE)
 
-stargazer(lm_multi,
-          type = "text",
-          column.labels = as.character(wtp_seq))
-
-
-cat(paste(xx, collapse = "\n"), "\n", file = "output/lm_table.txt", append = TRUE)
+write.csv(x = lm_multi_all,
+          file = paste(diroutput, "lm_table.csv", sep = "/"))
 
