@@ -32,15 +32,16 @@ num_all_tb_QALY <-
     n.uk_tb + n.exit_tb}
 
 
-# calculate QALYs for all tb cases for all situations
-# so can sample later
+# get QALYs all possible outcomes
+
 QALY_all_tb <-
   IMPUTED_sample_year_cohort %>%
-  subset(all_tb == TRUE) %$%
-  calc_QALY_tb(timetoevent = pmax(0.5, all_death_rNotificationDate), #assume at least 6 month between progression and all-cause death
-               utility.disease_free = utility$disease_free,
-               utility.case = utility$activeTB,
-               age = age_all_notification)
+  subset(all_tb == TRUE) %>%
+  transmute(fatality = QALY_fatality,
+            cured = QALY_cured,
+            diseasefree = QALY_diseasefree) %>%
+  as.list(t(.))
+
 
 E_fatalities <- with(IMPUTED_sample_year_cohort,
                      cfr[!is.na(cfr)])

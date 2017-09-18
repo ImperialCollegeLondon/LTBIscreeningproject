@@ -46,3 +46,19 @@ IMPUTED_sample <-
   dplyr::mutate(tb_fatality = ifelse(is.na(cfr),
                                      NA,
                                      runif(n = n()) < cfr))
+
+
+# calculate QALYs for all tb cases for all outcomes
+# so can sample later
+QALY_all_tb <-
+  IMPUTED_sample %>%
+  subset(all_tb == TRUE) %$%
+  calc_QALY_tb(timetoevent = pmax(0.5, all_death_rNotificationDate), #assume at least 6 month between progression and all-cause death
+               utility.disease_free = utility$disease_free,
+               utility.case = utility$activeTB,
+               age = age_all_notification)
+
+IMPUTED_sample$QALY_fatality[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$fatality
+IMPUTED_sample$QALY_diseasefree[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$diseasefree
+IMPUTED_sample$QALY_cured[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$cured
+
