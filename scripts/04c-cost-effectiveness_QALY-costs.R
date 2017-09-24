@@ -122,8 +122,10 @@ for (s in seq_len(n.scenarios)) {
 
     if (ENDPOINT_cost == "exit uk") {
 
-      cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * uk_secondary_inf_discounts
-      cost_notif.statusquo <- (uk_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
+      cost_notif.statusquo <- cost_tb_notif(num_sec_inf,
+                                            unit_cost.aTB_TxDx,
+                                            uk_secondary_inf_discounts,
+                                            uk_notif_discounts)
       cost_notif.screened  <- cost_notif.statusquo
 
       ##TODO: remove randomness for testing
@@ -138,8 +140,10 @@ for (s in seq_len(n.scenarios)) {
 
     }else{
 
-      cost_secondary_inf <- num_sec_inf * unit_cost.aTB_TxDx * all_secondary_inf_discounts
-      cost_notif.statusquo <- (all_notif_discounts * unit_cost.aTB_TxDx) + cost_secondary_inf
+      cost_notif.statusquo <- cost_tb_notif(num_sec_inf,
+                                            unit_cost.aTB_TxDx,
+                                            all_secondary_inf_discounts,
+                                            all_notif_discounts)
       cost_notif.screened  <- cost_notif.statusquo
 
       who_tb_avoided_cost <- who_all_tb_avoided
