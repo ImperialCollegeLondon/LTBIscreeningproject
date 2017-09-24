@@ -3,13 +3,16 @@
 #'
 #' Calculate decision tree expected costs and QALY loss
 #' for N simulations
-#' 
+#'
 decision_tree_cluster <- function(parameters,
                                   N.mc = 2,
                                   n.uk_tb = NA,
                                   n.exit_tb = NA,
                                   cost_dectree = "osNode_cost_2009.RData",
                                   health_dectree = "osNode_health_2009.RData"){
+
+  mcall <- match.call()
+
   load(cost_dectree)
   load(health_dectree)
 
@@ -38,7 +41,8 @@ decision_tree_cluster <- function(parameters,
   list(mc_cost = as.numeric(mc_cost$`expected values`),
        mc_health = as.numeric(mc_health$`expected values`),
        mc_n.tb_screen = mc_n.tb_screen,
-       p_complete_Tx = p_complete_Tx)
+       p_complete_Tx = p_complete_Tx,
+       mcall = mcall)
 }
 
 
