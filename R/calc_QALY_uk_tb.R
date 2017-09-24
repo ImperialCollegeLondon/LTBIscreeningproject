@@ -16,6 +16,7 @@
 #' @param utility.disease_free Utility value of non-diseased individual
 #' @param utility.case Utility value of diseased individual
 #' @param age Ages in years
+#' @param start_delay What time delay to origin, to shift discounting
 #' @param ... Additional arguments
 #'
 #' @return list of diseasefree, death, cured QALYs
@@ -27,6 +28,7 @@ calc_QALY_tb <- function(timetoevent,
                          utility.disease_free = 1,
                          utility.case,
                          age,
+                         start_delay = 0,
                          ...){
 
   if (utility.disease_free < 0 | utility.disease_free > 1)
@@ -43,15 +45,30 @@ calc_QALY_tb <- function(timetoevent,
 
   diseasefree <- QALY::calc_QALY_population(utility = utility.disease_free,
                                             time_horizons = timetoevent,
-                                            age = age)
+                                            age = age,
+                                            start_delay = start_delay)
 
   fatality <- QALY::calc_QALY_population(utility = utility.case,
-                                         time_horizons = pmin(timetoevent, 1),
-                                         age = age)
+                                         time_horizons = pmin(timetoevent, 0.5), #ie 6 months
+                                         age = age,
+                                         start_delay = start_delay)
+
 
   cured <- QALY::calc_QALY_population(utility = c(utility.case, utility.disease_free),
                                       time_horizons = timetoevent,
-                                      age = age)
+                                      age = age,
+                                      start_delay = start_delay)
+
+  #otherwise cured is better than disease_free
+  for (i in seq_along(timetoevent)) {
+
+    cured[i] <-
+      if (timetoevent[i] < 1) {
+        fatality[i]
+      } else {
+        cured[i]
+      }
+  }
 
   return(list(diseasefree = diseasefree,
               fatality = fatality,
