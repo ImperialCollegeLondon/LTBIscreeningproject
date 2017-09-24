@@ -74,3 +74,26 @@ IMPUTED_sample <-
                                         yes = QALY_fatality,
                                         no = QALY_cured))
 
+# future discounts for costs fo active TB cases
+
+uk_notif_dates <-
+  IMPUTED_sample$rNotificationDate_issdt.years %>%
+  ceiling()
+
+all_notif_dates <-
+  IMPUTED_sample$all_tb_issdt %>%
+  ceiling()
+
+max_tb_issdt <- max(IMPUTED_sample$all_tb_issdt, na.rm = TRUE)
+
+ydiscounts <- QALY::discount(t_limit = max_tb_issdt + 1)
+
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(uk_notif_discounts = ydiscounts[uk_notif_dates],
+         all_notif_discounts = ydiscounts[all_notif_dates],
+         uk_secondary_inf_discounts = ydiscounts[uk_notif_dates + 1],
+         all_secondary_inf_discounts = ydiscounts[all_notif_dates + 1])
+
+
+
