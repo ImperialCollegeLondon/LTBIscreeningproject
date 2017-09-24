@@ -7,9 +7,6 @@
 # run jobs using network drive Q:\R\cluster--LTBI-decision-tree
 
 
-pastef <- purrr::partial(...f = paste, sep = "/")
-
-
 # load input files ---------------------------------------------------------
 
 osNode.cost.fileName <- system.file("data", "LTBI_dtree-cost-symptoms.yaml",
@@ -30,17 +27,16 @@ osNode.health <- costeff.health$osNode
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 
 # 2009 cohort
-##TODO: hardcoded. calc from variable
-p_incid_grp <- c("(0,50]" = 0,
-                 "(50,150]" = 0.02505289,
-                 "(150,250]" = 0.09000483,
-                 "(250,350]" = 0.02046914,
-                 "(350,1e+05]" = 0.86447315)
+# p_incid_grp <- c("(0,50]" = 0,
+#                  "(50,150]" = 0.02505289,
+#                  "(150,250]" = 0.09000483,
+#                  "(250,350]" = 0.02046914,
+#                  "(350,1e+05]" = 0.86447315)
+# # drop groups not screened & rescale to 1
+# p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
+# p_incid_grp <- p_incid_grp/sum(p_incid_grp)
 
-# drop prevalence group not screened
-# and rescale to 1
-p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
-p_incid_grp <- p_incid_grp/sum(p_incid_grp)
+p_incid_grp <- table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011) %>% prop.table()
 
 pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
                             LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
