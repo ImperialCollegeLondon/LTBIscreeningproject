@@ -15,7 +15,9 @@ IMPUTED_sample <-
                                       exituk_tb.years),
 
                 # progression to death times
-                uk_death_rNotificationDate = date_death1_issdt.years - rNotificationDate_issdt.years,
+                uk_death_rNotificationDate = date_death1_issdt.years - ifelse(test = is.infinite(rNotificationDate_issdt.years),
+                                                                              yes = NA,
+                                                                              no = rNotificationDate_issdt.years),
                 all_death_rNotificationDate = date_death1_issdt.years - all_tb_issdt,
 
                 # progression ages
@@ -33,6 +35,19 @@ IMPUTED_sample <-
                                                 right = FALSE))
 
 
+
+# calculate QALYs for all tb cases for all outcomes
+# so can sample later
+QALY_all_tb <-
+  IMPUTED_sample %>%
+  subset(all_tb == TRUE) %$%
+  calc_QALY_tb(timetoevent = all_death_rNotificationDate,
+               utility.disease_free = utility$disease_free,
+               utility.case = utility$activeTB,
+               age = age_all_notification,
+               start_delay = all_tb_issdt)
+
+
 # case fatality rate for each active TB case
 
 IMPUTED_sample <-
@@ -43,22 +58,19 @@ IMPUTED_sample <-
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  dplyr::mutate(tb_fatality = ifelse(is.na(cfr),
-                                     NA,
-                                     runif(n = n()) < cfr))
-
-
-# calculate QALYs for all tb cases for all outcomes
-# so can sample later
-QALY_all_tb <-
-  IMPUTED_sample %>%
-  subset(all_tb == TRUE) %$%
-  calc_QALY_tb(timetoevent = pmax(0.5, all_death_rNotificationDate), #assume at least 6 month between progression and all-cause death
-               utility.disease_free = utility$disease_free,
-               utility.case = utility$activeTB,
-               age = age_all_notification)
-
-IMPUTED_sample$QALY_fatality[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$fatality
-IMPUTED_sample$QALY_diseasefree[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$diseasefree
-IMPUTED_sample$QALY_cured[IMPUTED_sample$all_tb == TRUE] <- QALY_all_tb$cured
+  dplyr::mutate(tb_fatality = ifelse(test = is.na(cfr),
+                                     yes = NA,
+                                     no = runif(n = n()) < cfr),
+                QALY_fatality = ifelse(test = all_tb,
+                                       yes = QALY_all_tb$fatality,
+                                       no = NA),
+                QALY_diseasefree = ifelse(test = all_tb,
+                                       yes = QALY_all_tb$diseasefree,
+                                       no = NA),
+                QALY_cured = ifelse(test = all_tb,
+                                       yes = QALY_all_tb$diseasefree,
+                                       no = NA),
+                QALY_statusquo = ifelse(test = tb_fatality,
+                                        yes = QALY_fatality,
+                                        no = QALY_cured))
 

@@ -32,25 +32,15 @@ num_all_tb_QALY <-
     n.uk_tb + n.exit_tb}
 
 
-# get QALYs all possible outcomes
-
-QALY_all_tb <-
-  IMPUTED_sample_year_cohort %>%
-  subset(all_tb == TRUE) %>%
-  transmute(fatality = QALY_fatality,
-            cured = QALY_cured,
-            diseasefree = QALY_diseasefree) %>%
-  as.list(t(.))
-
 
 E_fatalities <- with(IMPUTED_sample_year_cohort,
                      cfr[!is.na(cfr)])
 
 E_total_fatalities <- sum(E_fatalities)
 
-E_fatality_QALYloss <- QALY_all_tb$diseasefree * E_fatalities
+E_fatality_QALYloss <- IMPUTED_sample_year_cohort$QALY_diseasefree * E_fatalities
 
-E_total_fatality_QALYloss <- sum(E_fatality_QALYloss)
+E_total_fatality_QALYloss <- sum(E_fatality_QALYloss, na.rm = TRUE)
 
 
 # adjusted_life_years type object equivalent calc
