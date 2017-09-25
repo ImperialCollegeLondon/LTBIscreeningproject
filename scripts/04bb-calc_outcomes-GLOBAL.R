@@ -33,14 +33,14 @@ num_all_tb_QALY <-
 
 
 
-E_fatalities <- with(IMPUTED_sample_year_cohort,
-                     cfr[!is.na(cfr)])
-
-E_total_fatalities <- sum(E_fatalities)
-
-E_fatality_QALYloss <- IMPUTED_sample_year_cohort$QALY_diseasefree * E_fatalities
-
-E_total_fatality_QALYloss <- sum(E_fatality_QALYloss, na.rm = TRUE)
+# E_fatalities <- with(IMPUTED_sample_year_cohort,
+#                      cfr[!is.na(cfr)])
+#
+# E_total_fatalities <- sum(E_fatalities)
+#
+# E_fatality_QALYloss <- IMPUTED_sample_year_cohort$QALY_diseasefree * E_fatalities
+#
+# E_total_fatality_QALYloss <- sum(E_fatality_QALYloss, na.rm = TRUE)
 
 
 # adjusted_life_years type object equivalent calc

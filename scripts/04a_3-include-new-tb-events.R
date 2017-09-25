@@ -35,7 +35,6 @@ IMPUTED_sample <-
                                                 right = FALSE))
 
 
-
 # calculate QALYs for all tb cases for all outcomes
 # so can sample later
 QALY_all_tb <-
@@ -65,35 +64,31 @@ IMPUTED_sample <-
                                        yes = QALY_all_tb$fatality,
                                        no = NA),
                 QALY_diseasefree = ifelse(test = all_tb,
-                                       yes = QALY_all_tb$diseasefree,
-                                       no = NA),
+                                          yes = QALY_all_tb$diseasefree,
+                                          no = NA),
                 QALY_cured = ifelse(test = all_tb,
-                                       yes = QALY_all_tb$diseasefree,
-                                       no = NA),
+                                    yes = QALY_all_tb$diseasefree,
+                                    no = NA),
                 QALY_statusquo = ifelse(test = tb_fatality,
                                         yes = QALY_fatality,
                                         no = QALY_cured))
 
-# future discounts for costs fo active TB cases
 
-uk_notif_dates <-
-  IMPUTED_sample$rNotificationDate_issdt.years %>%
-  ceiling()
+# future discounts for costs of active TB cases
 
-all_notif_dates <-
-  IMPUTED_sample$all_tb_issdt %>%
-  ceiling()
-
-max_tb_issdt <- max(IMPUTED_sample$all_tb_issdt, na.rm = TRUE)
+max_tb_issdt <-
+  with(IMPUTED_sample,
+       all_tb_issdt[is.finite(all_tb_issdt)] %>%
+         max(na.rm = TRUE))
 
 ydiscounts <- QALY::discount(t_limit = max_tb_issdt + 1)
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(uk_notif_discounts = ydiscounts[uk_notif_dates],
+  mutate(uk_notif_dates = ceiling(rNotificationDate_issdt.years),
+         all_notif_dates = ceiling(all_tb_issdt),
+         uk_notif_discounts = ydiscounts[uk_notif_dates],
          all_notif_discounts = ydiscounts[all_notif_dates],
          uk_secondary_inf_discounts = ydiscounts[uk_notif_dates + 1],
          all_secondary_inf_discounts = ydiscounts[all_notif_dates + 1])
-
-
 

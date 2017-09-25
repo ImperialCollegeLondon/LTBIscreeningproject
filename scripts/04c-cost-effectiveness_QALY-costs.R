@@ -52,6 +52,8 @@ E_cost_incur <- E_cost_incur_person <- NA
 E_QALYgain <- E_QALYgain_person <- NA
 
 
+# extract tb cases only data
+
 cfr <- purrr::discard(IMPUTED_sample_year_cohort$cfr, is.na)
 
 QALY_statusquo <- purrr::discard(IMPUTED_sample_year_cohort$QALY_statusquo, is.na)
@@ -95,22 +97,22 @@ for (s in seq_len(n.scenarios)) {
   for (i in seq_len(N.mc)) {
 
     # removed randomness
-    unit_cost.aTB_TxDx <- mean_cost.aTB_TxDx
+    # unit_cost.aTB_TxDx <- mean_cost.aTB_TxDx
 
-    # unit_cost.aTB_TxDx <-
-    #   unit_cost$aTB_TxDx %>%
-    #   sample_distributions() %>%
-    #   sum()
+    unit_cost.aTB_TxDx <-
+      unit_cost$aTB_TxDx %>%
+      sample_distributions() %>%
+      sum()
 
     # secondary infections
     # in following year
     # removed randomness
-    num_sec_inf <- mean_num_sec_inf
+    # num_sec_inf <- mean_num_sec_inf
 
-    # num_sec_inf <-
-    #   NUM_SECONDARY_INF %>%
-    #   sample_distributions() %>%
-    #   unlist()
+    num_sec_inf <-
+      NUM_SECONDARY_INF %>%
+      sample_distributions() %>%
+      unlist()
 
     num_avoided.all_tb <- n.diseasefree.all_tb[[s]][i, 'n']
     num_avoided.uk_tb  <- n.diseasefree.uk_tb[[s]][i, 'n']
@@ -126,7 +128,7 @@ for (s in seq_len(n.scenarios)) {
                                             unit_cost.aTB_TxDx,
                                             uk_secondary_inf_discounts,
                                             uk_notif_discounts)
-      cost_notif.screened  <- cost_notif.statusquo
+      cost_notif.screened <- cost_notif.statusquo
 
       ##TODO: remove randomness for testing
       # random sample individuals
@@ -138,13 +140,13 @@ for (s in seq_len(n.scenarios)) {
       # creates clumped data tho
       # who_tb_avoided_cost <- seq(1, unlist(num_avoided.uk_tb))
 
-    }else{
+    }else if (ENDPOINT_cost == "death") {
 
       cost_notif.statusquo <- cost_tb_notif(num_sec_inf,
                                             unit_cost.aTB_TxDx,
                                             all_secondary_inf_discounts,
                                             all_notif_discounts)
-      cost_notif.screened  <- cost_notif.statusquo
+      cost_notif.screened <- cost_notif.statusquo
 
       who_tb_avoided_cost <- who_all_tb_avoided
 

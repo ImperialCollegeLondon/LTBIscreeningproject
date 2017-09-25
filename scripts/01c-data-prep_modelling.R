@@ -14,7 +14,6 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 # remove duplicate and not needed records ---------------------------------
 
-
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 dup_ref_id_orig == 0)
@@ -54,7 +53,6 @@ who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
-
 
 # ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
@@ -113,22 +111,21 @@ issdt.asnumeric <- IMPUTED_sample$issdt - date_origin
 # days from uk entry to active tb
 rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - date_origin
 rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
-rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365
-
+rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365.25
 
 # days from uk entry to all-cause death
 date_death1.asnumeric <- as.Date(IMPUTED_sample$date_death1) - date_origin
 date_death1_issdt <- date_death1.asnumeric - issdt.asnumeric
-date_death1_issdt.years <- as.numeric(date_death1_issdt)/365
-
+date_death1_issdt.years <- as.numeric(date_death1_issdt)/365.25
 
 # days from uk entry to exit uk
 date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - date_origin
 date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
 
-date_exit_uk1_issdt[date_exit_uk1_issdt == 36525] <- Inf  #never exit imputed 100 years
+#never exit imputed at 100 years
+date_exit_uk1_issdt[date_exit_uk1_issdt == 36525] <- Inf
 
-date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365
+date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365.25
 
 
 IMPUTED_sample <- data.frame(IMPUTED_sample,
@@ -142,11 +139,12 @@ IMPUTED_sample <- data.frame(IMPUTED_sample,
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(uk_tb = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
-                               yes = 0, no = 1),
-                rNotificationDate_issdt.years = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
+                               yes = 0,
+                               no = 1),
+                rNotificationDate_issdt.years = ifelse(!uk_tb,
                                                        yes = NA,
                                                        no = rNotificationDate_issdt.years),
-                rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
+                rNotificationDate_issdt = ifelse(!uk_tb,
                                                  yes = NA,
                                                  no = rNotificationDate_issdt))
 
@@ -187,7 +185,8 @@ IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 FUP_DATE <- as.Date("2013-12-31")
 
-fup_limit <- FUP_DATE - date_origin #days from 1960-01-01 to 2013-12-31
+# days from 1960-01-01 to 2013-12-31
+fup_limit <- FUP_DATE - date_origin
 
 IMPUTED_sample <-
   IMPUTED_sample %>%

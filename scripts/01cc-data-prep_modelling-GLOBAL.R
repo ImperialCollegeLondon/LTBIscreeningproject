@@ -7,6 +7,10 @@
 # calculate associated stats
 
 
+##TODO:
+# IMPUTED_sample %>% dplyr::count(who_prev_cat_Pareek2011) %>% mutate(cumsum = rev(cumsum(rev(n))))
+
+
 # single year cohort only -------------------------------------------------
 
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
@@ -15,18 +19,24 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
 # coverage: keep only if indiv screened  ------------------------------------
 
 IMPUTED_sample_year_cohort %<>%
-  dplyr::mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
-                           date_exit_uk1_issdt.years >= pmax(screen_year, min_screen_length_of_stay) &
-                           (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)),
-                         1, 0))
+  dplyr::mutate(screened_before_exit = date_exit_uk1_issdt.years >= screen_year,
+                screened_before_tb = (rNotificationDate_issdt.years >= screen_year) | is.na(rNotificationDate_issdt.years),
+                screened_before_death = date_death1_issdt.years >= screen_year,
+                stay_longer_than_min = date_exit_uk1_issdt.years >= min_screen_length_of_stay,
+                screen = ifelse(screened_before_death &
+                                  screened_before_exit &
+                                  screened_before_tb &
+                                  stay_longer_than_min,
+                                yes = 1, no = 0))
 
 if (screen_with_delay) {
-
   IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
-                                              screen == 1)
-}
+                                              screen == 1)}
 
-rm(rNotificationDate_issdt.years)
+if (no_students) {
+  IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
+                                              visatype2 != "Students")}
+
 
 # remove individuals from 'lower' incidence countries
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
@@ -57,16 +67,16 @@ p.who_year <-
 # calc yearly counts for cohort year  -------------------------------------
 # active tb, exit uk, death sub-pops
 
-strat_pop_year <-
-  with(IMPUTED_sample_year_cohort,
-         list(tb = rNotificationDate_issdt.years,
-              exit_uk = date_exit_uk1_issdt.years,
-              death = date_death1_issdt.years) %>%
-           count_comprsk_events()
-  )
-
-
-# include a year 0 baseline
-strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
-                        strat_pop_year)
+# strat_pop_year <-
+#   with(IMPUTED_sample_year_cohort,
+#          list(tb = rNotificationDate_issdt.years,
+#               exit_uk = date_exit_uk1_issdt.years,
+#               death = date_death1_issdt.years) %>%
+#            count_comprsk_events()
+#   )
+#
+#
+# # include a year 0 baseline
+# strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
+#                         strat_pop_year)
 

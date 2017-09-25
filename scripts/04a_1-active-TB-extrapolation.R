@@ -28,7 +28,7 @@ extrap_years <- seq(from = max_years_obs + 1,
                     to = FUP_MAX_YEAR)
 
 mf.cens.log <- model.frame(formula = logy ~ year,
-                           data = data.frame(logy = log(year_prob.activetb)[decreasing_years],
+                           data = data.frame(logy = log(Lancet_prob)[decreasing_years],
                                              year = decreasing_years))
 fit.cens <- lm(mf.cens.log)
 
@@ -55,7 +55,8 @@ res_year_prob <- c(Lancet_prob,
 
 
 # save
+year_prob.activetb_cens_exituk <- year_prob.activetb_cmprsk_exituk <- res_year_prob #assume the same
 
-save(res_year_prob, file = "ext-data/year_prob.activetb_cens_exituk.RData")
-save(res_year_prob, file = "ext-data/year_prob.activetb_cmprsk_exituk.RData")
+save(year_prob.activetb_cens_exituk, file = "ext-data/year_prob.activetb_cens_exituk.RData")
+save(year_prob.activetb_cmprsk_exituk, file = "ext-data/year_prob.activetb_cmprsk_exituk.RData")
 

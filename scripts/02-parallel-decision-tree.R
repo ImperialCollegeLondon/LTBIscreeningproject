@@ -3,7 +3,7 @@
 # N Green
 # Aug 2017
 #
-# the output is saved in Q:/R/cluster--LTBI-decision-tree
+# the output is also saved in Q:/R/cluster--LTBI-decision-tree
 # because the alternative way of running is on the DIDE cluster
 # so all of the results are in the same place
 #
@@ -30,7 +30,7 @@ source("decision_tree_cluster.R")
 no_cores <- detectCores() - 1
 
 # Initiate cluster
-cl <- makeCluster(no_cores)
+cl <- makeCluster(no_cores, outfile = "temp_logfile.txt")
 
 n.uk_tb <- unlist(n.uk_tb)
 n.exit_tb <- unlist(n.exit_tb)
@@ -47,16 +47,21 @@ set.seed(12345)
 
 ptm <- proc.time()
 
-dectree_res <- parLapply(cl, scenario_parameters, decision_tree_cluster,
-                         N.mc = N.mc,
-                         n.uk_tb = n.uk_tb,
-                         n.exit_tb = n.exit_tb)
+dectree_res <- parLapplyLB(cl, scenario_parameters, decision_tree_cluster,
+                           N.mc = N.mc,
+                           n.uk_tb = n.uk_tb,
+                           n.exit_tb = n.exit_tb)
 
 proc.time() - ptm
 
 stopCluster(cl)
 
+
+# save --------------------------------------------------------------------
+
 saveRDS(dectree_res, file = cluster_output_filename)
+save(dectree_res, file = pastef(exit_wd, diroutput, "dectree_res.RData"))
+
 
 setwd(exit_wd)
 
