@@ -35,3 +35,7 @@ get_from_envir <- function(envir_name) {
         envir = eval(parse(text = envir_name)))
   }
 }
+
+prop_table <- function(df) {
+  prop.table(table(df))
+}

@@ -11,23 +11,12 @@
 # IMPUTED_sample %>% dplyr::count(who_prev_cat_Pareek2011) %>% mutate(cumsum = rev(cumsum(rev(n))))
 
 
-# single year cohort only -------------------------------------------------
-
+# single year cohort only
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
                                             issdt_year == year_cohort)
 
-# coverage: keep only if indiv screened  ------------------------------------
-
-IMPUTED_sample_year_cohort %<>%
-  dplyr::mutate(screened_before_exit = date_exit_uk1_issdt.years >= screen_year,
-                screened_before_tb = (rNotificationDate_issdt.years >= screen_year) | is.na(rNotificationDate_issdt.years),
-                screened_before_death = date_death1_issdt.years >= screen_year,
-                stay_longer_than_min = date_exit_uk1_issdt.years >= min_screen_length_of_stay,
-                screen = ifelse(screened_before_death &
-                                  screened_before_exit &
-                                  screened_before_tb &
-                                  stay_longer_than_min,
-                                yes = 1, no = 0))
+IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
+                                            date_exit_uk1_issdt.years >= min_screen_length_of_stay)
 
 if (screen_with_delay) {
   IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
@@ -46,7 +35,7 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
 # discount cost and QALYs in decision tree  ---------------------------------
 ## due to delayed start
 
-prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% table %>% prop.table
+prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% prop_table
 screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
 
@@ -60,7 +49,5 @@ n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
 # probability cohort in each WHO TB category
 p.who_year <-
-  table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011) %>%
-  prop.table()
-
+  prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
 
