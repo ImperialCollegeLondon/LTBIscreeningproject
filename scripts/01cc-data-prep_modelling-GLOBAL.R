@@ -64,19 +64,3 @@ p.who_year <-
   prop.table()
 
 
-# calc yearly counts for cohort year  -------------------------------------
-# active tb, exit uk, death sub-pops
-
-# strat_pop_year <-
-#   with(IMPUTED_sample_year_cohort,
-#          list(tb = rNotificationDate_issdt.years,
-#               exit_uk = date_exit_uk1_issdt.years,
-#               death = date_death1_issdt.years) %>%
-#            count_comprsk_events()
-#   )
-#
-#
-# # include a year 0 baseline
-# strat_pop_year <- cbind(c(0, 0, 0, 0, pop_year),
-#                         strat_pop_year)
-
