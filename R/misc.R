@@ -26,3 +26,12 @@ syncr_fixed_paths <- function(from_folder_path, to_folder_path){
                  dest = to_folder_path)
   }
 }
+
+
+get_from_envir <- function(envir_name) {
+
+  function(variable_name){
+    get(variable_name,
+        envir = eval(parse(text = envir_name)))
+  }
+}

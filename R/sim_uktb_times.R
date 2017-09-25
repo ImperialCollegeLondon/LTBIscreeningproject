@@ -99,7 +99,7 @@ sample_tb_year <- function(fup_issdt,
 #'
 sim_uktb_times <- function(data,
                            prob) {
-  pop <-  nrow(data)
+  pop <- nrow(data)
 
   uk_tb_year <- vector(length = pop,
                        mode = "double")

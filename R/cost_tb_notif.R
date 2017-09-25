@@ -1,5 +1,5 @@
 
-#' cost_tb_notif
+#' Total Costs of First and Secondary Active TB Cases
 #'
 #' @param num_sec_inf
 #' @param unit_cost

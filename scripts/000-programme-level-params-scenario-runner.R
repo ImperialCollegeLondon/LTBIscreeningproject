@@ -14,7 +14,7 @@ rm(list = ls())
 devtools::load_all(".")
 
 source("scripts/create_LTBI_input_workspace.R")
-# load(file = "ext-data/LTBI_input_workspace.RData")
+load(file = "ext-data/LTBI_input_workspace.RData")
 
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")
@@ -25,7 +25,7 @@ sources_correctly <- NULL
 
 runtime <- proc.time()
 
-# global_run <- 2
+# global_run <- 6
 for (global_run in seq_along(global_params_scenarios_ls)) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))

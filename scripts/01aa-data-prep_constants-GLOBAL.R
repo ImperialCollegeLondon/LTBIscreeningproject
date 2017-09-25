@@ -9,19 +9,23 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 2#0
+N.mc <- 3
 
 cluster <- FALSE
 
 
 # global sensitivity parameters -------------------------------------------
 
+no_students <- FALSE
+
 # or read in scenarios environments
 if (exists("global_run")) {
 
-  incidence_grps_screen <- get("incidence_grps_screen", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
-  min_screen_length_of_stay <- get("min_screen_length_of_stay", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
-  ENDPOINT_cost <- get("ENDPOINT_cost", envir = eval(parse(text = global_params_scenarios_ls[global_run])))
+  get_current_scenario <- get_from_envir(global_params_scenarios_ls[global_run])
+
+  incidence_grps_screen <- get_current_scenario("incidence_grps_screen")
+  min_screen_length_of_stay <- get_current_scenario("min_screen_length_of_stay")
+  ENDPOINT_cost <- get_current_scenario("ENDPOINT_cost")
 
 }else{# hard code
 
@@ -39,8 +43,8 @@ if (exists("global_run")) {
   ENDPOINT_cost <- "exit uk" #"death"
 }
 
-sprintf("Input parameters WHO groups:%s, min stay:%s, endpoint:%s",
-        incidence_grps_screen, min_screen_length_of_stay, ENDPOINT_cost)
+sprintf("Input parameters - WHO groups:%s, min stay:%s, endpoint:%s",
+        paste(incidence_grps_screen, collapse = ""), min_screen_length_of_stay, ENDPOINT_cost)
 
 
 # folder locations --------------------------------------------------------
