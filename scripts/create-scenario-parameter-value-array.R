@@ -5,6 +5,7 @@
 #
 # create grid of parameter values
 # representing each scenario
+# full-factorial design
 
 
 library(xlsx)

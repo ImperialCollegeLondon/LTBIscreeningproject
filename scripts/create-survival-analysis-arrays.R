@@ -1,4 +1,9 @@
-# create survival analysis arrays -------------------------------------------------
+# ************************************
+# LTBI screening
+# N Green
+# 2017
+#
+# create survival analysis arrays
 # just use one imputation sample
 # different functions/packages require different formats
 
@@ -17,8 +22,9 @@ event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
 # i.e. non active TB event censoring times
 cens <- event
 cens[cens != 1] <- 0
-times <- fup_issdt[ ,"fup1_issdt"]
-times_years <- days_to_years(fup_issdt[ ,"fup1_issdt"])
+
+times <- IMPUTED_sample$fup_issdt_days
+times_years <- IMPUTED_sample$fup_issdt
 
 dat_surv_naive <-
   data.frame(cens = cens,
@@ -79,15 +85,14 @@ data_etm_cens_exituk <-
 # 1961.000               6           18      0      0      0
 
 dat_surv <-
-  fup_issdt %>%
-  data.frame() %>%
-  transmute(time_days = fup1_issdt,
-            time = days_to_years(fup1_issdt),
-            age_at_entry = IMPUTED_sample$age_at_entry,
+  IMPUTED_sample %>%
+  transmute(time_days = fup_issdt_days,
+            time = fup_issdt,
+            age_at_entry = age_at_entry,
             event3 = as.numeric(event == 3), #death
             event2 = as.numeric(event == 2), #exit_uk
             event1 = as.numeric(event == 1), #uk_tb
-            LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
+            LTBI_or_activeTB = LTBI_or_activeTB) %>%
   dplyr::filter(LTBI_or_activeTB == TRUE) %>%
   dplyr::select(-LTBI_or_activeTB)
 

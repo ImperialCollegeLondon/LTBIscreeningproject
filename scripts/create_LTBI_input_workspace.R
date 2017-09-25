@@ -18,8 +18,8 @@ source("scripts/01-prep-scenario-decisiontree-data.R", echo = TRUE)
 
 # 4) event times estimation --------------------------------------------
 
-source("scripts/04a_1-active-TB-extrapolation.R")
-source("scripts/04a_2-active-TB-imputation.R")
-source("scripts/04a_3-include-new-tb-events.R")
+source("scripts/04a_1-active-TB-extrapolation.R", echo = TRUE)
+source("scripts/04a_2-active-TB-imputation.R", echo = TRUE)
+source("scripts/04a_3-include-new-tb-events.R", echo = TRUE)
 
 save.image(file = "ext-data/LTBI_input_workspace.RData")

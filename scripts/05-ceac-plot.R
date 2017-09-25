@@ -5,6 +5,8 @@
 #
 # cost-effectiveness acceptability curves
 
+##TODO: save separate files for subsets (possibly single) lines
+
 
 # using BCEA package functions --------------------------------------------
 
@@ -20,13 +22,17 @@
 
 #  custom function --------------------------------------------------------
 
-filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
+# filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
+filename <- paste(plots_folder_scenario, "ceac.pdf", sep = "/")
 
-png(filename)
+# png(filename)
+pdf(filename)
 
-try(
-  print(my_ceac.plot(screen.bcea), new_window = TRUE),
-  silent = TRUE)
+for (i in screen.bcea$n.comparators) {
+  try(
+    print(my_ceac.plot(screen.bcea), new_window = TRUE),
+    silent = TRUE)
+}
 
 ##TODO:
 # ggsave(file = filename,
