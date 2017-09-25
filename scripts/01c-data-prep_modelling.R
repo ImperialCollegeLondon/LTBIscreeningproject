@@ -42,7 +42,8 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 ## exit date after latest death
 
 if (force_everyone_stays) {
-  IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
+##TODO:
+    IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
 
 
@@ -94,47 +95,20 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 
-# create time-to-events in days --------------------------
+# create time-to-events -------------------------
 # from uk entry to event dates
 
-# date_origin <- lubridate::origin
-# "1970-01-01 UTC"
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(rNotificationDate_issdt = rNotificationDate - issdt,
+         date_death1_issdt = date_death1 - issdt,
+         date_exit_uk1_issdt = date_exit_uk1 - issdt,
+         rNotificationDate_issdt.years = as.numeric(rNotificationDate_issdt)/365.25,
+         date_death1_issdt.years = as.numeric(date_death1_issdt)/365.25,
+         date_exit_uk1_issdt.years = as.numeric(date_exit_uk1_issdt)/365.25,
+         date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt),
+         date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt.years))
 
-date_origin <- as.Date("1960-01-01")
-
-IMPUTED_sample$issdt <- as.Date(IMPUTED_sample$issdt, '%Y-%m-%d')
-
-# days to arrival in uk from time origin
-issdt.asnumeric <- IMPUTED_sample$issdt - date_origin
-
-
-# days from uk entry to active tb
-rNotificationDate.asnumeric <- as.Date(IMPUTED_sample$rNotificationDate) - date_origin
-rNotificationDate_issdt <- rNotificationDate.asnumeric - issdt.asnumeric
-rNotificationDate_issdt.years <- as.numeric(rNotificationDate_issdt)/365.25
-
-# days from uk entry to all-cause death
-date_death1.asnumeric <- as.Date(IMPUTED_sample$date_death1) - date_origin
-date_death1_issdt <- date_death1.asnumeric - issdt.asnumeric
-date_death1_issdt.years <- as.numeric(date_death1_issdt)/365.25
-
-# days from uk entry to exit uk
-date_exit_uk1.asnumeric <- as.Date(IMPUTED_sample$date_exit_uk1) - date_origin
-date_exit_uk1_issdt <- date_exit_uk1.asnumeric - issdt.asnumeric
-
-#never exit imputed at 100 years
-date_exit_uk1_issdt[date_exit_uk1_issdt == 36525] <- Inf
-
-date_exit_uk1_issdt.years <- as.numeric(date_exit_uk1_issdt)/365.25
-
-
-IMPUTED_sample <- data.frame(IMPUTED_sample,
-                             rNotificationDate_issdt,
-                             rNotificationDate_issdt.years,
-                             date_death1_issdt,
-                             date_death1_issdt.years,
-                             date_exit_uk1_issdt,
-                             date_exit_uk1_issdt.years)
 # remove tb before entry
 IMPUTED_sample <-
   IMPUTED_sample %>%
@@ -147,16 +121,6 @@ IMPUTED_sample <-
                 rNotificationDate_issdt = ifelse(!uk_tb,
                                                  yes = NA,
                                                  no = rNotificationDate_issdt))
-
-rm(issdt.asnumeric,
-   rNotificationDate.asnumeric,
-   rNotificationDate_issdt,
-   date_death1_issdt,
-   date_death1.asnumeric,
-   date_death1_issdt.years,
-   date_exit_uk1_issdt,
-   date_exit_uk1.asnumeric,
-   date_exit_uk1_issdt.years)
 
 
 ##TODO: could use a more realistic distn
