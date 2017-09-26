@@ -26,7 +26,8 @@ sources_correctly <- NULL
 runtime <- proc.time()
 
 # global_run <- 6
-for (global_run in seq_along(global_params_scenarios_ls)) {
+# for (global_run in seq_along(global_params_scenarios_ls)) {
+for (global_run in c(2,4,6)) {
 
   print(sprintf("[ programme level parameters ] scenario: %d", global_run))
 

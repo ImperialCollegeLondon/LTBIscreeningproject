@@ -14,6 +14,28 @@ rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 # remove duplicate and not needed ---------------------------------
 
+rm_variables_names <-
+  c("firstcdt","exdt", "sex","dob","cxr","cxrdt","cxrint","cxrintdt","ssdnd","dta1","dta2","dta3",
+    "dtb1","dtb2","cresb2","dtb3","stres","iomgdln","ssspunob","ssnormcxr","sscxntb","ssappdec",
+    "famcont","cert","expdt","birthyr","ager", "cxrndr","cxrukres","examyr","exammth","dst2", "ssndr","consp","nocert",
+    "active","lab","clinical","ssres","scres","protocol","rclientsourceid","weight","SourceID","threshold",
+    "uk_caserepdate","uk_sitepulm","uk_microscopy","uk_pcr","uk_etsculture","uk_culture",
+    "uk_sputsmear","uk_origsputsmear","uk_anyres","uk_allfirstres","uk_secondres",
+    "uk_prevdiag","uk_bcgvacc","uk_anyriskfactor","uk_typed_loci","uk_atleast23",
+    "uk_clusteranalysis","uk_clusterno1_analysis","uk_clustered","uk_cluster_size","uk_clustersize_n",
+    "uk_clusterno1_analysis_24","male","active_pulm","any_culture","culture_pos","smear_pos",
+    "TB_IOM","lab_new","sputum_taken","time_to_cert","xray_new","clustered2", "first_screen",
+    "last_screen","time_first_last_screen","first_screen_TB","last_screen_TB",
+    "max_weight","keep_ETS_dup", "min_exdt", "next_screen","days_between_screens","cohort_end_dups",
+    "uk_pulm_culture","uk_pulm_smear","uk_pulm_resist","uk_extpulm_culture","uk_extrapulm_smear",
+    "uk_extrapulm_resist","cohort_end","cohort_end_visa","cohort_end_1yr","uk_anyriskfactor_risk",
+    "uk_bcgvacc_risk","uk_prevdiag_risk","uk_delayindiag_cat","uk_clustersize_cat","uk_clustersize_n_cat",
+    "uk_clusterno1_analysis_24_unique", "uk_max_loci_pre","uk_cluster_size_pre","uk_clustered_pre","uk_clustered_mi",
+    "uk_cluster_trans","uk_cluster_react","uk_first_in_cluster", "prop")
+
+IMPUTED_sample <- IMPUTED_sample[ ,!names(IMPUTED_sample) %in% rm_variables_names]
+
+
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 dup_ref_id_orig == 0)
@@ -35,7 +57,6 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 # eligible screening age range only
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_entry %in% screen_age_range)
-
 
 
 if (force_everyone_stays) {
@@ -123,7 +144,7 @@ IMPUTED_sample <-
 
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                fup1_date < issdt)
+                                fup1_date > issdt)
 
 # remove tb before entry
 IMPUTED_sample <-
@@ -157,5 +178,4 @@ n.popyear_screen <-
             by = list(IMPUTED_sample$issdt_year),
             sum) %>%
   set_names(c("year", "pop"))
-
 

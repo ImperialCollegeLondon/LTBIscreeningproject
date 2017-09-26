@@ -97,10 +97,10 @@ ydiscounts <- QALY::discount(t_limit = max_tb_issdt + 1)
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(uk_notif_dates = ceiling(rNotificationDate_issdt.years),
-         all_notif_dates = ceiling(all_tb_issdt),
-         uk_notif_discounts = ydiscounts[uk_notif_dates],
-         all_notif_discounts = ydiscounts[all_notif_dates],
-         uk_secondary_inf_discounts = ydiscounts[uk_notif_dates + 1],
-         all_secondary_inf_discounts = ydiscounts[all_notif_dates + 1])
+  mutate(uk_notif_issdt = ceiling(rNotificationDate_issdt.years),
+         all_notif_issdt = ceiling(all_tb_issdt),
+         uk_notif_discounts = ydiscounts[uk_notif_issdt],
+         all_notif_discounts = ydiscounts[all_notif_issdt],
+         uk_secondary_inf_discounts = ydiscounts[uk_notif_issdt + 1],
+         all_secondary_inf_discounts = ydiscounts[all_notif_issdt + 1])
 
