@@ -26,7 +26,6 @@ if (no_students) {
   IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                               visatype2 != "Students")}
 
-
 # remove individuals from 'lower' incidence countries
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                             who_prev_cat_Pareek2011 %in% incidence_grps_screen)

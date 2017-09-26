@@ -1,6 +1,6 @@
 
 days_to_years <- function(days)
-  ceiling(days/365)
+  ceiling(days/365.25)
 
 
 

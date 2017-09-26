@@ -12,7 +12,7 @@ IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
-# remove duplicate and not needed records ---------------------------------
+# remove duplicate and not needed ---------------------------------
 
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
@@ -38,9 +38,6 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 
 
 
-# assume that no-one leaves EWNI ------------------------------------------
-## exit date after latest death
-
 if (force_everyone_stays) {
 ##TODO:
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
@@ -59,28 +56,17 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 # ages 18-35 pooled
 pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3) %>% setNames(who_levels)
 
-
 ### assume >35 == 35 year olds ###
 # i.e. age independent
 
-pLatentTB.who_18to45 <- matrix(data = pLatentTB.who,
-                               ncol = 28,
-                               nrow = length(pLatentTB.who))
-
-pLatentTB.who_age <- data.frame(levels(IMPUTED_sample$who_prev_cat_Pareek2011),
-                                pLatentTB.who_18to45)
-
-
-colnames(pLatentTB.who_age) <- c("who_prev_cat_Pareek2011", as.character(screen_age_range))
-
-
-withr::with_options(list(warn = -1),
-                    rm(pLatentTB.who_18to35,
-                       pLatentTB.who_36to45,
-                       pLatentTB.who_18to45))
+pLatentTB.who_age <-
+  matrix(data = pLatentTB.who,
+         ncol = 28,
+         nrow = length(pLatentTB.who)) %>%
+  data.frame(who_levels, .) %>%
+  set_names("who_prev_cat_Pareek2011", as.character(screen_age_range))
 
 # join with main data set
-
 pLatentTB.who_age.long <- reshape2:::melt.data.frame(data = pLatentTB.who_age,
                                                      id.vars = "who_prev_cat_Pareek2011",
                                                      value.name = "pLTBI",
@@ -91,8 +77,15 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         by = c("age_at_entry",
                                "who_prev_cat_Pareek2011"))
 
-# sample LTBI status
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
+
+##TODO: could use a more realistic distn
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
+
+IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
+
+# extract uk entry year only
+IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 
 # create time-to-events -------------------------
@@ -100,60 +93,12 @@ IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(rNotificationDate_issdt = rNotificationDate - issdt,
-         date_death1_issdt = date_death1 - issdt,
+  mutate(date_death1_issdt = date_death1 - issdt,
          date_exit_uk1_issdt = date_exit_uk1 - issdt,
-         rNotificationDate_issdt.years = as.numeric(rNotificationDate_issdt)/365.25,
          date_death1_issdt.years = as.numeric(date_death1_issdt)/365.25,
          date_exit_uk1_issdt.years = as.numeric(date_exit_uk1_issdt)/365.25,
          date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt),
          date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt.years))
-
-# remove tb before entry
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  dplyr::mutate(uk_tb = ifelse(rNotificationDate_issdt.years < 0 | is.na(rNotificationDate_issdt.years),
-                               yes = 0,
-                               no = 1),
-                rNotificationDate_issdt.years = ifelse(!uk_tb,
-                                                       yes = NA,
-                                                       no = rNotificationDate_issdt.years),
-                rNotificationDate_issdt = ifelse(!uk_tb,
-                                                 yes = NA,
-                                                 no = rNotificationDate_issdt))
-
-
-##TODO: could use a more realistic distn
-IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
-
-
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  dplyr::mutate(screened_before_exit = date_exit_uk1_issdt.years >= screen_year,
-                screened_before_tb = (rNotificationDate_issdt.years >= screen_year) | is.na(rNotificationDate_issdt.years),
-                screened_before_death = date_death1_issdt.years >= screen_year,
-                screen = ifelse(screened_before_death &
-                                  screened_before_exit &
-                                  screened_before_tb &
-                                  yes = 1, no = 0))
-
-
-# create misc variables ---------------------------------------------------
-
-# keep original TB status
-IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-
-# active TB case fatality rate age groups
-
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  dplyr::mutate(age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
-                agegroup_uk_notification = cut(age_uk_notification,
-                                               breaks = cfr_age_breaks,
-                                               right = FALSE))
-
-# extract uk entry year only
-IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 
 # uk entry to follow-up days -------------------------------------------------
@@ -161,23 +106,36 @@ IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 FUP_DATE <- as.Date("2013-12-31")
 
 # days from 1960-01-01 to 2013-12-31
+date_origin <- as.Date("1960-01-01") #STATA
 fup_limit <- FUP_DATE - date_origin
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  dplyr::mutate(issdt.asnumeric = issdt - date_origin,
-                fup_limit_issdt = fup_limit - issdt.asnumeric,
-                fup_issdt_days = fup1 - issdt.asnumeric,
-                fup_issdt = days_to_years(fup_issdt_days),
+  dplyr::mutate(fup_limit_issdt_days = FUP_DATE - issdt,
+                fup_limit_issdt = fup_limit_issdt_days/365.25,
+                fup1_date = as.Date(fup1, origin = date_origin),
+                fup_issdt_days = fup1_date - issdt,
+                fup_issdt = fup_issdt_days/365.25,
                 LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1,
-                cens1 = fup1 == fup_limit,
-                death1 = date_death1_issdt == fup_issdt_days,
-                exit_uk1 = date_exit_uk1_issdt == fup_issdt_days)
+                cens1 = fup1_date == FUP_DATE,
+                death1 = fup1_date == date_death1,
+                exit_uk1 = fup1_date == date_exit_uk1)
 
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                fup_issdt_days >= 0)
+                                fup1_date < issdt)
 
+# remove tb before entry
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  dplyr::mutate(rNotificationDate_issdt = rNotificationDate - issdt,
+                uk_tb = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
+                               yes = 0,
+                               no = 1),
+                rNotificationDate_issdt = ifelse(uk_tb,
+                                                 yes = rNotificationDate_issdt,
+                                                 no = NA),
+                rNotificationDate_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)
 
 
 # mdr ---------------------------------------------------------------------
