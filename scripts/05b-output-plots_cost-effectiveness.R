@@ -66,7 +66,7 @@ try(
         scale_colour_manual(values = cbPalette)),
   silent = TRUE)
 
-ggsave(file = filename, width = 30, height = 20, units = "cm")
+ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 
 # dev.off()
 

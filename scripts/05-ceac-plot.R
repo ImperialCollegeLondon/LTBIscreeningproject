@@ -35,7 +35,7 @@ for (i in screen.bcea$n.comparators) {
 }
 
 ##TODO:
-# ggsave(file = filename,
+# ggplot2::ggsave(file = filename,
 #        width = 30, height = 20, units = "cm")
 
 dev.off()

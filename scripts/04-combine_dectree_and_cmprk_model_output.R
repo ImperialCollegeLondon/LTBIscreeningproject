@@ -88,8 +88,9 @@ c_screened <- purrr::map2(aTB_CE_stats$cost.screened_person,
 e_statusquo <- aTB_CE_stats$QALY.statusquo_person
 c_statusquo <- aTB_CE_stats$cost.statusquo_person
 
-wtp_seq <- seq(10000, 30000, by = 500)
+wtp_seq <- seq(10000, 40000, by = 500)
 
+# net monetary benefit by wtp
 nmb_long <-
   lapply(wtp_seq,
          FUN = function(wtp) nmb(e_statusquo, c_statusquo,
@@ -108,5 +109,4 @@ names(design_matrix) <- gsub(pattern =  " to Screen", replacement = "", names(de
 # set baseline level
 design_matrix <- within(design_matrix,
                         policy <- factor(policy, levels = c("statusquo", "screened")))
-
 

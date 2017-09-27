@@ -32,31 +32,29 @@
 
 
 # multiariate -----------------------------------------------
-##TODO:...
-nmb_formula <- as.formula(NMB ~ policy*Agree*Start +
+
+##interactions
+nmb_formula <- as.formula(NMB ~
+                            policy*Agree*Start +
                             policy*Agree*Complete +
                             policy*Agree*Effective +
                             policy*Start*Complete +
                             policy*Start*Effective +
                             policy*Complete*Effective)
 
+# expanded formula
+# terms = attr(terms.formula(nmb_formula), "term.labels")
+# f = as.formula(sprintf("y ~ %s", paste(terms, collapse="+")))
+
+
 # lm_multi_wtp <- lm_wtp(nmb_formula, design_matrix)
 lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+
 lm_multi <-
   lapply(wtp_seq, lm_multi_wtp) %>%
   purrr::set_names(wtp_seq)
 
-pred_data <- expand.grid("Agree" = seq(0,1,0.1),
-                         "Start" = seq(0,1,0.1),
-                         "Complete" = seq(0,1,0.1),
-                         "Effective" = seq(0,1,0.1),
-                         "policy" = c("screened", "statusquo"))
 
-pred_data$pred <- predict(lm_multi$`30000`, pred_data, type = "response")
-
-xx <-
-  split(x = pred_data, pred_data$policy) %>%
-  plyr::join_all(by = c("Agree", "Start", "Complete", "Effective"))
 
 # note: covariates are bounded [0,100]
 # is this a problem?
