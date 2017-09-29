@@ -8,6 +8,7 @@
 
 if (!exists("aTB_CE_stats")) load(choose.files()) #load(pastef(diroutput, "aTB_CE_stats.RData"))
 if (!exists("dectree_res")) dectree_res <- readRDS(choose.files()) #dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
+if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial.xlsx", sheet = "p")
 
 popscale <- 1#00000
 

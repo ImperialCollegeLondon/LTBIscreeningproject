@@ -16,7 +16,7 @@ library(ppcor)
 # pcc of screening
 pcor_screen <- pcor.test(x = design_matrix$NMB,
                          y = design_matrix$policy,
-                         z = design_matrix[ ,c("Agree", "Start", "Complete", "Effective")],
+                         z = design_matrix[ ,c("Agree", "Start", "Complete", "Effective")], #controlling for
                          method = "spearman")
 
 # pcc of each step

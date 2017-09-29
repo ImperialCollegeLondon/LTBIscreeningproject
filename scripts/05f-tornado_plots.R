@@ -17,7 +17,7 @@
 
 # wtp_threshold <- 20000
 
-if (!exists("scenario_parameter_p")) scenario_parameter_p <- read_excel("data/scenario-parameter-values.xlsx",
+if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial.xlsx",
                                                                         sheet = "p")
 
 positive_branch_only <-

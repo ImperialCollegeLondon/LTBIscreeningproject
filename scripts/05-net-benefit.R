@@ -1,10 +1,15 @@
-# ************************************
+# ********************************************
 # LTBI screening
 # N Green
 # Sept 2017
 #
 # net benefit regression (not incremental)
+# note: covariates are bounded [0,100]
+# is this a problem?
 
+
+library(broom)
+library(stargazer)
 
 
 # basic model -------------------------------------------------------------
@@ -34,13 +39,14 @@
 # multiariate -----------------------------------------------
 
 ##interactions
+##centre at maximum prob
 nmb_formula <- as.formula(NMB ~
-                            policy*Agree*Start +
-                            policy*Agree*Complete +
-                            policy*Agree*Effective +
-                            policy*Start*Complete +
-                            policy*Start*Effective +
-                            policy*Complete*Effective)
+                            policy*I(Agree - 90)*I(Start - 90) +
+                            policy*I(Agree - 90)*I(Complete - 90) +
+                            policy*I(Agree - 90)*I(Effective - 90) +
+                            policy*I(Start - 90)*I(Complete - 90) +
+                            policy*I(Start - 90)*I(Effective - 90) +
+                            policy*I(Complete - 90)*I(Effective - 90))
 
 # expanded formula
 # terms = attr(terms.formula(nmb_formula), "term.labels")
@@ -55,55 +61,88 @@ lm_multi <-
   purrr::set_names(wtp_seq)
 
 
+lm_multi_all <-
+  lapply(lm_multi, function(x) dplyr::select(tidy(x), -statistic)) %>%
+  plyr::join_all(by = "term") %>%
+  rbind(c("wtp", rep(wtp_seq, each = 3)))
 
-# note: covariates are bounded [0,100]
-# is this a problem?
-
-# centred for easier coefficient interpretation
-
-# one variable
-# ------------
-
-nmb_formula <- as.formula(NMB ~ policy*I(Agree - 50))
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
-lm_multi_agree <- lapply(wtp_seq, lm_multi_wtp)
-
-nmb_formula <- as.formula(NMB ~ policy*I(Start - 50))
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
-lm_multi_start <- lapply(wtp_seq, lm_multi_wtp)
-
-nmb_formula <- as.formula(NMB ~ policy*I(Complete - 50))
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
-lm_multi_complete <- lapply(wtp_seq, lm_multi_wtp)
-
-nmb_formula <- as.formula(NMB ~ policy*I(Effective - 50))
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
-lm_multi_effective <- lapply(wtp_seq, lm_multi_wtp)
+# format values
+lm_multi_all[ ,-1] <- round(sapply(lm_multi_all[ ,-1], as.numeric), 4)
 
 
-opt_thesholds_agree <- optimal_thresholds(lm_multi_agree, covar = "Agree", centre = 50)
-opt_thesholds_start <- optimal_thresholds(lm_multi_start, "Start", centre = 50)
-opt_thesholds_complete <- optimal_thresholds(lm_multi_complete, "Complete", centre = 50)
-opt_thesholds_effective <- optimal_thresholds(lm_multi_effective, "Effective", centre = 50)
+# save ------------
+
+# subset wtp
+lm_multi_save <- lm_multi_all[ ,lm_multi_all[lm_multi_all$term == "wtp", ] %in% c("wtp", 10000, 20000, 30000)]
+
+write.csv(x = lm_multi_save,
+          file = paste(diroutput, "lm_multi_all_table.csv", sep = "/"))
 
 
-png(paste(plots_folder_scenario, "optimal_thesholds.png", sep = "/"))
 
-plot(NA, type = 'n', xlim = c(min(wtp_seq) ,max(wtp_seq)), ylim = c(0, 100), xlab = "Willingness to pay (£)", ylab = "Probability")
-lines(wtp_seq, opt_thesholds_agree, type = 'l', col = "red")
-lines(wtp_seq, opt_thesholds_start, type = 'l', col = "blue")
-lines(wtp_seq, opt_thesholds_complete, type = 'l', col = "green")
-lines(wtp_seq, opt_thesholds_effective, type = 'l', col = "black")
+# coefficient plots -------------------------------------------------------------------
 
+var_names <- c("policyscreened:I(Start - 90)",
+               "policyscreened:I(Complete - 90)",
+               "policyscreened:I(Effective - 90)",
+               "policyscreened:I(Start - 90):I(Effective - 90)",
+               "policyscreened:I(Start - 90):I(Complete - 90)",
+               "policyscreened:I(Agree - 90):I(Effective - 90)",
+               "policyscreened:I(Agree - 90):I(Complete - 90)",
+               "policyscreened:I(Agree - 90):I(Start - 90)")
+
+
+filename <- paste(plots_folder_scenario, "coeff_plot_20000.png", sep = "/")
+png(filename)
+print(coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
+         summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
+dev.off()
+
+filename <- paste(plots_folder_scenario, "coeff_plot_30000.png", sep = "/")
+png(filename)
+print(coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
+         summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
 dev.off()
 
 
-##TODO: two variable threshold plots
+################
+# one variable #
+################
+
+# ------------
+
+# nmb_formula <- as.formula(NMB ~ policy*I(Agree - 50))
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_agree <- lapply(wtp_seq, lm_multi_wtp)
 #
-# sapply(lm_multi,
-#        function(x) centre - (x$coefficients["policyscreened"] + x$coefficients["x"]*x)/x$coefficients[sprintf("policyscreened:I(%s - %s)", covar, centre)])
+# nmb_formula <- as.formula(NMB ~ policy*I(Start - 50))
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_start <- lapply(wtp_seq, lm_multi_wtp)
 #
-# solve()
+# nmb_formula <- as.formula(NMB ~ policy*I(Complete - 50))
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_complete <- lapply(wtp_seq, lm_multi_wtp)
+#
+# nmb_formula <- as.formula(NMB ~ policy*I(Effective - 50))
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_effective <- lapply(wtp_seq, lm_multi_wtp)
+#
+#
+# opt_thesholds_agree <- optimal_thresholds(lm_multi_agree, covar = "Agree", centre = 50)
+# opt_thesholds_start <- optimal_thresholds(lm_multi_start, "Start", centre = 50)
+# opt_thesholds_complete <- optimal_thresholds(lm_multi_complete, "Complete", centre = 50)
+# opt_thesholds_effective <- optimal_thresholds(lm_multi_effective, "Effective", centre = 50)
+#
+#
+# png(paste(plots_folder_scenario, "optimal_thesholds.png", sep = "/"))
+#
+# plot(NA, type = 'n', xlim = c(min(wtp_seq) ,max(wtp_seq)), ylim = c(0, 100), xlab = "Willingness to pay (£)", ylab = "Probability")
+# lines(wtp_seq, opt_thesholds_agree, type = 'l', col = "red")
+# lines(wtp_seq, opt_thesholds_start, type = 'l', col = "blue")
+# lines(wtp_seq, opt_thesholds_complete, type = 'l', col = "green")
+# lines(wtp_seq, opt_thesholds_effective, type = 'l', col = "black")
+#
+# dev.off()
 
 
 ##TODO: regn coeff plots
@@ -129,30 +168,27 @@ dev.off()
 
 # output tables -----------------------------------------------------------
 
-library(broom)
-library(stargazer)
 
 # INMB estimate
 # lapply(lm_basic, function(x) tidy(x)[2, ]) %>%
 #   do.call(rbind, .)
 
-lm_multi_all_agree <-
-  lapply(lm_multi_agree, function(x) tidy(x)) %>%
-  plyr::join_all(by = "term") %>%
-  rbind(c("wtp", rep(wtp_seq, each = 4)))
-
-lm_multi_all_start <-
-  lapply(lm_multi_start, function(x) tidy(x)) %>%
-  plyr::join_all(by = "term")
-
-lm_multi_all_complete <-
-  lapply(lm_multi_complete, function(x) tidy(x)) %>%
-  plyr::join_all(by = "term")
-
-lm_multi_all_effective <-
-  lapply(lm_multi_effective, function(x) tidy(x)) %>%
-  plyr::join_all(by = "term")
-
+# lm_multi_all_agree <-
+#   lapply(lm_multi_agree, function(x) tidy(x)) %>%
+#   plyr::join_all(by = "term") %>%
+#   rbind(c("wtp", rep(wtp_seq, each = 4)))
+#
+# lm_multi_all_start <-
+#   lapply(lm_multi_start, function(x) tidy(x)) %>%
+#   plyr::join_all(by = "term")
+#
+# lm_multi_all_complete <-
+#   lapply(lm_multi_complete, function(x) tidy(x)) %>%
+#   plyr::join_all(by = "term")
+#
+# lm_multi_all_effective <-
+#   lapply(lm_multi_effective, function(x) tidy(x)) %>%
+#   plyr::join_all(by = "term")
 
 ##TODO:
 # doesnt like bayesglm
@@ -166,18 +202,17 @@ lm_multi_all_effective <-
 #
 # cat(paste(xx, collapse = "\n"), "\n", file = "output/lm_table.txt", append = TRUE)
 
+# save ------------
 
-# save --------------------------------------------------------------------
-
-write.csv(x = lm_multi_all_agree,
-          file = paste(diroutput, "lm_table_agree.csv", sep = "/"))
-
-write.csv(x = lm_multi_all_start,
-          file = paste(diroutput, "lm_table_start.csv", sep = "/"))
-
-write.csv(x = lm_multi_all_complete,
-          file = paste(diroutput, "lm_table_complete.csv", sep = "/"))
-
-write.csv(x = lm_multi_all_effective,
-          file = paste(diroutput, "lm_table_effective.csv", sep = "/"))
+# write.csv(x = lm_multi_all_agree,
+#           file = paste(diroutput, "lm_table_agree.csv", sep = "/"))
+#
+# write.csv(x = lm_multi_all_start,
+#           file = paste(diroutput, "lm_table_start.csv", sep = "/"))
+#
+# write.csv(x = lm_multi_all_complete,
+#           file = paste(diroutput, "lm_table_complete.csv", sep = "/"))
+#
+# write.csv(x = lm_multi_all_effective,
+#           file = paste(diroutput, "lm_table_effective.csv", sep = "/"))
 
