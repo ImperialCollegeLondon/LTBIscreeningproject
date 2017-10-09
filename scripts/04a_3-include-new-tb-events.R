@@ -12,12 +12,12 @@ IMPUTED_sample <-
                 screened_before_tb = (rNotificationDate_issdt.years >= screen_year) | is.na(rNotificationDate_issdt.years),
                 screened_before_death = date_death1_issdt.years >= screen_year,
                 screen = ifelse(screened_before_death &
-                                  screened_before_exit &
-                                  screened_before_tb,
+                                screened_before_exit &
+                                screened_before_tb,
                                 yes = 1, no = 0))
 
 
-# combine (imputed) exit_uk tb and uk tb data ------------------------------------------
+# combine (imputed) exit_uk tb and uk_tb data ------------------------------------------
 
 IMPUTED_sample <-
   IMPUTED_sample %>%

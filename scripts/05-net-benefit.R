@@ -10,15 +10,16 @@
 
 library(broom)
 library(stargazer)
+library(rstanarm)
 
 
 # basic model -------------------------------------------------------------
 
 # frequentist
-# lm_basic_wtp <- lm_wtp(as.formula(NMB ~ policy), design_matrix)
+# lm_basic_wtp <- lm_wtp(as.formula(NMB ~ policy), sim_matrix)
 
 # bayesian
-# lm_basic_wtp <- bayeslm_wtp(as.formula(NMB ~ policy), design_matrix)
+# lm_basic_wtp <- bayeslm_wtp(as.formula(NMB ~ policy), sim_matrix)
 #
 # lm_basic <-
 #   lapply(wtp_seq, lm_basic_wtp) %>%
@@ -36,31 +37,32 @@ library(stargazer)
 # plot(y = ceac, x = wtp_seq, type = "o")
 
 
+###############
 # multiariate -----------------------------------------------
-
-##interactions
-##centre at maximum prob
+###############
+## centre at high prob
 nmb_formula <- as.formula(NMB ~
-                            policy*I(Agree - 90)*I(Start - 90) +
-                            policy*I(Agree - 90)*I(Complete - 90) +
-                            policy*I(Agree - 90)*I(Effective - 90) +
-                            policy*I(Start - 90)*I(Complete - 90) +
-                            policy*I(Start - 90)*I(Effective - 90) +
-                            policy*I(Complete - 90)*I(Effective - 90))
+                            policy * (I(Agree - 90)*I(Start - 90) +
+                                        I(Agree - 90) * I(Complete - 90) +
+                                        I(Agree - 90) * I(Effective - 90) +
+                                        I(Start - 90) * I(Complete - 90) +
+                                        I(Start - 90) * I(Effective - 90) +
+                                        I(Complete - 90) * I(Effective - 90)))
 
 # expanded formula
 # terms = attr(terms.formula(nmb_formula), "term.labels")
 # f = as.formula(sprintf("y ~ %s", paste(terms, collapse="+")))
 
+# fit model
 
-# lm_multi_wtp <- lm_wtp(nmb_formula, design_matrix)
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_wtp <- lm_wtp(nmb_formula, sim_matrix)
+lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
 
 lm_multi <-
   lapply(wtp_seq, lm_multi_wtp) %>%
   purrr::set_names(wtp_seq)
 
-
+# create wide output table
 lm_multi_all <-
   lapply(lm_multi, function(x) dplyr::select(tidy(x), -statistic)) %>%
   plyr::join_all(by = "term") %>%
@@ -75,9 +77,9 @@ lm_multi_all[ ,-1] <- round(sapply(lm_multi_all[ ,-1], as.numeric), 4)
 # subset wtp
 lm_multi_save <- lm_multi_all[ ,lm_multi_all[lm_multi_all$term == "wtp", ] %in% c("wtp", 10000, 20000, 30000)]
 
-write.csv(x = lm_multi_save,
-          file = paste(diroutput, "lm_multi_all_table.csv", sep = "/"))
-
+try(
+  write.csv(x = lm_multi_save,
+            file = paste(diroutput, "lm_multi_all_table.csv", sep = "/")))
 
 
 # coefficient plots -------------------------------------------------------------------
@@ -89,42 +91,44 @@ var_names <- c("policyscreened:I(Start - 90)",
                "policyscreened:I(Start - 90):I(Complete - 90)",
                "policyscreened:I(Agree - 90):I(Effective - 90)",
                "policyscreened:I(Agree - 90):I(Complete - 90)",
-               "policyscreened:I(Agree - 90):I(Start - 90)")
+               "policyscreened:I(Agree - 90):I(Start - 90)",
+               "policyscreened:I(Complete - 90):I(Effective - 90)")
 
 
-filename <- paste(plots_folder_scenario, "coeff_plot_20000.png", sep = "/")
+filename <- paste(plots_folder_scenario, "coef_plot_20000.png", sep = "/")
 png(filename)
-print(coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
+print(
+  arm::coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
          summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
 dev.off()
 
-filename <- paste(plots_folder_scenario, "coeff_plot_30000.png", sep = "/")
+filename <- paste(plots_folder_scenario, "coef_plot_30000.png", sep = "/")
 png(filename)
-print(coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
+print(
+  arm::coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
          summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
 dev.off()
 
 
-################
-# one variable #
-################
 
-# ------------
+################
+# one variable -------------------------------------------------------------
+################
 
 # nmb_formula <- as.formula(NMB ~ policy*I(Agree - 50))
-# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
 # lm_multi_agree <- lapply(wtp_seq, lm_multi_wtp)
 #
 # nmb_formula <- as.formula(NMB ~ policy*I(Start - 50))
-# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
 # lm_multi_start <- lapply(wtp_seq, lm_multi_wtp)
 #
 # nmb_formula <- as.formula(NMB ~ policy*I(Complete - 50))
-# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
 # lm_multi_complete <- lapply(wtp_seq, lm_multi_wtp)
 #
 # nmb_formula <- as.formula(NMB ~ policy*I(Effective - 50))
-# lm_multi_wtp <- bayeslm_wtp(nmb_formula, design_matrix)
+# lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
 # lm_multi_effective <- lapply(wtp_seq, lm_multi_wtp)
 #
 #
