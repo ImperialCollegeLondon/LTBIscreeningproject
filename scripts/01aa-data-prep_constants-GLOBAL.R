@@ -9,14 +9,14 @@
 # computation -------------------------------------------------------------
 
 # number of Monte Carlo iterations
-N.mc <- 20
+N.mc <- 10
 
 cluster <- FALSE
 
 
 # global sensitivity parameters -------------------------------------------
 
-no_students <- FALSE
+no_students <- TRUE
 
 # or read in scenarios environments
 if (exists("global_run")) {

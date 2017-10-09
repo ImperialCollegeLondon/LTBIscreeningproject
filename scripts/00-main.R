@@ -10,7 +10,6 @@
 
 source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
 source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
-source("scripts/04bb-calc_outcomes-GLOBAL.R", echo = TRUE)
 
 
 # modelling ------------------------------------------------------------
@@ -29,7 +28,9 @@ source("scripts/05i-output-tables.R")
 source("scripts/05-ceac-plot.R")
 source("scripts/05f-tornado_plots.R")
 source("scripts/05-net-benefit.R")
-source("scripts/05-net-benefit-threshold-analysis.R")
+source("scripts/05-netbenefit-threshold-analysis.R")
+source("scripts/05-bayesglm_predictions.R")
+# source("scripts/05-stan_predictions.R")
 source("scripts/05-partial_correlation_coefficients.R")
 
 # source("scripts/05-aTB_histograms.R")

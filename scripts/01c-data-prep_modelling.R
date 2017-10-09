@@ -60,7 +60,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 
 
 if (force_everyone_stays) {
-##TODO:
+##TODO: is this doing what we want?
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
 
