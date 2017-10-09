@@ -1,39 +1,43 @@
 
 #' Plot a Cost-Effectiveness Acceptability Curve
 #'
-#' The function that comes with teh BCEA package
-#' is a bit basic.
+#' The function that comes with the \code{BCEA} package
+#' is a bit basic and hard to modify.
 #'
 #' TODO: ggplot version
 #'
 #' @param screen.bcea A BCEA object from the BCEA package
-#' @param new_window
+#' @param new_window default: FALSE
+#' @param scenario Specific scenario numbers to plot. default: NA
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-my_ceac.plot <- function(screen.bcea, new_window = FALSE) {
+my_ceac.plot <- function(screen.bcea,
+                         new_window = FALSE,
+                         scenario = NA) {
 
   require(RColorBrewer)
 
-  NUM_SCENARIOS <- ncol(screen.bcea$ceac)
+  if (is.na(scenario)) {
+    scenario <- seq_len(ncol(screen.bcea$ceac))
+  }
 
   rainbow_cols <-  colorRampPalette(c('red','blue','green'))(NUM_SCENARIOS)
 
   if (new_window) windows(width = 100, height = 50)
 
-  plot(x = seq(0, 50000, by = 100), y = screen.bcea$ceac[,1],
+  plot(x = seq(0, 50000, by = 100),
        ylim = c(0, 1), xlim = c(10000, 30000),
        type = 'l',
        xlab = "Willingness to pay (£)",
        ylab = "Probability cost-effective")
 
-  for (i in 1:NUM_SCENARIOS) {
-    # for (i in 9:16) {
+  for (i in scenario) {
 
-    lines(x = seq(0, 50000, by = 100), y = screen.bcea$ceac[,i],
+    lines(x = seq(0, 50000, by = 100), y = screen.bcea$ceac[ ,i],
           col = rainbow_cols[i], lty = i)
   }
 

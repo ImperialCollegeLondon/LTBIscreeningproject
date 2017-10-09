@@ -1,3 +1,14 @@
+
+#' net_benefit
+#'
+#' @param e_list
+#' @param c_list
+#' @param wtp_threshold
+#'
+#' @return
+#' @export
+#'
+#' @examples
 net_benefit <- function(e_list, c_list, wtp_threshold) {
 
   mapply(FUN = function(e, c, wtp) (e * wtp) - c,
@@ -7,7 +18,18 @@ net_benefit <- function(e_list, c_list, wtp_threshold) {
          SIMPLIFY = FALSE)
 }
 
-# create long array over multiple wtp
+#' create long array over multiple wtp
+#'
+#' @param e_statusquo
+#' @param c_statusquo
+#' @param e_screened
+#' @param c_screened
+#' @param wtp_threshold
+#'
+#' @return
+#' @export
+#'
+#' @examples
 nmb <- function(e_statusquo, c_statusquo,
                 e_screened, c_screened,
                 wtp_threshold) {
@@ -23,7 +45,16 @@ nmb <- function(e_statusquo, c_statusquo,
     mutate(wtp = wtp_threshold)
 }
 
-# partial linear regression function
+#' partial linear regression function
+#'
+#' @param nmb_formula
+#' @param design_matrix
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
 lm_wtp <- function(nmb_formula,
                    design_matrix, ...) {
   function(threshold){
@@ -33,7 +64,14 @@ lm_wtp <- function(nmb_formula,
   }
 }
 
-# partial bayesian linear regression function
+#' Partial bayesian linear regression function
+#'
+#' @param nmb_formula
+#' @param design_matrix
+#' @param ...
+#'
+#' @return
+#' @export
 bayeslm_wtp <- function(nmb_formula,
                         design_matrix, ...) {
   function(threshold){
@@ -44,6 +82,16 @@ bayeslm_wtp <- function(nmb_formula,
   }
 }
 
+#' optimal_thresholds
+#'
+#' @param lm_multi
+#' @param covar
+#' @param centre
+#'
+#' @return
+#' @export
+#'
+#' @examples
 optimal_thresholds <- function(lm_multi, covar, centre) {
 
   opt <-

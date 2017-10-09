@@ -28,7 +28,9 @@ Imports:
     magrittr,
     purrr,
     readr,
-    logging
+    logging,
+    arm,
+    parallel
 RoxygenNote: 6.0.1
 Suggests: knitr,
     rmarkdown,

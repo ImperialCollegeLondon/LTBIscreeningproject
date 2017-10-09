@@ -139,7 +139,7 @@ sim_uktb_times <- function(data,
 #' Basic brute-force approach.
 #'
 #' @param data Times of events, LTBI status, event indicators
-#' @param prob Probabilities of progressing to active TB each year
+#' @param prob Probabilities of active TB each year. Progression from LTBI needs rescaling.
 #'
 #' @return Times from UK entry to TB notification
 #' @export
@@ -170,7 +170,7 @@ sim_exituk_tb_times <- function(data,
 
         sample_tb_year(data$date_exit_uk1_issdt.years[i],
                        data$date_death1_issdt.years[i],
-                       prob)
+                       prob/data$p_LTBI[i])
       }
   }
 
