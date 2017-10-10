@@ -239,7 +239,7 @@ counts.melt <- reshape2::melt(counts.scenarios)
 # geom_point(aes(y = value), alpha=.3)
 
 
-# box ans whisker plot
+# box and whisker plot
 ggplot(data = counts.melt, aes(x = X2, y = value, group = X2)) +
   geom_boxplot() +
   stat_summary(fun.y = mean, geom = "point", shape = 5, size = 4) +
