@@ -72,7 +72,8 @@ sample_tb_year <- function(fup_issdt,
 
     while (tb_year > ceiling(death_issdt)) {
 
-      if (i > 100)
+      # if (i > 100)
+      if (i %% 100 == 0) message("taking a long time to sample a tb event time")
 
       tb_year <- sample(x = seq_along(prob),
                         size = 1,
@@ -170,7 +171,8 @@ sim_exituk_tb_times <- function(data,
 
         sample_tb_year(data$date_exit_uk1_issdt.years[i],
                        data$date_death1_issdt.years[i],
-                       prob/data$p_LTBI[i])
+                       prob)
+                       # prob/data$p_LTBI[i]) #assumes constant marginal distn p(TB)
       }
   }
 
