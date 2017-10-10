@@ -38,18 +38,8 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
 prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% prop_table
 screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
-
-# summary statistics ------------------------------------------------------
-
 # year cohort size potentially screened
 pop_year <- nrow(IMPUTED_sample_year_cohort)
-
-# number of active TB cases _without_ screening i.e. status-quo
-n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
-
-# probability cohort in each WHO TB category
-p.who_year <-
-  prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
 
 
 # count numbers of tb cases -----------------------------------------------
