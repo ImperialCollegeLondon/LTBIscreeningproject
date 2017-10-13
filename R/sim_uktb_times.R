@@ -54,10 +54,13 @@ sample_tb_year <- function(fup_issdt,
 
   tb_year <- Inf
 
-  noevent <- sum(prob) < runif(1)
-
   disease_free_yrs <- 0:fup_issdt
   prob[disease_free_yrs] <- 0
+
+  # two-step mixture model for tb sampling:
+  # 1- do they progress
+  # 2- tb time
+  noevent <- sum(prob) < runif(1)
 
   if (noevent) {
 
@@ -72,7 +75,6 @@ sample_tb_year <- function(fup_issdt,
 
     while (tb_year > ceiling(death_issdt)) {
 
-      # if (i > 100)
       if (i %% 100 == 0) message("taking a long time to sample a tb event time")
 
       tb_year <- sample(x = seq_along(prob),
@@ -110,7 +112,7 @@ sim_uktb_times <- function(data,
     uk_tb_year[i] <-
 
       # LTBI-free
-      if (data$LTBI[i] == 0) {
+      if (data$LTBI_or_activeTB[i] == 0) {
 
         Inf
 
@@ -125,9 +127,13 @@ sim_uktb_times <- function(data,
 
       }else {
 
-        sample_tb_year(data$fup_issdt[i],
-                       data$date_death1_issdt.years[i],
-                       prob)
+        cens_time <- as.numeric(data$fup_issdt[i]) %>% ceiling()
+        death_time <- data$date_death1_issdt.years[i]
+
+        tb_time <- sample_tb_year(cens_time,
+                                  death_time,
+                                  prob)
+        tb_time
       }
   }
 
@@ -158,7 +164,7 @@ sim_exituk_tb_times <- function(data,
     exituk_tb_year[i] <-
 
       # LTBI-free
-      if (data$LTBI[i] == 0) {
+      if (data$LTBI_or_activeTB[i] == 0) {
 
         Inf
 

@@ -1,4 +1,4 @@
-# ******************************************************
+# ************************************
 # LTBI screening
 # N Green
 # Sept 2017
@@ -7,10 +7,8 @@
 
 
 if (!exists("aTB_CE_stats")) load(choose.files()) #load(pastef(diroutput, "aTB_CE_stats.RData"))
-if (!exists("dectree_res")) load(choose.files()) #dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
-
-# if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-plus.xlsx", sheet = "p")
-if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-GIT.xlsx", sheet = "p")
+if (!exists("dectree_res")) dectree_res <- readRDS(choose.files()) #dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
+if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial.xlsx", sheet = "p")
 
 popscale <- 1#00000
 
@@ -91,7 +89,7 @@ c_screened <- purrr::map2(aTB_CE_stats$cost.screened_person,
 e_statusquo <- aTB_CE_stats$QALY.statusquo_person
 c_statusquo <- aTB_CE_stats$cost.statusquo_person
 
-wtp_seq <- seq(10000, 30000, by = 500)
+wtp_seq <- seq(10000, 40000, by = 500)
 
 # net monetary benefit by wtp
 nmb_long <-
@@ -101,15 +99,15 @@ nmb_long <-
                                  wtp)) %>%
   do.call(what = rbind, args = .)
 
+design_matrix <- merge(x = design_matrix,
+                       y = nmb_long,
+                       by = "scenario")
+
 # simplify names
 names(design_matrix) <- gsub(pattern =  " Treatment", replacement = "", names(design_matrix))
 names(design_matrix) <- gsub(pattern =  " to Screen", replacement = "", names(design_matrix))
 
-sim_matrix <- merge(x = design_matrix,
-                    y = nmb_long,
-                    by = "scenario")
 # set baseline level
-sim_matrix <- within(sim_matrix,
-                     policy <- factor(policy, levels = c("statusquo", "screened")))
-
+design_matrix <- within(design_matrix,
+                        policy <- factor(policy, levels = c("statusquo", "screened")))
 

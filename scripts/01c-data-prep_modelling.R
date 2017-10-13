@@ -60,7 +60,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 
 
 if (force_everyone_stays) {
-##TODO: is this doing what we want?
+##TODO:
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
 
@@ -179,7 +179,3 @@ n.popyear_screen <-
             sum) %>%
   set_names(c("year", "pop"))
 
-
-# expected LTBI prob
-# used in sampling tb times
-# prop_table(IMPUTED_sample$who_prev_cat_Pareek2011) %*% pLatentTB.who %>% c()

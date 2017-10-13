@@ -47,6 +47,7 @@ IMPUTED_sample <-
                                                 right = FALSE))
 
 
+
 # calculate QALYs for all tb cases for all outcomes
 # so can sample later
 QALY_all_tb <-

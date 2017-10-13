@@ -7,7 +7,7 @@
 # calculate associated stats
 
 
-##TODO: ??
+##TODO:
 # IMPUTED_sample %>% dplyr::count(who_prev_cat_Pareek2011) %>% mutate(cumsum = rev(cumsum(rev(n))))
 
 
@@ -15,7 +15,6 @@
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
                                             issdt_year == year_cohort)
 
-# uk stay long enough
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                             date_exit_uk1_issdt.years >= min_screen_length_of_stay)
 
@@ -38,31 +37,16 @@ IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
 prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% prop_table
 screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
+
+# summary statistics ------------------------------------------------------
+
 # year cohort size potentially screened
 pop_year <- nrow(IMPUTED_sample_year_cohort)
 
+# number of active TB cases _without_ screening i.e. status-quo
+n.uktb_orig <- sum(IMPUTED_sample_year_cohort$uk_tb)
 
-# count numbers of tb cases -----------------------------------------------
+# probability cohort in each WHO TB category
+p.who_year <-
+  prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
 
-n.exit_tb <-
-  IMPUTED_sample_year_cohort %>%
-  dplyr::filter(exituk_tb) %>%
-  dplyr::count()
-
-n.uk_tb <-
-  IMPUTED_sample_year_cohort %>%
-  dplyr::filter(uk_tb) %>%
-  dplyr::count()
-
-
-num_all_tb_cost <-
-  if (ENDPOINT_cost == "exit uk") {
-    n.uk_tb
-  } else if (ENDPOINT_cost == "death") {
-    n.uk_tb + n.exit_tb}
-
-num_all_tb_QALY <-
-  if (ENDPOINT_QALY == "exit uk") {
-    n.uk_tb
-  } else if (ENDPOINT_QALY == "death") {
-    n.uk_tb + n.exit_tb}
