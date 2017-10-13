@@ -13,24 +13,31 @@
 event <- rep(0, nrow(IMPUTED_sample))                          #event-free i.e. censored at followup
 event[IMPUTED_sample$death1] <- 3
 event[IMPUTED_sample$exit_uk1] <- 2
-event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
+# event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
+event[IMPUTED_sample$uk_tb] <- 1
 
 
 
 # naive case
 # assume a.s. all LTBI -> active TB
 # i.e. non active TB event censoring times
+
+# cens times         times_years
+# 0    495.0000 days 1.3552361 days
+# 0    844.1504 days 2.3111578 days
+# 0    439.7598 days 1.2039966 days
+
 cens <- event
 cens[cens != 1] <- 0
 
 times <- IMPUTED_sample$fup_issdt_days
-times_years <- IMPUTED_sample$fup_issdt
+times_years <- ceiling(IMPUTED_sample$fup_issdt)
 
 dat_surv_naive <-
   data.frame(cens = cens,
              times = times,
-             times_years = times_years) %>%
-  dplyr::filter(IMPUTED_sample$LTBI_or_activeTB == TRUE)
+             times_years = times_years) #%>%
+  # dplyr::filter(IMPUTED_sample$LTBI_or_activeTB == TRUE)
 
 
 # impute progression time after follow-up in uk

@@ -25,7 +25,7 @@ n.tb_screen <-
 n.tb_screen.all_tb <- n.tb_screen[["n.tb_screen.all_tb"]]
 n.tb_screen.uk_tb  <- n.tb_screen[["n.tb_screen.uk_tb"]]
 
-p_complete_Tx <-  purrr::map(dectree_res, "p_complete_Tx") %>% unlist() %>% unname()
+p_LTBI_to_effectiveTx <-  purrr::map(dectree_res, "p_LTBI_to_effectiveTx") %>% unlist() %>% unname()
 
 n.scenarios <- length(n.tb_screen.all_tb)
 
@@ -169,9 +169,9 @@ for (s in seq_len(n.scenarios)) {
     QALY.screened[[s]][i]  <- sum(QALY_screened)
   }
 
-  E_QALY_notif.screened[s] <- sum(p_complete_Tx[s] * QALY_diseasefree + (1 - p_complete_Tx[s]) * E_QALY_notif.statusquo)
+  E_QALY_notif.screened[s] <- sum(p_LTBI_to_effectiveTx[s] * QALY_diseasefree + (1 - p_LTBI_to_effectiveTx[s]) * E_QALY_notif.statusquo)
 
-  E_cost_notif.screened[s] <- (1 - p_complete_Tx[s]) * sum(E_cost_notif.statusquo)
+  E_cost_notif.screened[s] <- (1 - p_LTBI_to_effectiveTx[s]) * sum(E_cost_notif.statusquo)
 
 
   # final cost-effectiveness statistics  ---------------------------------------

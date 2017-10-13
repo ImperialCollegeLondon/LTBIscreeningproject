@@ -140,7 +140,7 @@ detach(cmprsk_age_screen)
 # barplots ----------------------------------------------------------------
 
 # see Robs Lancet (2016)
-counts <- table(floor(IMPUTED_sample$fup2_issdt[IMPUTED_sample$uk_tb_orig==1]/365))
-barplot(counts, ylim=c(0,600), xlab=("Years since migration"), ylab="Number of cases")
+counts <- table(floor(IMPUTED_sample$fup_issdt_days[IMPUTED_sample$uk_tb_orig == 1]/365.5))
+barplot(counts, ylim = c(0,600), xlab = ("Years since migration"), ylab = "Number of cases")
 
 

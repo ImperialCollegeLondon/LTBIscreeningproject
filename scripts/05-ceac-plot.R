@@ -28,14 +28,17 @@ filename <- paste(plots_folder_scenario, "ceac.pdf", sep = "/")
 # png(filename)
 pdf(filename)
 
-for (i in screen.bcea$n.comparators) {
-  try(
-    print(my_ceac.plot(screen.bcea), new_window = TRUE),
-    silent = TRUE)
-}
+# for (i in seq_len(screen.bcea$n.comparators)) {
+try(
+  print(
+    my_ceac.plot(screen.bcea, new_window = TRUE)))
+# }
+
+dev.off()
+
 
 ##TODO:
 # ggplot2::ggsave(file = filename,
 #        width = 30, height = 20, units = "cm")
 
-dev.off()
+

@@ -43,11 +43,18 @@ clusterEvalQ(cl, library(data.tree))
 clusterEvalQ(cl, library(dplyr))
 clusterEvalQ(cl, library(treeSimR))
 
+clusterEvalQ(cl, source("subset_pop_dectree.R"))
+clusterEvalQ(cl, source("myToDataFrame_fns.R"))
+# clusterCall(cl, function() { source("subset_pop_dectree.R") })
+
+
 set.seed(12345)
 
 ptm <- proc.time()
 
-dectree_res <- parLapplyLB(cl, scenario_parameters, decision_tree_cluster,
+dectree_res <- parLapplyLB(cl,
+                           scenario_parameters,
+                           fun = decision_tree_cluster,
                            N.mc = N.mc,
                            n.uk_tb = n.uk_tb,
                            n.exit_tb = n.exit_tb)
@@ -59,15 +66,19 @@ stopCluster(cl)
 
 # save --------------------------------------------------------------------
 
-saveRDS(dectree_res, file = cluster_output_filename)
+saveRDS(dectree_res, file = pastef("output", cluster_output_filename))
 save(dectree_res, file = pastef(exit_wd, diroutput, "dectree_res.RData"))
 
 
 setwd(exit_wd)
 
 
-##to debug
+# ##to debug
 # res <- lapply(scenario_parameters, decision_tree_cluster,
 #               N.mc = N.mc,
 #               n.uk_tb = n.uk_tb,
 #               n.exit_tb = n.exit_tb)
+#
+# xx <- decision_tree_cluster(parameters = scenario_parameters[[1]],
+#                       n.uk_tb = 10,
+#                       n.exit_tb = 10)
