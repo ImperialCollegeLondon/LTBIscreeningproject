@@ -6,7 +6,7 @@
 # 05-bayesglm_predictions
 
 
-N.sim <-  1000
+N.sim <-  10#00 #N.mc
 
 # simulate from fitted model
 lm.sim <- arm::sim(lm_multi$`20000`, n = N.sim)
@@ -16,7 +16,9 @@ pred_sim_20000 <- matrix(NA,
                          ncol = nrow(coef.sim),
                          nrow = nrow(plot_data)/2)
 
-for (i in 1:nrow(coef.sim)) {
+pred_sim_20000_wide <- plot_data %>% select(-pred)
+
+for (i in seq_len(N.sim)) {
 
   # replace with posterior sample
   lm_multi$`20000`$coefficients <- coef.sim[i, ]
@@ -24,6 +26,8 @@ for (i in 1:nrow(coef.sim)) {
   random_effect <- rnorm(n = nrow(plot_data), mean = 0, sd = lm.sim@sigma[i])
 
   plot_data$pred <- predict(lm_multi$`20000`, newdata = plot_data, type = "response") + random_effect
+
+  pred_sim_20000_wide[ ,paste0("pred", i)] <- plot_data$pred
 
   pred_sim_20000[ ,i] <-
     tidyr::spread(plot_data, policy, pred) %>%
@@ -89,14 +93,20 @@ pred_sim_30000 <- matrix(NA,
                          ncol = nrow(coef.sim),
                          nrow = nrow(plot_data)/2)
 
+pred_sim_30000_wide <- plot_data %>% select(-pred)
+
 for (i in 1:nrow(coef.sim)) {
 
   # replace with posterior sample
   lm_multi$`30000`$coefficients <- coef.sim[i, ]
 
-  random_effect <- rnorm(n = nrow(plot_data), mean = 0, sd = lm.sim@sigma[i])
+  random_effect <- rnorm(n = nrow(plot_data),
+                         mean = 0,
+                         sd = lm.sim@sigma[i])
 
   plot_data$pred <- predict(lm_multi$`30000`, newdata = plot_data, type = "response") + random_effect
+
+  pred_sim_30000_wide[ ,paste0("pred", i)] <- plot_data$pred
 
   pred_sim_30000[ ,i] <-
     tidyr::spread(plot_data, policy, pred) %>%

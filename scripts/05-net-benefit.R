@@ -8,8 +8,8 @@
 # is this a problem?
 
 
-# library(broom)
 # library(stargazer)
+library(broom)
 library(rstanarm)
 
 

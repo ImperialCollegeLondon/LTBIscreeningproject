@@ -16,9 +16,8 @@ library(gridExtra)
 # pred_grid_values <- seq(50, 100, 10)
 # plot_grid_values <- seq(50, 100, 10)
 
-pred_grid_values <- seq(50, 100, 1)
-plot_grid_values <- c(50, 100)
-
+pred_grid_values <- seq(50, 100, 1) #for regression
+plot_grid_values <- c(50, 100)      #for grid of plots
 
 # input parameter values
 
@@ -30,7 +29,7 @@ pred_data <-
               "Effective" = pred_grid_values,
               "policy" = c("screened", "statusquo"))
 
-pred_data_20000 <- pred_data_30000 <- pred_data
+pred_NMB_20000 <- pred_NMB_30000 <- pred_data
 
 ## from file
 # scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_main.xlsx", sheet = "p")
@@ -47,18 +46,18 @@ pred_data_20000 <- pred_data_30000 <- pred_data
 
 # predictions -------------------------------------------------------------
 
-pred_data_30000$pred <- predict(lm_multi$`30000`, pred_data_30000, type = "response")
-pred_data_20000$pred <- predict(lm_multi$`20000`, pred_data_20000, type = "response")
+pred_NMB_30000$pred <- predict(lm_multi$`30000`, pred_NMB_30000, type = "response")
+pred_NMB_20000$pred <- predict(lm_multi$`20000`, pred_NMB_20000, type = "response")
 
 # wide format with INMB
 pred_data_30000 <-
-  tidyr::spread(pred_data_30000, policy, pred) %>%
+  tidyr::spread(pred_NMB_30000, policy, pred) %>%
   mutate(INMB = screened - statusquo,
          CE = INMB > 0) %>%
   arrange(Effective, Agree, Complete, Start)
 
 pred_data_20000 <-
-  tidyr::spread(pred_data_20000, policy, pred) %>%
+  tidyr::spread(pred_NMB_20000, policy, pred) %>%
   mutate(INMB = screened - statusquo,
          CE = INMB > 0) %>%
   arrange(Effective, Agree, Complete, Start)
@@ -76,6 +75,14 @@ plot_data_20000 <- dplyr::filter(pred_data_20000,
 plot_data <- dplyr::filter(pred_data,
                            Start %in% plot_grid_values,
                            Complete %in% plot_grid_values)
+
+
+# # match with simulation design matrix
+# plot_data <- dplyr::filter(pred_data,
+#                            Start %in% sim_matrix$Start,
+#                            Complete %in% sim_matrix$Complete,
+#                            Agree %in% sim_matrix$Agree,
+#                            Effective %in% sim_matrix$Effective)
 
 
 # NMB contour plots ---------------------------------------------------------
