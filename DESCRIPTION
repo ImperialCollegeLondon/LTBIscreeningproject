@@ -30,9 +30,11 @@ Imports:
     readr,
     logging,
     arm,
-    parallel
+    parallel,
+    ggtern
 RoxygenNote: 6.0.1
-Suggests: knitr,
+Suggests:
+    knitr,
     rmarkdown,
     testthat,
     denstrip,

@@ -22,10 +22,11 @@ my_ceac.plot <- function(screen.bcea,
   require(RColorBrewer)
 
   if (is.na(scenario)) {
-    scenario <- seq_len(ncol(screen.bcea$ceac))
+    NUM_SCENARIOS <- ncol(screen.bcea$ceac)
+    scenario <- seq_len(NUM_SCENARIOS)
   }
 
-  rainbow_cols <-  colorRampPalette(c('red','blue','green'))(NUM_SCENARIOS)
+  rainbow_cols <- colorRampPalette(c('red','blue','green'))(NUM_SCENARIOS)
 
   if (new_window) windows(width = 100, height = 50)
 
