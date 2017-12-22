@@ -6,7 +6,15 @@
 # 05-bayesglm_predictions
 
 
-N.sim <-  10#00 #N.mc
+sim_grid <- dplyr::filter(pred_data,
+                          Agree %in% c(50,60,70,80,90,100),
+                          Start %in% c(50,60,70,80,90,100),
+                          Complete %in% c(50,60,70,80,90,100),
+                          Effective %in% c(50,60,70,80,90,100))
+
+# sim_grid <-  plot_data #%>% select(-pred)
+
+N.sim <-  100#00 #N.mc
 
 # simulate from fitted model
 lm.sim <- arm::sim(lm_multi$`20000`, n = N.sim)
@@ -14,30 +22,32 @@ coef.sim <- coef(lm.sim)
 
 pred_sim_20000 <- matrix(NA,
                          ncol = nrow(coef.sim),
-                         nrow = nrow(plot_data)/2)
+                         nrow = nrow(sim_grid)/2)
 
-pred_sim_20000_wide <- plot_data %>% select(-pred)
+pred_sim_20000_wide <- sim_grid
 
 for (i in seq_len(N.sim)) {
 
   # replace with posterior sample
   lm_multi$`20000`$coefficients <- coef.sim[i, ]
 
-  random_effect <- rnorm(n = nrow(plot_data), mean = 0, sd = lm.sim@sigma[i])
+  random_effect <- rnorm(n = nrow(sim_grid),
+                         mean = 0,
+                         sd = lm.sim@sigma[i])
 
-  plot_data$pred <- predict(lm_multi$`20000`, newdata = plot_data, type = "response") + random_effect
+  sim_grid$pred <- predict(lm_multi$`20000`, newdata = sim_grid, type = "response") + random_effect
 
-  pred_sim_20000_wide[ ,paste0("pred", i)] <- plot_data$pred
+  pred_sim_20000_wide[ ,paste0("pred", i)] <- sim_grid$pred
 
   pred_sim_20000[ ,i] <-
-    tidyr::spread(plot_data, policy, pred) %>%
+    tidyr::spread(sim_grid, policy, pred) %>%
     arrange(Effective, Agree, Complete, Start) %>%
     transmute(screened - statusquo) %>% unlist()
 }
 
 # probability cost-effective
 out_sim_20000 <-
-  data.frame(plot_data_20000,
+  data.frame(sim_grid[1:(nrow(sim_grid)/2), ],
              prob_CE = apply(pred_sim_20000, 1,
                              function(x) sum(x > 0)/ncol(pred_sim_20000)),
              pc_5 = apply(pred_sim_20000, 1,
@@ -91,31 +101,31 @@ coef.sim <- coef(lm.sim)
 
 pred_sim_30000 <- matrix(NA,
                          ncol = nrow(coef.sim),
-                         nrow = nrow(plot_data)/2)
+                         nrow = nrow(sim_grid)/2)
 
-pred_sim_30000_wide <- plot_data %>% select(-pred)
+pred_sim_30000_wide <- sim_grid
 
 for (i in 1:nrow(coef.sim)) {
 
   # replace with posterior sample
   lm_multi$`30000`$coefficients <- coef.sim[i, ]
 
-  random_effect <- rnorm(n = nrow(plot_data),
+  random_effect <- rnorm(n = nrow(sim_grid),
                          mean = 0,
                          sd = lm.sim@sigma[i])
 
-  plot_data$pred <- predict(lm_multi$`30000`, newdata = plot_data, type = "response") + random_effect
+  sim_grid$pred <- predict(lm_multi$`30000`, newdata = sim_grid, type = "response") + random_effect
 
-  pred_sim_30000_wide[ ,paste0("pred", i)] <- plot_data$pred
+  pred_sim_30000_wide[ ,paste0("pred", i)] <- sim_grid$pred
 
   pred_sim_30000[ ,i] <-
-    tidyr::spread(plot_data, policy, pred) %>%
+    tidyr::spread(sim_grid, policy, pred) %>%
     arrange(Effective, Agree, Complete, Start) %>%
     transmute(screened - statusquo) %>% unlist()
 }
 
 out_sim_30000 <-
-  data.frame(plot_data_30000,
+  data.frame(sim_grid[1:(nrow(sim_grid)/2), ],
              prob_CE = apply(pred_sim_30000, 1,
                              function(x) sum(x > 0)/ncol(pred_sim_30000)),
              pc_5 = apply(pred_sim_30000, 1,
@@ -159,11 +169,12 @@ filename <- paste(plots_folder_scenario, "prob_CE_grid_30000.png", sep = "/")
 ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 
 
-# output table ------------------------------------------------------------
+# output array ------------------------------------------------------------
 
-regn_CE_grid <- merge(out_sim_20000, out_sim_30000,
-                 by = c("Agree", "Start", "Complete", "Effective"),
-                 suffixes = c(".2k", ".3k"))
+regn_CE_grid <- merge(x = out_sim_20000,
+                      y = out_sim_30000,
+                      by = c("Agree", "Start", "Complete", "Effective"),
+                      suffixes = c(".2k", ".3k"))
 
 try(
   write.csv(x = regn_CE_grid,
@@ -174,19 +185,21 @@ try(
 
 # specific scenario line graphs -------------------------------------------
 
-df <- dplyr::filter(regn_CE_grid,
-                    Agree == 72, Start == 100, Complete == 100)
-df_long <- reshape::melt(df, measure.vars = c("prob_CE.3k","prob_CE.2k"), variable_name = "WTP")
-
-
-print(
-  ggplot(aes(x = Effective, y = prob_CE.3k), data = df_long) +
-  geom_smooth(aes(x = Effective, y = value, fill = WTP), se = FALSE) +
-  ylab("Probability cost-effective") +
-  geom_hline(yintercept = 0.5))
-
-filename <- paste(plots_folder_scenario, "prob_CE_Effective_72-100-100.png", sep = "/")
-ggsave(file = filename, width = 30, height = 20, units = "cm")
+# df <- dplyr::filter(regn_CE_grid,
+#                     Agree == 72, Start == 100, Complete == 100)
+# df_long <- reshape::melt(df,
+#                          measure.vars = c("prob_CE.3k","prob_CE.2k"),
+#                          variable_name = "WTP")
+#
+#
+# print(
+#   ggplot(aes(x = Effective, y = prob_CE.3k), data = df_long) +
+#   geom_smooth(aes(x = Effective, y = value, fill = WTP), se = FALSE) +
+#   ylab("Probability cost-effective") +
+#   geom_hline(yintercept = 0.5))
+#
+# filename <- paste(plots_folder_scenario, "prob_CE_Effective_72-100-100.png", sep = "/")
+# ggsave(file = filename, width = 30, height = 20, units = "cm")
 
 
 # ggplot(data = df, aes(x = Effective, y = INMB.3k)) +#, group=t, colour=t)) +

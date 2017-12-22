@@ -7,10 +7,10 @@
 # cost-effectiveness planes
 
 
-screen.bcea <- bcea(e = -e.total,  # Q1 - Q0 different way round in function!
-                    c =  -c.total,
-                    ref = 1,
-                    interventions = colnames(e.total))
+screen.bcea <- BCEA::bcea(e = -e.total,  # Q1 - Q0 different way round in function!
+                          c =  -c.total,
+                          ref = 1,
+                          interventions = colnames(e.total))
 
 #########
 # plots #
@@ -62,7 +62,10 @@ filename <- paste(plots_folder_scenario, "CE_plane2.png", sep = "/")
 
 ##TODO: error when matrix isnt symmetric. Think its lack of variability/multimodal...
 try(
-  print(my_contour2(screen.bcea, graph = "ggplot2", wtp = 20000, CONTOUR_PC = "50%") +
+  print(my_contour2(screen.bcea,
+                    graph = "ggplot2",
+                    wtp = 20000,
+                    CONTOUR_PC = "50%") +
         scale_colour_manual(values = cbPalette)),
   silent = TRUE)
 

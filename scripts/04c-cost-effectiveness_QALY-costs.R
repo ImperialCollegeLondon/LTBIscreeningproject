@@ -101,7 +101,7 @@ for (s in seq_len(n.scenarios)) {
 
     unit_cost.aTB_TxDx <-
       unit_cost$aTB_TxDx %>%
-      sample_distributions() %>%
+      treeSimR::sample_distributions() %>%
       sum()
 
     # secondary infections
@@ -111,7 +111,7 @@ for (s in seq_len(n.scenarios)) {
 
     num_sec_inf <-
       NUM_SECONDARY_INF %>%
-      sample_distributions() %>%
+      treeSimR::sample_distributions() %>%
       unlist()
 
     num_avoided.all_tb <- n.diseasefree.all_tb[[s]][i, 'n']
@@ -170,6 +170,7 @@ for (s in seq_len(n.scenarios)) {
   }
 
   E_QALY_notif.screened[s] <- sum(p_LTBI_to_effectiveTx[s] * QALY_diseasefree + (1 - p_LTBI_to_effectiveTx[s]) * E_QALY_notif.statusquo)
+
 
   E_cost_notif.screened[s] <- (1 - p_LTBI_to_effectiveTx[s]) * sum(E_cost_notif.statusquo)
 

@@ -85,7 +85,7 @@ pLatentTB.who_age <-
          ncol = 28,
          nrow = length(pLatentTB.who)) %>%
   data.frame(who_levels, .) %>%
-  set_names("who_prev_cat_Pareek2011", as.character(screen_age_range))
+  purrr::set_names("who_prev_cat_Pareek2011", as.character(screen_age_range))
 
 # join with main data set
 pLatentTB.who_age.long <- reshape2:::melt.data.frame(data = pLatentTB.who_age,
@@ -177,7 +177,7 @@ n.popyear_screen <-
   aggregate(x = rep(1, n.pop_screen),
             by = list(IMPUTED_sample$issdt_year),
             sum) %>%
-  set_names(c("year", "pop"))
+  purrr::set_names(c("year", "pop"))
 
 
 # expected LTBI prob

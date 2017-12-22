@@ -23,15 +23,14 @@
 #  custom function --------------------------------------------------------
 
 # filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
-filename <- paste(plots_folder_scenario, "ceac.pdf", sep = "/")
+filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
 
-# png(filename)
-pdf(filename)
+png(filename, width = 400, height = 350, res = 45)
 
 # for (i in seq_len(screen.bcea$n.comparators)) {
 try(
   print(
-    my_ceac.plot(screen.bcea, new_window = TRUE)))
+    my_ceac.plot(screen.bcea)))#, new_window = TRUE)))
 # }
 
 dev.off()

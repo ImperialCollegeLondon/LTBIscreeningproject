@@ -84,31 +84,42 @@ try(
 
 # coefficient plots -------------------------------------------------------------------
 
-var_names <- c("policyscreened:I(Start - 90)",
+var_names <- c("policyscreened:I(Agree - 90)",
+               "policyscreened:I(Start - 90)",
                "policyscreened:I(Complete - 90)",
-               "policyscreened:I(Effective - 90)",
-               "policyscreened:I(Start - 90):I(Effective - 90)",
-               "policyscreened:I(Start - 90):I(Complete - 90)",
-               "policyscreened:I(Agree - 90):I(Effective - 90)",
-               "policyscreened:I(Agree - 90):I(Complete - 90)",
-               "policyscreened:I(Agree - 90):I(Start - 90)",
-               "policyscreened:I(Complete - 90):I(Effective - 90)")
+               "policyscreened:I(Effective - 90)")#,
+               # "policyscreened:I(Start - 90):I(Effective - 90)",
+               # "policyscreened:I(Start - 90):I(Complete - 90)",
+               # "policyscreened:I(Agree - 90):I(Effective - 90)",
+               # "policyscreened:I(Agree - 90):I(Complete - 90)",
+               # "policyscreened:I(Agree - 90):I(Start - 90)",
+               # "policyscreened:I(Complete - 90):I(Effective - 90)")
+
+var_labels <- c("Agree", "Start", "Complete", "Effective")
 
 
-filename <- paste(plots_folder_scenario, "coef_plot_20000.png", sep = "/")
-png(filename)
-print(
-  arm::coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
-         summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
-dev.off()
+filename <- paste(plots_folder_scenario, "coef_plot.png", sep = "/")
 
-filename <- paste(plots_folder_scenario, "coef_plot_30000.png", sep = "/")
-png(filename)
+png(filename, width = 600, height = 600)#, res = 45)
+
 print(
   arm::coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
-         summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"], mar = c(1,15,5.1,2), varnames = var_names, main = ""))
-dev.off()
+                summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"],
+                mar = c(1,15,5.1,2), varnames = var_labels, main = "", xlim = c(-1,4), cex.var = 1.2))
+print(
+  arm::coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
+                summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"],
+                mar = c(1,15,5.1,2), varnames = var_labels, main = "", add = TRUE, col = "red"))
+print(
+  arm::coefplot(summary(lm_multi$`10000`)$coefficients[var_names, "Estimate"],
+                summary(lm_multi$`10000`)$coefficients[var_names, "Std. Error"],
+                mar = c(1,15,5.1,2), varnames = var_labels, main = "", add = TRUE, col = "blue"))
 
+legend("bottomright",
+       legend = c("£10k","£20k","£30k"),
+       col = c("blue", "red", "black"), lty = 1, horiz = TRUE)
+
+dev.off()
 
 
 ################

@@ -14,13 +14,13 @@ library(ppcor)
 # pcor(design_matrix[ ,c("Agree", "Start", "Complete", "Effective")], method = "spearman")
 
 # pcc of screening
-pcor_screen <- pcor.test(x = design_matrix$NMB,
-                         y = design_matrix$policy,
-                         z = design_matrix[ ,c("Agree", "Start", "Complete", "Effective")], #controlling for
+pcor_screen <- pcor.test(x = sim_matrix$NMB,
+                         y = sim_matrix$policy,
+                         z = sim_matrix[ ,c("Agree", "Start", "Complete", "Effective")], #controlling for
                          method = "spearman")
 
 # pcc of each step
-dm_screen <- subset(design_matrix, policy == "screened")
+dm_screen <- subset(sim_matrix, policy == "screened")
 
 pcor_agree <- pcor.test(x = dm_screen$NMB,
                         y = dm_screen$Agree,

@@ -39,4 +39,8 @@ year_cohort <- '2009' #largest cohort
 # scenario_file_tag <- "_high-low"
 # scenario_file_tag <- "_main" #paste0("_", study) #_oneway
 # scenario_file_tag <- "_fullfactorial_QFT-GIT"
-scenario_file_tag <- "_fullfactorial_QFT-plus"
+scenario_file_tag <- "_fullfactorial_QFT-GIT_3mo_RIFINH"
+# scenario_file_tag <- "_fullfactorial_QFT-GIT_50testcost"
+# scenario_file_tag <- "_fullfactorial_QFT-GIT_100testcost"
+# scenario_file_tag <- "_fullfactorial_QFT-plus"
+# scenario_file_tag <- "_fullfactorial_TSPOT"

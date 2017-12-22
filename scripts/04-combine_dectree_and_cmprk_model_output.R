@@ -11,6 +11,7 @@ if (!exists("dectree_res")) load(choose.files()) #dectree_res <- readRDS(paste0(
 
 # if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-plus.xlsx", sheet = "p")
 if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-GIT.xlsx", sheet = "p")
+# if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_TSPOT.xlsx", sheet = "p")
 
 popscale <- 1#00000
 
@@ -55,6 +56,7 @@ LTBI_QALYloss_melt <- do.call(cbind.data.frame,
 LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
 LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
 
+# screen_discount <- 0.9
 
 # discount due to delay to screening
 LTBI_cost.df <- LTBI_cost.df * screen_discount
@@ -111,5 +113,4 @@ sim_matrix <- merge(x = design_matrix,
 # set baseline level
 sim_matrix <- within(sim_matrix,
                      policy <- factor(policy, levels = c("statusquo", "screened")))
-
 

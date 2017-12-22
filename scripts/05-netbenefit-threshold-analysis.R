@@ -16,7 +16,7 @@ library(gridExtra)
 # pred_grid_values <- seq(50, 100, 10)
 # plot_grid_values <- seq(50, 100, 10)
 
-pred_grid_values <- seq(50, 100, 1) #for regression
+pred_grid_values <- seq(5, 100, 5) #for regression
 plot_grid_values <- c(50, 100)      #for grid of plots
 
 # input parameter values
@@ -29,7 +29,7 @@ pred_data <-
               "Effective" = pred_grid_values,
               "policy" = c("screened", "statusquo"))
 
-pred_NMB_20000 <- pred_NMB_30000 <- pred_data
+pred_NMB_10000 <- pred_NMB_20000 <- pred_NMB_30000 <- pred_data
 
 ## from file
 # scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_main.xlsx", sheet = "p")
@@ -41,33 +41,44 @@ pred_NMB_20000 <- pred_NMB_30000 <- pred_data
 #
 # pred_data <- pred_data[!duplicated(pred_data), ]
 #
-# pred_data_20000 <- pred_data_30000 <- bind_rows(list("screened" = pred_data, "statusquo" = pred_data), .id = "policy")
+# pred_INMB_20000 <- pred_INMB_30000 <- bind_rows(list("screened" = pred_data, "statusquo" = pred_data), .id = "policy")
 
 
 # predictions -------------------------------------------------------------
 
 pred_NMB_30000$pred <- predict(lm_multi$`30000`, pred_NMB_30000, type = "response")
 pred_NMB_20000$pred <- predict(lm_multi$`20000`, pred_NMB_20000, type = "response")
+pred_NMB_10000$pred <- predict(lm_multi$`10000`, pred_NMB_10000, type = "response")
 
 # wide format with INMB
-pred_data_30000 <-
+pred_INMB_30000 <-
   tidyr::spread(pred_NMB_30000, policy, pred) %>%
   mutate(INMB = screened - statusquo,
-         CE = INMB > 0) %>%
+         CE = INMB > 0,
+         wtp = 30000) %>%
   arrange(Effective, Agree, Complete, Start)
 
-pred_data_20000 <-
+pred_INMB_20000 <-
   tidyr::spread(pred_NMB_20000, policy, pred) %>%
   mutate(INMB = screened - statusquo,
-         CE = INMB > 0) %>%
+         CE = INMB > 0,
+         wtp = 20000) %>%
   arrange(Effective, Agree, Complete, Start)
 
+pred_INMB_10000 <-
+  tidyr::spread(pred_NMB_10000, policy, pred) %>%
+  mutate(INMB = screened - statusquo,
+         CE = INMB > 0,
+         wtp = 10000) %>%
+  arrange(Effective, Agree, Complete, Start)
+
+
 # keep plotting values only
-plot_data_30000 <- dplyr::filter(pred_data_30000,
+plot_data_30000 <- dplyr::filter(pred_INMB_30000,
                                  Start %in% plot_grid_values,
                                  Complete %in% plot_grid_values)
 
-plot_data_20000 <- dplyr::filter(pred_data_20000,
+plot_data_20000 <- dplyr::filter(pred_INMB_20000,
                                  Start %in% plot_grid_values,
                                  Complete %in% plot_grid_values)
 
@@ -164,30 +175,31 @@ ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 
 # base graphics filled contour plots ---------------------------------------
 
-## £20,000
+levels_range <- seq(0, 250, 5)
 
+## £20,000
 s1 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_20000, Start == 50 & Complete == 50),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_20000, Start == 50 & Complete == 50),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 50 & Complete = 50",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s2 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_20000, Start == 50 & Complete == 100),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_20000, Start == 50 & Complete == 100),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 50 & Complete== 100",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s3 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_20000, Start == 100 & Complete == 50),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_20000, Start == 100 & Complete == 50),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 100 & Complete = 50",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s4 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_20000, Start == 100 & Complete == 100),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_20000, Start == 100 & Complete == 100),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 100 & Complete = 100",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 print(
@@ -205,27 +217,27 @@ ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 ## £30,000
 
 s1 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_30000, Start == 50 & Complete == 50),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_30000, Start == 50 & Complete == 50),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 50 & Complete = 50",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s2 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_30000, Start == 50 & Complete == 100),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_30000, Start == 50 & Complete == 100),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 50 & Complete== 100",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s3 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_30000, Start == 100 & Complete == 50),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_30000, Start == 100 & Complete == 50),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 100 & Complete = 50",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 s4 <-
-  lattice::levelplot(INMB~Agree*Effective, subset(pred_data_30000, Start == 100 & Complete == 100),
+  lattice::levelplot(INMB~Agree*Effective, subset(pred_INMB_30000, Start == 100 & Complete == 100),
                      xlab = "Agree (%)", ylab = "Effective (%)",
-                     at = seq(-50, 50, 5),
+                     at = levels_range,
                      main = "Start = 100 & Complete = 100",
                      col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
 print(
@@ -243,7 +255,7 @@ ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 
 
 
-# filled-contour plot simulations results --------------------------------------------
+# filled-contour plot original simulation --------------------------------------------
 ##TODO:
 # sim_data_30000 <-
 #   design_matrix %>%
@@ -257,7 +269,7 @@ ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 #                                  Start == 100,
 #                                  Complete == 100)
 #
-# lattice::levelplot(INMB~Agree*Effective, pred_data_30000,
+# lattice::levelplot(INMB~Agree*Effective, pred_INMB_30000,
 #                    xlab = "Agree (%)", ylab = "Effective (%)",
 #                    at = seq(-50, 50, 5),
 #                    main = "Start = 100 & Complete = 100",
