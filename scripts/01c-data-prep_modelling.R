@@ -2,11 +2,13 @@
 # project: LTBI screening
 # N Green
 # Oct 2016
-#
+# 01c-data-prep_modelling.R
 # pre-process imputed dataset, from Aldridge (2016) Lancet
 
 
 set.seed(23456)
+
+if (!exists("screen_age_range")) screen_age_range <- 18:45
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)

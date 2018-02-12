@@ -8,13 +8,14 @@
 # different functions/packages require different formats
 
 
+source("01c-data-prep_modelling.R")
 
 # create final state vectors full sample
 event <- rep(0, nrow(IMPUTED_sample))                          #event-free i.e. censored at followup
 event[IMPUTED_sample$death1] <- 3
 event[IMPUTED_sample$exit_uk1] <- 2
 # event[IMPUTED_sample$uk_tb_orig == "1"] <- 1
-event[IMPUTED_sample$uk_tb] <- 1
+event[as.logical(IMPUTED_sample$uk_tb)] <- 1
 
 
 
@@ -49,20 +50,22 @@ imputed_uk_tb_excess <- rexp(n = n.LTBI, rate = 1e-5)  #days
 dat_surv_etm_imputed_uk_tb <-
   IMPUTED_sample %>%
   dplyr::filter(LTBI_or_activeTB == TRUE) %>%
-  transmute(imputed_uk_tb_times = fup1_issdt + imputed_uk_tb_excess,
-            date_death1_issdt = date_death1_issdt,
-            min_uk_tb_death_impute = pmin(imputed_uk_tb_times,
-                                          date_death1_issdt),
-            time_days = ifelse(cens1 == TRUE, min_uk_tb_death_impute, fup1_issdt),
-            time = days_to_years(time_days),
-            to = ifelse(death1 == TRUE, 3,
-                        ifelse(exit_uk1 == TRUE, 2,
-                               ifelse(uk_tb_orig == "1", 1,
-                                      ifelse(imputed_uk_tb_times <= date_death1_issdt, 1, 3)))),
-            cens = ifelse(to == 1, 1, 0),
-            from = 9,
-            id = rownames(.))
-
+  transmute(
+    # imputed_uk_tb_times = fup1_issdt + imputed_uk_tb_excess,
+    imputed_uk_tb_times = fup_issdt + imputed_uk_tb_excess,
+    date_death1_issdt = date_death1_issdt,
+    min_uk_tb_death_impute = pmin(imputed_uk_tb_times,
+                                  date_death1_issdt),
+    # time_days = ifelse(cens1 == TRUE, min_uk_tb_death_impute, fup1_issdt),
+    time_days = ifelse(cens1 == TRUE, min_uk_tb_death_impute, fup_issdt),
+    time = days_to_years(time_days),
+    to = ifelse(death1 == TRUE, 3,
+                ifelse(exit_uk1 == TRUE, 2,
+                       ifelse(uk_tb_orig == "1", 1,
+                              ifelse(imputed_uk_tb_times <= date_death1_issdt, 1, 3)))),
+    cens = ifelse(to == 1, 1, 0),
+    from = 9,
+    id = rownames(.))
 
 
 # etm:: format

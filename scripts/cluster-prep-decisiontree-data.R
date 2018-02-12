@@ -19,7 +19,6 @@ osNode.health.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms.yaml
 costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
 osNode.cost <- costeff.cost$osNode
 
-
 ## health
 costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
 osNode.health <- costeff.health$osNode
@@ -81,3 +80,5 @@ data_folder <- system.file("data", package = "LTBIscreeningproject")
 save(osNode.cost, file = paste0(data_folder, "/osNode_cost_2009.RData"))
 save(osNode.health, file = paste0(data_folder, "/osNode_health_2009.RData"))
 
+saveRDS(osNode.cost, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_cost_2009.Rds"))
+saveRDS(osNode.health, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_health_2009.Rds"))

@@ -8,6 +8,8 @@
 
 ##TODO: age dependent for death
 
+source("scripts/create-survival-analysis-arrays.R")
+
 
 # naive fit ---------------------------------------------------------------
 
@@ -22,6 +24,17 @@ lines(fs1)
 plot(fs1, type = "hazard", ylim = c(0,0.01))
 plot(fs1, type = "cumhaz")
 
+##TODO
+# curve(dgamma(x, shape=1.8117, rate = 0.0164))
+
+w1 <- flexsurvreg(Surv(times_years, cens) ~ 1,
+                   data = dat_surv_naive,
+                   dist = "weibull")
+w1
+plot(NA, type = 'n', xlim = c(0, 10), ylim = c(0.95, 1), ylab = "S(t) Kaplan-Meier")
+lines(w1)
+curve(dweibull(x, shape = 1.7642, scale = 90.5760))
+
 # daily
 ##slow
 # sp1 <- flexsurvspline(Surv(times, cens) ~ 1,
@@ -33,35 +46,41 @@ plot(fs1, type = "cumhaz")
 
 # yearly
 sp1 <- flexsurvspline(Surv(times_years, cens) ~ 1,
-                      data = dat_surv_naive, k = 3, scale = "hazard")
-
-plot(sp1, type = "cumhaz")
+                      data = dat_surv_naive,
+                      k = 3,
+                      scale = "hazard")
+plot(NA, type = 'n', xlim = c(0, 10), ylim = c(0.95, 1), ylab = "S(t) Kaplan-Meier")
+lines(sp1)
 plot(sp1, type = "hazard", ylim = c(0,0.01))
-abline(h = 0.004, col = "blue")
+abline(h = 0.004/3, col = "blue")
+plot(sp1, type = "cumhaz")
 
 
 # imputed progression after follow-up -------------------------------------
+#
+# sp1 <- flexsurvspline(Surv(times, cens) ~ 1,
+#                       data = dat_surv_imputed_uk_tb, k = 2)
+# plot(sp1, type = "cumhaz")
+# plot(sp1, type = "hazard")
 
-sp1 <- flexsurvspline(Surv(times, cens) ~ 1,
-                      data = dat_surv_imputed_uk_tb, k = 2)
-plot(sp1, type = "cumhaz")
-plot(sp1, type = "hazard")
 
-
+# -------------------------------------------------------------------------
 # fit multistate models ---------------------------------------------------
+# -------------------------------------------------------------------------
+
 # survivor functions
 
 ##slow
-flex_impute <- flexsurvreg(Surv(time, status) ~ trans,
-                           data = dat_surv_long,
-                           # dist = "gengamma")
-                           dist = "llogis")
-
-plot(NULL, xlim = c(0, 10), ylim = c(0.7,1), type = "n", xlab = "", ylab = "S(t)")
-lines(flex_impute)
-
-plot(density(qllogis(p = seq(0,1,0.01), shape = 1.75640, scale = 44.15933)), main = "", xlim = c(0,100))
-
+# flex_impute <- flexsurvreg(Surv(time, status) ~ trans,
+#                            data = dat_surv_long,
+#                            # dist = "gengamma")
+#                            dist = "llogis")
+#
+# plot(NULL, xlim = c(0, 10), ylim = c(0.7,1), type = "n", xlab = "", ylab = "S(t)")
+# lines(flex_impute)
+#
+# plot(density(qllogis(p = seq(0,1,0.01), shape = 1.75640, scale = 44.15933)), main = "", xlim = c(0,100))
+#
 
 # non-joint distn fit
 ## quicker
@@ -127,12 +146,11 @@ ggplot(data = plot_dat,
 # full parametric model
 tgrid <- seq(0, 20, 1)
 
-mrwei <- msfit.flexsurvreg(object = flex_impute,
+mrwei <- msfit.flexsurvreg(object = flex_impute.list,
                            t = tgrid,
                            trans = tmat)
 
 plot(mrwei)
-
 
 ggplot(data = mrwei$Haz,
        aes(x = time, y = Haz, colour = trans, group = trans)) +
@@ -151,7 +169,7 @@ ggplot(data = plot_dat,
 
 # prediction transition probs -----------------------------------------------
 
-pmatrix <- pmatrix.fs(x = flex_impute,
+pmatrix <- pmatrix.fs(x = flex_impute.list,
                       t = seq(0, 100, by = 0.5),
                       trans = tmat)
 pmatrix <-
@@ -179,9 +197,8 @@ ggplot(data = plot_dat,
   geom_line()
 
 
-
 # by simulation
-sim_out <- pmatrix.simfs(x = flex_impute,
+sim_out <- pmatrix.simfs(x = flex_impute.list,
                          trans = tmat,
                          t = 20)
 

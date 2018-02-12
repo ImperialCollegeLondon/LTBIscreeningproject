@@ -8,13 +8,13 @@ decision_tree_cluster <- function(parameters,
                                   N.mc = 2,
                                   n.uk_tb,
                                   n.exit_tb,
-                                  cost_dectree = "osNode_cost_2009.RData",
-                                  health_dectree = "osNode_health_2009.RData"){
+                                  cost_dectree = "osNode_cost_2009.Rds",
+                                  health_dectree = "osNode_health_2009.Rds"){
 
   mcall <- match.call()
 
-  load(cost_dectree)
-  load(health_dectree)
+  osNode.cost <- readRDS(file = cost_dectree)
+  osNode.health <- readRDS(file = health_dectree)
 
   assign_branch_values(osNode.cost,
                        osNode.health,

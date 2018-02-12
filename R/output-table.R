@@ -1,8 +1,10 @@
 
 #' Table of Cost-Effectiveness Statistics
 #'
+#' Take \code{BCEA} package oject as input and
+#' creates a summary table.
 #'
-#' @param bcea_obj Pre-calculated output from BCEA package
+#' @param bcea_obj Pre-calculated output from BCEA package (class(bcea))
 #'
 #' @return data.frame
 #' @export

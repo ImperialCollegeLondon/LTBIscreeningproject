@@ -10,12 +10,13 @@
 # https://www.r-bloggers.com/how-to-go-parallel-in-r-basics-tips/
 
 
-library(parallel)
+# library(parallel)
 
 if (getwd() != "Q:/R/cluster--LTBI-decision-tree") {
   exit_wd <- getwd()}
 
 source("scripts/cluster-prep-decisiontree-data.R")
+source("scripts/cluster-prep-decisiontree-data_pdistn.R")
 
 setwd("Q:/R/cluster--LTBI-decision-tree")
 
@@ -47,7 +48,6 @@ clusterEvalQ(cl, source("subset_pop_dectree.R"))
 clusterEvalQ(cl, source("myToDataFrame_fns.R"))
 # clusterCall(cl, function() { source("subset_pop_dectree.R") })
 
-
 set.seed(12345)
 
 ptm <- proc.time()
@@ -58,7 +58,6 @@ dectree_res <- parLapplyLB(cl,
                            N.mc = N.mc,
                            n.uk_tb = n.uk_tb,
                            n.exit_tb = n.exit_tb)
-
 proc.time() - ptm
 
 stopCluster(cl)
@@ -73,12 +72,22 @@ save(dectree_res, file = pastef(exit_wd, diroutput, "dectree_res.RData"))
 setwd(exit_wd)
 
 
-# ##to debug
-# res <- lapply(scenario_parameters, decision_tree_cluster,
+##to debug
+# res <- lapply(scenario_parameters,
+#               decision_tree_cluster,
 #               N.mc = N.mc,
 #               n.uk_tb = n.uk_tb,
 #               n.exit_tb = n.exit_tb)
 #
 # xx <- decision_tree_cluster(parameters = scenario_parameters[[1]],
-#                       n.uk_tb = 10,
-#                       n.exit_tb = 10)
+#                             n.uk_tb = 10,
+#                             n.exit_tb = 10,
+#                             cost_dectree = "osNode_cost_2009.Rds",
+#                             health_dectree = "osNode_health_2009.Rds")
+#
+# xx <- decision_tree_cluster(parameters = scenario_parameters[[1]][1:3, ],
+#                             n.uk_tb = 10,
+#                             n.exit_tb = 10,
+#                             cost_dectree = "osNode_cost_2009_pdistn.Rds",
+#                             health_dectree = "osNode_health_2009_pdistn.Rds")
+
