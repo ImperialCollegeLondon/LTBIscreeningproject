@@ -1,4 +1,15 @@
 
+#' decision_tree
+#'
+#' @param scenario_parameters
+#' @param osNode.cost
+#' @param osNode.health
+#' @param N.mc
+#'
+#' @return
+#' @export
+#'
+#' @examples
 decision_tree <- function(scenario_parameters,
                           osNode.cost,
                           osNode.health,

@@ -4,6 +4,17 @@
 #' Calculate decision tree expected costs and QALY loss
 #' for N simulations
 #'
+#' @param parameters
+#' @param N.mc
+#' @param n.uk_tb
+#' @param n.exit_tb
+#' @param cost_dectree
+#' @param health_dectree
+#'
+#' @return
+#' @export
+#'
+#' @examples
 decision_tree_cluster <- function(parameters,
                                   N.mc = 2,
                                   n.uk_tb,

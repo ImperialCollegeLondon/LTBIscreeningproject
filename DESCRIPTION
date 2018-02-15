@@ -27,7 +27,6 @@ Imports:
     reshape2,
     magrittr,
     purrr,
-    readr,
     logging,
     arm,
     parallel,

@@ -3,7 +3,7 @@
 # N Green
 #
 # high-level global scenario runner
-# for a deterministic sensitivity analysis
+# for a (deterministic) sensitivity analysis
 # of screening programme
 #
 # *****************************************
