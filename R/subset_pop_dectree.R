@@ -32,11 +32,17 @@
 # }
 
 
-#' subset_pop_dectree
+#' Subset Populations of Decision Tree
+#'
+#' Specific to the LTBI screening model, this gives the total
+#' probabilities of particular state on the pathway but summing
+#' across them.
+#'
+#' Absolute counts also TODO
 #'
 #' @param osNode
 #'
-#' @return
+#' @return data.frame
 #' @export
 #'
 #' @examples

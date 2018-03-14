@@ -15,6 +15,7 @@
 #' @export
 #'
 #' @examples
+#'
 decision_tree_cluster <- function(parameters,
                                   N.mc = 2,
                                   n.uk_tb,
