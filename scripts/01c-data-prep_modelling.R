@@ -3,6 +3,7 @@
 # N Green
 # Oct 2016
 # 01c-data-prep_modelling.R
+#
 # pre-process imputed dataset, from Aldridge (2016) Lancet
 
 
@@ -120,8 +121,12 @@ IMPUTED_sample <-
          date_exit_uk1_issdt = date_exit_uk1 - issdt,
          date_death1_issdt.years = as.numeric(date_death1_issdt)/365.25,
          date_exit_uk1_issdt.years = as.numeric(date_exit_uk1_issdt)/365.25,
-         date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt),
-         date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100, Inf, date_exit_uk1_issdt.years))
+         date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100,
+                                      yes = Inf,
+                                      no = date_exit_uk1_issdt),
+         date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100,
+                                            yes = Inf,
+                                            no = date_exit_uk1_issdt.years))
 
 
 # uk entry to follow-up days -------------------------------------------------
@@ -160,16 +165,6 @@ IMPUTED_sample <-
                                                  no = NA),
                 rNotificationDate_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)
 
-
-# mdr ---------------------------------------------------------------------
-
-# MDR_burden <- readr::read_csv("C:/Users/ngreen1/Dropbox/TB/LTBI/data/WHO/MDR_RR_TB_burden_estimates_2017-05-30.csv")
-#
-# sample_mdr <- left_join(IMPUTED_sample_year_cohort[,c("iso_a3_nat","iso_a3_country")],
-#                 MDR_burden[,c("iso3","e_rr_pct_new")],
-#                 by = c("iso_a3_country" = "iso3"))
-#
-# mdr_pct <- mean(sample_mdr$e_rr_pct_new)
 
 # total sample size
 n.pop_screen <- nrow(IMPUTED_sample)
