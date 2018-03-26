@@ -1,8 +1,13 @@
 Package: LTBIscreeningproject
 Type: Package
-Title: LTBI Screening Cost-Effectiveness Analysis
+Title: LTBI screening cost-effectiveness analysis
 Version: 0.1.0
-Author: Nathan Green
+Authors@R: c(
+    person("Nathan", "Green", , "nathan.green@imperial.ac.uk", role = c("aut", "cre"), 
+      comment = c(ORCID = "0000-0003-4757-117X")
+    ),
+    person("RStudio", role = c("cph", "fnd"))
+    )
 Maintainer: Nathan Green <nathan.green@imperial.ac.uk>
 Description: More about what it does (maybe more than one line)
 License: MIT

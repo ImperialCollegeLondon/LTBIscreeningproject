@@ -1,5 +1,5 @@
 
-#' net_benefit
+#' Net benefit
 #'
 #' @param e_list
 #' @param c_list
@@ -45,10 +45,10 @@ nmb <- function(e_statusquo, c_statusquo,
     mutate(wtp = wtp_threshold)
 }
 
-#' partial linear regression function
+#' Partial linear regression function
 #'
-#' @param nmb_formula
-#' @param design_matrix
+#' @param nmb_formula Regression formula
+#' @param design_matrix Input data
 #' @param ...
 #'
 #' @return
@@ -64,7 +64,7 @@ lm_wtp <- function(nmb_formula,
   }
 }
 
-#' Partial bayesian linear regression function
+#' Partial Bayesian linear regression function
 #'
 #' @param nmb_formula
 #' @param design_matrix
@@ -82,7 +82,7 @@ bayeslm_wtp <- function(nmb_formula,
   }
 }
 
-#' optimal_thresholds
+#' Optimal thresholds
 #'
 #' @param lm_multi
 #' @param covar
@@ -92,7 +92,9 @@ bayeslm_wtp <- function(nmb_formula,
 #' @export
 #'
 #' @examples
-optimal_thresholds <- function(lm_multi, covar, centre) {
+optimal_thresholds <- function(lm_multi,
+                               covar,
+                               centre) {
 
   opt <-
     sapply(lm_multi,

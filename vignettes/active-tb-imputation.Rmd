@@ -39,7 +39,7 @@ We also fit an exponential distibution to the tail of the Lancet data.
 
 All of the data can be put together.
 
-![](C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/output/plots/extrapolated_active_tb.png)
+![](extrapolated_active_tb.png)
 
 
 ## Imputation

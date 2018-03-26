@@ -54,6 +54,45 @@ We pick a single year cohort to simulate from. 2012 is the most recent complete 
 year_cohort <- '2009'
 ```
 
+## Scenario parameter values
+
+We'll show later how to simulate over multiple scenarios but here we'll take the simplest case of a single scenario.
+The scenario values are given in a _long_ format tibble such as the following.
+
+```{r}
+data("scenario_parameters", package = "LTBIscreeningproject")
+scenario_parameters[[1]]
+```
+
+
+* `node` are the names of the nodes on the decision tree i.e. the steps along the screening, diagnosis and treatment pathway.
+* `distn`, `min`, `max` specify the distibutions for whichever parameter is indicated.
+* `scenario` in this case is superfluous.
+* `val_type` indicates the paramter type i.e. is it cost or some health indicator. (__`QALYloss` is not a good name! Need to change__. This should really be `p` and we have another label for health.)
+* `p` is the probability. If we rename the val_types then we can get rid of this column.
+
+
+## Study data
+
+Read-in the cleaned individual-level study. This is in accordance with the fixed model parameters above.
+
+```r
+data("sample_cleaned")
+```
+
+* Remove duplicate pre-entry screened
+* Remove duplicate notification dates
+* Remove death before entry to UK
+* Eligible screening age range only
+* Create LTBI probabilities by WHO active TB group
+    + Match active TB prevalence groups in dataset to previous study
+    + Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+* Create time-to-events, from UK entry to event dates
+* Create UK entry to follow-up days
+* Remove individual follow-up date before entry
+* Remove TB before entry
+
+
 ## Cost-effectiveness parameter values
 
 The data objects are created in the following script.
@@ -88,47 +127,4 @@ QALYloss
 ```{r}
 NUM_SECONDARY_INF
 ```
-
-
-
-## Scenario parameter values
-
-We'll show later how to simulate over multiple scenarios but here we'll take the simplest case of a single scenario.
-The scenario values are given in a _long_ format tibble such as the following.
-
-```{r}
-data("scenario_parameters", package = "LTBIscreeningproject")
-scenario_parameters[[1]]
-```
-
-
-* `node` are the names of the nodes on the decision tree i.e. the steps along the screening, diagnosis and treatment pathway.
-* `distn`, `min`, `max` specify the distibutions for whichever parameter is indicated.
-* `scenario` in this case is superfluous.
-* `val_type` indicates the paramter type i.e. is it cost or some health indicator. (__`QALYloss` is not a good name! Need to change__. This should really be `p` and we have another label for health.)
-* `p` is the probability. If we rename the val_types then we can get rid of this column.
-
-
-## Study data
-
-Read-in the cleaned individual-level study. This is in accordance with the fixed model parameters above.
-
-```r
-data("sample_cleaned")
-```
-
-* Remove duplicate pre-entry screened
-* Remove duplicate notification dates
-* Remove death before entry to UK
-* Eligible screening age range only
-* Create LTBI probabilities by WHO active TB group
-    + Match active TB prevalence groups in dataset to previous study
-    + Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
-* Create time-to-events, from Uk entry to event dates
-* Create UK entry to follow-up days
-* Remove individual follow-up date before entry
-* Remove TB before entry
-
-
-
 
