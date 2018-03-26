@@ -1,0 +1,50 @@
+---
+title: "Active TB estimation"
+author: "Nathan Green"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+This vignette steps through how we estimate the unobserved active TB progression.
+
+## Previous studies
+
+There are few references for active TB progression data.
+We use the observed incidence in the Lancet (xxxx) paper (taken directly from the plots and the tail probabilities from Sutherland (xxxx).
+
+The counts in the Lancet paper are
+
+```{r}
+data("incidence_Lancet", package = "LTBIscreeningproject")
+
+plot(incidence_Lancet$mean, type = 's', ylim = c(0,300), xlab = "Year", ylab = "Incidence")
+lines(incidence_Lancet$lower95, type = 's', lty = 2)
+lines(incidence_Lancet$upper95, type = 's', lty = 2)
+```
+
+We rescale these counts to proportions.
+We also fit an exponential distibution to the tail of the Lancet data.
+
+All of the data can be put together.
+
+![](C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/output/plots/extrapolated_active_tb.png)
+
+
+## Imputation
+
+
+
+
+

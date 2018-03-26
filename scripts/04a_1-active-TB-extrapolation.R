@@ -46,12 +46,13 @@ res_year_prob <- c(Lancet_prob,
 
 
 # plots -------------------------------------------------------------------
-
+# x11()
 # plot(incidence_Lancet$year, Lancet_prob, xlim = c(0,100), type = 'l', ylim = c(0, 0.003))
 # lines(as.numeric(names(fit_year_prob)), fit_year_prob, col = "blue")
-# lines(extrap_years - 1, activetb_year_pmf_sutherland[extrap_years - 1], col = "red")
 # lines(1:length(res_year_prob) - 1, res_year_prob, col = "green")
+# lines(extrap_years - 1, activetb_year_pmf_sutherland[extrap_years - 1], col = "red")
 # abline(v = 0:20, col = "gray", lty = 3)
+# legend("topright", legend = c("Lancet", "Exponential", "Sutherland"), col = c("green", "blue", "red"), lty = c(1,1,1))
 
 
 # save
