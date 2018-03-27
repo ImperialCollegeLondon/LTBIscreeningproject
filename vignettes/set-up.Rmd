@@ -3,6 +3,7 @@ title: "Basic example: model set-up"
 author: "Nathan Green"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: active_tb_imputation.bib
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,12 +20,13 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This is a basic example of how to use the LTBI screening model. Other vignettes will show how to automate some of the running over multiple scenarios, and how to visualised the output.
+This is a basic example of how to use the LTBI screening model.
+Other vignettes will show how to then automate some of the running over multiple scenarios, and how to visualised the output.
 
 
-## Fixed model parameters
+## Fixed model parameters defining an _intervention_
 
-Don't assume that everyone who enters the country doesn't leave.
+Assume that everyone who enters the country doesn't leave.
 ```r
 force_everyone_stays <- FALSE
 ```
@@ -49,18 +51,30 @@ FUP_MAX_YEAR <- 100
 screen_age_range <- 18:45
 ```
 
-We pick a single year cohort to simulate from. 2012 is the most recent complete year but we'll use the largest.
+We pick a single year cohort to simulate from. The year 2012 is the most recent complete year but we'll use the largest.
 ```r
 year_cohort <- '2009'
 ```
 
+This specification we'll call an _intervention_ (in contrast to a _scenario_ which are the lower level variables) and can be loaded as a list using
+
+```r
+data("intervention_constants")
+```
+
+
 ## Scenario parameter values
 
 We'll show later how to simulate over multiple scenarios but here we'll take the simplest case of a single scenario.
-The scenario values are given in a _long_ format tibble such as the following.
+For a given intervention (e.g. for QFT-GIT test and 3 months Rifampicin-Isoniazid treatment), we can load the different scenarios as a list:
 
 ```{r}
 data("scenario_parameters", package = "LTBIscreeningproject")
+```
+
+Each scenario's set of values are given in a _long_ format tibble, such as the following.
+
+```{r}
 scenario_parameters[[1]]
 ```
 
@@ -69,7 +83,7 @@ scenario_parameters[[1]]
 * `distn`, `min`, `max` specify the distibutions for whichever parameter is indicated.
 * `scenario` in this case is superfluous.
 * `val_type` indicates the paramter type i.e. is it cost or some health indicator. (__`QALYloss` is not a good name! Need to change__. This should really be `p` and we have another label for health.)
-* `p` is the probability. If we rename the val_types then we can get rid of this column.
+* `p` is the probability. If we rename the `val_types` then we can get rid of this column.
 
 
 ## Study data
@@ -88,7 +102,7 @@ Data cleaning removes some entries and we also create new fields from the existi
 * Eligible screening age range only
 * Create LTBI probabilities by WHO active TB group
     + Match active TB prevalence groups in dataset to previous study
-    + Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+    + @Pareek2011
 * Create time-to-events, from UK entry to event dates
 * Create UK entry to follow-up days
 * Remove individual follow-up date before entry
@@ -104,13 +118,16 @@ source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 
 The data are created with the date of the original and the discounted or inflated date as well as the reference from where it came.
 
-Where available the parameter values are given as distibutions and their hyper-parameters.
+Where available the parameter values are given as distibutions and their (hyper-)parameters.
+The data can be loaded using:
+
+```{r}
+data("cost_effectivness_params", package = "LTBIscreeningproject")
+```
 
 This includes:
 
 ```{r}
-data("cost_effectivness_params", package = "LTBIscreeningproject")
-
 cfr_age_lookup
 ```
 
@@ -129,4 +146,7 @@ QALYloss
 ```{r}
 NUM_SECONDARY_INF
 ```
+
+
+# References
 

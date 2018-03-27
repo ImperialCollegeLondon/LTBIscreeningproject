@@ -1,9 +1,9 @@
-# *****************************
+# ********************************************
 # LTBI screening
 # N Green
 # 2017
 #
-# generate a fixed cohort
+# generate a fixed cohort and set constants
 # only need to run this once
 
 
@@ -12,10 +12,17 @@ data("051206 - IMPUTED_sample")
 # 1) define and clean data ---------------------------------------------
 
 source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
+# data("intervention_constants")
+
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
+# data("cost_effectivness_params")
+
 source("scripts/01-prep-scenario-decisiontree-data.R", echo = TRUE)
+# data("scenario_parameters")
+
 source("scripts/01c-data-prep_modelling.R", echo = TRUE)
-source("scripts/01-pop_numbers.R", echo = TRUE)
+# data("sample_cleaned")
+
 
 # 4) event times estimation --------------------------------------------
 

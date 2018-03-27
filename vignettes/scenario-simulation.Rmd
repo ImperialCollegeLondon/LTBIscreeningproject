@@ -1,0 +1,20 @@
+---
+title: "A scenario simulation"
+author: "Nathan Green"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: active_tb_imputation.bib
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+

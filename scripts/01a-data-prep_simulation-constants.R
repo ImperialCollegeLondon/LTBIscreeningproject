@@ -44,3 +44,16 @@ scenario_file_tag <- "_fullfactorial_QFT-GIT_3mo_RIFINH"
 # scenario_file_tag <- "_fullfactorial_QFT-GIT_100testcost"
 # scenario_file_tag <- "_fullfactorial_QFT-plus"
 # scenario_file_tag <- "_fullfactorial_TSPOT"
+
+interv <-
+  list(force_everyone_stays = force_everyone_stays,
+       ENDPOINT_QALY = ENDPOINT_QALY,
+       screen_with_delay = screen_with_delay,
+       FUP_MAX_YEAR = FUP_MAX_YEAR,
+       screen_age_range = screen_age_range,
+       year_cohort = year_cohort,
+       scenario_file_tag = scenario_file_tag)
+
+save(interv,
+     file = "data/intervention_constants.RData")
+
