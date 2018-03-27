@@ -80,6 +80,8 @@ Read-in the cleaned individual-level study. This is in accordance with the fixed
 data("sample_cleaned")
 ```
 
+Data cleaning removes some entries and we also create new fields from the existing ones which we'll need later on.
+
 * Remove duplicate pre-entry screened
 * Remove duplicate notification dates
 * Remove death before entry to UK

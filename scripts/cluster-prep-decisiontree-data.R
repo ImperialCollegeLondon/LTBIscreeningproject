@@ -35,7 +35,7 @@ who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 # p_incid_grp[!names(p_incid_grp) %in% incidence_grps_screen] <- 0
 # p_incid_grp <- p_incid_grp/sum(p_incid_grp)
 
-p_incid_grp <- prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
+p_incid_grp <- miscUtilities::prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
 
 pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
                             LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))

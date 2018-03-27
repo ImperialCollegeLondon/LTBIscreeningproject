@@ -75,7 +75,7 @@
       <h1>Active TB estimation</h1>
                         <h4 class="author">Nathan Green</h4>
             
-            <h4 class="date">2018-03-26</h4>
+            <h4 class="date">2018-03-27</h4>
       
       
 
@@ -95,16 +95,63 @@
 <span class="kw">plot</span>(incidence_Lancet<span class="op">$</span>mean, <span class="dt">type =</span> <span class="st">'s'</span>, <span class="dt">ylim =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">300</span>), <span class="dt">xlab =</span> <span class="st">"Year"</span>, <span class="dt">ylab =</span> <span class="st">"Incidence"</span>)
 <span class="kw">lines</span>(incidence_Lancet<span class="op">$</span>lower95, <span class="dt">type =</span> <span class="st">'s'</span>, <span class="dt">lty =</span> <span class="dv">2</span>)
 <span class="kw">lines</span>(incidence_Lancet<span class="op">$</span>upper95, <span class="dt">type =</span> <span class="st">'s'</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</code></pre></div>
-<p><img src="active-tb-imputation_files/figure-html/unnamed-chunk-1-1.png" width="672"></p>
+<div class="figure">
+<img src="active-tb-imputation_files/figure-html/unnamed-chunk-1-1.png" alt="Cases of tuberculosis notified in migrants to EWNI by time since entry. Aldridge, Lancet (2016)" width="672"><p class="caption">
+Cases of tuberculosis notified in migrants to EWNI by time since entry. Aldridge, Lancet (2016)
+</p>
+</div>
+<div id="extrapolation" class="section level3">
+<h3 class="hasAnchor">
+<a href="#extrapolation" class="anchor"></a>Extrapolation</h3>
 <p>We rescale these counts to proportions. We also fit an exponential distibution to the tail of the Lancet data.</p>
 <p>All of the data can be put together.</p>
 <div class="figure">
 <img src="extrapolated_active_tb.png">
 </div>
 </div>
+</div>
 <div id="imputation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#imputation" class="anchor"></a>Imputation</h2>
+<p>We now want to impute individual unobserved progression times to active TB for the cohort. These are times after exiting UK or after end of follow-up.</p>
+<p>We scale the progression probabilities using a weight average of LTBI cohort probabilities, because the progression probabilities generate above are for <em>all</em> individuals whereas we know someone’s LTBI status (because we simulate them in the first place). The valued calculated for the cohort is <code>0.278</code>.</p>
+<p>We calculate separately the times for those that leave EWNI and after end of follow-up.</p>
+<p>There are a few ways that we could have done this. We could have sampled the progression time and if its after the death time then assume no progression. The problem with this is that we have little say on how many people progress. This is fine if the hazards are independent but the progression probabilities that we’re using are in the presence of competing risk of all-cause mortality. We could just ignore this of course which may be reasonable in some circumstances like when the death rate is low e.g. at younger ages.</p>
+<p>An alternative way of generating progression times is by a two-step mixture model-type approach. That is, we first sample whether someone progresses and then we sample the time of progression. In this way we can control the proportion of progressors.</p>
+<p>Construct the time to active TB as a mixture model with 2 components.</p>
+<p><span class="math display">\[
+p(\text{infected}) \times p(\text{infected at $T=t$ | infected}).
+\]</span> The conditional probability <span class="math inline">\(p(\text{infected at $T=t$ | infected})\)</span> is produced from Sutherland () and extrapolating assuming an exponential decay to 1 in lifetime. The marginal probability <span class="math inline">\(p(\text{infected})\)</span> is the chance of being infected in a lifetime.</p>
+<p>The reason to do it like this is so that we can easily see the value of <span class="math inline">\(p(\text{infected})\)</span> for different estimates found in literature, without modifying <span class="math inline">\(p(\text{infected at $T=t$ | infected})\)</span>.</p>
+<p>From <span class="citation">Pareek et al. (2011)</span>, they chose a conservative rate for LTBI to active TB of 5% over 20 years. <span class="citation">Marks et al. (2000)</span> calculated a progression rate of 6.7% over 40 years. <span class="citation">Choudhury and West (2013)</span> estimated 13% over 10 years or 16.3% over 15 years. 2006 NICE economic appraisal said LTBI testing is cost-effective over 18% chance over 15 years and 2001 NICE economic appraisal reduced this to 12%.</p>
+<p>The algorithm is as follows:</p>
+<ul>
+<li>Check that they are LTBI and that the first event is exiting EWNI or end of followup. If not stop.</li>
+<li>Sample <span class="math inline">\(U \sim Unif[0,1]\)</span>.
+<ul>
+<li>If <span class="math inline">\(U&gt;lifetimeRisk\)</span> then no progression. Stop.</li>
+<li>Otherwise TB progression.</li>
+</ul>
+</li>
+<li>If followup time is the same as death time return followup time. Stop.</li>
+<li>Sample from ECDF of TB progression times until <span class="math inline">\(t_{tb} &lt; t_{death}\)</span>.</li>
+<li>End.</li>
+</ul>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h1>
+<div id="refs" class="references">
+<div id="ref-Choudhury2013">
+<p>Choudhury, I W, and C R West. 2013. “The outcome of a cohort of tuberculin-positive predominantly South Asian new entrants aged 16 – 34 to the UK : Blackburn 1989 – 2001” 36 (3): 390–95. doi:<a href="https://doi.org/10.1093/pubmed/fdt110">10.1093/pubmed/fdt110</a>.</p>
+</div>
+<div id="ref-Marks2000a">
+<p>Marks, Suzanne M, Zachary Taylor, Noreen L Qualls, Robin J Shrestha-kuwahara, Maureen A Wilce, and Cristy H Nguyen. 2000. “Outcomes of Contact Investigations of Infectious Tuberculosis Patients” 162: 2033–8.</p>
+</div>
+<div id="ref-Pareek2011">
+<p>Pareek, Manish, I. Abubakar, Peter J. White, G. P. Garnette, and A. Lalvani. 2011. “Tuberculosis screening of migrants to low-burden nations: Insights from evaluation of UK practice.” <em>European Respiratory Journal</em> 37 (5): 1175–82. doi:<a href="https://doi.org/10.1183/09031936.00105810">10.1183/09031936.00105810</a>.</p>
+</div>
+</div>
 </div>
 </div>
   </div>
@@ -116,6 +163,7 @@
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#previous-studies">Previous studies</a></li>
       <li><a href="#imputation">Imputation</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>
