@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Active TB estimation • LTBIscreeningproject</title>
+<title>Active TB progression estimation • LTBIscreeningproject</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Active TB estimation">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Active TB progression estimation">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -52,7 +52,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/active-tb-imputation.html">Active TB estimation</a>
+      <a href="../articles/active-tb-imputation.html">Active TB progression estimation</a>
     </li>
     <li>
       <a href="../articles/basic-example.html">Basic example: model set-up</a>
@@ -72,7 +72,7 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Active TB estimation</h1>
+      <h1>Active TB progression estimation</h1>
                         <h4 class="author">Nathan Green</h4>
             
             <h4 class="date">2018-03-27</h4>
@@ -88,7 +88,7 @@
 <div id="previous-studies" class="section level2">
 <h2 class="hasAnchor">
 <a href="#previous-studies" class="anchor"></a>Previous studies</h2>
-<p>There are few references for active TB progression data. We use the observed incidence in the Lancet (xxxx) paper (taken directly from the plots and the tail probabilities from Sutherland (xxxx).</p>
+<p>There are few references for active TB progression data. We use the observed incidence in <span class="citation">Aldridge et al. (2016)</span> (taken directly from the plots) and the tail probabilities from <span class="citation">Sutherland, Švandová, and Radhakrishna (1982)</span></p>
 <p>The counts in the Lancet paper are</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"incidence_Lancet"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 
@@ -96,8 +96,8 @@
 <span class="kw">lines</span>(incidence_Lancet<span class="op">$</span>lower95, <span class="dt">type =</span> <span class="st">'s'</span>, <span class="dt">lty =</span> <span class="dv">2</span>)
 <span class="kw">lines</span>(incidence_Lancet<span class="op">$</span>upper95, <span class="dt">type =</span> <span class="st">'s'</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</code></pre></div>
 <div class="figure">
-<img src="active-tb-imputation_files/figure-html/unnamed-chunk-1-1.png" alt="Cases of tuberculosis notified in migrants to EWNI by time since entry. Aldridge, Lancet (2016)" width="672"><p class="caption">
-Cases of tuberculosis notified in migrants to EWNI by time since entry. Aldridge, Lancet (2016)
+<img src="active-tb-imputation_files/figure-html/unnamed-chunk-1-1.png" alt="Cases of tuberculosis notified in migrants to EWNI by time since entry. @Aldridge2016" width="672"><p class="caption">
+Cases of tuberculosis notified in migrants to EWNI by time since entry. <span class="citation">Aldridge et al. (2016)</span>
 </p>
 </div>
 <div id="extrapolation" class="section level3">
@@ -137,11 +137,21 @@ p(\text{infected}) \times p(\text{infected at $T=t$ | infected}).
 <li>Sample from ECDF of TB progression times until <span class="math inline">\(t_{tb} &lt; t_{death}\)</span>.</li>
 <li>End.</li>
 </ul>
+<p>Here are the original <span class="citation">Aldridge et al. (2016)</span> plotted data and an example of our imputation.</p>
+<div class="figure">
+<img src="lancet-aldridge-plots.png">
+</div>
+<div class="figure">
+<img src="all_years_tb_sims_histograms.png">
+</div>
 </div>
 <div id="references" class="section level1 unnumbered">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <div id="refs" class="references">
+<div id="ref-Aldridge2016">
+<p>Aldridge, Robert W., Dominik Zenner, Peter J. White, Elizabeth J. Williamson, Morris C. Muzyamba, Poonam Dhavan, Davide Mosca, et al. 2016. “Tuberculosis in migrants moving from high-incidence to low-incidence countries: a population-based cohort study of 519 955 migrants screened before entry to England, Wales, and Northern Ireland.” <em>The Lancet</em> 388 (10059). The Author(s). Published by Elsevier Ltd. This is an Open Access article under the CC BY license: 2510–8. doi:<a href="https://doi.org/10.1016/S0140-6736(16)31008-X">10.1016/S0140-6736(16)31008-X</a>.</p>
+</div>
 <div id="ref-Choudhury2013">
 <p>Choudhury, I W, and C R West. 2013. “The outcome of a cohort of tuberculin-positive predominantly South Asian new entrants aged 16 – 34 to the UK : Blackburn 1989 – 2001” 36 (3): 390–95. doi:<a href="https://doi.org/10.1093/pubmed/fdt110">10.1093/pubmed/fdt110</a>.</p>
 </div>
@@ -150,6 +160,9 @@ p(\text{infected}) \times p(\text{infected at $T=t$ | infected}).
 </div>
 <div id="ref-Pareek2011">
 <p>Pareek, Manish, I. Abubakar, Peter J. White, G. P. Garnette, and A. Lalvani. 2011. “Tuberculosis screening of migrants to low-burden nations: Insights from evaluation of UK practice.” <em>European Respiratory Journal</em> 37 (5): 1175–82. doi:<a href="https://doi.org/10.1183/09031936.00105810">10.1183/09031936.00105810</a>.</p>
+</div>
+<div id="ref-Sutherland1982">
+<p>Sutherland, Ian, Eva Švandová, and S. Radhakrishna. 1982. “The development of clinical tuberculosis following infection with tubercle bacilli.” <em>Tubercle</em> 63 (4): 255–68. doi:<a href="https://doi.org/10.1016/S0041-3879(82)80013-5">10.1016/S0041-3879(82)80013-5</a>.</p>
 </div>
 </div>
 </div>

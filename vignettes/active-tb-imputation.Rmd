@@ -1,5 +1,5 @@
 ---
-title: "Active TB estimation"
+title: "Active TB progression estimation"
 author: "Nathan Green"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
@@ -23,11 +23,11 @@ This vignette steps through how we estimate the unobserved active TB progression
 ## Previous studies
 
 There are few references for active TB progression data.
-We use the observed incidence in the Lancet (xxxx) paper (taken directly from the plots and the tail probabilities from Sutherland (xxxx).
+We use the observed incidence in @Aldridge2016 (taken directly from the plots) and the tail probabilities from @Sutherland1982
 
 The counts in the Lancet paper are
 
-```{r fig.width=7, fig.height=5, fig.cap="Cases of tuberculosis notified in migrants to EWNI by time since entry. Aldridge, Lancet (2016)"}
+```{r fig.width=7, fig.height=5, fig.cap="Cases of tuberculosis notified in migrants to EWNI by time since entry. @Aldridge2016"}
 data("incidence_Lancet", package = "LTBIscreeningproject")
 
 plot(incidence_Lancet$mean, type = 's', ylim = c(0,300), xlab = "Year", ylab = "Incidence")
@@ -84,6 +84,15 @@ The algorithm is as follows:
 * If followup time is the same as death time return followup time. Stop.
 * Sample from ECDF of TB progression times until $t_{tb} < t_{death}$.
 * End.
+
+
+Here are the original @Aldridge2016 plotted data and an example of our imputation.
+
+![](lancet-aldridge-plots.png)
+
+![](all_years_tb_sims_histograms.png)
+
+
 
 
 # References
