@@ -1,0 +1,1539 @@
+
+    name: LTBI screening cost
+    distn: unif
+    min: 0
+    max: 0
+    p: 1
+    shape: NA
+    scale: NA
+    type: logical
+    (0,50]:
+      distn: unif
+      min: 0
+      max: 0
+      p: 0.0
+      type: chance
+      LTBI:
+        p: 0.03
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          1-Sensitivity:
+            p: 0.16
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Sensitivity:
+            p: 0.84
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          Specificity:
+            p: 0.99
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          1-Specificity:
+            p: 0.01
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+    (50,150]:
+      distn: unif
+      min: 0
+      max: 0
+      p: 0.04
+      type: chance
+      LTBI:
+        p: 0.03
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          1-Sensitivity:
+            p: 0.16
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Sensitivity:
+            p: 0.84
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          Specificity:
+            p: 0.99
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          1-Specificity:
+            p: 0.01
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+    (150,250]:
+      p: 0.16
+      distn: unif
+      min: 0
+      max: 0
+      type: chance
+      LTBI:
+        p: 0.03
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          1-Sensitivity:
+            p: 0.16
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Sensitivity:
+            p: 0.84
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          Specificity:
+            p: 0.99
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          1-Specificity:
+            p: 0.01
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+    (250,350]:
+      p: 0.60
+      distn: unif
+      min: 0
+      max: 0
+      type: chance
+      LTBI:
+        p: 0.03
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          1-Sensitivity:
+            p: 0.16
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Sensitivity:
+            p: 0.84
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          Specificity:
+            p: 0.99
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          1-Specificity:
+            p: 0.01
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+    (350,1e+05]:
+      p: 0.20
+      distn: unif
+      min: 0
+      max: 0
+      type: chance
+      LTBI:
+        p: 0.03
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          1-Sensitivity:
+            p: 0.16
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          Sensitivity:
+            p: 0.84
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: chance
+                    Effective:
+                      p: 0.9
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                    Not Effective:
+                      p: 0.1
+                      distn: unif
+                      min: 0
+                      max: 0
+                      type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+      non-LTBI:
+        p: 0.97
+        distn: unif
+        min: 0
+        max: 0
+        type: chance
+        Not Agree to Screen:
+          p: 0.4
+          distn: unif
+          min: 0
+          max: 0
+          type: terminal
+        Agree to Screen:
+          p: 0.6
+          distn: unif
+          min: 50
+          max: 106
+          type: chance
+          Specificity:
+            p: 0.99
+            distn: unif
+            min: 0
+            max: 0
+            type: terminal
+          1-Specificity:
+            p: 0.01
+            distn: unif
+            min: 0
+            max: 0
+            type: chance
+            Not Start Treatment:
+              p: 0.3
+              distn: unif
+              min: 0
+              max: 0
+              type: terminal
+            Start Treatment:
+              p: 0.7
+              distn: unif
+              min: 0
+              max: 0
+              type: chance
+              Symptoms Hepatotoxicity:
+                p: 0.00245
+                distn: gamma
+                shape: 6.679
+                scale: 87.889
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+              Not Symptoms Hepatotoxicity:
+                p: 0.99755
+                distn: unif
+                min: 0
+                max: 0
+                type: chance
+                Symptoms Nausea:
+                  p: 0.143
+                  distn: gamma
+                  shape: 5
+                  scale: 13
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal
+                Not Symptoms Nausea:
+                  p: 0.857
+                  distn: unif
+                  min: 0
+                  max: 0
+                  type: chance
+                  Complete Treatment:
+                    p: 0.8
+                    distn: unif
+                    min: 511.69
+                    max: 842.45
+                    type: terminal
+                  Not Complete Treatment:
+                    p: 0.2
+                    distn: unif
+                    min: 85.24
+                    max: 140.41
+                    type: terminal

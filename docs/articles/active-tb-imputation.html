@@ -55,7 +55,13 @@
       <a href="../articles/active-tb-imputation.html">Active TB progression estimation</a>
     </li>
     <li>
-      <a href="../articles/basic-example.html">Basic example: model set-up</a>
+      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness analysis</a>
+    </li>
+    <li>
+      <a href="../articles/scenario-simulation.html">A scenario decision tree simulation</a>
+    </li>
+    <li>
+      <a href="../articles/set-up.html">Basic example: model set-up</a>
     </li>
   </ul>
 </li>
@@ -143,6 +149,22 @@ p(\text{infected}) \times p(\text{infected at $T=t$ | infected}).
 </div>
 <div class="figure">
 <img src="all_years_tb_sims_histograms.png">
+</div>
+<div id="updating-cohort" class="section level3">
+<h3 class="hasAnchor">
+<a href="#updating-cohort" class="anchor"></a>Updating cohort</h3>
+<p>Using the above results the main cohort data set is then updated with this extra information, accounting for the order of events:</p>
+<ul>
+<li>Are they screened before exit EWNI/end of followup/death?</li>
+<li>Time from EWNI entry to TB notification.</li>
+<li>Time from TB notification to death.</li>
+<li>Age (group) at TB notification.</li>
+<li>Are they a TB case-fatality?</li>
+<li>Total QALY to time of death/exit EWNI.</li>
+<li>Discount at time of notification/secondary infection.</li>
+</ul>
+<p>This is loaded by</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"model_input_cohort"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)</code></pre></div>
 </div>
 </div>
 <div id="references" class="section level1 unnumbered">

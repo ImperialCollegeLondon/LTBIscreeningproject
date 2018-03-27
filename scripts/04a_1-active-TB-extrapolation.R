@@ -58,6 +58,8 @@ res_year_prob <- c(Lancet_prob,
 # save
 year_prob.activetb_cens_exituk <- year_prob.activetb_cmprsk_exituk <- res_year_prob #assume the same
 
-save(year_prob.activetb_cens_exituk, file = "ext-data/year_prob.activetb_cens_exituk.RData")
-save(year_prob.activetb_cmprsk_exituk, file = "ext-data/year_prob.activetb_cmprsk_exituk.RData")
+save(year_prob.activetb_cens_exituk,
+     file = "data/year_prob.activetb_cens_exituk.RData")
+save(year_prob.activetb_cmprsk_exituk,
+     file = "data/year_prob.activetb_cmprsk_exituk.RData")
 

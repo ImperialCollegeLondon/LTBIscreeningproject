@@ -1,4 +1,4 @@
-# *****************************************
+# *******************************************
 # LTBI screening
 # N Green
 #
@@ -6,16 +6,21 @@
 # for a (deterministic) sensitivity analysis
 # of screening programme
 #
-# *****************************************
+# *******************************************
 
 
 rm(list = ls())
 
 devtools::load_all(".")
 
-source("scripts/create_LTBI_input_workspace.R")
-# load(file = "ext-data/LTBI_input_workspace.RData")
+# source("scripts/create_LTBI_input_workspace.R")
 
+data("intervention_constants")
+data("cost_effectivness_params")
+data("scenario_parameters")
+data("year_prob.activetb_cens_exituk")
+data("year_prob.activetb_cmprsk_exituk")
+data("model_input_cohort")
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")
 

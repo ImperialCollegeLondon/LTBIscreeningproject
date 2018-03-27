@@ -31,9 +31,10 @@ Assume that everyone who enters the country doesn't leave.
 force_everyone_stays <- FALSE
 ```
 
-Do we include the QALY loss of individuals who leave EWNI but then progress to active TB? If yes then we follow them to death rather than time of exit.
+Do we include the QALY loss or costs of individuals who leave EWNI but then progress to active TB? If yes then we follow them to death rather than time of exit.
 ```r
 ENDPOINT_QALY <- "death"
+ENDPOINT_cost <- "death"
 ```
 
 Rather than offer screening to _everyone_ immediately on entry, assume that we screen at random 0-5 years from entry.
@@ -54,6 +55,23 @@ screen_age_range <- 18:45
 We pick a single year cohort to simulate from. The year 2012 is the most recent complete year but we'll use the largest.
 ```r
 year_cohort <- '2009'
+```
+
+Which incidence in country of origin group to target for screening
+```r
+incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
+```
+
+What minimum duration in EWNI should someone have to be eligible for screening as a number or implictly on student status
+```r
+min_screen_length_of_stay <- 0
+no_students = FALSE
+```
+
+Computation options for number of Monte-Carlo iterations and whether to use the DIDE cluster to run the model
+```r
+N.mc = 100,
+cluster = FALSE,
 ```
 
 This specification we'll call an _intervention_ (in contrast to a _scenario_ which are the lower level variables) and can be loaded as a list using

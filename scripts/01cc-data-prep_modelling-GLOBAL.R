@@ -13,29 +13,29 @@
 
 # single year cohort only
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample,
-                                            issdt_year == year_cohort)
+                                            issdt_year == interv$year_cohort)
 
 # uk stay long enough
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
-                                            date_exit_uk1_issdt.years >= min_screen_length_of_stay)
+                                            date_exit_uk1_issdt.years >= interv$min_screen_length_of_stay)
 
-if (screen_with_delay) {
+if (interv$screen_with_delay) {
   IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                               screen == 1)}
 
-if (no_students) {
+if (interv$no_students) {
   IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
                                               visatype2 != "Students")}
 
 # remove individuals from 'lower' incidence countries
 IMPUTED_sample_year_cohort <- dplyr::filter(IMPUTED_sample_year_cohort,
-                                            who_prev_cat_Pareek2011 %in% incidence_grps_screen)
+                                            who_prev_cat_Pareek2011 %in% interv$incidence_grps_screen)
 
 
 # discount cost and QALYs in decision tree  ---------------------------------
 ## due to delayed start
 
-prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% prop_table
+prop_screen_year <- ceiling(IMPUTED_sample_year_cohort$screen_year) %>% miscUtilities::prop_table()
 screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
 # year cohort size potentially screened
@@ -58,13 +58,13 @@ n.uk_tb <-
 
 
 num_all_tb_cost <-
-  if (ENDPOINT_cost == "exit uk") {
+  if (interv$ENDPOINT_cost == "exit uk") {
     n.uk_tb
-  } else if (ENDPOINT_cost == "death") {
+  } else if (interv$ENDPOINT_cost == "death") {
     n.uk_tb + n.exit_tb}
 
 num_all_tb_QALY <-
-  if (ENDPOINT_QALY == "exit uk") {
+  if (interv$ENDPOINT_QALY == "exit uk") {
     n.uk_tb
-  } else if (ENDPOINT_QALY == "death") {
+  } else if (interv$ENDPOINT_QALY == "death") {
     n.uk_tb + n.exit_tb}

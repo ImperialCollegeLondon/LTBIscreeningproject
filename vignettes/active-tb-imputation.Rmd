@@ -92,6 +92,22 @@ Here are the original @Aldridge2016 plotted data and an example of our imputatio
 
 ![](all_years_tb_sims_histograms.png)
 
+### Updating cohort
+
+Using the above results the main cohort data set is then updated with this extra information, accounting for the order of events:
+
+* Are they screened before exit EWNI/end of followup/death?
+* Time from EWNI entry to TB notification. 
+* Time from TB notification to death.
+* Age (group) at TB notification.
+* Are they a TB case-fatality?
+* Total QALY to time of death/exit EWNI.
+* Discount at time of notification/secondary infection.
+
+This is loaded by
+```r
+data("model_input_cohort", package = "LTBIscreeningproject")
+```
 
 
 

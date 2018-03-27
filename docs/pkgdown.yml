@@ -3,5 +3,7 @@ pkgdown: 0.1.0.9000
 pkgdown_sha: 5e4825875751c009444c56ce43d06324ec53e910
 articles:
   active-tb-imputation: active-tb-imputation.html
-  basic-example: basic-example.html
+  cost-effectiveness-analysis: cost-effectiveness-analysis.html
+  scenario-simulation: scenario-simulation.html
+  set-up: set-up.html
 

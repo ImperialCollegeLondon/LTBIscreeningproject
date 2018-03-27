@@ -6,7 +6,14 @@
 # simulation specific constants
 
 
+N.mc <- 10
+
+cluster <- FALSE
+
+
 # global fixed constants --------------------------------------------------
+
+no_students <- FALSE
 
 force_everyone_stays <- FALSE
 
@@ -45,14 +52,29 @@ scenario_file_tag <- "_fullfactorial_QFT-GIT_3mo_RIFINH"
 # scenario_file_tag <- "_fullfactorial_QFT-plus"
 # scenario_file_tag <- "_fullfactorial_TSPOT"
 
+
+# these parameters will be modified in the
+# deterministic sensitivity analysis
+# but set default values
+incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
+min_screen_length_of_stay <- 0
+ENDPOINT_cost <- "death"
+
+
 interv <-
   list(force_everyone_stays = force_everyone_stays,
        ENDPOINT_QALY = ENDPOINT_QALY,
+       ENDPOINT_cost = ENDPOINT_cost,
        screen_with_delay = screen_with_delay,
        FUP_MAX_YEAR = FUP_MAX_YEAR,
        screen_age_range = screen_age_range,
        year_cohort = year_cohort,
-       scenario_file_tag = scenario_file_tag)
+       scenario_file_tag = scenario_file_tag,
+       incidence_grps_screen = incidence_grps_screen,
+       min_screen_length_of_stay = min_screen_length_of_stay,
+       N.mc = N.mc,
+       cluster = cluster,
+       no_students = no_students)
 
 save(interv,
      file = "data/intervention_constants.RData")

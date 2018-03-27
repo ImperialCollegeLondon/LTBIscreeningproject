@@ -62,14 +62,14 @@ for (i in who_levels) {
                   select = LTBI)
 
   osNode.cost$Set(p = pLTBI,
-                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
+                  filterFun = function(x) x$pathString == miscUtilities::pastef("LTBI screening cost", i, "LTBI"))
   osNode.health$Set(p = pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
+                    filterFun = function(x) x$pathString == miscUtilities::pastef("LTBI screening QALY loss", i, "LTBI"))
 
   osNode.cost$Set(p = 1 - pLTBI,
-                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
+                  filterFun = function(x) x$pathString == miscUtilities::pastef("LTBI screening cost", i, "non-LTBI"))
   osNode.health$Set(p = 1 - pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "non-LTBI"))
+                    filterFun = function(x) x$pathString == miscUtilities::pastef("LTBI screening QALY loss", i, "non-LTBI"))
 }
 
 
@@ -79,6 +79,8 @@ data_folder <- system.file("data", package = "LTBIscreeningproject")
 
 save(osNode.cost, file = paste0(data_folder, "/osNode_cost_2009.RData"))
 save(osNode.health, file = paste0(data_folder, "/osNode_health_2009.RData"))
+saveRDS(osNode.cost, file = paste0(data_folder, "/osNode_cost_2009.Rds"))
+saveRDS(osNode.health, file = paste0(data_folder, "/osNode_health_2009.Rds"))
 
 saveRDS(osNode.cost, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_cost_2009.Rds"))
 saveRDS(osNode.health, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_health_2009.Rds"))
