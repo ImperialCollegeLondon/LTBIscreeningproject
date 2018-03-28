@@ -1,4 +1,19 @@
 
+#' scenario_cost
+#'
+#' @param interv
+#' @param unit_cost
+#' @param NUM_SECONDARY_INF
+#' @param uk_secondary_inf_discounts
+#' @param num_all_tb_QALY
+#' @param uk_notif_discounts
+#' @param num_avoided.all_tb
+#' @param num_avoided.uk_tb
+#'
+#' @return
+#' @export
+#'
+#' @examples
 scenario_cost <- function(interv,
                           unit_cost,
                           NUM_SECONDARY_INF,

@@ -1,4 +1,15 @@
 
+#' scenario_QALY
+#'
+#' @param avoided
+#' @param total
+#' @param QALY_statusquo
+#' @param QALY_diseasefree
+#'
+#' @return
+#' @export
+#'
+#' @examples
 scenario_QALY <- function(avoided,
                           total,
                           QALY_statusquo,

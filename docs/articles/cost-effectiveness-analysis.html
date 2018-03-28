@@ -5,11 +5,11 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cost-effectiveness analysis • LTBIscreeningproject</title>
+<title>Cost-effectiveness calculation • LTBIscreeningproject</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Cost-effectiveness analysis">
+<script src="../jquery.sticky-kit.min.js"></script><script src="../pkgdown.js"></script><meta property="og:title" content="Cost-effectiveness calculation">
 <meta property="og:description" content="">
 <meta name="twitter:card" content="summary">
 <!-- mathjax --><script src="https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!--[if lt IE 9]>
@@ -55,7 +55,7 @@
       <a href="../articles/active-tb-imputation.html">Active TB progression estimation</a>
     </li>
     <li>
-      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness analysis</a>
+      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness calculation</a>
     </li>
     <li>
       <a href="../articles/scenario-simulation.html">A scenario decision tree simulation</a>
@@ -78,10 +78,10 @@
       </header><div class="row">
   <div class="col-md-9">
     <div class="page-header toc-ignore">
-      <h1>Cost-effectiveness analysis</h1>
+      <h1>Cost-effectiveness calculation</h1>
                         <h4 class="author">Nathan Green</h4>
             
-            <h4 class="date">2018-03-27</h4>
+            <h4 class="date">2018-03-28</h4>
       
       
 
@@ -90,11 +90,461 @@
     
     
 <div class="contents">
+<div id="introduction" class="section level2">
+<h2 class="hasAnchor">
+<a href="#introduction" class="anchor"></a>Introduction</h2>
+<p>This document demonstrates how we calculate the cost and QALY statistics.</p>
+</div>
+<div id="analysis-preparation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#analysis-preparation" class="anchor"></a>Analysis preparation</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(treeSimR)
+<span class="kw">library</span>(LTBIscreeningproject)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(data.tree)
+<span class="kw">library</span>(purrr)</code></pre></div>
+<p>We first need to read-in the decision tree output data and the individual cohort data.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dectree_res &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">"decision_tree_output.Rds"</span>)
+cohort &lt;-<span class="st"> </span><span class="kw">readRDS</span>(<span class="st">"cohort.Rds"</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##TODO: which ones do we actually need?
 
+<span class="kw">data</span>(<span class="st">"intervention_constants"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
+<span class="kw">data</span>(<span class="st">"cost_effectivness_params"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
+<span class="kw">data</span>(<span class="st">"scenario_parameters"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
+<span class="kw">data</span>(<span class="st">"model_input_cohort"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)</code></pre></div>
+<p>It is sometimes arkward to use the decision tree output in the format with the scenario number as the top level. It may be more useful to have each output type at the top level, so we <em>transpose</em> the data.</p>
+<p>From</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(dectree_res[[<span class="dv">1</span>]], head)
+<span class="co">#&gt; $mc_cost</span>
+<span class="co">#&gt; [1] 36.62706 36.36996 36.43045 36.48334 36.25762 36.36769</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_health</span>
+<span class="co">#&gt; [1] 96.42043 79.12046 90.29482 89.47937 99.76506 76.48640</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_all</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  1</span>
+<span class="co">#&gt; 2   1           tb 19</span>
+<span class="co">#&gt; 3   2 disease-free  1</span>
+<span class="co">#&gt; 4   2           tb 19</span>
+<span class="co">#&gt; 5   3 disease-free  3</span>
+<span class="co">#&gt; 6   3           tb 17</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_uk</span>
+<span class="co">#&gt;   sim       status n</span>
+<span class="co">#&gt; 1   1 disease-free 1</span>
+<span class="co">#&gt; 2   1           tb 9</span>
+<span class="co">#&gt; 3   2 disease-free 1</span>
+<span class="co">#&gt; 4   2           tb 9</span>
+<span class="co">#&gt; 5   3 disease-free 2</span>
+<span class="co">#&gt; 6   3           tb 8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $p_LTBI_to_effectiveTx</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;    0.108864 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $subset_pop</span>
+<span class="co">#&gt;    LTBI_pre tests  positive    startTx completeTx      cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.08930096 0.05358058 0.03122406 0.2555931</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $call</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 10, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $N.mc</span>
+<span class="co">#&gt; [1] 10</span></code></pre></div>
+<p>to</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># convert from scenario-wise to remain-exit format</span>
+scenario_res &lt;-
+<span class="st">  </span>dectree_res <span class="op">%&gt;%</span>
+<span class="st">  </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/transpose">transpose</a></span>()
+
+scenario_res
+<span class="co">#&gt; $mc_cost</span>
+<span class="co">#&gt; $mc_cost$`1`</span>
+<span class="co">#&gt;  [1] 36.62706 36.36996 36.43045 36.48334 36.25762 36.36769 36.33455</span>
+<span class="co">#&gt;  [8] 36.22660 36.68189 36.55648</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_cost$`2`</span>
+<span class="co">#&gt;  [1] 44.60893 44.26684 45.08499 44.94742 45.04090 45.03695 44.86235</span>
+<span class="co">#&gt;  [8] 44.72711 44.74205 44.66228</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_cost$`3`</span>
+<span class="co">#&gt;  [1] 52.18929 52.78731 52.16572 52.71352 53.65720 53.55051 52.67202</span>
+<span class="co">#&gt;  [8] 52.08538 53.90907 53.78709</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_health</span>
+<span class="co">#&gt; $mc_health$`1`</span>
+<span class="co">#&gt;  [1] 96.42043 79.12046 90.29482 89.47937 99.76506 76.48640 78.09005</span>
+<span class="co">#&gt;  [8] 98.80613 78.85704 77.79564</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_health$`2`</span>
+<span class="co">#&gt;  [1] 114.84521  86.87532 100.63327  89.73458  96.74989 105.51189 100.54761</span>
+<span class="co">#&gt;  [8]  99.46424 115.96568  98.51712</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $mc_health$`3`</span>
+<span class="co">#&gt;  [1] 124.10254 103.06869 103.60227  97.28794 120.59849 109.87270 117.37686</span>
+<span class="co">#&gt;  [8]  95.60130 126.42607 113.85031</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_all</span>
+<span class="co">#&gt; $n_tb_screen_all$`1`</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  1</span>
+<span class="co">#&gt; 2    1           tb 19</span>
+<span class="co">#&gt; 3    2 disease-free  1</span>
+<span class="co">#&gt; 4    2           tb 19</span>
+<span class="co">#&gt; 5    3 disease-free  3</span>
+<span class="co">#&gt; 6    3           tb 17</span>
+<span class="co">#&gt; 7    4 disease-free  1</span>
+<span class="co">#&gt; 8    4           tb 19</span>
+<span class="co">#&gt; 9    5 disease-free  3</span>
+<span class="co">#&gt; 10   5           tb 17</span>
+<span class="co">#&gt; 11   6 disease-free  1</span>
+<span class="co">#&gt; 12   6           tb 19</span>
+<span class="co">#&gt; 13   7 disease-free  2</span>
+<span class="co">#&gt; 14   7           tb 18</span>
+<span class="co">#&gt; 15   8 disease-free  3</span>
+<span class="co">#&gt; 16   8           tb 17</span>
+<span class="co">#&gt; 17   9 disease-free  2</span>
+<span class="co">#&gt; 18   9           tb 18</span>
+<span class="co">#&gt; 19  10 disease-free  1</span>
+<span class="co">#&gt; 20  10           tb 19</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_all$`2`</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  3</span>
+<span class="co">#&gt; 2    1           tb 17</span>
+<span class="co">#&gt; 3    2 disease-free  2</span>
+<span class="co">#&gt; 4    2           tb 18</span>
+<span class="co">#&gt; 5    3 disease-free  2</span>
+<span class="co">#&gt; 6    3           tb 18</span>
+<span class="co">#&gt; 7    4 disease-free  5</span>
+<span class="co">#&gt; 8    4           tb 15</span>
+<span class="co">#&gt; 9    5 disease-free  1</span>
+<span class="co">#&gt; 10   5           tb 19</span>
+<span class="co">#&gt; 11   6 disease-free  2</span>
+<span class="co">#&gt; 12   6           tb 18</span>
+<span class="co">#&gt; 13   7 disease-free  4</span>
+<span class="co">#&gt; 14   7           tb 16</span>
+<span class="co">#&gt; 15   8 disease-free  4</span>
+<span class="co">#&gt; 16   8           tb 16</span>
+<span class="co">#&gt; 17   9 disease-free  4</span>
+<span class="co">#&gt; 18   9           tb 16</span>
+<span class="co">#&gt; 19  10 disease-free  3</span>
+<span class="co">#&gt; 20  10           tb 17</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_all$`3`</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  0</span>
+<span class="co">#&gt; 2    1           tb 20</span>
+<span class="co">#&gt; 3    2 disease-free  5</span>
+<span class="co">#&gt; 4    2           tb 15</span>
+<span class="co">#&gt; 5    3 disease-free  1</span>
+<span class="co">#&gt; 6    3           tb 19</span>
+<span class="co">#&gt; 7    4 disease-free  8</span>
+<span class="co">#&gt; 8    4           tb 12</span>
+<span class="co">#&gt; 9    5 disease-free  4</span>
+<span class="co">#&gt; 10   5           tb 16</span>
+<span class="co">#&gt; 11   6 disease-free  4</span>
+<span class="co">#&gt; 12   6           tb 16</span>
+<span class="co">#&gt; 13   7 disease-free  3</span>
+<span class="co">#&gt; 14   7           tb 17</span>
+<span class="co">#&gt; 15   8 disease-free  1</span>
+<span class="co">#&gt; 16   8           tb 19</span>
+<span class="co">#&gt; 17   9 disease-free  2</span>
+<span class="co">#&gt; 18   9           tb 18</span>
+<span class="co">#&gt; 19  10 disease-free  5</span>
+<span class="co">#&gt; 20  10           tb 15</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_uk</span>
+<span class="co">#&gt; $n_tb_screen_uk$`1`</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  1</span>
+<span class="co">#&gt; 2    1           tb  9</span>
+<span class="co">#&gt; 3    2 disease-free  1</span>
+<span class="co">#&gt; 4    2           tb  9</span>
+<span class="co">#&gt; 5    3 disease-free  2</span>
+<span class="co">#&gt; 6    3           tb  8</span>
+<span class="co">#&gt; 7    4 disease-free  0</span>
+<span class="co">#&gt; 8    4           tb 10</span>
+<span class="co">#&gt; 9    5 disease-free  1</span>
+<span class="co">#&gt; 10   5           tb  9</span>
+<span class="co">#&gt; 11   6 disease-free  1</span>
+<span class="co">#&gt; 12   6           tb  9</span>
+<span class="co">#&gt; 13   7 disease-free  1</span>
+<span class="co">#&gt; 14   7           tb  9</span>
+<span class="co">#&gt; 15   8 disease-free  1</span>
+<span class="co">#&gt; 16   8           tb  9</span>
+<span class="co">#&gt; 17   9 disease-free  1</span>
+<span class="co">#&gt; 18   9           tb  9</span>
+<span class="co">#&gt; 19  10 disease-free  1</span>
+<span class="co">#&gt; 20  10           tb  9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_uk$`2`</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  2</span>
+<span class="co">#&gt; 2    1           tb  8</span>
+<span class="co">#&gt; 3    2 disease-free  3</span>
+<span class="co">#&gt; 4    2           tb  7</span>
+<span class="co">#&gt; 5    3 disease-free  0</span>
+<span class="co">#&gt; 6    3           tb 10</span>
+<span class="co">#&gt; 7    4 disease-free  1</span>
+<span class="co">#&gt; 8    4           tb  9</span>
+<span class="co">#&gt; 9    5 disease-free  1</span>
+<span class="co">#&gt; 10   5           tb  9</span>
+<span class="co">#&gt; 11   6 disease-free  0</span>
+<span class="co">#&gt; 12   6           tb 10</span>
+<span class="co">#&gt; 13   7 disease-free  0</span>
+<span class="co">#&gt; 14   7           tb 10</span>
+<span class="co">#&gt; 15   8 disease-free  0</span>
+<span class="co">#&gt; 16   8           tb 10</span>
+<span class="co">#&gt; 17   9 disease-free  2</span>
+<span class="co">#&gt; 18   9           tb  8</span>
+<span class="co">#&gt; 19  10 disease-free  0</span>
+<span class="co">#&gt; 20  10           tb 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_uk$`3`</span>
+<span class="co">#&gt;    sim       status n</span>
+<span class="co">#&gt; 1    1 disease-free 3</span>
+<span class="co">#&gt; 2    1           tb 7</span>
+<span class="co">#&gt; 3    2 disease-free 1</span>
+<span class="co">#&gt; 4    2           tb 9</span>
+<span class="co">#&gt; 5    3 disease-free 1</span>
+<span class="co">#&gt; 6    3           tb 9</span>
+<span class="co">#&gt; 7    4 disease-free 2</span>
+<span class="co">#&gt; 8    4           tb 8</span>
+<span class="co">#&gt; 9    5 disease-free 1</span>
+<span class="co">#&gt; 10   5           tb 9</span>
+<span class="co">#&gt; 11   6 disease-free 2</span>
+<span class="co">#&gt; 12   6           tb 8</span>
+<span class="co">#&gt; 13   7 disease-free 2</span>
+<span class="co">#&gt; 14   7           tb 8</span>
+<span class="co">#&gt; 15   8 disease-free 4</span>
+<span class="co">#&gt; 16   8           tb 6</span>
+<span class="co">#&gt; 17   9 disease-free 2</span>
+<span class="co">#&gt; 18   9           tb 8</span>
+<span class="co">#&gt; 19  10 disease-free 1</span>
+<span class="co">#&gt; 20  10           tb 9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $p_LTBI_to_effectiveTx</span>
+<span class="co">#&gt; $p_LTBI_to_effectiveTx$`1`</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;    0.108864 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $p_LTBI_to_effectiveTx$`2`</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;    0.145152 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $p_LTBI_to_effectiveTx$`3`</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;     0.18144 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $subset_pop</span>
+<span class="co">#&gt; $subset_pop$`1`</span>
+<span class="co">#&gt;    LTBI_pre tests  positive    startTx completeTx      cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.08930096 0.05358058 0.03122406 0.2555931</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $subset_pop$`2`</span>
+<span class="co">#&gt;    LTBI_pre tests  positive   startTx completeTx      cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.1190679 0.07144077 0.04163208 0.2451851</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $subset_pop$`3`</span>
+<span class="co">#&gt;    LTBI_pre tests  positive   startTx completeTx     cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.1488349 0.08930096 0.0520401  0.234777</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $call</span>
+<span class="co">#&gt; $call$`1`</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 10, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $call$`2`</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 10, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $call$`3`</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 10, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $N.mc</span>
+<span class="co">#&gt; $N.mc$`1`</span>
+<span class="co">#&gt; [1] 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $N.mc$`2`</span>
+<span class="co">#&gt; [1] 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $N.mc$`3`</span>
+<span class="co">#&gt; [1] 10</span></code></pre></div>
+<p>We need to extract some specific values and initialise the variables for the cost-effectiveness statistics.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n.scenarios &lt;-<span class="st"> </span><span class="kw">length</span>(dectree_res)
+
+n.diseasefree.all_tb &lt;-
+<span class="st">  </span>scenario_res<span class="op">$</span>n_tb_screen_all <span class="op">%&gt;%</span>
+<span class="st">  </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="cf">function</span>(x) dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(x, status <span class="op">==</span><span class="st"> "disease-free"</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map</span>(<span class="cf">function</span>(x) x<span class="op">$</span>n)
+
+n.diseasefree.uk_tb  &lt;-
+<span class="st">  </span>scenario_res<span class="op">$</span>n_tb_screen_uk <span class="op">%&gt;%</span>
+<span class="st">  </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/map">map</a></span>(<span class="cf">function</span>(x) dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(x, status <span class="op">==</span><span class="st"> "disease-free"</span>)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">map</span>(<span class="cf">function</span>(x) x<span class="op">$</span>n)
+
+n_uk_tb &lt;-<span class="st"> </span>dectree_res<span class="op">$</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span><span class="op">$</span>call<span class="op">$</span>n.uk_tb
+n_exit_tb &lt;-<span class="st"> </span>dectree_res<span class="op">$</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span><span class="op">$</span>call<span class="op">$</span>n.exit_tb
+n_all_tb &lt;-<span class="st"> </span>n_exit_tb <span class="op">+</span><span class="st"> </span>n_uk_tb
+
+<span class="co"># declare variables</span>
+
+interv_cost &lt;-<span class="st"> </span>interv_cost_vs &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">length =</span> n.scenarios, <span class="dt">mode =</span> <span class="st">"list"</span>)
+interv_QALY &lt;-<span class="st"> </span>interv_QALY_vs &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="dt">length =</span> n.scenarios, <span class="dt">mode =</span> <span class="st">"list"</span>)
+
+cost.screened_person &lt;-<span class="st"> </span>QALY.screened_person &lt;-<span class="st"> </span><span class="kw">list</span>()
+cost_incur &lt;-<span class="st"> </span>cost_incur_person &lt;-<span class="st"> </span><span class="kw">list</span>()
+
+cost.statusquo_person &lt;-<span class="st"> </span>QALY.statusquo_person &lt;-<span class="st"> </span><span class="kw">list</span>()
+QALYgain &lt;-<span class="st"> </span>QALYgain_person &lt;-<span class="st"> </span><span class="kw">list</span>()
+
+E_cost_notif.screened &lt;-<span class="st"> </span><span class="ot">NA</span>
+E_QALY_notif.screened &lt;-<span class="st"> </span><span class="ot">NA</span>
+E_cost_incur &lt;-<span class="st"> </span>E_cost_incur_person &lt;-<span class="st"> </span><span class="ot">NA</span>
+E_QALYgain &lt;-<span class="st"> </span>E_QALYgain_person &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+N.mc &lt;-<span class="st"> </span>dectree_res<span class="op">$</span><span class="st">`</span><span class="dt">1</span><span class="st">`</span><span class="op">$</span>call<span class="op">$</span>N.mc
+pop_year &lt;-<span class="st">  </span><span class="dv">1000</span> ##TODO: get real value</code></pre></div>
+<p>Extract TB cases only data</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+cfr &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>cfr, is.na)
+
+QALY_statusquo &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>QALY_statusquo, is.na)
+QALY_diseasefree &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>QALY_diseasefree, is.na)
+QALY_cured &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>QALY_cured, is.na)
+QALY_fatality &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>QALY_fatality, is.na)
+
+uk_notif_discounts &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>uk_notif_discounts, is.na)
+all_notif_discounts &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>all_notif_discounts, is.na)
+uk_secondary_inf_discounts &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>uk_secondary_inf_discounts, is.na)
+all_secondary_inf_discounts &lt;-<span class="st"> </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/keep">discard</a></span>(cohort<span class="op">$</span>all_secondary_inf_discounts, is.na)</code></pre></div>
+<p>We also calculate the expected statistics for reproducability and comparison with the randomly generated values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">
+mean_cost.aTB_TxDx &lt;-<span class="st"> </span><span class="kw">means_distributions</span>(unit_cost<span class="op">$</span>aTB_TxDx) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">sum</span>()
+mean_num_sec_inf &lt;-<span class="st"> </span><span class="kw">means_distributions</span>(NUM_SECONDARY_INF) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">unlist</span>()
+
+E_cost_secondary_inf &lt;-<span class="st"> </span>mean_num_sec_inf <span class="op">*</span><span class="st"> </span>mean_cost.aTB_TxDx <span class="op">*</span><span class="st"> </span>all_secondary_inf_discounts
+E_cost_notif.statusquo &lt;-<span class="st"> </span>(all_notif_discounts <span class="op">*</span><span class="st"> </span>mean_cost.aTB_TxDx) <span class="op">+</span><span class="st"> </span>E_cost_secondary_inf
+
+E_QALY_notif.statusquo &lt;-<span class="st"> </span>(cfr <span class="op">*</span><span class="st"> </span>QALY_fatality) <span class="op">+</span><span class="st"> </span>((<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>cfr) <span class="op">*</span><span class="st"> </span>QALY_cured)</code></pre></div>
+</div>
+<div id="main-calculation" class="section level2">
+<h2 class="hasAnchor">
+<a href="#main-calculation" class="anchor"></a>Main calculation</h2>
+<p>We iterate over all scenarios and all Monte-Carlo samples. The <code>scenario_cost</code> and <code>scenario_QALY</code> functions calculate the values for each. We then transpose the returned values from these functions and calculate the final statistics.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span> (s <span class="cf">in</span> <span class="kw">seq_len</span>(n.scenarios)) {
+
+  cost_incur[[s]] &lt;-<span class="st"> </span>cost_incur_person[[s]] &lt;-<span class="st"> </span><span class="ot">NA</span>   <span class="co">#cost[screen] - cost[statusquo]</span>
+  QALYgain[[s]] &lt;-<span class="st"> </span>QALYgain_person[[s]]  &lt;-<span class="st"> </span><span class="ot">NA</span>   <span class="co">#QALY[screen] - QALY[statusquo]</span>
+  QALY.statusquo_person[[s]] &lt;-<span class="st"> </span>cost.statusquo_person[[s]] &lt;-<span class="st"> </span><span class="ot">NA</span>
+  QALY.screened_person[[s]] &lt;-<span class="st"> </span>cost.screened_person[[s]] &lt;-<span class="st"> </span><span class="ot">NA</span>
+
+  <span class="kw">set.seed</span>(<span class="dv">12345</span>)
+
+  <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(N.mc)) {
+
+    interv_cost[[s]][[i]] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/scenario_cost.html">scenario_cost</a></span>(interv,
+                                           unit_cost,
+                                           NUM_SECONDARY_INF,
+                                           uk_secondary_inf_discounts,
+                                           <span class="dt">num_all_tb_QALY =</span> n_all_tb,
+                                           uk_notif_discounts,
+                                           n.diseasefree.all_tb[[s]][i],
+                                           n.diseasefree.uk_tb[[s]][i])
+
+    interv_QALY[[s]][[i]] &lt;-<span class="st"> </span><span class="kw"><a href="../reference/scenario_QALY.html">scenario_QALY</a></span>(<span class="dt">avoided =</span> n.diseasefree.all_tb[[s]][i],
+                                           <span class="dt">total =</span> n_all_tb,
+                                           QALY_statusquo,
+                                           QALY_diseasefree)
+  }
+
+  interv_cost_vs[[s]] &lt;-
+<span class="st">    </span>interv_cost[[s]] <span class="op">%&gt;%</span>
+<span class="st">    </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/transpose">transpose</a></span>() <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">simplify_all</span>()
+
+  interv_QALY_vs[[s]] &lt;-
+<span class="st">    </span>interv_QALY[[s]] <span class="op">%&gt;%</span>
+<span class="st">    </span>purrr<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/purrr/topics/transpose">transpose</a></span>() <span class="op">%&gt;%</span>
+<span class="st">    </span><span class="kw">simplify_all</span>()
+
+  E_QALY_notif.screened[s] &lt;-<span class="st"> </span><span class="kw">sum</span>(scenario_res<span class="op">$</span>p_LTBI_to_effectiveTx[[s]] <span class="op">*</span><span class="st"> </span>QALY_diseasefree <span class="op">+</span>
+<span class="st">                                  </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>scenario_res<span class="op">$</span>p_LTBI_to_effectiveTx[[s]]) <span class="op">*</span><span class="st"> </span>E_QALY_notif.statusquo)
+
+  E_cost_notif.screened[s] &lt;-<span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>scenario_res<span class="op">$</span>p_LTBI_to_effectiveTx[[s]]) <span class="op">*</span><span class="st"> </span><span class="kw">sum</span>(E_cost_notif.statusquo)
+
+  <span class="co"># final cost-effectiveness statistics  ---------------------------------------</span>
+
+  QALY.screened_person[[s]]  &lt;-<span class="st"> </span>interv_QALY_vs[[s]]<span class="op">$</span>screened<span class="op">/</span>pop_year
+  QALY.statusquo_person[[s]] &lt;-<span class="st"> </span>interv_QALY_vs[[s]]<span class="op">$</span>statusquo<span class="op">/</span>pop_year
+
+  <span class="co"># Q1 - Q0: +ve good</span>
+  <span class="co"># C1 - C0: +ve bad</span>
+
+  QALYgain[[s]] &lt;-<span class="st"> </span>interv_QALY_vs[[s]]<span class="op">$</span>screened <span class="op">-</span><span class="st"> </span>interv_QALY_vs[[s]]<span class="op">$</span>statusquo
+
+  <span class="co"># per person</span>
+  QALYgain_person[[s]] &lt;-<span class="st"> </span>QALYgain[[s]]<span class="op">/</span>pop_year
+
+  <span class="co"># cost incurred per person for each simulation</span>
+  cost.screened_person[[s]]  &lt;-<span class="st"> </span>interv_cost_vs[[s]]<span class="op">$</span>screened<span class="op">/</span>pop_year
+  cost.statusquo_person[[s]] &lt;-<span class="st"> </span>interv_cost_vs[[s]]<span class="op">$</span>statusquo<span class="op">/</span>pop_year
+
+  cost_incur[[s]] &lt;-<span class="st"> </span>interv_cost_vs[[s]]<span class="op">$</span>screened <span class="op">-</span><span class="st"> </span>interv_cost_vs[[s]]<span class="op">$</span>statusquo
+  cost_incur_person[[s]] &lt;-<span class="st"> </span>cost_incur[[s]]<span class="op">/</span>pop_year
+
+  E_cost_incur[s] &lt;-<span class="st"> </span>E_cost_notif.screened[s] <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(E_cost_notif.statusquo)
+  E_cost_incur_person[s] &lt;-<span class="st"> </span>E_cost_incur[s]<span class="op">/</span>pop_year
+
+  E_QALYgain[s] &lt;-<span class="st"> </span>E_QALY_notif.screened[s] <span class="op">-</span><span class="st"> </span><span class="kw">sum</span>(E_QALY_notif.statusquo)
+  E_QALYgain_person[s] &lt;-<span class="st"> </span>E_QALYgain[s]<span class="op">/</span>pop_year
+}
+
+aTB_CE_stats &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">QALY.statusquo =</span> <span class="kw">map</span>(interv_QALY_vs, <span class="st">"statusquo"</span>),
+                     <span class="dt">cost.statusquo =</span> <span class="kw">map</span>(interv_cost_vs, <span class="st">"statusquo"</span>),
+                     <span class="dt">QALY.screened =</span> <span class="kw">map</span>(interv_QALY_vs, <span class="st">"screened"</span>),
+                     <span class="dt">cost.screened =</span> <span class="kw">map</span>(interv_cost_vs, <span class="st">"screened"</span>),
+                     <span class="dt">QALY.screened_person =</span> QALY.screened_person,
+                     <span class="dt">QALY.statusquo_person =</span> QALY.statusquo_person,
+                     <span class="dt">cost.screened_person =</span> cost.screened_person,
+                     <span class="dt">cost.statusquo_person =</span> cost.statusquo_person,
+                     <span class="dt">cost_incur =</span> cost_incur,
+                     <span class="dt">QALYgain =</span> QALYgain,
+                     <span class="dt">cost_incur_person =</span> cost_incur_person,
+                     <span class="dt">QALYgain_person =</span> QALYgain_person,
+                     <span class="dt">E_cost_incur =</span> E_cost_incur,
+                     <span class="dt">E_cost_incur_person =</span> E_cost_incur_person,
+                     <span class="dt">E_QALYgain =</span> E_QALYgain,
+                     <span class="dt">E_QALYgain_person =</span> E_QALYgain_person,
+                     <span class="dt">pop_year =</span> pop_year)
+
+<span class="kw">save</span>(aTB_CE_stats,
+     <span class="dt">file =</span> <span class="st">"aTB_CE_stats.RData"</span>)</code></pre></div>
+</div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+        <div id="tocnav">
+      <h2 class="hasAnchor">
+<a href="#tocnav" class="anchor"></a>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+<li><a href="#introduction">Introduction</a></li>
+      <li><a href="#analysis-preparation">Analysis preparation</a></li>
+      <li><a href="#main-calculation">Main calculation</a></li>
+      </ul>
+</div>
       </div>
 
 </div>

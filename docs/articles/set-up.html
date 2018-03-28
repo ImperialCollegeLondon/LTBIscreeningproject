@@ -55,7 +55,7 @@
       <a href="../articles/active-tb-imputation.html">Active TB progression estimation</a>
     </li>
     <li>
-      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness analysis</a>
+      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness calculation</a>
     </li>
     <li>
       <a href="../articles/scenario-simulation.html">A scenario decision tree simulation</a>
@@ -81,7 +81,7 @@
       <h1>Basic example: model set-up</h1>
                         <h4 class="author">Nathan Green</h4>
             
-            <h4 class="date">2018-03-27</h4>
+            <h4 class="date">2018-03-28</h4>
       
       
 
@@ -97,14 +97,13 @@
 </div>
 <div id="fixed-model-parameters-defining-an-intervention" class="section level2">
 <h2 class="hasAnchor">
-<a href="#fixed-model-parameters-defining-an-intervention" class="anchor"></a>Fixed model parameters defining an <em>intervention</em>
-</h2>
+<a href="#fixed-model-parameters-defining-an-intervention" class="anchor"></a>Fixed model parameters defining an intervention</h2>
 <p>Assume that everyone who enters the country doesn’t leave.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">force_everyone_stays &lt;-<span class="st"> </span><span class="ot">FALSE</span></code></pre></div>
 <p>Do we include the QALY loss or costs of individuals who leave EWNI but then progress to active TB? If yes then we follow them to death rather than time of exit.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ENDPOINT_QALY &lt;-<span class="st"> "death"</span>
 ENDPOINT_cost &lt;-<span class="st"> "death"</span></code></pre></div>
-<p>Rather than offer screening to <em>everyone</em> immediately on entry, assume that we screen at random 0-5 years from entry.</p>
+<p>Rather than offer screening to <em>everyone</em> immediately on entry, assume that we screen at a uniformly random time 0-5 years from entry.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">screen_with_delay &lt;-<span class="st"> </span><span class="ot">TRUE</span>
 MAX_SCREEN_DELAY &lt;-<span class="st"> </span><span class="dv">5</span></code></pre></div>
 <p>Time horizon for active TB progression</p>
@@ -391,7 +390,7 @@ cluster =<span class="st"> </span><span class="ot">FALSE</span>,</code></pre></d
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#introduction">Introduction</a></li>
-      <li><a href="#fixed-model-parameters-defining-an-intervention">Fixed model parameters defining an <em>intervention</em></a></li>
+      <li><a href="#fixed-model-parameters-defining-an-intervention">Fixed model parameters defining an intervention</a></li>
       <li><a href="#scenario-parameter-values">Scenario parameter values</a></li>
       <li><a href="#study-data">Study data</a></li>
       <li><a href="#cost-effectiveness-parameter-values">Cost-effectiveness parameter values</a></li>

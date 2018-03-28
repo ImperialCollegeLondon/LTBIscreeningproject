@@ -107,9 +107,10 @@ for (s in seq_len(n.scenarios)) {
                                            n.diseasefree.all_tb[[s]][i],
                                            n.diseasefree.uk_tb[[s]][i])
 
-    interv_QALY[[s]][[i]] <- scenario_QALY(n.diseasefree.all_tb[[s]][i],
-                                           n.diseasefree.uk_tb[[s]][i],
-                                           num_all_tb_QALY)
+    interv_QALY[[s]][[i]] <- scenario_QALY(avoided = n.diseasefree.all_tb[[s]][i],
+                                           total = n_all_tb,
+                                           QALY_statusquo,
+                                           QALY_diseasefree)
   }
 
   interv_cost_vs[[s]] <-

@@ -55,7 +55,7 @@
       <a href="../articles/active-tb-imputation.html">Active TB progression estimation</a>
     </li>
     <li>
-      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness analysis</a>
+      <a href="../articles/cost-effectiveness-analysis.html">Cost-effectiveness calculation</a>
     </li>
     <li>
       <a href="../articles/scenario-simulation.html">A scenario decision tree simulation</a>
@@ -81,7 +81,7 @@
       <h1>A scenario decision tree simulation</h1>
                         <h4 class="author">Nathan Green</h4>
             
-            <h4 class="date">2018-03-27</h4>
+            <h4 class="date">2018-03-28</h4>
       
       
 
@@ -91,6 +91,7 @@
     
 <div class="contents">
 <p>This document demonstrates running the screening, diagnosis and treatment decision tree model.</p>
+<p>First, we need to attach the packages we’ll need. <code>treeSimR</code> is written by us too so this will need to be installed from GitHub.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(treeSimR)
 <span class="kw">library</span>(LTBIscreeningproject)
 <span class="kw">library</span>(dplyr)
@@ -100,38 +101,42 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">"intervention_constants"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 <span class="kw">data</span>(<span class="st">"cost_effectivness_params"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 <span class="kw">data</span>(<span class="st">"scenario_parameters"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
-<span class="kw">data</span>(<span class="st">"year_prob.activetb_cens_exituk"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
-<span class="kw">data</span>(<span class="st">"year_prob.activetb_cmprsk_exituk"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 <span class="kw">data</span>(<span class="st">"model_input_cohort"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)</code></pre></div>
-<div id="specific-intervention-data-prep" class="section level2">
+<div id="intervention-specific-data-prep" class="section level2">
 <h2 class="hasAnchor">
-<a href="#specific-intervention-data-prep" class="anchor"></a>Specific intervention data prep</h2>
-<p>According to the parameter values we specified in <code>interv</code> we first need to prepare the cohort data set.</p>
+<a href="#intervention-specific-data-prep" class="anchor"></a>Intervention specific data prep</h2>
+<p>According to the parameter values we specified in <code>interv</code> we first need to prepare the cohort data set to only include those individuals we’re interested in analysing.</p>
 <p>Only use a single year cohort</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">IMPUTED_sample_year_cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample,
-                                            issdt_year <span class="op">==</span><span class="st"> </span>interv<span class="op">$</span>year_cohort)</code></pre></div>
-<p>EWNI stay long enough</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">IMPUTED_sample_year_cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample_year_cohort,
-                                            date_exit_uk1_issdt.years <span class="op">&gt;=</span><span class="st"> </span>interv<span class="op">$</span>min_screen_length_of_stay)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample,
+                        issdt_year <span class="op">==</span><span class="st"> </span>interv<span class="op">$</span>year_cohort)</code></pre></div>
+<p>EWNI stay long enough to be screened</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(cohort,
+                        date_exit_uk1_issdt.years <span class="op">&gt;=</span><span class="st"> </span>interv<span class="op">$</span>min_screen_length_of_stay)</code></pre></div>
 <p>Only keep those inidiviuals that are screened before some other event</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (interv<span class="op">$</span>screen_with_delay) {
-  IMPUTED_sample_year_cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample_year_cohort,
-                                              screen <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##TODO: knitting error
+  <span class="co"># print(head(cohort$screen, 10))</span>
+  <span class="co"># print(head(cohort$screen_year, 10))</span>
+<span class="cf">if</span> (interv<span class="op">$</span>screen_with_delay) {
+  cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(cohort,
+                        screen <span class="op">==</span><span class="st"> </span><span class="dv">1</span>)
+  }</code></pre></div>
 <p>Do we include student in the screening programme?</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">if</span> (interv<span class="op">$</span>no_students) {
-  IMPUTED_sample_year_cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample_year_cohort,
-                                              visatype2 <span class="op">!=</span><span class="st"> "Students"</span>)}</code></pre></div>
-<p>Remove individuals from ‘lower’ incidence countries</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">IMPUTED_sample_year_cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample_year_cohort,
-                                            who_prev_cat_Pareek2011 <span class="op">%in%</span><span class="st"> </span>interv<span class="op">$</span>incidence_grps_screen)</code></pre></div>
+  cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(cohort,
+                          visatype2 <span class="op">!=</span><span class="st"> "Students"</span>)}</code></pre></div>
+<p>Include individuals from ‘higher’ incidence countries only</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(cohort,
+                        who_prev_cat_Pareek2011 <span class="op">%in%</span><span class="st"> </span>interv<span class="op">$</span>incidence_grps_screen)</code></pre></div>
 <p>Count numbers of TB cases</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">n.exit_tb &lt;-
-<span class="st">  </span>IMPUTED_sample_year_cohort <span class="op">%&gt;%</span>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##TODO: knitting error
+
+n.exit_tb &lt;-
+<span class="st">  </span>cohort <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(exituk_tb) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>()
 
 n.uk_tb &lt;-
-<span class="st">  </span>IMPUTED_sample_year_cohort <span class="op">%&gt;%</span>
+<span class="st">  </span>cohort <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(uk_tb) <span class="op">%&gt;%</span>
 <span class="st">  </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/tally.html">count</a></span>()
 
@@ -147,10 +152,11 @@ num_all_tb_QALY &lt;-
     n.uk_tb
   } <span class="cf">else</span> <span class="cf">if</span> (interv<span class="op">$</span>ENDPOINT_QALY <span class="op">==</span><span class="st"> "death"</span>) {
     n.uk_tb <span class="op">+</span><span class="st"> </span>n.exit_tb}</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">saveRDS</span>(cohort, <span class="dt">file =</span> <span class="st">"cohort.Rds"</span>)</code></pre></div>
 </div>
-<div id="prep-decision-tree" class="section level2">
+<div id="prepare-decision-tree" class="section level2">
 <h2 class="hasAnchor">
-<a href="#prep-decision-tree" class="anchor"></a>Prep decision tree</h2>
+<a href="#prepare-decision-tree" class="anchor"></a>Prepare decision tree</h2>
 <p>Load input files. We have defined the decision tree using YAML syntax. We have a separate trees for cost and health. They have the same structure and probabilities but different values on the branches. We also create our own class.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">osNode.cost.fileName &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">"data"</span>, <span class="st">"LTBI_dtree-cost-symptoms.yaml"</span>,
                                     <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
@@ -163,524 +169,265 @@ osNode.cost &lt;-<span class="st"> </span>costeff.cost<span class="op">$</span>o
 
 costeff.health &lt;-<span class="st"> </span>treeSimR<span class="op">::</span><span class="kw"><a href="http://www.rdocumentation.org/packages/treeSimR/topics/costeffectiveness_tree">costeffectiveness_tree</a></span>(<span class="dt">yaml_tree =</span> osNode.health.fileName)
 osNode.health &lt;-<span class="st"> </span>costeff.health<span class="op">$</span>osNode</code></pre></div>
-<pre><code>#&gt; Warning in treeSimR::costeffectiveness_tree(yaml_tree = "LTBI_dtree-cost-
-#&gt; symptoms.yaml"): Check type of attributes. Should they be numeric rather
-#&gt; than character?
+<pre><code>#&gt; Warning in treeSimR::costeffectiveness_tree(yaml_tree = "LTBI_dtree-cost-symptoms.yaml"): Check type of attributes. Should they be numeric rather than character?
 #&gt; $osNode
-#&gt;                                                  levelName distn    max
-#&gt; 1   LTBI screening cost                                     unif   0.00
-#&gt; 2    ¦--(0,50]                                              unif   0.00
-#&gt; 3    ¦   ¦--LTBI                                            unif   0.00
-#&gt; 4    ¦   ¦   ¦--Not Agree to Screen                         unif   0.00
-#&gt; 5    ¦   ¦   °--Agree to Screen                             unif 106.00
-#&gt; 6    ¦   ¦       ¦--1-Sensitivity                           unif   0.00
-#&gt; 7    ¦   ¦       °--Sensitivity                             unif   0.00
-#&gt; 8    ¦   ¦           ¦--Not Start Treatment                 unif   0.00
-#&gt; 9    ¦   ¦           °--Start Treatment                     unif   0.00
-#&gt; 10   ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 11   ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 12   ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 13   ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 14   ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 15   ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 16   ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 17   ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 18   ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00
-#&gt; 19   ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00
-#&gt; 20   ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 21   ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 22   ¦   ¦                   ¦--Symptoms Nausea            gamma     NA
-#&gt; 23   ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 24   ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 25   ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 26   ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 27   ¦   ¦                   °--Not Symptoms Nausea         unif   0.00
-#&gt; 28   ¦   ¦                       ¦--Complete Treatment      unif 842.45
-#&gt; 29   ¦   ¦                       ¦   ¦--Effective           unif   0.00
-#&gt; 30   ¦   ¦                       ¦   °--Not Effective       unif   0.00
-#&gt; 31   ¦   ¦                       °--Not Complete Treatment  unif 140.41
-#&gt; 32   ¦   °--non-LTBI                                        unif   0.00
-#&gt; 33   ¦       ¦--Not Agree to Screen                         unif   0.00
-#&gt; 34   ¦       °--Agree to Screen                             unif 106.00
-#&gt; 35   ¦           ¦--Specificity                             unif   0.00
-#&gt; 36   ¦           °--1-Specificity                           unif   0.00
-#&gt; 37   ¦               ¦--Not Start Treatment                 unif   0.00
-#&gt; 38   ¦               °--Start Treatment                     unif   0.00
-#&gt; 39   ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 40   ¦                   ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 41   ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 42   ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 43   ¦                   ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 44   ¦                   ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 45   ¦                   ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 46   ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 47   ¦                       ¦--Symptoms Nausea            gamma     NA
-#&gt; 48   ¦                       ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 49   ¦                       ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 50   ¦                       °--Not Symptoms Nausea         unif   0.00
-#&gt; 51   ¦                           ¦--Complete Treatment      unif 842.45
-#&gt; 52   ¦                           °--Not Complete Treatment  unif 140.41
-#&gt; 53   ¦--(50,150]                                            unif   0.00
-#&gt; 54   ¦   ¦--LTBI                                            unif   0.00
-#&gt; 55   ¦   ¦   ¦--Not Agree to Screen                         unif   0.00
-#&gt; 56   ¦   ¦   °--Agree to Screen                             unif 106.00
-#&gt; 57   ¦   ¦       ¦--1-Sensitivity                           unif   0.00
-#&gt; 58   ¦   ¦       °--Sensitivity                             unif   0.00
-#&gt; 59   ¦   ¦           ¦--Not Start Treatment                 unif   0.00
-#&gt; 60   ¦   ¦           °--Start Treatment                     unif   0.00
-#&gt; 61   ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 62   ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 63   ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 64   ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 65   ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 66   ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 67   ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 68   ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 69   ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00
-#&gt; 70   ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00
-#&gt; 71   ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 72   ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 73   ¦   ¦                   ¦--Symptoms Nausea            gamma     NA
-#&gt; 74   ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 75   ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 76   ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 77   ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 78   ¦   ¦                   °--Not Symptoms Nausea         unif   0.00
-#&gt; 79   ¦   ¦                       ¦--Complete Treatment      unif 842.45
-#&gt; 80   ¦   ¦                       ¦   ¦--Effective           unif   0.00
-#&gt; 81   ¦   ¦                       ¦   °--Not Effective       unif   0.00
-#&gt; 82   ¦   ¦                       °--Not Complete Treatment  unif 140.41
-#&gt; 83   ¦   °--non-LTBI                                        unif   0.00
-#&gt; 84   ¦       ¦--Not Agree to Screen                         unif   0.00
-#&gt; 85   ¦       °--Agree to Screen                             unif 106.00
-#&gt; 86   ¦           ¦--Specificity                             unif   0.00
-#&gt; 87   ¦           °--1-Specificity                           unif   0.00
-#&gt; 88   ¦               ¦--Not Start Treatment                 unif   0.00
-#&gt; 89   ¦               °--Start Treatment                     unif   0.00
-#&gt; 90   ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 91   ¦                   ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 92   ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 93   ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 94   ¦                   ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 95   ¦                   ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 96   ¦                   ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 97   ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 98   ¦                       ¦--Symptoms Nausea            gamma     NA
-#&gt; 99   ¦                       ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 100  ¦                       ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 101  ¦                       °--Not Symptoms Nausea         unif   0.00
-#&gt; 102  ¦                           ¦--Complete Treatment      unif 842.45
-#&gt; 103  ¦                           °--Not Complete Treatment  unif 140.41
-#&gt; 104  ¦--(150,250]                                           unif   0.00
-#&gt; 105  ¦   ¦--LTBI                                            unif   0.00
-#&gt; 106  ¦   ¦   ¦--Not Agree to Screen                         unif   0.00
-#&gt; 107  ¦   ¦   °--Agree to Screen                             unif 106.00
-#&gt; 108  ¦   ¦       ¦--1-Sensitivity                           unif   0.00
-#&gt; 109  ¦   ¦       °--Sensitivity                             unif   0.00
-#&gt; 110  ¦   ¦           ¦--Not Start Treatment                 unif   0.00
-#&gt; 111  ¦   ¦           °--Start Treatment                     unif   0.00
-#&gt; 112  ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 113  ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 114  ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 115  ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 116  ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 117  ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 118  ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 119  ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 120  ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00
-#&gt; 121  ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00
-#&gt; 122  ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 123  ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 124  ¦   ¦                   ¦--Symptoms Nausea            gamma     NA
-#&gt; 125  ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 126  ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 127  ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 128  ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 129  ¦   ¦                   °--Not Symptoms Nausea         unif   0.00
-#&gt; 130  ¦   ¦                       ¦--Complete Treatment      unif 842.45
-#&gt; 131  ¦   ¦                       ¦   ¦--Effective           unif   0.00
-#&gt; 132  ¦   ¦                       ¦   °--Not Effective       unif   0.00
-#&gt; 133  ¦   ¦                       °--Not Complete Treatment  unif 140.41
-#&gt; 134  ¦   °--non-LTBI                                        unif   0.00
-#&gt; 135  ¦       ¦--Not Agree to Screen                         unif   0.00
-#&gt; 136  ¦       °--Agree to Screen                             unif 106.00
-#&gt; 137  ¦           ¦--Specificity                             unif   0.00
-#&gt; 138  ¦           °--1-Specificity                           unif   0.00
-#&gt; 139  ¦               ¦--Not Start Treatment                 unif   0.00
-#&gt; 140  ¦               °--Start Treatment                     unif   0.00
-#&gt; 141  ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 142  ¦                   ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 143  ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 144  ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 145  ¦                   ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 146  ¦                   ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 147  ¦                   ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 148  ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 149  ¦                       ¦--Symptoms Nausea            gamma     NA
-#&gt; 150  ¦                       ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 151  ¦                       ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 152  ¦                       °--Not Symptoms Nausea         unif   0.00
-#&gt; 153  ¦                           ¦--Complete Treatment      unif 842.45
-#&gt; 154  ¦                           °--Not Complete Treatment  unif 140.41
-#&gt; 155  ¦--(250,350]                                           unif   0.00
-#&gt; 156  ¦   ¦--LTBI                                            unif   0.00
-#&gt; 157  ¦   ¦   ¦--Not Agree to Screen                         unif   0.00
-#&gt; 158  ¦   ¦   °--Agree to Screen                             unif 106.00
-#&gt; 159  ¦   ¦       ¦--1-Sensitivity                           unif   0.00
-#&gt; 160  ¦   ¦       °--Sensitivity                             unif   0.00
-#&gt; 161  ¦   ¦           ¦--Not Start Treatment                 unif   0.00
-#&gt; 162  ¦   ¦           °--Start Treatment                     unif   0.00
-#&gt; 163  ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 164  ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 165  ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 166  ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 167  ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 168  ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 169  ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 170  ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 171  ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00
-#&gt; 172  ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00
-#&gt; 173  ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 174  ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 175  ¦   ¦                   ¦--Symptoms Nausea            gamma     NA
-#&gt; 176  ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 177  ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 178  ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 179  ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 180  ¦   ¦                   °--Not Symptoms Nausea         unif   0.00
-#&gt; 181  ¦   ¦                       ¦--Complete Treatment      unif 842.45
-#&gt; 182  ¦   ¦                       ¦   ¦--Effective           unif   0.00
-#&gt; 183  ¦   ¦                       ¦   °--Not Effective       unif   0.00
-#&gt; 184  ¦   ¦                       °--Not Complete Treatment  unif 140.41
-#&gt; 185  ¦   °--non-LTBI                                        unif   0.00
-#&gt; 186  ¦       ¦--Not Agree to Screen                         unif   0.00
-#&gt; 187  ¦       °--Agree to Screen                             unif 106.00
-#&gt; 188  ¦           ¦--Specificity                             unif   0.00
-#&gt; 189  ¦           °--1-Specificity                           unif   0.00
-#&gt; 190  ¦               ¦--Not Start Treatment                 unif   0.00
-#&gt; 191  ¦               °--Start Treatment                     unif   0.00
-#&gt; 192  ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 193  ¦                   ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 194  ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 195  ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 196  ¦                   ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 197  ¦                   ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 198  ¦                   ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 199  ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 200  ¦                       ¦--Symptoms Nausea            gamma     NA
-#&gt; 201  ¦                       ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 202  ¦                       ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 203  ¦                       °--Not Symptoms Nausea         unif   0.00
-#&gt; 204  ¦                           ¦--Complete Treatment      unif 842.45
-#&gt; 205  ¦                           °--Not Complete Treatment  unif 140.41
-#&gt; 206  °--(350,1e+05]                                         unif   0.00
-#&gt; 207      ¦--LTBI                                            unif   0.00
-#&gt; 208      ¦   ¦--Not Agree to Screen                         unif   0.00
-#&gt; 209      ¦   °--Agree to Screen                             unif 106.00
-#&gt; 210      ¦       ¦--1-Sensitivity                           unif   0.00
-#&gt; 211      ¦       °--Sensitivity                             unif   0.00
-#&gt; 212      ¦           ¦--Not Start Treatment                 unif   0.00
-#&gt; 213      ¦           °--Start Treatment                     unif   0.00
-#&gt; 214      ¦               ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 215      ¦               ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 216      ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 217      ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 218      ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 219      ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 220      ¦               ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 221      ¦               ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 222      ¦               ¦       ¦   ¦--Effective           unif   0.00
-#&gt; 223      ¦               ¦       ¦   °--Not Effective       unif   0.00
-#&gt; 224      ¦               ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 225      ¦               °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 226      ¦                   ¦--Symptoms Nausea            gamma     NA
-#&gt; 227      ¦                   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 228      ¦                   ¦   ¦   ¦--Effective           unif   0.00
-#&gt; 229      ¦                   ¦   ¦   °--Not Effective       unif   0.00
-#&gt; 230      ¦                   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 231      ¦                   °--Not Symptoms Nausea         unif   0.00
-#&gt; 232      ¦                       ¦--Complete Treatment      unif 842.45
-#&gt; 233      ¦                       ¦   ¦--Effective           unif   0.00
-#&gt; 234      ¦                       ¦   °--Not Effective       unif   0.00
-#&gt; 235      ¦                       °--Not Complete Treatment  unif 140.41
-#&gt; 236      °--non-LTBI                                        unif   0.00
-#&gt; 237          ¦--Not Agree to Screen                         unif   0.00
-#&gt; 238          °--Agree to Screen                             unif 106.00
-#&gt; 239              ¦--Specificity                             unif   0.00
-#&gt; 240              °--1-Specificity                           unif   0.00
-#&gt; 241                  ¦--Not Start Treatment                 unif   0.00
-#&gt; 242                  °--Start Treatment                     unif   0.00
-#&gt; 243                      ¦--Symptoms Hepatotoxicity        gamma     NA
-#&gt; 244                      ¦   ¦--Symptoms Nausea            gamma     NA
-#&gt; 245                      ¦   ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 246                      ¦   ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 247                      ¦   °--Not Symptoms Nausea         unif   0.00
-#&gt; 248                      ¦       ¦--Complete Treatment      unif 842.45
-#&gt; 249                      ¦       °--Not Complete Treatment  unif 140.41
-#&gt; 250                      °--Not Symptoms Hepatotoxicity     unif   0.00
-#&gt; 251                          ¦--Symptoms Nausea            gamma     NA
-#&gt; 252                          ¦   ¦--Complete Treatment      unif 842.45
-#&gt; 253                          ¦   °--Not Complete Treatment  unif 140.41
-#&gt; 254                          °--Not Symptoms Nausea         unif   0.00
-#&gt; 255                              ¦--Complete Treatment      unif 842.45
-#&gt; 256                              °--Not Complete Treatment  unif 140.41
-#&gt;        min       p  scale shape     type
-#&gt; 1     0.00 1.00000     NA    NA  logical
-#&gt; 2     0.00 0.00000                chance
-#&gt; 3     0.00 0.03000                chance
-#&gt; 4     0.00 0.40000              terminal
-#&gt; 5    50.00 0.60000                chance
-#&gt; 6     0.00 0.16000              terminal
-#&gt; 7     0.00 0.84000                chance
-#&gt; 8     0.00 0.30000              terminal
-#&gt; 9     0.00 0.70000                chance
-#&gt; 10      NA 0.00245 87.889 6.679   chance
-#&gt; 11      NA 0.14300     13     5   chance
-#&gt; 12  511.69 0.80000                chance
-#&gt; 13    0.00 0.90000              terminal
-#&gt; 14    0.00 0.10000              terminal
-#&gt; 15   85.24 0.20000              terminal
-#&gt; 16    0.00 0.85700                chance
-#&gt; 17  511.69 0.80000                chance
-#&gt; 18    0.00 0.90000              terminal
-#&gt; 19    0.00 0.10000              terminal
-#&gt; 20   85.24 0.20000              terminal
-#&gt; 21    0.00 0.99755                chance
-#&gt; 22      NA 0.14300     13     5   chance
-#&gt; 23  511.69 0.80000                chance
-#&gt; 24    0.00 0.90000              terminal
-#&gt; 25    0.00 0.10000              terminal
-#&gt; 26   85.24 0.20000              terminal
-#&gt; 27    0.00 0.85700                chance
-#&gt; 28  511.69 0.80000                chance
-#&gt; 29    0.00 0.90000              terminal
-#&gt; 30    0.00 0.10000              terminal
-#&gt; 31   85.24 0.20000              terminal
-#&gt; 32    0.00 0.97000                chance
-#&gt; 33    0.00 0.40000              terminal
-#&gt; 34   50.00 0.60000                chance
-#&gt; 35    0.00 0.99000              terminal
-#&gt; 36    0.00 0.01000                chance
-#&gt; 37    0.00 0.30000              terminal
-#&gt; 38    0.00 0.70000                chance
-#&gt; 39      NA 0.00245 87.889 6.679   chance
-#&gt; 40      NA 0.14300     13     5   chance
-#&gt; 41  511.69 0.80000              terminal
-#&gt; 42   85.24 0.20000              terminal
-#&gt; 43    0.00 0.85700                chance
-#&gt; 44  511.69 0.80000              terminal
-#&gt; 45   85.24 0.20000              terminal
-#&gt; 46    0.00 0.99755                chance
-#&gt; 47      NA 0.14300     13     5   chance
-#&gt; 48  511.69 0.80000              terminal
-#&gt; 49   85.24 0.20000              terminal
-#&gt; 50    0.00 0.85700                chance
-#&gt; 51  511.69 0.80000              terminal
-#&gt; 52   85.24 0.20000              terminal
-#&gt; 53    0.00 0.04000                chance
-#&gt; 54    0.00 0.03000                chance
-#&gt; 55    0.00 0.40000              terminal
-#&gt; 56   50.00 0.60000                chance
-#&gt; 57    0.00 0.16000              terminal
-#&gt; 58    0.00 0.84000                chance
-#&gt; 59    0.00 0.30000              terminal
-#&gt; 60    0.00 0.70000                chance
-#&gt; 61      NA 0.00245 87.889 6.679   chance
-#&gt; 62      NA 0.14300     13     5   chance
-#&gt; 63  511.69 0.80000                chance
-#&gt; 64    0.00 0.90000              terminal
-#&gt; 65    0.00 0.10000              terminal
-#&gt; 66   85.24 0.20000              terminal
-#&gt; 67    0.00 0.85700                chance
-#&gt; 68  511.69 0.80000                chance
-#&gt; 69    0.00 0.90000              terminal
-#&gt; 70    0.00 0.10000              terminal
-#&gt; 71   85.24 0.20000              terminal
-#&gt; 72    0.00 0.99755                chance
-#&gt; 73      NA 0.14300     13     5   chance
-#&gt; 74  511.69 0.80000                chance
-#&gt; 75    0.00 0.90000              terminal
-#&gt; 76    0.00 0.10000              terminal
-#&gt; 77   85.24 0.20000              terminal
-#&gt; 78    0.00 0.85700                chance
-#&gt; 79  511.69 0.80000                chance
-#&gt; 80    0.00 0.90000              terminal
-#&gt; 81    0.00 0.10000              terminal
-#&gt; 82   85.24 0.20000              terminal
-#&gt; 83    0.00 0.97000                chance
-#&gt; 84    0.00 0.40000              terminal
-#&gt; 85   50.00 0.60000                chance
-#&gt; 86    0.00 0.99000              terminal
-#&gt; 87    0.00 0.01000                chance
-#&gt; 88    0.00 0.30000              terminal
-#&gt; 89    0.00 0.70000                chance
-#&gt; 90      NA 0.00245 87.889 6.679   chance
-#&gt; 91      NA 0.14300     13     5   chance
-#&gt; 92  511.69 0.80000              terminal
-#&gt; 93   85.24 0.20000              terminal
-#&gt; 94    0.00 0.85700                chance
-#&gt; 95  511.69 0.80000              terminal
-#&gt; 96   85.24 0.20000              terminal
-#&gt; 97    0.00 0.99755                chance
-#&gt; 98      NA 0.14300     13     5   chance
-#&gt; 99  511.69 0.80000              terminal
-#&gt; 100  85.24 0.20000              terminal
-#&gt; 101   0.00 0.85700                chance
-#&gt; 102 511.69 0.80000              terminal
-#&gt; 103  85.24 0.20000              terminal
-#&gt; 104   0.00 0.16000                chance
-#&gt; 105   0.00 0.03000                chance
-#&gt; 106   0.00 0.40000              terminal
-#&gt; 107  50.00 0.60000                chance
-#&gt; 108   0.00 0.16000              terminal
-#&gt; 109   0.00 0.84000                chance
-#&gt; 110   0.00 0.30000              terminal
-#&gt; 111   0.00 0.70000                chance
-#&gt; 112     NA 0.00245 87.889 6.679   chance
-#&gt; 113     NA 0.14300     13     5   chance
-#&gt; 114 511.69 0.80000                chance
-#&gt; 115   0.00 0.90000              terminal
-#&gt; 116   0.00 0.10000              terminal
-#&gt; 117  85.24 0.20000              terminal
-#&gt; 118   0.00 0.85700                chance
-#&gt; 119 511.69 0.80000                chance
-#&gt; 120   0.00 0.90000              terminal
-#&gt; 121   0.00 0.10000              terminal
-#&gt; 122  85.24 0.20000              terminal
-#&gt; 123   0.00 0.99755                chance
-#&gt; 124     NA 0.14300     13     5   chance
-#&gt; 125 511.69 0.80000                chance
-#&gt; 126   0.00 0.90000              terminal
-#&gt; 127   0.00 0.10000              terminal
-#&gt; 128  85.24 0.20000              terminal
-#&gt; 129   0.00 0.85700                chance
-#&gt; 130 511.69 0.80000                chance
-#&gt; 131   0.00 0.90000              terminal
-#&gt; 132   0.00 0.10000              terminal
-#&gt; 133  85.24 0.20000              terminal
-#&gt; 134   0.00 0.97000                chance
-#&gt; 135   0.00 0.40000              terminal
-#&gt; 136  50.00 0.60000                chance
-#&gt; 137   0.00 0.99000              terminal
-#&gt; 138   0.00 0.01000                chance
-#&gt; 139   0.00 0.30000              terminal
-#&gt; 140   0.00 0.70000                chance
-#&gt; 141     NA 0.00245 87.889 6.679   chance
-#&gt; 142     NA 0.14300     13     5   chance
-#&gt; 143 511.69 0.80000              terminal
-#&gt; 144  85.24 0.20000              terminal
-#&gt; 145   0.00 0.85700                chance
-#&gt; 146 511.69 0.80000              terminal
-#&gt; 147  85.24 0.20000              terminal
-#&gt; 148   0.00 0.99755                chance
-#&gt; 149     NA 0.14300     13     5   chance
-#&gt; 150 511.69 0.80000              terminal
-#&gt; 151  85.24 0.20000              terminal
-#&gt; 152   0.00 0.85700                chance
-#&gt; 153 511.69 0.80000              terminal
-#&gt; 154  85.24 0.20000              terminal
-#&gt; 155   0.00 0.60000                chance
-#&gt; 156   0.00 0.03000                chance
-#&gt; 157   0.00 0.40000              terminal
-#&gt; 158  50.00 0.60000                chance
-#&gt; 159   0.00 0.16000              terminal
-#&gt; 160   0.00 0.84000                chance
-#&gt; 161   0.00 0.30000              terminal
-#&gt; 162   0.00 0.70000                chance
-#&gt; 163     NA 0.00245 87.889 6.679   chance
-#&gt; 164     NA 0.14300     13     5   chance
-#&gt; 165 511.69 0.80000                chance
-#&gt; 166   0.00 0.90000              terminal
-#&gt; 167   0.00 0.10000              terminal
-#&gt; 168  85.24 0.20000              terminal
-#&gt; 169   0.00 0.85700                chance
-#&gt; 170 511.69 0.80000                chance
-#&gt; 171   0.00 0.90000              terminal
-#&gt; 172   0.00 0.10000              terminal
-#&gt; 173  85.24 0.20000              terminal
-#&gt; 174   0.00 0.99755                chance
-#&gt; 175     NA 0.14300     13     5   chance
-#&gt; 176 511.69 0.80000                chance
-#&gt; 177   0.00 0.90000              terminal
-#&gt; 178   0.00 0.10000              terminal
-#&gt; 179  85.24 0.20000              terminal
-#&gt; 180   0.00 0.85700                chance
-#&gt; 181 511.69 0.80000                chance
-#&gt; 182   0.00 0.90000              terminal
-#&gt; 183   0.00 0.10000              terminal
-#&gt; 184  85.24 0.20000              terminal
-#&gt; 185   0.00 0.97000                chance
-#&gt; 186   0.00 0.40000              terminal
-#&gt; 187  50.00 0.60000                chance
-#&gt; 188   0.00 0.99000              terminal
-#&gt; 189   0.00 0.01000                chance
-#&gt; 190   0.00 0.30000              terminal
-#&gt; 191   0.00 0.70000                chance
-#&gt; 192     NA 0.00245 87.889 6.679   chance
-#&gt; 193     NA 0.14300     13     5   chance
-#&gt; 194 511.69 0.80000              terminal
-#&gt; 195  85.24 0.20000              terminal
-#&gt; 196   0.00 0.85700                chance
-#&gt; 197 511.69 0.80000              terminal
-#&gt; 198  85.24 0.20000              terminal
-#&gt; 199   0.00 0.99755                chance
-#&gt; 200     NA 0.14300     13     5   chance
-#&gt; 201 511.69 0.80000              terminal
-#&gt; 202  85.24 0.20000              terminal
-#&gt; 203   0.00 0.85700                chance
-#&gt; 204 511.69 0.80000              terminal
-#&gt; 205  85.24 0.20000              terminal
-#&gt; 206   0.00 0.20000                chance
-#&gt; 207   0.00 0.03000                chance
-#&gt; 208   0.00 0.40000              terminal
-#&gt; 209  50.00 0.60000                chance
-#&gt; 210   0.00 0.16000              terminal
-#&gt; 211   0.00 0.84000                chance
-#&gt; 212   0.00 0.30000              terminal
-#&gt; 213   0.00 0.70000                chance
-#&gt; 214     NA 0.00245 87.889 6.679   chance
-#&gt; 215     NA 0.14300     13     5   chance
-#&gt; 216 511.69 0.80000                chance
-#&gt; 217   0.00 0.90000              terminal
-#&gt; 218   0.00 0.10000              terminal
-#&gt; 219  85.24 0.20000              terminal
-#&gt; 220   0.00 0.85700                chance
-#&gt; 221 511.69 0.80000                chance
-#&gt; 222   0.00 0.90000              terminal
-#&gt; 223   0.00 0.10000              terminal
-#&gt; 224  85.24 0.20000              terminal
-#&gt; 225   0.00 0.99755                chance
-#&gt; 226     NA 0.14300     13     5   chance
-#&gt; 227 511.69 0.80000                chance
-#&gt; 228   0.00 0.90000              terminal
-#&gt; 229   0.00 0.10000              terminal
-#&gt; 230  85.24 0.20000              terminal
-#&gt; 231   0.00 0.85700                chance
-#&gt; 232 511.69 0.80000                chance
-#&gt; 233   0.00 0.90000              terminal
-#&gt; 234   0.00 0.10000              terminal
-#&gt; 235  85.24 0.20000              terminal
-#&gt; 236   0.00 0.97000                chance
-#&gt; 237   0.00 0.40000              terminal
-#&gt; 238  50.00 0.60000                chance
-#&gt; 239   0.00 0.99000              terminal
-#&gt; 240   0.00 0.01000                chance
-#&gt; 241   0.00 0.30000              terminal
-#&gt; 242   0.00 0.70000                chance
-#&gt; 243     NA 0.00245 87.889 6.679   chance
-#&gt; 244     NA 0.14300     13     5   chance
-#&gt; 245 511.69 0.80000              terminal
-#&gt; 246  85.24 0.20000              terminal
-#&gt; 247   0.00 0.85700                chance
-#&gt; 248 511.69 0.80000              terminal
-#&gt; 249  85.24 0.20000              terminal
-#&gt; 250   0.00 0.99755                chance
-#&gt; 251     NA 0.14300     13     5   chance
-#&gt; 252 511.69 0.80000              terminal
-#&gt; 253  85.24 0.20000              terminal
-#&gt; 254   0.00 0.85700                chance
-#&gt; 255 511.69 0.80000              terminal
-#&gt; 256  85.24 0.20000              terminal
+#&gt;                                                  levelName distn    max    min       p  scale shape     type
+#&gt; 1   LTBI screening cost                                     unif   0.00   0.00 1.00000     NA    NA  logical
+#&gt; 2    ¦--(0,50]                                              unif   0.00   0.00 0.00000                chance
+#&gt; 3    ¦   ¦--LTBI                                            unif   0.00   0.00 0.03000                chance
+#&gt; 4    ¦   ¦   ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 5    ¦   ¦   °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 6    ¦   ¦       ¦--1-Sensitivity                           unif   0.00   0.00 0.16000              terminal
+#&gt; 7    ¦   ¦       °--Sensitivity                             unif   0.00   0.00 0.84000                chance
+#&gt; 8    ¦   ¦           ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 9    ¦   ¦           °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 10   ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 11   ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 12   ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 13   ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 14   ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 15   ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 16   ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 17   ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 18   ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 19   ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 20   ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 21   ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 22   ¦   ¦                   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 23   ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 24   ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 25   ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 26   ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 27   ¦   ¦                   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 28   ¦   ¦                       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 29   ¦   ¦                       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 30   ¦   ¦                       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 31   ¦   ¦                       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 32   ¦   °--non-LTBI                                        unif   0.00   0.00 0.97000                chance
+#&gt; 33   ¦       ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 34   ¦       °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 35   ¦           ¦--Specificity                             unif   0.00   0.00 0.99000              terminal
+#&gt; 36   ¦           °--1-Specificity                           unif   0.00   0.00 0.01000                chance
+#&gt; 37   ¦               ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 38   ¦               °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 39   ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 40   ¦                   ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 41   ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 42   ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 43   ¦                   ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 44   ¦                   ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 45   ¦                   ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 46   ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 47   ¦                       ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 48   ¦                       ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 49   ¦                       ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 50   ¦                       °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 51   ¦                           ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 52   ¦                           °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 53   ¦--(50,150]                                            unif   0.00   0.00 0.04000                chance
+#&gt; 54   ¦   ¦--LTBI                                            unif   0.00   0.00 0.03000                chance
+#&gt; 55   ¦   ¦   ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 56   ¦   ¦   °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 57   ¦   ¦       ¦--1-Sensitivity                           unif   0.00   0.00 0.16000              terminal
+#&gt; 58   ¦   ¦       °--Sensitivity                             unif   0.00   0.00 0.84000                chance
+#&gt; 59   ¦   ¦           ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 60   ¦   ¦           °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 61   ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 62   ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 63   ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 64   ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 65   ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 66   ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 67   ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 68   ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 69   ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 70   ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 71   ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 72   ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 73   ¦   ¦                   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 74   ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 75   ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 76   ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 77   ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 78   ¦   ¦                   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 79   ¦   ¦                       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 80   ¦   ¦                       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 81   ¦   ¦                       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 82   ¦   ¦                       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 83   ¦   °--non-LTBI                                        unif   0.00   0.00 0.97000                chance
+#&gt; 84   ¦       ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 85   ¦       °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 86   ¦           ¦--Specificity                             unif   0.00   0.00 0.99000              terminal
+#&gt; 87   ¦           °--1-Specificity                           unif   0.00   0.00 0.01000                chance
+#&gt; 88   ¦               ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 89   ¦               °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 90   ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 91   ¦                   ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 92   ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 93   ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 94   ¦                   ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 95   ¦                   ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 96   ¦                   ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 97   ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 98   ¦                       ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 99   ¦                       ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 100  ¦                       ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 101  ¦                       °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 102  ¦                           ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 103  ¦                           °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 104  ¦--(150,250]                                           unif   0.00   0.00 0.16000                chance
+#&gt; 105  ¦   ¦--LTBI                                            unif   0.00   0.00 0.03000                chance
+#&gt; 106  ¦   ¦   ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 107  ¦   ¦   °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 108  ¦   ¦       ¦--1-Sensitivity                           unif   0.00   0.00 0.16000              terminal
+#&gt; 109  ¦   ¦       °--Sensitivity                             unif   0.00   0.00 0.84000                chance
+#&gt; 110  ¦   ¦           ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 111  ¦   ¦           °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 112  ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 113  ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 114  ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 115  ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 116  ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 117  ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 118  ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 119  ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 120  ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 121  ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 122  ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 123  ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 124  ¦   ¦                   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 125  ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 126  ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 127  ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 128  ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 129  ¦   ¦                   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 130  ¦   ¦                       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 131  ¦   ¦                       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 132  ¦   ¦                       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 133  ¦   ¦                       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 134  ¦   °--non-LTBI                                        unif   0.00   0.00 0.97000                chance
+#&gt; 135  ¦       ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 136  ¦       °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 137  ¦           ¦--Specificity                             unif   0.00   0.00 0.99000              terminal
+#&gt; 138  ¦           °--1-Specificity                           unif   0.00   0.00 0.01000                chance
+#&gt; 139  ¦               ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 140  ¦               °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 141  ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 142  ¦                   ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 143  ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 144  ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 145  ¦                   ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 146  ¦                   ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 147  ¦                   ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 148  ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 149  ¦                       ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 150  ¦                       ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 151  ¦                       ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 152  ¦                       °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 153  ¦                           ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 154  ¦                           °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 155  ¦--(250,350]                                           unif   0.00   0.00 0.60000                chance
+#&gt; 156  ¦   ¦--LTBI                                            unif   0.00   0.00 0.03000                chance
+#&gt; 157  ¦   ¦   ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 158  ¦   ¦   °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 159  ¦   ¦       ¦--1-Sensitivity                           unif   0.00   0.00 0.16000              terminal
+#&gt; 160  ¦   ¦       °--Sensitivity                             unif   0.00   0.00 0.84000                chance
+#&gt; 161  ¦   ¦           ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 162  ¦   ¦           °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 163  ¦   ¦               ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 164  ¦   ¦               ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 165  ¦   ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 166  ¦   ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 167  ¦   ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 168  ¦   ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 169  ¦   ¦               ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 170  ¦   ¦               ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 171  ¦   ¦               ¦       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 172  ¦   ¦               ¦       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 173  ¦   ¦               ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 174  ¦   ¦               °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 175  ¦   ¦                   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 176  ¦   ¦                   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 177  ¦   ¦                   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 178  ¦   ¦                   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 179  ¦   ¦                   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 180  ¦   ¦                   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 181  ¦   ¦                       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 182  ¦   ¦                       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 183  ¦   ¦                       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 184  ¦   ¦                       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 185  ¦   °--non-LTBI                                        unif   0.00   0.00 0.97000                chance
+#&gt; 186  ¦       ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 187  ¦       °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 188  ¦           ¦--Specificity                             unif   0.00   0.00 0.99000              terminal
+#&gt; 189  ¦           °--1-Specificity                           unif   0.00   0.00 0.01000                chance
+#&gt; 190  ¦               ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 191  ¦               °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 192  ¦                   ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 193  ¦                   ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 194  ¦                   ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 195  ¦                   ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 196  ¦                   ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 197  ¦                   ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 198  ¦                   ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 199  ¦                   °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 200  ¦                       ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 201  ¦                       ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 202  ¦                       ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 203  ¦                       °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 204  ¦                           ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 205  ¦                           °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 206  °--(350,1e+05]                                         unif   0.00   0.00 0.20000                chance
+#&gt; 207      ¦--LTBI                                            unif   0.00   0.00 0.03000                chance
+#&gt; 208      ¦   ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 209      ¦   °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 210      ¦       ¦--1-Sensitivity                           unif   0.00   0.00 0.16000              terminal
+#&gt; 211      ¦       °--Sensitivity                             unif   0.00   0.00 0.84000                chance
+#&gt; 212      ¦           ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 213      ¦           °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 214      ¦               ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 215      ¦               ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 216      ¦               ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 217      ¦               ¦   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 218      ¦               ¦   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 219      ¦               ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 220      ¦               ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 221      ¦               ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 222      ¦               ¦       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 223      ¦               ¦       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 224      ¦               ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 225      ¦               °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 226      ¦                   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 227      ¦                   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 228      ¦                   ¦   ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 229      ¦                   ¦   ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 230      ¦                   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 231      ¦                   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 232      ¦                       ¦--Complete Treatment      unif 842.45 511.69 0.80000                chance
+#&gt; 233      ¦                       ¦   ¦--Effective           unif   0.00   0.00 0.90000              terminal
+#&gt; 234      ¦                       ¦   °--Not Effective       unif   0.00   0.00 0.10000              terminal
+#&gt; 235      ¦                       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 236      °--non-LTBI                                        unif   0.00   0.00 0.97000                chance
+#&gt; 237          ¦--Not Agree to Screen                         unif   0.00   0.00 0.40000              terminal
+#&gt; 238          °--Agree to Screen                             unif 106.00  50.00 0.60000                chance
+#&gt; 239              ¦--Specificity                             unif   0.00   0.00 0.99000              terminal
+#&gt; 240              °--1-Specificity                           unif   0.00   0.00 0.01000                chance
+#&gt; 241                  ¦--Not Start Treatment                 unif   0.00   0.00 0.30000              terminal
+#&gt; 242                  °--Start Treatment                     unif   0.00   0.00 0.70000                chance
+#&gt; 243                      ¦--Symptoms Hepatotoxicity        gamma     NA     NA 0.00245 87.889 6.679   chance
+#&gt; 244                      ¦   ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 245                      ¦   ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 246                      ¦   ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 247                      ¦   °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 248                      ¦       ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 249                      ¦       °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 250                      °--Not Symptoms Hepatotoxicity     unif   0.00   0.00 0.99755                chance
+#&gt; 251                          ¦--Symptoms Nausea            gamma     NA     NA 0.14300     13     5   chance
+#&gt; 252                          ¦   ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 253                          ¦   °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
+#&gt; 254                          °--Not Symptoms Nausea         unif   0.00   0.00 0.85700                chance
+#&gt; 255                              ¦--Complete Treatment      unif 842.45 511.69 0.80000              terminal
+#&gt; 256                              °--Not Complete Treatment  unif 140.41  85.24 0.20000              terminal
 #&gt; 
 #&gt; $data
 #&gt; $data$data_prob
@@ -697,31 +444,31 @@ osNode.health &lt;-<span class="st"> </span>costeff.health<span class="op">$</sp
 <p>Create look-up tables using the cohort data to give proportion in each incidence in country of origin and the probability of LTBI for each of these.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">who_levels &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">"(0,50]"</span>, <span class="st">"(50,150]"</span>, <span class="st">"(150,250]"</span>, <span class="st">"(250,350]"</span>, <span class="st">"(350,1e+05]"</span>)
 
-p_incid_grp &lt;-<span class="st"> </span>miscUtilities<span class="op">::</span><span class="kw">prop_table</span>(IMPUTED_sample_year_cohort<span class="op">$</span>who_prev_cat_Pareek2011)
+p_incid_grp &lt;-<span class="st"> </span>miscUtilities<span class="op">::</span><span class="kw">prop_table</span>(cohort<span class="op">$</span>who_prev_cat_Pareek2011)
 
 pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">who_prev_cat_Pareek2011 =</span> <span class="kw">names</span>(p_incid_grp),
                             <span class="dt">LTBI =</span> <span class="kw">c</span>(<span class="fl">0.03</span>, <span class="fl">0.13</span>, <span class="fl">0.2</span>, <span class="fl">0.3</span>, <span class="fl">0.3</span>))</code></pre></div>
 <p>Then insert these probabilities in to the decision tree</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_along</span>(who_levels)) {
-
+  
   osNode.cost<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> p_incid_grp[i],
                   <span class="dt">filterFun =</span> <span class="cf">function</span>(x) x<span class="op">$</span>name <span class="op">==</span><span class="st"> </span>who_levels[i])
-
+  
   osNode.health<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> p_incid_grp[i],
                     <span class="dt">filterFun =</span> <span class="cf">function</span>(x) x<span class="op">$</span>name <span class="op">==</span><span class="st"> </span>who_levels[i])
 }
 
 <span class="cf">for</span> (i <span class="cf">in</span> who_levels) {
-
+  
   pLTBI &lt;-<span class="st"> </span><span class="kw">subset</span>(pLatentTB.who,
                   who_prev_cat_Pareek2011 <span class="op">==</span><span class="st"> </span>i,
                   <span class="dt">select =</span> LTBI)
-
+  
   osNode.cost<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> pLTBI,
                   <span class="dt">filterFun =</span> <span class="cf">function</span>(x) x<span class="op">$</span>pathString <span class="op">==</span><span class="st"> </span>miscUtilities<span class="op">::</span><span class="kw">pastef</span>(<span class="st">"LTBI screening cost"</span>, i, <span class="st">"LTBI"</span>))
   osNode.health<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> pLTBI,
                     <span class="dt">filterFun =</span> <span class="cf">function</span>(x) x<span class="op">$</span>pathString <span class="op">==</span><span class="st"> </span>miscUtilities<span class="op">::</span><span class="kw">pastef</span>(<span class="st">"LTBI screening QALY loss"</span>, i, <span class="st">"LTBI"</span>))
-
+  
   osNode.cost<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>pLTBI,
                   <span class="dt">filterFun =</span> <span class="cf">function</span>(x) x<span class="op">$</span>pathString <span class="op">==</span><span class="st"> </span>miscUtilities<span class="op">::</span><span class="kw">pastef</span>(<span class="st">"LTBI screening cost"</span>, i, <span class="st">"non-LTBI"</span>))
   osNode.health<span class="op">$</span><span class="kw">Set</span>(<span class="dt">p =</span> <span class="dv">1</span> <span class="op">-</span><span class="st"> </span>pLTBI,
@@ -731,32 +478,65 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
 <div id="decision-tree-output" class="section level2">
 <h2 class="hasAnchor">
 <a href="#decision-tree-output" class="anchor"></a>Decision tree output</h2>
+<p>Now we can run the decision tree model using the scenario parameter values, active TB cases, and cost and health decision tree objects.</p>
+<p>A single scenario:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="../reference/decision_tree_cluster.html">decision_tree_cluster</a></span>(<span class="dt">parameters =</span> scenario_parameters[[<span class="dv">1</span>]],
-                       <span class="dt">n.uk_tb =</span> <span class="dv">10</span>,
-                       <span class="dt">n.exit_tb =</span> <span class="dv">10</span>,
-                       <span class="dt">cost_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>,
-                       <span class="dt">health_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>)
+                      <span class="dt">N.mc =</span> interv<span class="op">$</span>N.mc,
+                      <span class="dt">n.uk_tb =</span> <span class="dv">10</span>, <span class="co">#as.numeric(n.uk_tb),</span>
+                      <span class="dt">n.exit_tb =</span> <span class="dv">10</span>, <span class="co">#as.numeric(n.exit_tb),</span>
+                      <span class="dt">cost_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>,
+                      <span class="dt">health_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>)
 <span class="co">#&gt; $mc_cost</span>
-<span class="co">#&gt; [1] 37.73118 36.34105</span>
+<span class="co">#&gt;  [1] 36.39428 36.25581 36.05193 36.43912 36.41619 36.40893 36.62926 36.17997 36.25634 37.11173</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $mc_health</span>
-<span class="co">#&gt; [1] 81.58914 88.08845</span>
+<span class="co">#&gt;  [1] 80.15402 81.14604 96.29806 82.31646 95.62722 87.69414 83.54713 78.22763 93.51087 95.87006</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $mc_n.tb_screen</span>
-<span class="co">#&gt; $mc_n.tb_screen$n.tb_screen.all_tb</span>
-<span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  2</span>
-<span class="co">#&gt; 2   1           tb 18</span>
-<span class="co">#&gt; 3   2 disease-free  2</span>
-<span class="co">#&gt; 4   2           tb 18</span>
+<span class="co">#&gt; $n_tb_screen_all</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  0</span>
+<span class="co">#&gt; 2    1           tb 20</span>
+<span class="co">#&gt; 3    2 disease-free  3</span>
+<span class="co">#&gt; 4    2           tb 17</span>
+<span class="co">#&gt; 5    3 disease-free  3</span>
+<span class="co">#&gt; 6    3           tb 17</span>
+<span class="co">#&gt; 7    4 disease-free  3</span>
+<span class="co">#&gt; 8    4           tb 17</span>
+<span class="co">#&gt; 9    5 disease-free  1</span>
+<span class="co">#&gt; 10   5           tb 19</span>
+<span class="co">#&gt; 11   6 disease-free  1</span>
+<span class="co">#&gt; 12   6           tb 19</span>
+<span class="co">#&gt; 13   7 disease-free  2</span>
+<span class="co">#&gt; 14   7           tb 18</span>
+<span class="co">#&gt; 15   8 disease-free  5</span>
+<span class="co">#&gt; 16   8           tb 15</span>
+<span class="co">#&gt; 17   9 disease-free  1</span>
+<span class="co">#&gt; 18   9           tb 19</span>
+<span class="co">#&gt; 19  10 disease-free  4</span>
+<span class="co">#&gt; 20  10           tb 16</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; $mc_n.tb_screen$n.tb_screen.uk_tb</span>
-<span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  2</span>
-<span class="co">#&gt; 2   1           tb  8</span>
-<span class="co">#&gt; 3   2 disease-free  0</span>
-<span class="co">#&gt; 4   2           tb 10</span>
-<span class="co">#&gt; </span>
+<span class="co">#&gt; $n_tb_screen_uk</span>
+<span class="co">#&gt;    sim       status  n</span>
+<span class="co">#&gt; 1    1 disease-free  0</span>
+<span class="co">#&gt; 2    1           tb 10</span>
+<span class="co">#&gt; 3    2 disease-free  1</span>
+<span class="co">#&gt; 4    2           tb  9</span>
+<span class="co">#&gt; 5    3 disease-free  0</span>
+<span class="co">#&gt; 6    3           tb 10</span>
+<span class="co">#&gt; 7    4 disease-free  1</span>
+<span class="co">#&gt; 8    4           tb  9</span>
+<span class="co">#&gt; 9    5 disease-free  0</span>
+<span class="co">#&gt; 10   5           tb 10</span>
+<span class="co">#&gt; 11   6 disease-free  1</span>
+<span class="co">#&gt; 12   6           tb  9</span>
+<span class="co">#&gt; 13   7 disease-free  2</span>
+<span class="co">#&gt; 14   7           tb  8</span>
+<span class="co">#&gt; 15   8 disease-free  2</span>
+<span class="co">#&gt; 16   8           tb  8</span>
+<span class="co">#&gt; 17   9 disease-free  1</span>
+<span class="co">#&gt; 18   9           tb  9</span>
+<span class="co">#&gt; 19  10 disease-free  1</span>
+<span class="co">#&gt; 20  10           tb  9</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $p_LTBI_to_effectiveTx</span>
 <span class="co">#&gt; (350,1e+05] </span>
@@ -768,11 +548,116 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $call</span>
 <span class="co">#&gt; decision_tree_cluster(parameters = scenario_parameters[[1]], </span>
-<span class="co">#&gt;     n.uk_tb = 10, n.exit_tb = 10, cost_dectree = "osNode_cost_2009.Rds", </span>
+<span class="co">#&gt;     N.mc = interv$N.mc, n.uk_tb = 10, n.exit_tb = 10, cost_dectree = "osNode_cost_2009.Rds", </span>
 <span class="co">#&gt;     health_dectree = "osNode_cost_2009.Rds")</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $N.mc</span>
-<span class="co">#&gt; [1] 2</span></code></pre></div>
+<span class="co">#&gt; [1] 10</span></code></pre></div>
+<p>Multiple scenarios:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lapply</span>(scenario_parameters[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>],
+       decision_tree_cluster,
+       <span class="dt">N.mc =</span> <span class="dv">1</span>,
+       <span class="dt">n.uk_tb =</span> <span class="dv">10</span>, <span class="co">#as.numeric(n.uk_tb),</span>
+       <span class="dt">n.exit_tb =</span> <span class="dv">10</span>, <span class="co">#as.numeric(n.exit_tb),</span>
+       <span class="dt">cost_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>,
+       <span class="dt">health_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>)
+<span class="co">#&gt; $`1`</span>
+<span class="co">#&gt; $`1`$mc_cost</span>
+<span class="co">#&gt; [1] 37.14623</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$mc_health</span>
+<span class="co">#&gt; [1] 86.10194</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$n_tb_screen_all</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  5</span>
+<span class="co">#&gt; 2   1           tb 15</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$n_tb_screen_uk</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  0</span>
+<span class="co">#&gt; 2   1           tb 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$p_LTBI_to_effectiveTx</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;    0.108864 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$subset_pop</span>
+<span class="co">#&gt;    LTBI_pre tests  positive    startTx completeTx      cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.08930096 0.05358058 0.03122406 0.2555931</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$call</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 1, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`1`$N.mc</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`</span>
+<span class="co">#&gt; $`2`$mc_cost</span>
+<span class="co">#&gt; [1] 44.42203</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$mc_health</span>
+<span class="co">#&gt; [1] 102.733</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$n_tb_screen_all</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  2</span>
+<span class="co">#&gt; 2   1           tb 18</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$n_tb_screen_uk</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  0</span>
+<span class="co">#&gt; 2   1           tb 10</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$p_LTBI_to_effectiveTx</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;    0.145152 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$subset_pop</span>
+<span class="co">#&gt;    LTBI_pre tests  positive   startTx completeTx      cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.1190679 0.07144077 0.04163208 0.2451851</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$call</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 1, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`2`$N.mc</span>
+<span class="co">#&gt; [1] 1</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`</span>
+<span class="co">#&gt; $`3`$mc_cost</span>
+<span class="co">#&gt; [1] 53.11109</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$mc_health</span>
+<span class="co">#&gt; [1] 105.4447</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$n_tb_screen_all</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  4</span>
+<span class="co">#&gt; 2   1           tb 16</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$n_tb_screen_uk</span>
+<span class="co">#&gt;   sim       status n</span>
+<span class="co">#&gt; 1   1 disease-free 1</span>
+<span class="co">#&gt; 2   1           tb 9</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$p_LTBI_to_effectiveTx</span>
+<span class="co">#&gt; (350,1e+05] </span>
+<span class="co">#&gt;     0.18144 </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$subset_pop</span>
+<span class="co">#&gt;    LTBI_pre tests  positive   startTx completeTx     cured LTBI_post</span>
+<span class="co">#&gt; 1 0.2868171   0.6 0.1488349 0.1488349 0.08930096 0.0520401  0.234777</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$call</span>
+<span class="co">#&gt; FUN(parameters = X[[i]], N.mc = 1, n.uk_tb = 10, n.exit_tb = 10, </span>
+<span class="co">#&gt;     cost_dectree = "osNode_cost_2009.Rds", health_dectree = "osNode_cost_2009.Rds")</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; $`3`$N.mc</span>
+<span class="co">#&gt; [1] 1</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -782,8 +667,8 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#specific-intervention-data-prep">Specific intervention data prep</a></li>
-      <li><a href="#prep-decision-tree">Prep decision tree</a></li>
+<li><a href="#intervention-specific-data-prep">Intervention specific data prep</a></li>
+      <li><a href="#prepare-decision-tree">Prepare decision tree</a></li>
       <li><a href="#decision-tree-output">Decision tree output</a></li>
       </ul>
 </div>
