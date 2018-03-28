@@ -39,10 +39,10 @@ decision_tree_cluster <- function(parameters,
   p_LTBI_to_effectiveTx <- p_complete_Tx(osNode.cost = osNode.cost,
                                          who_levels = c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"))
 
-  mc_n.tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_effectiveTx,
-                                           n.uk_tb = n.uk_tb,
-                                           n.all_tb = n.uk_tb + n.exit_tb,
-                                           n = N.mc)
+  n_tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_effectiveTx,
+                                        n.uk_tb = n.uk_tb,
+                                        n.all_tb = n.uk_tb + n.exit_tb,
+                                        n = N.mc)
 
   mc_cost <- MonteCarlo_expectedValues(osNode = osNode.cost,
                                        n = N.mc)
@@ -54,7 +54,8 @@ decision_tree_cluster <- function(parameters,
 
   list(mc_cost = as.numeric(mc_cost$`expected values`),
        mc_health = as.numeric(mc_health$`expected values`),
-       mc_n.tb_screen = mc_n.tb_screen,
+       n_tb_screen_all = n_tb_screen$n.tb_screen.all_tb,
+       n_tb_screen_uk  = n_tb_screen$n.tb_screen.uk_tb,
        p_LTBI_to_effectiveTx = p_LTBI_to_effectiveTx,
        subset_pop = subset_pop,
        call = mcall,

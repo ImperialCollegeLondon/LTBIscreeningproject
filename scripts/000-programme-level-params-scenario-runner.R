@@ -18,9 +18,8 @@ devtools::load_all(".")
 data("intervention_constants")
 data("cost_effectivness_params")
 data("scenario_parameters")
-data("year_prob.activetb_cens_exituk")
-data("year_prob.activetb_cmprsk_exituk")
 data("model_input_cohort")
+
 data("global-parameters-scenarios")
 data("global-parameters-scenarios_ls")
 

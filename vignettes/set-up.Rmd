@@ -24,7 +24,7 @@ This is a basic example of how to use the LTBI screening model.
 Other vignettes will show how to then automate some of the running over multiple scenarios, and how to visualised the output.
 
 
-## Fixed model parameters defining an _intervention_
+## Fixed model parameters defining an intervention
 
 Assume that everyone who enters the country doesn't leave.
 ```r
@@ -37,7 +37,7 @@ ENDPOINT_QALY <- "death"
 ENDPOINT_cost <- "death"
 ```
 
-Rather than offer screening to _everyone_ immediately on entry, assume that we screen at random 0-5 years from entry.
+Rather than offer screening to _everyone_ immediately on entry, assume that we screen at a uniformly random time 0-5 years from entry.
 ```r
 screen_with_delay <- TRUE
 MAX_SCREEN_DELAY <- 5

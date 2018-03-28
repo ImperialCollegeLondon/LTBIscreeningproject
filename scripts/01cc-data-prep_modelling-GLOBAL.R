@@ -68,3 +68,4 @@ num_all_tb_QALY <-
     n.uk_tb
   } else if (interv$ENDPOINT_QALY == "death") {
     n.uk_tb + n.exit_tb}
+

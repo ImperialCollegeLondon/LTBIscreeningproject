@@ -18,31 +18,34 @@ if (!exists("dectree_res")) {
 # data format prep --------------------------------------------------------
 
 # convert from scenario-wise to remain-exit format
-n.tb_screen <-
-  purrr::map(dectree_res, "mc_n.tb_screen") %>%
+scenario_res <-
+  dectree_res %>%
   purrr::transpose()
 
-n.tb_screen.all_tb <- n.tb_screen[["n.tb_screen.all_tb"]]
-n.tb_screen.uk_tb  <- n.tb_screen[["n.tb_screen.uk_tb"]]
+n.scenarios <- length(dectree_res)
 
-p_LTBI_to_effectiveTx <-  purrr::map(dectree_res, "p_LTBI_to_effectiveTx") %>% unlist() %>% unname()
+n.diseasefree.all_tb <-
+  scenario_res$n_tb_screen_all %>%
+  purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
+  map(function(x) x$n)
 
-n.scenarios <- length(n.tb_screen.all_tb)
+n.diseasefree.uk_tb  <-
+  scenario_res$n_tb_screen_uk %>%
+  purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
+  map(function(x) x$n)
 
-n.diseasefree.all_tb <- purrr::map(n.tb_screen.all_tb, function(x) dplyr::filter(x, status == "disease-free"))
-n.diseasefree.uk_tb  <- purrr::map(n.tb_screen.uk_tb,  function(x) dplyr::filter(x, status == "disease-free"))
-
-n_all_tb <- subset(dectree_res[[1]]$mc_n.tb_screen$n.tb_screen.all_tb, sim == 1)$n %>% sum()
-n_uk_tb  <- subset(dectree_res[[1]]$mc_n.tb_screen$n.tb_screen.uk_tb, sim == 1)$n %>% sum()
+n_uk_tb <- dectree_res$`1`$call$n.uk_tb
+n_exit_tb <- dectree_res$`1`$call$n.exit_tb
+n_all_tb <- n.exit_tb + n_uk_tb
 
 
 # declare variables
 
-cost.screened <- QALY.screened <- list()
+interv_cost <- interv_cost_vs <- vector(length = n.scenarios, mode = "list")
+interv_QALY <- interv_QALY_vs <- vector(length = n.scenarios, mode = "list")
 cost.screened_person <- QALY.screened_person <- list()
 cost_incur <- cost_incur_person <- list()
 
-cost.statusquo <- QALY.statusquo <- list()
 cost.statusquo_person <- QALY.statusquo_person <- list()
 QALYgain <- QALYgain_person <- list()
 
@@ -54,17 +57,17 @@ E_QALYgain <- E_QALYgain_person <- NA
 
 # extract tb cases only data
 
-cfr <- purrr::discard(IMPUTED_sample_year_cohort$cfr, is.na)
+cfr <- purrr::discard(cohort$cfr, is.na)
 
-QALY_statusquo <- purrr::discard(IMPUTED_sample_year_cohort$QALY_statusquo, is.na)
-QALY_diseasefree <- purrr::discard(IMPUTED_sample_year_cohort$QALY_diseasefree, is.na)
-QALY_cured <- purrr::discard(IMPUTED_sample_year_cohort$QALY_cured, is.na)
-QALY_fatality <- purrr::discard(IMPUTED_sample_year_cohort$QALY_fatality, is.na)
+QALY_statusquo <- purrr::discard(cohort$QALY_statusquo, is.na)
+QALY_diseasefree <- purrr::discard(cohort$QALY_diseasefree, is.na)
+QALY_cured <- purrr::discard(cohort$QALY_cured, is.na)
+QALY_fatality <- purrr::discard(cohort$QALY_fatality, is.na)
 
-uk_notif_discounts <- purrr::discard(IMPUTED_sample_year_cohort$uk_notif_discounts, is.na)
-all_notif_discounts <- purrr::discard(IMPUTED_sample_year_cohort$all_notif_discounts, is.na)
-uk_secondary_inf_discounts <- purrr::discard(IMPUTED_sample_year_cohort$uk_secondary_inf_discounts, is.na)
-all_secondary_inf_discounts <- purrr::discard(IMPUTED_sample_year_cohort$all_secondary_inf_discounts, is.na)
+uk_notif_discounts <- purrr::discard(cohort$uk_notif_discounts, is.na)
+all_notif_discounts <- purrr::discard(cohort$all_notif_discounts, is.na)
+uk_secondary_inf_discounts <- purrr::discard(cohort$uk_secondary_inf_discounts, is.na)
+all_secondary_inf_discounts <- purrr::discard(cohort$all_secondary_inf_discounts, is.na)
 
 
 # expected statistics ------------------------------------------------------
@@ -83,116 +86,65 @@ for (s in seq_len(n.scenarios)) {
 
   print(sprintf("[ population model ] scenario: %d", s))
 
-  cost.screened[[s]] <- QALY.screened[[s]] <- NA
   cost_incur[[s]] <- cost_incur_person[[s]] <- NA   #cost[screen] - cost[statusquo]
   QALYgain[[s]] <- QALYgain_person[[s]]  <- NA   #QALY[screen] - QALY[statusquo]
-  QALY.statusquo[[s]] <- cost.statusquo[[s]] <- NA
   QALY.statusquo_person[[s]] <- cost.statusquo_person[[s]] <- NA
   QALY.screened_person[[s]] <- cost.screened_person[[s]] <- NA
 
   set.seed(12345)
+  N.mc <- dectree_res$`1`$call$N.mc
 
   # QALYs and cost with screening -------------------------------------------
 
   for (i in seq_len(N.mc)) {
 
-    # removed randomness
-    # unit_cost.aTB_TxDx <- mean_cost.aTB_TxDx
+    interv_cost[[s]][[i]] <- scenario_cost(interv,
+                                           unit_cost,
+                                           NUM_SECONDARY_INF,
+                                           uk_secondary_inf_discounts,
+                                           num_all_tb_QALY,
+                                           uk_notif_discounts,
+                                           n.diseasefree.all_tb[[s]][i],
+                                           n.diseasefree.uk_tb[[s]][i])
 
-    unit_cost.aTB_TxDx <-
-      unit_cost$aTB_TxDx %>%
-      treeSimR::sample_distributions() %>%
-      sum()
-
-    # secondary infections
-    # in following year
-    # removed randomness
-    # num_sec_inf <- mean_num_sec_inf
-
-    num_sec_inf <-
-      NUM_SECONDARY_INF %>%
-      treeSimR::sample_distributions() %>%
-      unlist()
-
-    num_avoided.all_tb <- n.diseasefree.all_tb[[s]][i, 'n']
-    num_avoided.uk_tb  <- n.diseasefree.uk_tb[[s]][i, 'n']
-
-    # random sample individuals
-    who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
-                                 size = unlist(num_avoided.all_tb),
-                                 replace = FALSE)
-
-    if (ENDPOINT_cost == "exit uk") {
-
-      cost_notif.statusquo <- cost_tb_notif(num_sec_inf,
-                                            unit_cost.aTB_TxDx,
-                                            uk_secondary_inf_discounts,
-                                            uk_notif_discounts)
-      cost_notif.screened <- cost_notif.statusquo
-
-      ##TODO: remove randomness for testing
-      # random sample individuals
-      who_tb_avoided_cost <- sample(x = seq_along(cost_notif.screened),
-                                    size = unlist(num_avoided.uk_tb),
-                                    replace = FALSE)
-
-      # use this so that more cases avoided is always more QALYs gained
-      # creates clumped data tho
-      # who_tb_avoided_cost <- seq(1, unlist(num_avoided.uk_tb))
-
-    }else if (ENDPOINT_cost == "death") {
-
-      cost_notif.statusquo <- cost_tb_notif(num_sec_inf,
-                                            unit_cost.aTB_TxDx,
-                                            all_secondary_inf_discounts,
-                                            all_notif_discounts)
-      cost_notif.screened <- cost_notif.statusquo
-
-      who_tb_avoided_cost <- who_all_tb_avoided
-
-      # use this so that more cases avoided is always more QALYs gained
-      # who_tb_avoided_cost <- seq(1, unlist(num_avoided.all_tb))
-    }
-
-    cost_notif.screened[who_tb_avoided_cost] <- 0
-
-    cost.statusquo[[s]][i] <- sum(cost_notif.statusquo)
-    cost.screened[[s]][i]  <- sum(cost_notif.screened)
-
-    # use this so that more cases avoided is always more QALYs gained
-    # who_all_tb_avoided <- seq(1, unlist(num_avoided.all_tb))
-
-    QALY_screened <- QALY_statusquo
-    QALY_screened[who_all_tb_avoided] <- QALY_diseasefree[who_all_tb_avoided]
-
-    QALY.statusquo[[s]][i] <- sum(QALY_statusquo)
-    QALY.screened[[s]][i]  <- sum(QALY_screened)
+    interv_QALY[[s]][[i]] <- scenario_QALY(n.diseasefree.all_tb[[s]][i],
+                                           n.diseasefree.uk_tb[[s]][i],
+                                           num_all_tb_QALY)
   }
 
-  E_QALY_notif.screened[s] <- sum(p_LTBI_to_effectiveTx[s] * QALY_diseasefree + (1 - p_LTBI_to_effectiveTx[s]) * E_QALY_notif.statusquo)
+  interv_cost_vs[[s]] <-
+    interv_cost[[s]] %>%
+    purrr::transpose() %>%
+    simplify_all()
 
+  interv_QALY_vs[[s]] <-
+    interv_QALY[[s]] %>%
+    purrr::transpose() %>%
+    simplify_all()
 
-  E_cost_notif.screened[s] <- (1 - p_LTBI_to_effectiveTx[s]) * sum(E_cost_notif.statusquo)
+  E_QALY_notif.screened[s] <- sum(scenario_res$p_LTBI_to_effectiveTx[[s]] * QALY_diseasefree +
+                                  (1 - scenario_res$p_LTBI_to_effectiveTx[[s]]) * E_QALY_notif.statusquo)
 
+  E_cost_notif.screened[s] <- (1 - scenario_res$p_LTBI_to_effectiveTx[[s]]) * sum(E_cost_notif.statusquo)
 
   # final cost-effectiveness statistics  ---------------------------------------
 
-  QALY.screened_person[[s]]  <- QALY.screened[[s]]/pop_year
-  QALY.statusquo_person[[s]] <- QALY.statusquo[[s]]/pop_year
+  QALY.screened_person[[s]]  <- interv_QALY_vs[[s]]$screened/pop_year
+  QALY.statusquo_person[[s]] <- interv_QALY_vs[[s]]$statusquo/pop_year
 
   # Q1 - Q0: +ve good
   # C1 - C0: +ve bad
 
-  QALYgain[[s]] <- QALY.screened[[s]] - QALY.statusquo[[s]]
+  QALYgain[[s]] <- interv_QALY_vs[[s]]$screened - interv_QALY_vs[[s]]$statusquo
 
   # per person
   QALYgain_person[[s]] <- QALYgain[[s]]/pop_year
 
   # cost incurred per person for each simulation
-  cost.screened_person[[s]]  <- cost.screened[[s]]/pop_year
-  cost.statusquo_person[[s]] <- cost.statusquo[[s]]/pop_year
+  cost.screened_person[[s]]  <- interv_cost_vs[[s]]$screened/pop_year
+  cost.statusquo_person[[s]] <- interv_cost_vs[[s]]$statusquo/pop_year
 
-  cost_incur[[s]] <- cost.screened[[s]] - cost.statusquo[[s]]
+  cost_incur[[s]] <- interv_cost_vs[[s]]$screened - interv_cost_vs[[s]]$statusquo
   cost_incur_person[[s]] <- cost_incur[[s]]/pop_year
 
   E_cost_incur[s] <- E_cost_notif.screened[s] - sum(E_cost_notif.statusquo)
@@ -205,10 +157,10 @@ for (s in seq_len(n.scenarios)) {
 
 #  save --------------------------------------------------------------------
 
-aTB_CE_stats <- list(QALY.statusquo = QALY.statusquo,
-                     cost.statusquo = cost.statusquo,
-                     QALY.screened = QALY.screened,
-                     cost.screened = cost.screened,
+aTB_CE_stats <- list(QALY.statusquo = map(interv_QALY_vs, "statusquo"),
+                     cost.statusquo = map(interv_cost_vs, "statusquo"),
+                     QALY.screened = map(interv_QALY_vs, "screened"),
+                     cost.screened = map(interv_cost_vs, "screened"),
                      QALY.screened_person = QALY.screened_person,
                      QALY.statusquo_person = QALY.statusquo_person,
                      cost.screened_person = cost.screened_person,

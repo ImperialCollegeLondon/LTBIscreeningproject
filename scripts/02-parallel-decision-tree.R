@@ -18,7 +18,7 @@ if (getwd() != "Q:/R/cluster--LTBI-decision-tree") {
 source("scripts/cluster-prep-decisiontree-data.R")
 
 # if decisiontree uses pmin, pmax
-source("scripts/cluster-prep-decisiontree-data_pdistn.R")
+# source("scripts/cluster-prep-decisiontree-data_pdistn.R")
 
 setwd("Q:/R/cluster--LTBI-decision-tree")
 
@@ -74,7 +74,9 @@ save(dectree_res, file = miscUtilities::pastef(exit_wd, diroutput, "dectree_res.
 setwd(exit_wd)
 
 
-##to debug
+
+# to debug ----------------------------------------------------------------
+
 # res <- lapply(scenario_parameters,
 #               decision_tree_cluster,
 #               N.mc = N.mc,
@@ -84,8 +86,8 @@ setwd(exit_wd)
 xx <- decision_tree_cluster(parameters = scenario_parameters[[1]],
                             n.uk_tb = 10,
                             n.exit_tb = 10,
-                            cost_dectree = "data/osNode_cost_2009.Rds",
-                            health_dectree = "data/osNode_health_2009.Rds")
+                            cost_dectree = "vignettes/osNode_cost_2009.Rds",
+                            health_dectree = "vignettes/osNode_health_2009.Rds")
 #
 # xx <- decision_tree_cluster(parameters = scenario_parameters[[1]][1:3, ],
 #                             n.uk_tb = 10,
