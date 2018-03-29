@@ -68,38 +68,67 @@ lapply(scenario_res, function(x) lapply(x, head))
 
 We need to extract some specific values and initialise the variables for the cost-effectiveness statistics.
 
-```{r}
-n.scenarios <- length(dectree_res)
+Number of TB cases in status-quo scenario.
 
-n.diseasefree.all_tb <-
+```{r}
+n_uk_tb <- dectree_res$`1`$call$n.uk_tb
+n_exit_tb <- dectree_res$`1`$call$n.exit_tb
+n_all_tb <- n_exit_tb + n_uk_tb
+```
+
+Numbers of individuals who avoid getting TB due to screening.
+
+```{r}
+avoid_all_tb <-
   scenario_res$n_tb_screen_all %>%
   purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
   map(function(x) x$n)
 
-n.diseasefree.uk_tb  <-
+avoid_uk_tb  <-
   scenario_res$n_tb_screen_uk %>%
   purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
   map(function(x) x$n)
 
-n_uk_tb <- dectree_res$`1`$call$n.uk_tb
-n_exit_tb <- dectree_res$`1`$call$n.exit_tb
-n_all_tb <- n_exit_tb + n_uk_tb
+avoid_tb <-
+  mapply(function(x,y) cbind(x, y),
+         avoid_all_tb,
+         avoid_uk_tb,
+         SIMPLIFY = FALSE) %>% 
+  map(`colnames<-`, c('all','uk'))
+```
 
+Define some variables we'll need later.
+
+```{r}
+n.scenarios <- length(dectree_res)
 N.mc <- dectree_res$`1`$call$N.mc
 
 interv_cost <- vector(length = N.mc, mode = "list")
 interv_QALY <- vector(length = N.mc, mode = "list")
 CE_stats <- vector(length = n.scenarios, mode = "list")
 
-
 pop_year <-  1000 ##TODO: get real value
 ```
 
 
-Extract TB cases only data
+We also calculate the expected statistics for reproducability and comparison with the randomly generated values.
 
 ```{r}
-costeff_data <-
+mean_cost.aTB_TxDx <-
+  unit_cost$aTB_TxDx %>% 
+  means_distributions() %>%
+  sum()
+
+mean_num_sec_inf <-
+  NUM_SECONDARY_INF %>%
+  means_distributions() %>%
+  unlist()
+```
+
+Extract cost-effectiveness variables from main individual-level data set.
+
+```{r}
+costeff_cohort <-
   cohort %>%
   select(cfr,
          QALY_statusquo,
@@ -109,24 +138,13 @@ costeff_data <-
          uk_notif_discounts,
          all_notif_discounts,
          uk_secondary_inf_discounts,
-         all_secondary_inf_discounts) %>%
+         all_secondary_inf_discounts) %>% 
+  mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
+         E_cost_notif_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
+         E_QALY_notif_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured)) %>%
   stats::na.omit()
 ```
 
-
-We also calculate the expected statistics for reproducability and comparison with the randomly generated values.
-
-```{r}
-
-mean_cost.aTB_TxDx <- means_distributions(unit_cost$aTB_TxDx) %>% sum()
-mean_num_sec_inf <- means_distributions(NUM_SECONDARY_INF) %>% unlist()
-
-expected_costeff <-
-  costeff_data %>% 
-  transmute(cost_secondary_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
-            cost_notif.statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + cost_secondary_inf,
-            QALY_notif.statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))
-```
 
 
 ## Main calculation
@@ -142,19 +160,16 @@ for (s in seq_len(n.scenarios)) {
 
   for (i in seq_len(N.mc)) {
     
-    interv_cost[[i]] <- scenario_cost(interv,
-                                      unit_cost,
+    interv_cost[[i]] <- scenario_cost(interv$ENDPOINT_cost,
+                                      unit_cost$aTB_TxDx,
                                       NUM_SECONDARY_INF,
-                                      costeff_data$uk_secondary_inf_discounts,
-                                      num_all_tb_QALY = n_all_tb,
-                                      costeff_data$uk_notif_discounts,
-                                      n.diseasefree.all_tb[[s]][i],
-                                      n.diseasefree.uk_tb[[s]][i])
+                                      costeff_cohort,
+                                      total_tb = n_all_tb,
+                                      avoid_tb[[s]][i, ])
     
-    interv_QALY[[i]] <- scenario_QALY(avoided = n.diseasefree.all_tb[[s]][i],
+    interv_QALY[[i]] <- scenario_QALY(avoided = avoid_tb[[s]][i, ],
                                       total = n_all_tb,
-                                      costeff_data$QALY_statusquo,
-                                      costeff_data$QALY_diseasefree)
+                                      costeff_cohort)
   }
   
   CE_stats[[s]] <- costeff_stats(scenario_res[[s]],

@@ -3,8 +3,7 @@
 #'
 #' @param avoided
 #' @param total
-#' @param QALY_statusquo
-#' @param QALY_diseasefree
+#' @param costeff_data
 #'
 #' @return
 #' @export
@@ -12,12 +11,14 @@
 #' @examples
 scenario_QALY <- function(avoided,
                           total,
-                          QALY_statusquo,
-                          QALY_diseasefree) {
+                          costeff_data) {
+
+  QALY_statusquo <- costeff_data$QALY_statusquo
+  QALY_diseasefree <- costeff_data$QALY_diseasefree
 
   # random sample individuals
-  who_all_tb_avoided <- sample(x = 1:unlist(total),
-                               size = unlist(avoided),
+  who_all_tb_avoided <- sample(x = seq_num(total),
+                               size = avoid_tb['all'],
                                replace = FALSE)
 
   screened <- QALY_statusquo
