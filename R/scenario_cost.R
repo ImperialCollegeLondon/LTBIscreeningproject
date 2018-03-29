@@ -42,7 +42,7 @@ scenario_cost <- function(interv,
     unlist()
 
   # random sample individuals
-  who_all_tb_avoided <- sample(x = 1:unlist(num_all_tb_QALY),
+  who_all_tb_avoided <- sample(x = seq_len(num_all_tb_QALY),
                                size = unlist(num_avoided.all_tb),
                                replace = FALSE)
 
