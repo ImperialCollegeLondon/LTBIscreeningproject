@@ -43,7 +43,7 @@ data("model_input_cohort", package = "LTBIscreeningproject")
 ```
 
 
-## Intervention specific data prep
+## Intervention specific individual-level data
 
 According to the parameter values we specified in `interv` we first need to prepare the cohort data set to only include those individuals we're interested in analysing.
 

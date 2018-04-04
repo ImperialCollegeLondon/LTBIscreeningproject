@@ -46,15 +46,15 @@ cohort <- readRDS("cohort.Rds")
 ```
 
 It is sometimes arkward to use the decision tree output in the format with the scenario number as the top level.
-It may be more useful to have each output type at the top level, so we _transpose_ the data.
+It may be more useful to have each output type at the top level instead, so we _transpose_ the data.
 
-From
+From:
 
 ```{r}
 lapply(dectree_res, FUN = function(x) lapply(x, head))
 ```
 
-to
+to:
 
 ```{r}
 # convert from scenario-wise to parameter-wise format
@@ -64,7 +64,6 @@ scenario_res <-
 
 lapply(scenario_res, function(x) lapply(x, head))
 ```
-
 
 We need to extract some specific values and initialise the variables for the cost-effectiveness statistics.
 
@@ -95,6 +94,9 @@ avoid_tb <-
          avoid_uk_tb,
          SIMPLIFY = FALSE) %>% 
   map(`colnames<-`, c('all','uk'))
+
+rm(avoid_all_tb,
+   avoid_uk_tb)
 ```
 
 Define some variables we'll need later.
@@ -125,7 +127,7 @@ mean_num_sec_inf <-
   unlist()
 ```
 
-Extract cost-effectiveness variables from main individual-level data set.
+Extract cost-effectiveness variables from main individual-level data set and create some more expected statistics using these.
 
 ```{r}
 costeff_cohort <-
@@ -140,48 +142,52 @@ costeff_cohort <-
          uk_secondary_inf_discounts,
          all_secondary_inf_discounts) %>% 
   mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
-         E_cost_notif_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
-         E_QALY_notif_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured)) %>%
+         E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
+         E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured)) %>%
   stats::na.omit()
 ```
-
 
 
 ## Main calculation
 
 We iterate over all scenarios and all Monte-Carlo samples.
-The `scenario_cost` and `scenario_QALY` functions calculate the values for each.
+The `scenario_cost` and `scenario_QALY` functions calculate the respective values for each.
 We then transpose the returned values from these functions and calculate the final statistics.
 
 ```{r}
-for (s in seq_len(n.scenarios)) {
+interv_scenario_cost <- partial(scenario_cost,
+                                endpoint = interv$ENDPOINT_cost,
+                                unit_cost.aTB_TxDx = unit_cost$aTB_TxDx,
+                                num_2nd_inf = NUM_SECONDARY_INF,
+                                costeff_cohort = costeff_cohort,
+                                total_tb = n_all_tb)
 
-  set.seed(12345)
+interv_scenario_QALY <- partial(scenario_QALY,
+                                total = n_all_tb,
+                                costeff_data = costeff_cohort)
+
+
+for (s in seq_len(n.scenarios)) {
 
   for (i in seq_len(N.mc)) {
     
-    interv_cost[[i]] <- scenario_cost(interv$ENDPOINT_cost,
-                                      unit_cost$aTB_TxDx,
-                                      NUM_SECONDARY_INF,
-                                      costeff_cohort,
-                                      total_tb = n_all_tb,
-                                      avoid_tb[[s]][i, ])
+    # set.seed(12345)
     
-    interv_QALY[[i]] <- scenario_QALY(avoided = avoid_tb[[s]][i, ],
-                                      total = n_all_tb,
-                                      costeff_cohort)
+    num_avoided <- avoid_tb[[s]][i, ]
+    
+    interv_cost[[i]] <- interv_scenario_cost(num_avoided)
+    interv_QALY[[i]] <- interv_scenario_QALY(num_avoided)
   }
   
-  CE_stats[[s]] <- costeff_stats(scenario_res[[s]],
-                                 interv_QALY,
-                                 interv_cost,
-                                 costeff_data,
-                                 expected_costeff)
+  CE_stats[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
+                                 interv_QALY = interv_QALY,
+                                 interv_cost = interv_cost,
+                                 pop_year = pop_year)
 }
 
 
-#transpose CE_stats?
-
+# CE_stats %>% purrr::transpose()
+##TODO:
 aTB_CE_stats <- list(QALY.statusquo = map(interv_QALY_vs, "statusquo"),
                      cost.statusquo = map(interv_cost_vs, "statusquo"),
                      QALY.screened = map(interv_QALY_vs, "screened"),
@@ -202,71 +208,6 @@ aTB_CE_stats <- list(QALY.statusquo = map(interv_QALY_vs, "statusquo"),
 
 save(aTB_CE_stats,
      file = "aTB_CE_stats.RData")
-```
-
-
-
-```{r}
-
-#' costeff_stats
-#'
-#' @param scenario_res 
-#' @param interv_QALY
-#' @param interv_cost
-#' @param costeff_data 
-#' @param expected_costeff
-#' @param pop_year
-#'
-#' @return
-#' @export
-#'
-#' @examples
-
-costeff_stats <- function(scenario_res,
-                          interv_QALY,
-                          interv_cost,
-                          costeff_data,
-                          expected_costeff,
-                          pop_year) {
-  
-  interv_cost_vs <-
-    interv_cost %>%
-    purrr::transpose() %>%
-    simplify_all()
-  
-  interv_QALY_vs <-
-    interv_QALY %>%
-    purrr::transpose() %>%
-    simplify_all()
-  
-  return(list(
-    interv_cost_vs = interv_cost_vs,
-    interv_QALY_vs = interv_QALY_vs,
-    E_QALY_notif.screened = sum(scenario_res$p_LTBI_to_effectiveTx * costeff_data$QALY_diseasefree +
-                                  (1 - scenario_res$p_LTBI_to_effectiveTx) * expected_costeff$QALY_notif.statusquo),
-    
-    E_cost_notif.screened = (1 - scenario_res$p_LTBI_to_effectiveTx) * sum(expected_costeff$cost_notif.statusquo),
-    
-    QALY.screened_person = interv_QALY_vs$screened/pop_year,
-    QALY.statusquo_person = interv_QALY_vs$statusquo/pop_year,
-    
-    QALYgain = interv_QALY_vs$screened - interv_QALY_vs$statusquo,
-    
-    QALYgain_person = QALYgain/pop_year,
-    
-    cost.screened_person = interv_cost_vs$screened/pop_year,
-    cost.statusquo_person = interv_cost_vs$statusquo/pop_year,
-    
-    cost_incur = interv_cost_vs$screened - interv_cost_vs$statusquo,
-    cost_incur_person = cost_incur/pop_year,
-    
-    E_cost_incur = E_cost_notif.screened - sum(expected_costeff$cost_notif.statusquo),
-    E_cost_incur_person = E_cost_incur/pop_year,
-    
-    E_QALYgain = E_QALY_notif.screened - sum(expected_costeff$QALY_notif.statusquo),
-    E_QALYgain_person = E_QALYgain/pop_year))
-}
-
 ```
 
 
