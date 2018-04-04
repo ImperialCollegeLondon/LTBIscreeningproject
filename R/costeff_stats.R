@@ -6,11 +6,11 @@
 #' @param interv_cost
 #' @param pop_year
 #'
-#' @return
+#' @return list
 #' @export
 #'
 #' @examples
-
+#'
 costeff_stats <- function(scenario_dat,
                           interv_QALY,
                           interv_cost,
@@ -51,17 +51,16 @@ costeff_stats <- function(scenario_dat,
       E_QALY_screened = mean(interv_QALY_vs$screened),
       QALY.screened_person = interv_QALY_vs$screened/pop_year,
       QALY.statusquo_person = interv_QALY_vs$statusquo/pop_year,
-      QALYgain = interv_QALY_vs$screened - interv_QALY_vs$statusquo)
+      QALYgain = interv_QALY_vs$screened - interv_QALY_vs$statusquo) %>%
 
-  return(
-    c(res,
+    update_list(
+      cost_incur_person = ~cost_incur/pop_year,
+      E_cost_incur = ~mean(cost_incur),
+      E_cost_incur_person = ~mean(cost_incur/pop_year),
 
-      cost_incur_person = list(res$cost_incur/pop_year),
-      E_cost_incur = mean(res$cost_incur),
-      E_cost_incur_person = mean(res$cost_incur/pop_year),
+      QALYgain_person = ~QALYgain/pop_year,
+      E_QALYgain = ~mean(QALYgain),
+      E_QALYgain_person = ~mean(QALYgain/pop_year))
 
-      QALYgain_person = list(res$QALYgain/pop_year),
-      E_QALYgain = mean(res$QALYgain),
-      E_QALYgain_person = mean(res$QALYgain/pop_year)
-    ))
+  return(res)
 }

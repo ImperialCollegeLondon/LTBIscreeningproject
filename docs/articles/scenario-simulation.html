@@ -81,7 +81,7 @@
       <h1>A scenario decision tree simulation</h1>
                         <h4 class="author">Nathan Green</h4>
             
-            <h4 class="date">2018-03-28</h4>
+            <h4 class="date">2018-04-04</h4>
       
       
 
@@ -102,9 +102,9 @@
 <span class="kw">data</span>(<span class="st">"cost_effectivness_params"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 <span class="kw">data</span>(<span class="st">"scenario_parameters"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)
 <span class="kw">data</span>(<span class="st">"model_input_cohort"</span>, <span class="dt">package =</span> <span class="st">"LTBIscreeningproject"</span>)</code></pre></div>
-<div id="intervention-specific-data-prep" class="section level2">
+<div id="intervention-specific-individual-level-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#intervention-specific-data-prep" class="anchor"></a>Intervention specific data prep</h2>
+<a href="#intervention-specific-individual-level-data" class="anchor"></a>Intervention specific individual-level data</h2>
 <p>According to the parameter values we specified in <code>interv</code> we first need to prepare the cohort data set to only include those individuals we’re interested in analysing.</p>
 <p>Only use a single year cohort</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">cohort &lt;-<span class="st"> </span>dplyr<span class="op">::</span><span class="kw"><a href="http://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(IMPUTED_sample,
@@ -487,50 +487,50 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
                       <span class="dt">cost_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>,
                       <span class="dt">health_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>)
 <span class="co">#&gt; $mc_cost</span>
-<span class="co">#&gt;  [1] 36.39428 36.25581 36.05193 36.43912 36.41619 36.40893 36.62926 36.17997 36.25634 37.11173</span>
+<span class="co">#&gt;  [1] 36.09209 36.30532 36.82480 36.77348 36.32879 36.79551 36.18050 36.96167 36.42619 36.46997</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $mc_health</span>
-<span class="co">#&gt;  [1] 80.15402 81.14604 96.29806 82.31646 95.62722 87.69414 83.54713 78.22763 93.51087 95.87006</span>
+<span class="co">#&gt;  [1] 80.05278 87.63734 76.64702 82.01762 91.47051 79.00273 92.21092 98.96609 88.81429 92.39271</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $n_tb_screen_all</span>
 <span class="co">#&gt;    sim       status  n</span>
-<span class="co">#&gt; 1    1 disease-free  0</span>
-<span class="co">#&gt; 2    1           tb 20</span>
-<span class="co">#&gt; 3    2 disease-free  3</span>
-<span class="co">#&gt; 4    2           tb 17</span>
-<span class="co">#&gt; 5    3 disease-free  3</span>
-<span class="co">#&gt; 6    3           tb 17</span>
-<span class="co">#&gt; 7    4 disease-free  3</span>
-<span class="co">#&gt; 8    4           tb 17</span>
-<span class="co">#&gt; 9    5 disease-free  1</span>
-<span class="co">#&gt; 10   5           tb 19</span>
+<span class="co">#&gt; 1    1 disease-free  2</span>
+<span class="co">#&gt; 2    1           tb 18</span>
+<span class="co">#&gt; 3    2 disease-free  2</span>
+<span class="co">#&gt; 4    2           tb 18</span>
+<span class="co">#&gt; 5    3 disease-free  5</span>
+<span class="co">#&gt; 6    3           tb 15</span>
+<span class="co">#&gt; 7    4 disease-free  0</span>
+<span class="co">#&gt; 8    4           tb 20</span>
+<span class="co">#&gt; 9    5 disease-free  0</span>
+<span class="co">#&gt; 10   5           tb 20</span>
 <span class="co">#&gt; 11   6 disease-free  1</span>
 <span class="co">#&gt; 12   6           tb 19</span>
-<span class="co">#&gt; 13   7 disease-free  2</span>
-<span class="co">#&gt; 14   7           tb 18</span>
-<span class="co">#&gt; 15   8 disease-free  5</span>
-<span class="co">#&gt; 16   8           tb 15</span>
-<span class="co">#&gt; 17   9 disease-free  1</span>
-<span class="co">#&gt; 18   9           tb 19</span>
-<span class="co">#&gt; 19  10 disease-free  4</span>
-<span class="co">#&gt; 20  10           tb 16</span>
+<span class="co">#&gt; 13   7 disease-free  1</span>
+<span class="co">#&gt; 14   7           tb 19</span>
+<span class="co">#&gt; 15   8 disease-free  1</span>
+<span class="co">#&gt; 16   8           tb 19</span>
+<span class="co">#&gt; 17   9 disease-free  0</span>
+<span class="co">#&gt; 18   9           tb 20</span>
+<span class="co">#&gt; 19  10 disease-free  2</span>
+<span class="co">#&gt; 20  10           tb 18</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $n_tb_screen_uk</span>
 <span class="co">#&gt;    sim       status  n</span>
-<span class="co">#&gt; 1    1 disease-free  0</span>
-<span class="co">#&gt; 2    1           tb 10</span>
-<span class="co">#&gt; 3    2 disease-free  1</span>
-<span class="co">#&gt; 4    2           tb  9</span>
-<span class="co">#&gt; 5    3 disease-free  0</span>
-<span class="co">#&gt; 6    3           tb 10</span>
-<span class="co">#&gt; 7    4 disease-free  1</span>
-<span class="co">#&gt; 8    4           tb  9</span>
+<span class="co">#&gt; 1    1 disease-free  1</span>
+<span class="co">#&gt; 2    1           tb  9</span>
+<span class="co">#&gt; 3    2 disease-free  2</span>
+<span class="co">#&gt; 4    2           tb  8</span>
+<span class="co">#&gt; 5    3 disease-free  1</span>
+<span class="co">#&gt; 6    3           tb  9</span>
+<span class="co">#&gt; 7    4 disease-free  2</span>
+<span class="co">#&gt; 8    4           tb  8</span>
 <span class="co">#&gt; 9    5 disease-free  0</span>
 <span class="co">#&gt; 10   5           tb 10</span>
-<span class="co">#&gt; 11   6 disease-free  1</span>
-<span class="co">#&gt; 12   6           tb  9</span>
-<span class="co">#&gt; 13   7 disease-free  2</span>
-<span class="co">#&gt; 14   7           tb  8</span>
+<span class="co">#&gt; 11   6 disease-free  2</span>
+<span class="co">#&gt; 12   6           tb  8</span>
+<span class="co">#&gt; 13   7 disease-free  1</span>
+<span class="co">#&gt; 14   7           tb  9</span>
 <span class="co">#&gt; 15   8 disease-free  2</span>
 <span class="co">#&gt; 16   8           tb  8</span>
 <span class="co">#&gt; 17   9 disease-free  1</span>
@@ -563,15 +563,15 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
        <span class="dt">health_dectree =</span> <span class="st">"osNode_cost_2009.Rds"</span>)
 <span class="co">#&gt; $`1`</span>
 <span class="co">#&gt; $`1`$mc_cost</span>
-<span class="co">#&gt; [1] 37.14623</span>
+<span class="co">#&gt; [1] 36.36745</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`1`$mc_health</span>
-<span class="co">#&gt; [1] 86.10194</span>
+<span class="co">#&gt; [1] 80.86949</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`1`$n_tb_screen_all</span>
 <span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  5</span>
-<span class="co">#&gt; 2   1           tb 15</span>
+<span class="co">#&gt; 1   1 disease-free  0</span>
+<span class="co">#&gt; 2   1           tb 20</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`1`$n_tb_screen_uk</span>
 <span class="co">#&gt;   sim       status  n</span>
@@ -596,20 +596,20 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`2`</span>
 <span class="co">#&gt; $`2`$mc_cost</span>
-<span class="co">#&gt; [1] 44.42203</span>
+<span class="co">#&gt; [1] 44.86165</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`2`$mc_health</span>
-<span class="co">#&gt; [1] 102.733</span>
+<span class="co">#&gt; [1] 110.3187</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`2`$n_tb_screen_all</span>
 <span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  2</span>
-<span class="co">#&gt; 2   1           tb 18</span>
+<span class="co">#&gt; 1   1 disease-free  1</span>
+<span class="co">#&gt; 2   1           tb 19</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`2`$n_tb_screen_uk</span>
-<span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  0</span>
-<span class="co">#&gt; 2   1           tb 10</span>
+<span class="co">#&gt;   sim       status n</span>
+<span class="co">#&gt; 1   1 disease-free 2</span>
+<span class="co">#&gt; 2   1           tb 8</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`2`$p_LTBI_to_effectiveTx</span>
 <span class="co">#&gt; (350,1e+05] </span>
@@ -629,20 +629,20 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`3`</span>
 <span class="co">#&gt; $`3`$mc_cost</span>
-<span class="co">#&gt; [1] 53.11109</span>
+<span class="co">#&gt; [1] 52.29912</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`3`$mc_health</span>
-<span class="co">#&gt; [1] 105.4447</span>
+<span class="co">#&gt; [1] 135.1278</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`3`$n_tb_screen_all</span>
 <span class="co">#&gt;   sim       status  n</span>
-<span class="co">#&gt; 1   1 disease-free  4</span>
-<span class="co">#&gt; 2   1           tb 16</span>
+<span class="co">#&gt; 1   1 disease-free  1</span>
+<span class="co">#&gt; 2   1           tb 19</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`3`$n_tb_screen_uk</span>
-<span class="co">#&gt;   sim       status n</span>
-<span class="co">#&gt; 1   1 disease-free 1</span>
-<span class="co">#&gt; 2   1           tb 9</span>
+<span class="co">#&gt;   sim       status  n</span>
+<span class="co">#&gt; 1   1 disease-free  0</span>
+<span class="co">#&gt; 2   1           tb 10</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $`3`$p_LTBI_to_effectiveTx</span>
 <span class="co">#&gt; (350,1e+05] </span>
@@ -667,7 +667,7 @@ pLatentTB.who &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#intervention-specific-data-prep">Intervention specific data prep</a></li>
+<li><a href="#intervention-specific-individual-level-data">Intervention specific individual-level data</a></li>
       <li><a href="#prepare-decision-tree">Prepare decision tree</a></li>
       <li><a href="#decision-tree-output">Decision tree output</a></li>
       </ul>

@@ -150,7 +150,7 @@ costeff_cohort <-
 ```
 
 
-## Calculate cost-effectivness statistics for all scenarios
+## Calculate cost-effectiveness statistics for each scenario
 
 We iterate over all scenarios and all Monte-Carlo samples.
 The `scenario_cost` and `scenario_QALY` functions calculate the respective values for each.
@@ -186,6 +186,8 @@ for (s in seq_len(n.scenarios)) {
 }
 
 aTB_CE_stats <- stats_scenario %>% purrr::transpose()
+
+aTB_CE_stats
 
 save(aTB_CE_stats,
      file = "aTB_CE_stats.RData")
