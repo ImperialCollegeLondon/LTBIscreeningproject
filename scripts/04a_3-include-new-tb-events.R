@@ -95,7 +95,7 @@ IMPUTED_sample <-
                                           yes = QALY_all_tb$diseasefree,
                                           no = NA),
                 QALY_cured = ifelse(test = all_tb,
-                                    yes = QALY_all_tb$diseasefree,
+                                    yes = QALY_all_tb$cured,
                                     no = NA),
                 QALY_statusquo = ifelse(test = tb_fatality,
                                         yes = QALY_fatality,
