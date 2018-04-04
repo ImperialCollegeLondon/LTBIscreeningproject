@@ -5,8 +5,10 @@ date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
-  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include = FALSE}
@@ -107,7 +109,7 @@ N.mc <- dectree_res$`1`$call$N.mc
 
 interv_cost <- vector(length = N.mc, mode = "list")
 interv_QALY <- vector(length = N.mc, mode = "list")
-CE_stats <- vector(length = n.scenarios, mode = "list")
+stats_scenario <- vector(length = n.scenarios, mode = "list")
 
 pop_year <-  1000 ##TODO: get real value
 ```
@@ -148,11 +150,11 @@ costeff_cohort <-
 ```
 
 
-## Main calculation
+## Calculate cost-effectivness statistics for all scenarios
 
 We iterate over all scenarios and all Monte-Carlo samples.
 The `scenario_cost` and `scenario_QALY` functions calculate the respective values for each.
-We then transpose the returned values from these functions and calculate the final statistics.
+We then transpose the returned values from these functions and calculate the final statistics in a single list.
 
 ```{r}
 interv_scenario_cost <- partial(scenario_cost,
@@ -166,9 +168,7 @@ interv_scenario_QALY <- partial(scenario_QALY,
                                 total = n_all_tb,
                                 costeff_data = costeff_cohort)
 
-
 for (s in seq_len(n.scenarios)) {
-
   for (i in seq_len(N.mc)) {
     
     # set.seed(12345)
@@ -179,32 +179,13 @@ for (s in seq_len(n.scenarios)) {
     interv_QALY[[i]] <- interv_scenario_QALY(num_avoided)
   }
   
-  CE_stats[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
-                                 interv_QALY = interv_QALY,
-                                 interv_cost = interv_cost,
-                                 pop_year = pop_year)
+  stats_scenario[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
+                                       interv_QALY = interv_QALY,
+                                       interv_cost = interv_cost,
+                                       pop_year = pop_year)
 }
 
-
-# CE_stats %>% purrr::transpose()
-##TODO:
-aTB_CE_stats <- list(QALY.statusquo = map(interv_QALY_vs, "statusquo"),
-                     cost.statusquo = map(interv_cost_vs, "statusquo"),
-                     QALY.screened = map(interv_QALY_vs, "screened"),
-                     cost.screened = map(interv_cost_vs, "screened"),
-                     QALY.screened_person = QALY.screened_person,
-                     QALY.statusquo_person = QALY.statusquo_person,
-                     cost.screened_person = cost.screened_person,
-                     cost.statusquo_person = cost.statusquo_person,
-                     cost_incur = cost_incur,
-                     QALYgain = QALYgain,
-                     cost_incur_person = cost_incur_person,
-                     QALYgain_person = QALYgain_person,
-                     E_cost_incur = E_cost_incur,
-                     E_cost_incur_person = E_cost_incur_person,
-                     E_QALYgain = E_QALYgain,
-                     E_QALYgain_person = E_QALYgain_person,
-                     pop_year = pop_year)
+aTB_CE_stats <- stats_scenario %>% purrr::transpose()
 
 save(aTB_CE_stats,
      file = "aTB_CE_stats.RData")
