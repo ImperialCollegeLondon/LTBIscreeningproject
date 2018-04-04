@@ -1,5 +1,5 @@
 
-#' scenario_QALY
+#' Calculate the total QALYs of a scenario
 #'
 #' @param avoided
 #' @param total
@@ -17,8 +17,8 @@ scenario_QALY <- function(avoided,
   QALY_diseasefree <- costeff_data$QALY_diseasefree
 
   # random sample individuals
-  who_all_tb_avoided <- sample(x = seq_num(total),
-                               size = avoid_tb['all'],
+  who_all_tb_avoided <- sample(x = seq_len(total),
+                               size = avoided['all'],
                                replace = FALSE)
 
   screened <- QALY_statusquo

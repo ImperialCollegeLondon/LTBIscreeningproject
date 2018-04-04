@@ -1,9 +1,9 @@
 
-#' scenario_cost
+#' Calculate the total cost of a scenario
 #'
 #' @param endpoint
 #' @param unit_cost.aTB_TxDx
-#' @param NUM_SECONDARY_INF
+#' @param num_2nd_inf
 #' @param costeff_cohort
 #' @param total_tb
 #' @param avoid_tb
@@ -14,7 +14,7 @@
 #' @examples
 scenario_cost <- function(endpoint,
                           unit_cost.aTB_TxDx,
-                          NUM_SECONDARY_INF,
+                          num_2nd_inf,
                           costeff_cohort,
                           total_tb,
                           avoid_tb) {
@@ -38,8 +38,8 @@ scenario_cost <- function(endpoint,
   # removed randomness
   # num_sec_inf <- mean_num_sec_inf
 
-  num_sec_inf <-
-    NUM_SECONDARY_INF %>%
+  r2nd_inf <-
+    num_2nd_inf %>%
     treeSimR::sample_distributions() %>%
     unlist()
 
@@ -50,7 +50,7 @@ scenario_cost <- function(endpoint,
 
   if (endpoint == "exit uk") {
 
-    notif.statusquo <- cost_tb_notif(num_sec_inf,
+    notif.statusquo <- cost_tb_notif(r2nd_inf,
                                      rcost,
                                      uk_2nd_discounts,
                                      uk_1st_discounts)
@@ -68,7 +68,7 @@ scenario_cost <- function(endpoint,
 
   }else if (endpoint == "death") {
 
-    notif.statusquo <- cost_tb_notif(num_sec_inf,
+    notif.statusquo <- cost_tb_notif(r2nd_inf,
                                      rcost,
                                      all_2nd_discounts,
                                      all_1st_discounts)
