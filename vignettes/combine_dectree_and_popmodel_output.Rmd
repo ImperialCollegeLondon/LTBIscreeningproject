@@ -1,0 +1,127 @@
+---
+title: "Basic output plots"
+author: "Nathan Green"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+  editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+## Introduction
+
+We combine the cost and health results from the screening, testing and treatment decision tree with the cost and health results from the population model follow-up to defined end-point.
+We then plot some basic cost-effectiveness planes.
+
+Load packages
+
+```{r, warning=F, message=F}
+library(treeSimR)
+library(LTBIscreeningproject)
+library(dplyr)
+library(data.tree)
+library(purrr)
+library(tibble)
+library(magrittr)
+library(plotCostEffectiveness)
+library(ggplot2)
+library(BCEA)
+```
+
+Load in data
+
+```{r}
+data("scenario_parameters", package = "LTBIscreeningproject")
+load("aTB_CE_stats.RData")
+
+dectree_res <- readRDS("decision_tree_output.Rds")
+cohort <- readRDS("cohort.Rds")
+```
+
+
+## Create input matrices
+
+We're going to use the `BCEA` package to calculate some additional values and do some of the plotting.
+In order to use this we need to rearrange some of our data.
+
+```{r}
+# discount due to delay to screening
+##TODO: what is actual number?
+screen_discount <- 0.9
+
+scenario.names <-
+  c(0, seq_len(length(dectree_res))) %>%
+  as.character(.)
+```
+
+Cost and QALY gain due to active TB in the population
+
+```{r}
+tb_cost <-
+  aTB_CE_stats$cost_incur_person %>%
+  do.call(cbind.data.frame, .) %>%
+  add_column('0' = 0, .before = 1) %>%
+  set_names(nm = scenario.names)
+
+tb_QALYgain <-
+  aTB_CE_stats$QALYgain_person %>%
+  do.call(cbind.data.frame, .) %>%
+  add_column('0' = 0, .before = 1) %>%
+  set_names(nm = scenario.names)
+```
+
+Cost and QALY gain due to screening
+
+```{r}
+LTBI_cost <-
+  purrr::map(dectree_res, "mc_cost") %>% 
+  do.call(cbind.data.frame, .) %>%
+  multiply_by(screen_discount) %>% 
+  add_column('0' = 0, .before = 1)
+
+LTBI_QALYgain <- 
+  purrr::map(dectree_res, "mc_health") %>% 
+  do.call(cbind.data.frame, .) %>%
+  multiply_by(-screen_discount) %>% 
+  add_column('0' = 0, .before = 1)
+
+c.total <- as.matrix(LTBI_cost + tb_cost)
+e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
+
+c.total
+e.total
+```
+
+
+## Cost-effectiveness planes
+
+```{r fig.width=5, fig.height=5}
+screen.bcea <- BCEA::bcea(e = -e.total,  # Q1 - Q0 different way round in function!
+                          c =  -c.total,
+                          ref = 1,
+                          interventions = colnames(e.total))
+
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n.comparisons)
+
+gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
+gg + scale_colour_manual(values = cbPalette)
+
+my_contour2(screen.bcea,
+            graph = "ggplot2",
+            wtp = 20000,
+            CONTOUR_PC = "50%") +
+  ggtitle('50th percentile contours') +
+  scale_colour_manual(values = cbPalette)
+```
+

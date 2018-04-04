@@ -21,7 +21,7 @@ options(width = 240)
 
 
 This document demonstrates running the screening, diagnosis and treatment decision tree model.
- 
+
 First, we need to attach the packages we'll need. `treeSimR` is written by us too so this will need to be installed from GitHub.
 
 ```{r, warning=F, message=F}
@@ -39,7 +39,7 @@ Load in data
 data("intervention_constants", package = "LTBIscreeningproject")
 data("cost_effectivness_params", package = "LTBIscreeningproject")
 data("scenario_parameters", package = "LTBIscreeningproject")
-data("model_input_cohort", package = "LTBIscreeningproject")
+load("model_input_cohort.RData")
 ```
 
 
@@ -59,15 +59,13 @@ cohort <- dplyr::filter(cohort,
                         date_exit_uk1_issdt.years >= interv$min_screen_length_of_stay)
 ```
 
-Only keep those inidiviuals that are screened before some other event
-```{r eval = FALSE}
-##TODO: knitting error
-  # print(head(cohort$screen, 10))
-  # print(head(cohort$screen_year, 10))
+Only keep those inidiviuals that are screened _before_ some other event
+
+```{r eval = T}
 if (interv$screen_with_delay) {
   cohort <- dplyr::filter(cohort,
-                        screen == 1)
-  }
+                          screen == 1)
+}
 ```
 
 Do we include student in the screening programme?
@@ -86,8 +84,6 @@ cohort <- dplyr::filter(cohort,
 Count numbers of TB cases
 
 ```{r eval = F}
-##TODO: knitting error
-
 n.exit_tb <-
   cohort %>%
   dplyr::filter(exituk_tb) %>%
@@ -195,7 +191,7 @@ decision_tree_cluster(parameters = scenario_parameters[[1]],
                       n.uk_tb = 10, #as.numeric(n.uk_tb),
                       n.exit_tb = 10, #as.numeric(n.exit_tb),
                       cost_dectree = "osNode_cost_2009.Rds",
-                      health_dectree = "osNode_cost_2009.Rds")
+                      health_dectree = "osNode_health_2009.Rds")
 ```
 
 Multiple scenarios:
@@ -207,7 +203,7 @@ lapply(scenario_parameters[1:3],
        n.uk_tb = 10, #as.numeric(n.uk_tb),
        n.exit_tb = 10, #as.numeric(n.exit_tb),
        cost_dectree = "osNode_cost_2009.Rds",
-       health_dectree = "osNode_cost_2009.Rds")
+       health_dectree = "osNode_health_2009.Rds")
 ```
 
 ```{r echo = FALSE}
@@ -217,6 +213,6 @@ lapply(scenario_parameters[1:3],
        n.uk_tb = 10, #as.numeric(n.uk_tb),
        n.exit_tb = 10, #as.numeric(n.exit_tb),
        cost_dectree = "osNode_cost_2009.Rds",
-       health_dectree = "osNode_cost_2009.Rds") %>% 
+       health_dectree = "osNode_health_2009.Rds") %>% 
   saveRDS(file = "decision_tree_output.Rds")
 ```
