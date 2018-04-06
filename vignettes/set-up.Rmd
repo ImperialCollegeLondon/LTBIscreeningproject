@@ -20,8 +20,8 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-This is a basic example of how to use the LTBI screening model.
-Other vignettes will show how to then automate some of the running over multiple scenarios, and how to visualised the output.
+This is a basic example of how to define the policy and scenarios (within policies) for the LTBI screening model.
+Other vignettes will show how to run a model, automate some of the running over multiple scenarios, and how to visualised the output.
 
 
 ## Fixed model parameters defining an intervention
