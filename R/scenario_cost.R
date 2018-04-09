@@ -1,11 +1,10 @@
 
 #' Calculate the total cost of a scenario
 #'
-#' @param endpoint
-#' @param unit_cost.aTB_TxDx
-#' @param num_2nd_inf
-#' @param costeff_cohort
-#' @param total_tb
+#' @param endpoint 'death' or 'exit uk'
+#' @param unit_cost.aTB_TxDx diagnosis and treatment cost distributions
+#' @param num_2nd_inf average number of secondary tb infections from a single index case
+#' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
 #' @param avoid_tb
 #'
 #' @return
@@ -16,69 +15,42 @@ scenario_cost <- function(endpoint,
                           unit_cost.aTB_TxDx,
                           num_2nd_inf,
                           costeff_cohort,
-                          total_tb,
                           avoid_tb) {
 
-  uk_1st_discounts <- costeff_cohort$uk_notif_discounts
-  uk_2nd_discounts <- costeff_cohort$uk_secondary_inf_discounts
-
-  all_1st_discounts <- costeff_cohort$all_notif_discounts
-  all_2nd_discounts <- costeff_cohort$all_secondary_inf_discounts
-
-  # removed randomness
-  # unit_cost.aTB_TxDx <- mean_cost.aTB_TxDx
+  assert_that(endpoint %in% c("death", "exit uk"))
 
   rcost <-
     unit_cost.aTB_TxDx %>%
     treeSimR::sample_distributions() %>%
     sum()
 
-  # secondary infections
-  # in following year
-  # removed randomness
-  # num_sec_inf <- mean_num_sec_inf
-
   r2nd_inf <-
     num_2nd_inf %>%
     treeSimR::sample_distributions() %>%
     unlist()
 
-  # random sample individuals
-  who_all_tb_avoided <- sample(x = seq_len(total_tb),
-                               size = avoid_tb['all'],
-                               replace = FALSE)
-
   if (endpoint == "exit uk") {
 
-    notif.statusquo <- cost_tb_notif(r2nd_inf,
-                                     rcost,
-                                     uk_2nd_discounts,
-                                     uk_1st_discounts)
-    notif.screened <- notif.statusquo
+    discounts_1st <- na.omit(costeff_cohort$uk_notif_discounts)
+    discounts_2nd <- na.omit(costeff_cohort$uk_secondary_inf_discounts)
+    n_avoid <- avoid_tb['uk']
 
-    ##TODO: remove randomness for testing
-    # random sample individuals
-    who_tb_avoided_cost <- sample(x = seq_along(notif.screened),
-                                  size = avoid_tb['uk'],
-                                  replace = FALSE)
+  } else if (endpoint == "death") {
 
-    # use this so that more cases avoided is always more QALYs gained
-    # creates clumped data tho
-    # who_tb_avoided_cost <- seq(1, unlist(num_avoided.uk_tb))
-
-  }else if (endpoint == "death") {
-
-    notif.statusquo <- cost_tb_notif(r2nd_inf,
-                                     rcost,
-                                     all_2nd_discounts,
-                                     all_1st_discounts)
-    notif.screened <- notif.statusquo
-
-    who_tb_avoided_cost <- who_all_tb_avoided
-
-    # use this so that more cases avoided is always more QALYs gained
-    # who_tb_avoided_cost <- seq(1, unlist(num_avoided.all_tb))
+    discounts_1st <- costeff_cohort$all_notif_discounts
+    discounts_2nd <- costeff_cohort$all_secondary_inf_discounts
+    n_avoid <- avoid_tb['all']
   }
+
+  notif.statusquo <- cost_tb_notif(r2nd_inf,
+                                   rcost,
+                                   discounts_2nd,
+                                   discounts_1st)
+  notif.screened <- notif.statusquo
+
+  who_tb_avoided_cost <- sample(x = seq_along(notif.screened),
+                                size = n_avoid,
+                                replace = FALSE)
 
   notif.screened[who_tb_avoided_cost] <- 0
 

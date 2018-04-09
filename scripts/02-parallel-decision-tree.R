@@ -20,11 +20,13 @@ source("scripts/cluster-prep-decisiontree-data.R")
 # if decisiontree uses pmin, pmax
 # source("scripts/cluster-prep-decisiontree-data_pdistn.R")
 
+
+## MAKE SURE THIS IS UPTO DATE WITH PACKAGE
 setwd("Q:/R/cluster--LTBI-decision-tree")
 
 sources <- list.files(pattern = "[.]R$")[!grepl(x = list.files(pattern = "[.]R$"), pattern = "^cluster-master")]
 
-source("decision_tree_cluster.R")
+# source("decision_tree_cluster.R")
 
 
 # parallel config ---------------------------------------------------------
@@ -40,11 +42,12 @@ n.exit_tb <- unlist(n.exit_tb)
 
 clusterExport(cl, "n.uk_tb")
 clusterExport(cl, "n.exit_tb")
-clusterExport(cl, "N.mc")
+# clusterExport(cl, "N.mc")
 
 clusterEvalQ(cl, library(data.tree))
 clusterEvalQ(cl, library(dplyr))
 clusterEvalQ(cl, library(treeSimR))
+clusterEvalQ(cl, library(purrr))
 
 clusterEvalQ(cl, source("subset_pop_dectree.R"))
 clusterEvalQ(cl, source("myToDataFrame_fns.R"))
@@ -57,7 +60,7 @@ ptm <- proc.time()
 dectree_res <- parLapplyLB(cl,
                            scenario_parameters,
                            fun = decision_tree_cluster,
-                           N.mc = N.mc,
+                           N.mc = interv$N.mc,
                            n.uk_tb = n.uk_tb,
                            n.exit_tb = n.exit_tb)
 proc.time() - ptm
@@ -72,26 +75,4 @@ save(dectree_res, file = miscUtilities::pastef(exit_wd, diroutput, "dectree_res.
 
 
 setwd(exit_wd)
-
-
-
-# to debug ----------------------------------------------------------------
-
-# res <- lapply(scenario_parameters,
-#               decision_tree_cluster,
-#               N.mc = N.mc,
-#               n.uk_tb = n.uk_tb,
-#               n.exit_tb = n.exit_tb)
-#
-xx <- decision_tree_cluster(parameters = scenario_parameters[[1]],
-                            n.uk_tb = 10,
-                            n.exit_tb = 10,
-                            cost_dectree = "vignettes/osNode_cost_2009.Rds",
-                            health_dectree = "vignettes/osNode_health_2009.Rds")
-#
-# xx <- decision_tree_cluster(parameters = scenario_parameters[[1]][1:3, ],
-#                             n.uk_tb = 10,
-#                             n.exit_tb = 10,
-#                             cost_dectree = "osNode_cost_2009_pdistn.Rds",
-#                             health_dectree = "osNode_health_2009_pdistn.Rds")
 

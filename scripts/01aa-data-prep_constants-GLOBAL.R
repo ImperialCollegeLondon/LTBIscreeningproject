@@ -44,7 +44,11 @@ sprintf("Input parameters - WHO groups:%s, min stay:%s, endpoint:%s",
 scenario_name <- global_params_scenarios_ls[global_run]
 
 # # create permanent output folder
-parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
+parent_folder <- sprintf("ext-data/%d_to_%d_in_%s",
+                         min(interv$screen_age_range),
+                         max(interv$screen_age_range),
+                         interv$year_cohort)
+
 diroutput <- sprintf("%s/%s", parent_folder, scenario_name)
 dir.create(parent_folder, showWarnings = FALSE)
 dir.create(diroutput, showWarnings = FALSE)
