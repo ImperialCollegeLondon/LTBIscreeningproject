@@ -183,6 +183,24 @@ unit_cost$aTB_TxDx <- list(culture = culture,
                            aTB_Tx = aTB_Tx)
 
 
+
+effectiveness <-
+  list(LTBI_Tx_3mISORIF = list(pmin = 0.33, pmax = 0.84),
+       LTBI_Tx_6mISO = list(pmin = 0.48, pmax = 0.77))
+
+test_performance <-
+  list(QFT_GIT =
+         list(sens = list(pmin = 0.81, pmax = 0.87),
+              spec = list(pmin = 0.98, pmax = 1.0)),
+       QFT_plus =
+         list(sens = list(pmin = 0.88, pmax = 0.88),
+              spec = list(pmin = 0.9717, pmax = 0.9717)),
+       TSPOT =
+         list(sens = list(pmin = 0.85, pmax = 0.93),
+              spec = list(pmin = 0.86, pmax = 1.0)))
+
+
+
 ##########
 # health #
 ##########
@@ -194,7 +212,7 @@ utility <- list()
 
 utility$falsepos_Tx <- 0.9
 
-utility$disease_free <- 1.0 #assume perfect health. we're only interest in relative changes
+utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 
 # relative to disease free = 1
