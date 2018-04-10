@@ -13,58 +13,30 @@ if (!exists("dectree_res")) load(choose.files()) #dectree_res <- readRDS(paste0(
 if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-GIT.xlsx", sheet = "p")
 # if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_TSPOT.xlsx", sheet = "p")
 
-popscale <- 1#00000
-
 
 # create BCEA dataframe ---------------------------------------------------
 
-###############
-## active TB ##
-###############
+from_list_to_BCEA <- function(scenario_list,
+                              discount = 1) {
 
-scenario.names <-
-  c(0, seq_len(length(dectree_res))) %>%
-  as.character(.)
+  scenario_names <-
+    c(0, seq_len(length(scenario_list))) %>%
+    as.character(.)
 
-# BCEA format
-# with status-quo
+  scenario_list %>%
+    do.call(cbind.data.frame, .) %>%
+    multiply_by(discount) %>%
+    add_column('0' = 0, .before = 1) %>%
+    set_names(nm = scenario_names)
+}
 
-aTB_cost.df <-
-  do.call(cbind,
-          aTB_CE_stats$cost_incur_person) %>%
-  data.frame(0, ., row.names = NULL) %>%
-  set_names(nm = scenario.names)
+tb_cost <- from_list_to_BCEA(aTB_CE_stats$cost_incur_person)
+tb_QALYgain <- from_list_to_BCEA(aTB_CE_stats$QALYgain_person)
+LTBI_cost <- from_list_to_BCEA(purrr::map(dectree_res, "mc_cost"), screen_discount)
+LTBI_QALYgain <- from_list_to_BCEA(purrr::map(dectree_res, "mc_health"), -screen_discount)
 
-aTB_QALYgain.df <-
-  do.call(cbind,
-          aTB_CE_stats$QALYgain_person) %>%
-  data.frame(0, ., row.names = NULL) %>%
-  set_names(nm = scenario.names)
-
-
-####################
-## LTBI screening ##
-####################
-
-LTBI_cost_melt <- do.call(cbind.data.frame,
-                          purrr::map(dectree_res, "mc_cost"))
-
-LTBI_QALYloss_melt <- do.call(cbind.data.frame,
-                              purrr::map(dectree_res, "mc_health"))
-
-## BCEA format
-LTBI_cost.df <- data.frame('0' = 0, LTBI_cost_melt, check.names = FALSE)
-LTBI_QALYgain.df <- data.frame('0' = 0, -LTBI_QALYloss_melt, check.names = FALSE)
-
-# screen_discount <- 0.9
-
-# discount due to delay to screening
-LTBI_cost.df <- LTBI_cost.df * screen_discount
-LTBI_QALYgain.df <- LTBI_QALYgain.df * screen_discount
-
-
-c.total <- as.matrix(LTBI_cost.df + aTB_cost.df) * popscale
-e.total <- as.matrix(LTBI_QALYgain.df + aTB_QALYgain.df) * popscale
+c.total <- as.matrix(LTBI_cost + tb_cost)
+e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
 
 
 # create design matrix ----------------------------------------------------
@@ -80,8 +52,11 @@ design_matrix <-
 # design_matrix <- apply(scenario_parameter_p, 2, as.factor)
 
 # discounting due to delay to screening
-dectree_res_mc_health <- lapply(purrr::map(dectree_res, "mc_health"), `*`, screen_discount)
-dectree_res_mc_cost <- lapply(purrr::map(dectree_res, "mc_cost"), `*`, screen_discount)
+dectree_res_mc_health <-
+  lapply(purrr::map(dectree_res, "mc_health"), `*`, screen_discount)
+
+dectree_res_mc_cost <-
+  lapply(purrr::map(dectree_res, "mc_cost"), `*`, screen_discount)
 
 # combine decision tree and pop model output
 e_screened <- purrr::map2(aTB_CE_stats$QALY.screened_person,
@@ -104,8 +79,11 @@ nmb_long <-
   do.call(what = rbind, args = .)
 
 # simplify names
-names(design_matrix) <- gsub(pattern =  " Treatment", replacement = "", names(design_matrix))
-names(design_matrix) <- gsub(pattern =  " to Screen", replacement = "", names(design_matrix))
+names(design_matrix) <-
+  gsub(pattern =  " Treatment", replacement = "", names(design_matrix))
+
+names(design_matrix) <-
+  gsub(pattern =  " to Screen", replacement = "", names(design_matrix))
 
 sim_matrix <- merge(x = design_matrix,
                     y = nmb_long,

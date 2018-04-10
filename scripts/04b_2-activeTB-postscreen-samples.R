@@ -41,7 +41,7 @@ who_prev_cat.uk_tb <-
 
 for (i in seq_len(n.scenarios)) {
 
-  print(sprintf("scenario: %d", i))
+  message(sprintf("scenario: %d", i))
 
   tb_scenarios.all_tb <- c(NULL, NULL)
   tb_scenarios.uk_tb  <- c(NULL, NULL)

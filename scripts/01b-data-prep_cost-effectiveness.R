@@ -103,16 +103,31 @@ unit_cost$LTBI_Tx <- QALY::inflation_adjust_cost(from_year = 2006,
                                                  reference = "HTA VOLUME 20, ISSUE 38, MAY 2016, ISSN 1366-527, p.8")
 
 # https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/442192/030615_LTBI_testing_and_treatment_for_migrants_1.pdf
+
+# these are 'low' conservative estimates
 # 6 months isoniazid
-unit_cost$LTBI_Tx_6mISO <- QALY::inflation_adjust_cost(from_year = 2015,
+unit_cost$LTBI_Tx_6mISO$full <- QALY::inflation_adjust_cost(from_year = 2015,
                                                        to_year = 2016,
                                                        from_cost = 531,
                                                        reference = "Jit & White (2015)")
 # 3 months isoniazid + rifampicin
-unit_cost$LTBI_Tx_3mISORIF <- QALY::inflation_adjust_cost(from_year = 2015,
+unit_cost$LTBI_Tx_3mISORIF$full <- QALY::inflation_adjust_cost(from_year = 2015,
                                                           to_year = 2016,
                                                           from_cost = 396,
                                                           reference = "Jit & White (2015)")
+
+# use ratio from Warwick evidence: appendix H, p 292
+
+unit_cost$LTBI_Tx_6mISO$dropout <- QALY::inflation_adjust_cost(from_year = 2015,
+                                                               to_year = 2016,
+                                                               from_cost = 88.5,
+                                                               reference = "Jit & White (2015)")
+
+unit_cost$LTBI_Tx_3mISORIF$dropout <- QALY::inflation_adjust_cost(from_year = 2015,
+                                                                  to_year = 2016,
+                                                                  from_cost = 66,
+                                                                  reference = "Jit & White (2015)")
+
 
 # active TB -----------------------------------------------------
 
@@ -183,6 +198,24 @@ unit_cost$aTB_TxDx <- list(culture = culture,
                            aTB_Tx = aTB_Tx)
 
 
+
+effectiveness <-
+  list(LTBI_Tx_3mISORIF = list(pmin = 0.33, pmax = 0.84),
+       LTBI_Tx_6mISO = list(pmin = 0.48, pmax = 0.77))
+
+test_performance <-
+  list(QFT_GIT =
+         list(sens = list(pmin = 0.81, pmax = 0.87),
+              spec = list(pmin = 0.98, pmax = 1.0)),
+       QFT_plus =
+         list(sens = list(pmin = 0.88, pmax = 0.88),
+              spec = list(pmin = 0.9717, pmax = 0.9717)),
+       TSPOT =
+         list(sens = list(pmin = 0.85, pmax = 0.93),
+              spec = list(pmin = 0.86, pmax = 1.0)))
+
+
+
 ##########
 # health #
 ##########
@@ -194,7 +227,7 @@ utility <- list()
 
 utility$falsepos_Tx <- 0.9
 
-utility$disease_free <- 1.0 #assume perfect health. we're only interest in relative changes
+utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 
 # relative to disease free = 1
@@ -219,5 +252,5 @@ QALYloss$falseposLTBI_adverse <- 0.0008   #Mears J, et al. Thorax 2015
 QALYloss$falsepos_activeTB_Tx <- 0.03     #Mears J, et al. Thorax 2015
 
 
-save(unit_cost, utility, QALYloss, cfr_age_lookup, NUM_SECONDARY_INF, wtp_threshold,
-     file = "data/cost_effectivness_params.RData")
+save(unit_cost, utility, QALYloss, cfr_age_lookup, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance,
+     file = "data/cost_effectiveness_params.RData")

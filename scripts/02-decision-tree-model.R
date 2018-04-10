@@ -133,7 +133,7 @@ scenario_parameter_p.melt <-
 for (scenario_i in seq_len(n.scenarios)) {
 
 
-  print(sprintf("scenario: %d", scenario_i))
+  message(sprintf("scenario: %d", scenario_i))
 
 
   assign_branch_values(osNode.cost,

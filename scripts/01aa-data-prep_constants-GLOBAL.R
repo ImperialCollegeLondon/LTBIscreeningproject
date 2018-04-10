@@ -6,9 +6,7 @@
 # simulation specific constants
 
 
-
-# global sensitivity parameters -------------------------------------------
-
+# policy-level sensitivity parameters -------------------------------------------
 
 # or read in scenarios environments
 if (exists("global_run")) {
@@ -18,6 +16,8 @@ if (exists("global_run")) {
   incidence_grps_screen <- get_current_scenario("incidence_grps_screen")
   min_screen_length_of_stay <- get_current_scenario("min_screen_length_of_stay")
   ENDPOINT_cost <- get_current_scenario("ENDPOINT_cost")
+  LTBI_test <- get_current_scenario("LTBI_test")
+  treatment <- get_current_scenario("treatment")
 
 }else{# hard code
 
@@ -35,16 +35,24 @@ if (exists("global_run")) {
   ENDPOINT_cost <- "exit uk" #"death"
 }
 
-sprintf("Input parameters - WHO groups:%s, min stay:%s, endpoint:%s",
-        paste(incidence_grps_screen, collapse = ""), min_screen_length_of_stay, ENDPOINT_cost)
+message(sprintf("[ policy level parameters ]\n WHO groups:%s\n min stay:%s\n cost endpoint:%s\n test:%s\n treatment:%s",
+                green(paste(incidence_grps_screen, collapse = "")),
+                green(min_screen_length_of_stay),
+                green(ENDPOINT_cost),
+                green(LTBI_test),
+                green(treatment)))
 
 
 # folder locations --------------------------------------------------------
 
 scenario_name <- global_params_scenarios_ls[global_run]
 
-# # create permanent output folder
-parent_folder <- sprintf("ext-data/%d_to_%d_in_%s", min(screen_age_range), max(screen_age_range), year_cohort)
+# create permanent output folder
+parent_folder <- sprintf("ext-data/%d_to_%d_in_%s",
+                         min(interv$screen_age_range),
+                         max(interv$screen_age_range),
+                         interv$year_cohort)
+
 diroutput <- sprintf("%s/%s", parent_folder, scenario_name)
 dir.create(parent_folder, showWarnings = FALSE)
 dir.create(diroutput, showWarnings = FALSE)

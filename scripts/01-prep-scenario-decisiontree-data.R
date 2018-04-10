@@ -6,9 +6,18 @@
 # prep scenario decision tree cost & QALY data
 
 
+# deterministic sensitivity analysis --------------------------------------
+# grid of policy input parameter values
+
+# file_tag <- "_high-low"
+# file_tag <- "_baseline"
+# file_tag <- "_oneway"
+file_tag <- "_fullfactorial"
+
+
 # load data ---------------------------------------------------------------
 
-parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%s.xlsx", scenario_file_tag),
+parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%s.xlsx", file_tag),
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,

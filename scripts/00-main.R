@@ -14,8 +14,8 @@ source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
 
 # modelling ------------------------------------------------------------
 
-if (!cluster) source("scripts/02-parallel-decision-tree.R", echo = TRUE)
-if (cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
+if (!interv$cluster) source("scripts/02-parallel-decision-tree.R", echo = TRUE)
+if (interv$cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
 source("scripts/04c-cost-effectiveness_QALY-costs.R", echo = TRUE)
 source("scripts/04-combine_dectree_and_cmprk_model_output.R", echo = TRUE)

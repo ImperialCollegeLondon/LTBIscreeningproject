@@ -2,14 +2,14 @@
 #' decision_tree_cluster
 #'
 #' Calculate decision tree expected costs and QALY loss
-#' for N simulations
+#' for \code{N} simulations
 #'
-#' @param parameters
-#' @param N.mc
-#' @param n.uk_tb
-#' @param n.exit_tb
-#' @param cost_dectree
-#' @param health_dectree
+#' @param parameters long format array
+#' @param N.mc integer
+#' @param n.uk_tb integer
+#' @param n.exit_tb integer
+#' @param cost_dectree Rds file names
+#' @param health_dectree Rds file names
 #'
 #' @return
 #' @export
