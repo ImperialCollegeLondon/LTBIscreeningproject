@@ -15,10 +15,7 @@
 if (getwd() != "Q:/R/cluster--LTBI-decision-tree") {
   exit_wd <- getwd()}
 
-source("scripts/cluster-prep-decisiontree-data.R")
-
-# if decisiontree uses pmin, pmax
-# source("scripts/cluster-prep-decisiontree-data_pdistn.R")
+source("scripts/cluster-prep-decisiontree-data_pdistn.R")
 
 
 ## MAKE SURE THIS IS UPTO DATE WITH PACKAGE

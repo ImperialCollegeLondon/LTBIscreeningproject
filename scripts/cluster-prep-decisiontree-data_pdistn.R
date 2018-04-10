@@ -3,16 +3,17 @@
 # N Green
 # May 2017
 #
-# create data in a format to use in DIDE computer cluster functions
+# create data in a format for parallel batch runs
+# e.g. use in DIDE computer cluster functions
 # run jobs using network drive Q:\R\cluster--LTBI-decision-tree
 
 
 # load input files ---------------------------------------------------------
 
-osNode.cost_pdistn.fileName <- system.file("data", "LTBI_dtree-cost-symptoms-pdistn.yaml",
+osNode.cost_pdistn.fileName <- system.file("data", "LTBI_dectree-cost.yaml",
                                     package = "LTBIscreeningproject")
 
-osNode.health_pdistn.fileName <- system.file("data", "LTBI_dtree-QALYloss-symptoms-pdistn.yaml",
+osNode.health_pdistn.fileName <- system.file("data", "LTBI_dectree-QALY.yaml",
                                       package = "LTBIscreeningproject")
 
 ## cost
