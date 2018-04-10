@@ -55,7 +55,6 @@ interv <-
        FUP_MAX_YEAR = FUP_MAX_YEAR,
        screen_age_range = screen_age_range,
        year_cohort = year_cohort,
-       scenario_file_tag = scenario_file_tag,
        incidence_grps_screen = incidence_grps_screen,
        min_screen_length_of_stay = min_screen_length_of_stay,
        N.mc = N.mc,

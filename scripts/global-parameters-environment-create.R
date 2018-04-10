@@ -45,6 +45,8 @@ for (min_screen_length_of_stay in c(0,5)) {
           assign(x = "min_screen_length_of_stay", value = min_screen_length_of_stay, envir = eval(parse(text = environ_name)))
           assign(x = "incidence_grps_screen", value = incidence_list[[incidence]], envir = eval(parse(text = environ_name)))
           assign(x = "ENDPOINT_cost", value = endpoint_cost, envir = eval(parse(text = environ_name)))
+          assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
+          assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
 
           programme_level %<>% add(1)
         }
