@@ -16,35 +16,24 @@ if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel(
 
 # create BCEA dataframe ---------------------------------------------------
 
-scenario.names <-
-  c(0, seq_len(length(dectree_res))) %>%
-  as.character(.)
+from_list_to_BCEA <- function(scenario_list,
+                              discount = 1) {
 
-# convert to BCEA:: format
+  scenario_names <-
+    c(0, seq_len(length(scenario_list))) %>%
+    as.character(.)
 
-tb_cost <-
-  aTB_CE_stats$cost_incur_person %>%
-  do.call(cbind.data.frame, .) %>%
-  add_column('0' = 0, .before = 1) %>%
-  set_names(nm = scenario.names)
+  scenario_list %>%
+    do.call(cbind.data.frame, .) %>%
+    multiply_by(discount) %>%
+    add_column('0' = 0, .before = 1) %>%
+    set_names(nm = scenario_names)
+}
 
-tb_QALYgain <-
-  aTB_CE_stats$QALYgain_person %>%
-  do.call(cbind.data.frame, .) %>%
-  add_column('0' = 0, .before = 1) %>%
-  set_names(nm = scenario.names)
-
-LTBI_cost <-
-  purrr::map(dectree_res, "mc_cost") %>%
-  do.call(cbind.data.frame, .) %>%
-  multiply_by(screen_discount) %>%
-  add_column('0' = 0, .before = 1)
-
-LTBI_QALYgain <-
-  purrr::map(dectree_res, "mc_health") %>%
-  do.call(cbind.data.frame, .) %>%
-  multiply_by(-screen_discount) %>%
-  add_column('0' = 0, .before = 1)
+tb_cost <- from_list_to_BCEA(aTB_CE_stats$cost_incur_person)
+tb_QALYgain <- from_list_to_BCEA(aTB_CE_stats$QALYgain_person)
+LTBI_cost <- from_list_to_BCEA(purrr::map(dectree_res, "mc_cost"), screen_discount)
+LTBI_QALYgain <- from_list_to_BCEA(purrr::map(dectree_res, "mc_health"), -screen_discount)
 
 c.total <- as.matrix(LTBI_cost + tb_cost)
 e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
