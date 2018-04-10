@@ -6,9 +6,7 @@
 # simulation specific constants
 
 
-
-# global sensitivity parameters -------------------------------------------
-
+# policy-level sensitivity parameters -------------------------------------------
 
 # or read in scenarios environments
 if (exists("global_run")) {
@@ -35,8 +33,8 @@ if (exists("global_run")) {
   ENDPOINT_cost <- "exit uk" #"death"
 }
 
-sprintf("Input parameters - WHO groups:%s, min stay:%s, endpoint:%s",
-        paste(incidence_grps_screen, collapse = ""), min_screen_length_of_stay, ENDPOINT_cost)
+message(sprintf("[ policy level parameters ] WHO groups:%s, min stay:%s, cost endpoint:%s",
+                green(paste(incidence_grps_screen, collapse = "")), green(min_screen_length_of_stay), green(ENDPOINT_cost)))
 
 
 # folder locations --------------------------------------------------------

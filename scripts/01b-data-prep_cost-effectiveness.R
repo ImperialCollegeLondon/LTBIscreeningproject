@@ -220,4 +220,4 @@ QALYloss$falsepos_activeTB_Tx <- 0.03     #Mears J, et al. Thorax 2015
 
 
 save(unit_cost, utility, QALYloss, cfr_age_lookup, NUM_SECONDARY_INF, wtp_threshold,
-     file = "data/cost_effectivness_params.RData")
+     file = "data/cost_effectiveness_params.RData")

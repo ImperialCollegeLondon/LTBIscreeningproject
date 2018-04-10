@@ -36,7 +36,8 @@ Imports:
     arm,
     parallel,
     ggtern,
-    miscUtilities
+    miscUtilities,
+    crayon
 RoxygenNote: 6.0.1
 Suggests:
     knitr,

@@ -33,7 +33,7 @@ runtime <- proc.time()
 # for (global_run in c(2,4,6)) {
 for (global_run in seq_along(global_params_scenarios_ls)) {
 
-  message(sprintf("[ programme level parameters ] scenario: %d", global_run))
+  message(sprintf("[ programme level parameters ] scenario: %s", green(global_run)))
 
   try_out <- try(source("scripts/00-main.R"))
 
