@@ -10,9 +10,9 @@
 # grid of policy input parameter values
 
 # file_tag <- "_high-low"
-# file_tag <- "_baseline"
+file_tag <- "_baseline"
 # file_tag <- "_oneway"
-file_tag <- "_fullfactorial"
+# file_tag <- "_fullfactorial"
 
 
 # load data ---------------------------------------------------------------
@@ -21,26 +21,26 @@ parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
-                                              sheet = "cost")
+                                              sheet = "cost", na = c("", NA))
 
 scenario_parameter_p <- readxl::read_excel(parameter_values_file,
-                                           sheet = "p")
-
-# transform to long format
-
-scenario_parameter_p.melt <-
-  as.data.frame(scenario_parameter_p) %>%
-  reshape2::melt(id.vars = "scenario") %>%
-  plyr::rename(replace = c("variable" = "node",
-                           "value" = "p"))
-
-# combine probs and costs in to a single array
+                                           sheet = "p", na = c("", NA))
 
 scenario_parameter_cost$val_type <- "cost"
-scenario_parameter_p.melt$val_type <- "QALYloss"
 
-scenario_parameters <- dplyr::bind_rows(scenario_parameter_cost,
-                                        scenario_parameter_p.melt)
+if (nrow(scenario_parameter_p) > 0) {
+
+  # transform to long format
+  scenario_parameters <-
+    as.data.frame(scenario_parameter_p) %>%
+    reshape2::melt(id.vars = "scenario") %>%
+    plyr::rename(replace = c("variable" = "node",
+                             "value" = "p")) %>%
+    mutate(val_type = "QALYloss") %>%
+    dplyr::bind_rows(scenario_parameter_cost, .)
+}else{
+  scenario_parameters <- scenario_parameter_cost
+}
 
 # split by scenario to lists
 scenario_parameters <- split(x = scenario_parameters,
