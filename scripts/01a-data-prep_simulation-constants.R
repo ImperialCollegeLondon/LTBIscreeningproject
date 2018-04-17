@@ -6,7 +6,7 @@
 # simulation specific constants
 
 
-N.mc <- 10
+N.mc <- 100
 
 cluster <- FALSE
 
@@ -50,13 +50,13 @@ ENDPOINT_cost <- "death"
 interv <-
   list(force_everyone_stays = force_everyone_stays,
        ENDPOINT_QALY = ENDPOINT_QALY,
-       ENDPOINT_cost = ENDPOINT_cost,
+       # ENDPOINT_cost = ENDPOINT_cost,
+       # incidence_grps_screen = incidence_grps_screen,
+       # min_screen_length_of_stay = min_screen_length_of_stay,
        screen_with_delay = screen_with_delay,
        FUP_MAX_YEAR = FUP_MAX_YEAR,
        screen_age_range = screen_age_range,
        year_cohort = year_cohort,
-       incidence_grps_screen = incidence_grps_screen,
-       min_screen_length_of_stay = min_screen_length_of_stay,
        N.mc = N.mc,
        cluster = cluster,
        no_students = no_students)

@@ -15,9 +15,6 @@
 if (getwd() != "Q:/R/cluster--LTBI-decision-tree") {
   exit_wd <- getwd()}
 
-source("scripts/cluster-prep-decisiontree-data_pdistn.R")
-
-
 ## MAKE SURE THIS IS UPTO DATE WITH PACKAGE
 setwd("Q:/R/cluster--LTBI-decision-tree")
 

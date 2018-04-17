@@ -2,9 +2,9 @@
 # LTBI screening
 # N Green
 #
-# high-level global scenario runner
+# high-level global policy runner
 # for a (deterministic) sensitivity analysis
-# of screening programme
+# of screening programme scenarios
 #
 # *******************************************
 
@@ -16,7 +16,7 @@ devtools::load_all(".")
 # source("scripts/create_LTBI_input_workspace.R")
 
 data("intervention_constants")
-data("cost_effectivness_params")
+data("cost_effectiveness_params")
 data("scenario_parameters")
 data("model_input_cohort")
 
@@ -29,8 +29,8 @@ sources_correctly <- NULL
 
 runtime <- proc.time()
 
-# global_run <- 4
-# for (global_run in c(2,4,6)) {
+# global_run <- 38
+# for (global_run in c(38,44,39,45)) {
 for (global_run in seq_along(global_params_scenarios_ls)) {
 
   message(sprintf("[ programme level parameters ] scenario: %s", green(global_run)))

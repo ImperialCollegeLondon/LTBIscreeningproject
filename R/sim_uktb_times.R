@@ -34,10 +34,14 @@ sample_tb_year2 <- function(fup_issdt,
   return(tb_year)
 }
 
-#' Sample active TB Progression Time After Follow-up
+#' Sample active TB progression time after right censoring
 #'
 #' Given that an individual progresses then this approach
 #' samples active TB times until one is before the death date.
+#'
+#' Two-step mixture model for tb sampling:
+#'   1- do they progress?
+#'   2- TB time
 #'
 #' @param fup_issdt Time to follow-up/exit UK
 #' @param death_issdt Time to all-cause death (competing risk)
@@ -57,9 +61,6 @@ sample_tb_year <- function(fup_issdt,
   disease_free_yrs <- 0:fup_issdt
   prob[disease_free_yrs] <- 0
 
-  # two-step mixture model for tb sampling:
-  # 1- do they progress
-  # 2- tb time
   noevent <- sum(prob) < runif(1)
 
   if (noevent) {
@@ -84,7 +85,6 @@ sample_tb_year <- function(fup_issdt,
     }
 
     return(tb_year)
-
   }
 }
 

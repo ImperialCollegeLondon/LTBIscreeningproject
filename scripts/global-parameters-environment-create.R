@@ -31,7 +31,7 @@ for (min_screen_length_of_stay in c(0,5)) {
         for (treat in treatment) {
 
           programme_scenarios <- rbind(programme_scenarios,
-                                       cbind(scenario = formatC(programme_level, width = 3, format = "d", flag = "0"),
+                                       cbind(policy = formatC(programme_level, width = 3, format = "d", flag = "0"),
                                              min_screen_length_of_stay,
                                              incid_grps = as.character(incidence_list[incidence]),
                                              treatment = treat,

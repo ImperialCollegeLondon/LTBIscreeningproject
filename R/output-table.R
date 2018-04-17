@@ -44,25 +44,27 @@ table_costeffectiveness <- function(bcea_obj,
 
 #' table_tb_avoided
 #'
-#' @param mc_n.tb_screen
+#' @param n_tb_screen_all
+#' @param n_tb_screen_uk
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-table_tb_avoided <- function(mc_n.tb_screen) {
+table_tb_avoided <- function(n_tb_screen_all,
+                             n_tb_screen_uk) {
 
   out <- NULL
   QUANTILES <- c(0.05, 0.5, 0.95)
 
-  for (i in seq_along(mc_n.tb_screen)) {
+  for (i in seq_along(n_tb_screen_all)) {
 
-    diseasefree_all <- subset(mc_n.tb_screen[[i]]$n.tb_screen.all_tb,
+    diseasefree_all <- subset(n_tb_screen_all[[i]],
                               status == "disease-free",
                               select = "n") %>% unlist()
 
-    diseasefree_uk <- subset(mc_n.tb_screen[[i]]$n.tb_screen.uk_tb,
+    diseasefree_uk <- subset(n_tb_screen_uk[[i]],
                              status == "disease-free",
                              select = "n") %>% unlist()
 

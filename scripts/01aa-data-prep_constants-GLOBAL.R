@@ -13,34 +13,19 @@ if (exists("global_run")) {
 
   get_current_scenario <- get_from_envir(global_params_scenarios_ls[global_run])
 
-  incidence_grps_screen <- get_current_scenario("incidence_grps_screen")
-  min_screen_length_of_stay <- get_current_scenario("min_screen_length_of_stay")
-  ENDPOINT_cost <- get_current_scenario("ENDPOINT_cost")
-  LTBI_test <- get_current_scenario("LTBI_test")
-  treatment <- get_current_scenario("treatment")
-
-}else{# hard code
-
-  # select which paramter file for decision tree
-  study <-  "QFT" #"twoway" #"oneway" "TSPOT" "HALT"
-
-  # which incidence groups to screen
-  incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]") #full set
-  # incidence_grps_screen <- c("(150,250]", "(250,350]", "(350,1e+05]")
-  # incidence_grps_screen <- c("(250,350]", "(350,1e+05]")
-
-  min_screen_length_of_stay <- 0 #years #5
-
-  # include costs for individuals once they've left (i.e. to death)?
-  ENDPOINT_cost <- "exit uk" #"death"
+  interv$incidence_grps_screen <- get_current_scenario("incidence_grps_screen")
+  interv$min_screen_length_of_stay <- get_current_scenario("min_screen_length_of_stay")
+  interv$ENDPOINT_cost <- get_current_scenario("ENDPOINT_cost")
+  interv$LTBI_test <- get_current_scenario("LTBI_test")
+  interv$treatment <- get_current_scenario("treatment")
 }
 
-message(sprintf("[ policy level parameters ]\n WHO groups:%s\n min stay:%s\n cost endpoint:%s\n test:%s\n treatment:%s",
-                green(paste(incidence_grps_screen, collapse = "")),
-                green(min_screen_length_of_stay),
-                green(ENDPOINT_cost),
-                green(LTBI_test),
-                green(treatment)))
+message(sprintf("[ policy level parameters ]\n WHO groups: %s\n min stay: %s\n cost endpoint: %s\n test: %s\n treatment: %s",
+                green(paste(interv$incidence_grps_screen, collapse = "")),
+                green(interv$min_screen_length_of_stay),
+                green(interv$ENDPOINT_cost),
+                green(interv$LTBI_test),
+                green(interv$treatment)))
 
 
 # folder locations --------------------------------------------------------
