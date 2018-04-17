@@ -224,15 +224,21 @@ test_performance <-
 
 utility <- list()
 
+# where from?
 utility$falsepos_Tx <- 0.9
 
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 
-# relative to disease free = 1
-utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2010), on treatment, outpatient
-utility$activeTB <- 0.9   #pre-treatment #Mears, J., (2015) The prospective evaluation of the TB strain typing service in England: a mixed methods study. Thorax
-utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
+# relative to disease-free = 1
+utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2015), on treatment, outpatient p.83
+# utility$activeTB <- 0.9   #pre-treatment #Mears, J., (2015) The prospective evaluation of the TB strain typing service in England: a mixed methods study. Thorax
+# utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
+
+# Pasipanodya (2007)?
+##TODO: check this number
+utility$postTx <- 0.921
+# utility$postTx <- 1 #perfectly recovered
 
 
 # where are these from??
@@ -243,6 +249,7 @@ utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
 
 
 # overall mean QALY loss --------------------------------------------------
+##TODO: not used
 
 QALYloss <- list()
 

@@ -7,8 +7,8 @@
 
 
 hist(ceiling(IMPUTED_sample$exituk_tb.years), col = "blue",
-     breaks = 150)#, xlim = c(0, 50), ylim = c(0,25),
-     # xlab = "year", main = "")
+     breaks = 150, #, xlim = c(0, 50), ylim = c(0,25),
+     xlab = "Time (year)", main = "")
 
 hist(ceiling(IMPUTED_sample$rNotificationDate_issdt.years), add = T, col = "green",
      breaks = 150)#, xlim = c(0, 50), ylim = c(0,25),
@@ -17,6 +17,9 @@ hist(ceiling(IMPUTED_sample$rNotificationDate_issdt.years), add = T, col = "gree
 hist(ceiling(IMPUTED_sample$rNotificationDate_issdt.years[IMPUTED_sample$uk_tb_orig == 1]), add = T,
      breaks = 12, col = "red")#, xlim = c(0, 50), ylim = c(0,25),
 # xlab = "year", main = "")
+
+legend('topright', c('Observed', 'EWNI', 'Outside EWNI'), col = c('red', 'green', 'blue'), lty = 1)
+
 
 plot(x = 0:19,
      y = num_uk_tb_year[1:20],
