@@ -8,19 +8,22 @@
 # impute missing/unobserved time to active tb
 # prob: scaled progression probs with IMPUTED_sample weighted average LTBI prob
 # individually SIMULATE active TB progression times after exit uk and followup
+
+p_LTBI_cohort <- 0.279 #mean(IMPUTED_sample$pLTBI)
+
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
-                                                      prob = p_incid_year/0.278),
+                                                      prob = p_incid_year/p_LTBI_cohort),
                 rNotificationDate_issdt.years = sim_uktb_times(data = .,
-                                                               prob = p_incid_year/0.278),
+                                                               prob = p_incid_year/p_LTBI_cohort),
                 exituk_tb = !is.na(exituk_tb.years) &
-                  !is.infinite(exituk_tb.years),
+                            !is.infinite(exituk_tb.years),
                 uk_tb = !is.na(rNotificationDate_issdt.years) &
-                  !is.infinite(rNotificationDate_issdt.years))
+                        !is.infinite(rNotificationDate_issdt.years))
 
 
-# is someone actually screened?
+# is someone screened before something else happens?
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(screened_before_exit = date_exit_uk1_issdt.years >= screen_year,
@@ -45,7 +48,7 @@ IMPUTED_sample <-
                 uk_death_rNotificationDate = date_death1_issdt.years - ifelse(test = is.infinite(rNotificationDate_issdt.years),
                                                                               yes = NA,
                                                                               no = rNotificationDate_issdt.years),
-                all_death_rNotificationDate = date_death1_issdt.years - all_tb_issdt,
+                all_death_rNotificationDate = ceiling(date_death1_issdt.years - all_tb_issdt),
 
                 # progression ages
                 age_uk_notification = age_at_entry + rNotificationDate_issdt.years,
@@ -61,10 +64,9 @@ IMPUTED_sample <-
                                                 breaks = cfr_age_breaks,
                                                 right = FALSE))
 
-
-
 # calculate QALYs for all tb cases for all outcomes
 # so can sample later
+##TODO: speed up. memoise calc_QALY_population()?
 QALY_all_tb <-
   IMPUTED_sample %>%
   subset(all_tb == TRUE) %$%
@@ -73,7 +75,6 @@ QALY_all_tb <-
                utility.case = utility$activeTB,
                age = age_all_notification,
                start_delay = all_tb_issdt)
-
 
 # case fatality rate for each active TB case
 
@@ -101,7 +102,6 @@ IMPUTED_sample <-
                                         yes = QALY_fatality,
                                         no = QALY_cured))
 
-
 # future discounts for costs of active TB cases
 
 max_tb_issdt <-
@@ -120,7 +120,5 @@ IMPUTED_sample <-
          uk_secondary_inf_discounts = ydiscounts[uk_notif_issdt + 1],
          all_secondary_inf_discounts = ydiscounts[all_notif_issdt + 1])
 
-
 save(IMPUTED_sample, file = "data/model_input_cohort.RData")
-
 

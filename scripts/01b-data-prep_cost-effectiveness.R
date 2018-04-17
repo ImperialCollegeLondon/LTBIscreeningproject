@@ -97,10 +97,10 @@ unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2011,
 
 
 # LTBI complete treatment
-unit_cost$LTBI_Tx <- QALY::inflation_adjust_cost(from_year = 2006,
-                                                 to_year = 2016,
-                                                 from_cost = 483.74,
-                                                 reference = "HTA VOLUME 20, ISSUE 38, MAY 2016, ISSN 1366-527, p.8")
+# unit_cost$LTBI_Tx <- QALY::inflation_adjust_cost(from_year = 2006,
+#                                                  to_year = 2016,
+#                                                  from_cost = 483.74,
+#                                                  reference = "HTA VOLUME 20, ISSUE 38, MAY 2016, ISSN 1366-527, p.8")
 
 # https://www.gov.uk/government/uploads/system/uploads/attachment_data/file/442192/030615_LTBI_testing_and_treatment_for_migrants_1.pdf
 
@@ -172,13 +172,13 @@ followup_visit <- list(distn = "gamma",
 
 
 # treatment
-aTB_Tx <- QALY::inflation_adjust_cost(from_year = 2015,
-                                      to_year = 2016,
-                                      from_cost = 5329,
-                                      reference = "Jit & White (2015)")
+aTB_Tx_mean <- QALY::inflation_adjust_cost(from_year = 2015,
+                                           to_year = 2016,
+                                           from_cost = 5329,
+                                           reference = "Jit & White (2015)")
 aTB_Tx <- list(distn = "gamma",
                params = c(shape = 8.333,
-                          scale = aTB_Tx/8.333))
+                          scale = aTB_Tx_mean/8.333))
 
 
 unit_cost$aTB_TxDx <- list(culture = culture,
@@ -186,17 +186,16 @@ unit_cost$aTB_TxDx <- list(culture = culture,
                            smear = smear,
                            first_visit = first_visit,
                            followup_visit = followup_visit,
-                           # HIV_test = list(distn = "unif",
-                           #                 params = c(min = unit_cost$HIV_test,
-                           #                            max = unit_cost$HIV_test)),
                            LFT_test = list(distn = "unif",
                                            params = c(min = unit_cost$LFT_test,
                                                       max = unit_cost$LFT_test)),
+                           # HIV_test = list(distn = "unif",
+                           #                 params = c(min = unit_cost$HIV_test,
+                           #                            max = unit_cost$HIV_test)),
                            # hep_test = list(distn = "unif",
                            #                 params = c(min = unit_cost$hep_test,
                            #                            max = unit_cost$hep_test)),
                            aTB_Tx = aTB_Tx)
-
 
 
 effectiveness <-

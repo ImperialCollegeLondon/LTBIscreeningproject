@@ -3,15 +3,20 @@
 # N Green
 # April 2017
 #
-# plots
+# plots of number of active tb cases over time
 
 
-hist(IMPUTED_sample_year_cohort$exituk_tb.years,
-     breaks = 50, xlim = c(0, 50), ylim = c(0,25),
-     xlab = "year", main = "")
+hist(ceiling(IMPUTED_sample$exituk_tb.years), col = "blue",
+     breaks = 150)#, xlim = c(0, 50), ylim = c(0,25),
+     # xlab = "year", main = "")
 
-lines(num_exituk_tb_year, type = 'l', xlim = c(0, 20),
-      col = "red") #rgb(0, 0, 0, 0.5))
+hist(ceiling(IMPUTED_sample$rNotificationDate_issdt.years), add = T, col = "green",
+     breaks = 150)#, xlim = c(0, 50), ylim = c(0,25),
+# xlab = "year", main = "")
+
+hist(ceiling(IMPUTED_sample$rNotificationDate_issdt.years[IMPUTED_sample$uk_tb_orig == 1]), add = T,
+     breaks = 12, col = "red")#, xlim = c(0, 50), ylim = c(0,25),
+# xlab = "year", main = "")
 
 plot(x = 0:19,
      y = num_uk_tb_year[1:20],
@@ -19,6 +24,9 @@ plot(x = 0:19,
      lty = 1,
      xlab = "Time (year)", ylab = "Frequency",
      main = "Active TB cases")
+
+lines(num_exituk_tb_year, type = 'l', xlim = c(0, 20),
+      col = "red") #rgb(0, 0, 0, 0.5))
 
 # lines(x = seq_along(obs_uk_tb_year) - 1,
 #       y = obs_uk_tb_year,
@@ -48,7 +56,7 @@ col = c("black", "green", "blue"), lty = c(1,2,3))
 # for (i in 1:5) {
 #
 #   exituk_tb.years <- sim_aTB_times(pop = pop_year,
-#                                    data = IMPUTED_sample_year_cohort,
+#                                    data = cohort,
 #                                    prob = year_prob.activetb_cens_exituk)
 #
 #   x <- hist(exituk_tb.years,

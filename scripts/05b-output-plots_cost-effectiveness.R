@@ -45,15 +45,9 @@ screen.bcea <- BCEA::bcea(e = -e.total,  # Q1 - Q0 different way round in functi
 
 cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n.comparisons)
 
-# ceplane.plot(screen.bcea, pos = "bottomright")
-# contour(screen.bcea)
 
-# gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
-# gg + scale_colour_manual(values = cbPalette)
-#
-#
-# gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
-# gg + scale_colour_manual(values = cbPalette)
+gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
+gg + scale_colour_manual(values = cbPalette)
 
 
 filename <- paste(plots_folder_scenario, "CE_plane2.png", sep = "/")
@@ -74,7 +68,15 @@ ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 # dev.off()
 
 
-## annotations
+
+# # NOT PLOTTED
+
+# ceplane.plot(screen.bcea, pos = "bottomright")
+# contour(screen.bcea)
+# gg <- ceplane.plot(screen.bcea, graph = "ggplot2")
+# gg + scale_colour_manual(values = cbPalette)
+
+# with annotations
 
 # gg +
 #   # scale_color_brewer(palette = "Dark2") +
@@ -86,7 +88,6 @@ ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 #            y = apply(screen.bcea$delta.c, 2, mean),
 #            label = seq_along(SCENARIO_LABELS)) +
 #   theme(legend.position = c(1, 0.2))
-
 
 # with ICER values
 # gg + annotate("text",

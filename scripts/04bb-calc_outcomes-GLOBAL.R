@@ -20,15 +20,15 @@ n.uk_tb <-
 
 
 num_all_tb_cost <-
-  if (ENDPOINT_cost == "exit uk") {
+  if (interv$ENDPOINT_cost == "exit uk") {
     n.uk_tb
-  } else if (ENDPOINT_cost == "death") {
+  } else if (interv$ENDPOINT_cost == "death") {
     n.uk_tb + n.exit_tb}
 
 num_all_tb_QALY <-
-  if (ENDPOINT_QALY == "exit uk") {
+  if (interv$ENDPOINT_QALY == "exit uk") {
     n.uk_tb
-  } else if (ENDPOINT_QALY == "death") {
+  } else if (interv$ENDPOINT_QALY == "death") {
     n.uk_tb + n.exit_tb}
 
 

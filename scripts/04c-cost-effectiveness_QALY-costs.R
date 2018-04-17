@@ -7,11 +7,6 @@
 # random sampling individuals
 
 
-if (!exists("dectree_res")) {
-  dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
-}
-
-
 # data format prep --------------------------------------------------------
 
 # convert from scenario-wise to remain-exit format
@@ -42,7 +37,7 @@ avoid_tb <-
          avoid_all_tb,
          avoid_uk_tb,
          SIMPLIFY = FALSE) %>%
-  map(`colnames<-`, c('all','uk'))
+  map(`colnames<-`, c('death','exit uk'))
 
 rm(avoid_all_tb,
    avoid_uk_tb)
@@ -69,7 +64,7 @@ mean_num_sec_inf <-
 # extract cost-effectiveness variables
 
 costeff_cohort <-
-  IMPUTED_sample_year_cohort %>%
+  cohort %>%
   dplyr::filter(all_tb) %>%
   select(cfr,
          QALY_statusquo,
@@ -79,7 +74,8 @@ costeff_cohort <-
          uk_notif_discounts,
          all_notif_discounts,
          uk_secondary_inf_discounts,
-         all_secondary_inf_discounts) %>%
+         all_secondary_inf_discounts,
+         id_tb_avoided) %>%
   mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
          E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
          E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))
@@ -102,7 +98,7 @@ interv_scenario_QALY <- partial(scenario_QALY,
 
 for (s in seq_len(n.scenarios)) {
 
-  message(sprintf("[ population model ] scenario: %d", s))
+  message(sprintf("[ population model ] scenario: %s", green(s)))
 
   for (i in seq_len(N.mc)) {
 

@@ -3,28 +3,27 @@
 #'
 #' TODO: could generalise like for cost to select EWNI only
 #'
-#' @param avoided
-#' @param costeff_cohort
+#' @param avoided Number avoided for each endpoint
+#' @param costeff_cohort Individual data
+#' @param endpoint 'death' or 'exit uk'
 #'
-#' @return
+#' @return list of status-quo and screen life-time QALYs
 #' @export
 #'
 #' @examples
 scenario_QALY <- function(avoided,
-                          costeff_cohort) {
-
-  n_total <- nrow(costeff_cohort)
+                          costeff_cohort,
+                          endpoint = 'death') {
 
   QALY_statusquo <- costeff_cohort$QALY_statusquo
   QALY_diseasefree <- costeff_cohort$QALY_diseasefree
 
-  # random sample individuals
-  who_all_tb_avoided <- sample(x = seq_len(n_total),
-                               size = avoided['all'],
-                               replace = FALSE)
-
   screened <- QALY_statusquo
-  screened[who_all_tb_avoided] <- QALY_diseasefree[who_all_tb_avoided]
+
+  who_tb_avoided <- rows_first_n_ids(costeff_cohort$id_tb_avoided,
+                                     avoided[endpoint])
+
+  screened[who_tb_avoided] <- QALY_diseasefree[who_tb_avoided]
 
   statusquo <- sum(QALY_statusquo)
   screened  <- sum(screened)

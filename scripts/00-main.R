@@ -11,6 +11,7 @@
 source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
 source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
 
+source("scripts/cluster-prep-decisiontree-data_pdistn.R", echo = TRUE)
 
 # modelling ------------------------------------------------------------
 
@@ -25,17 +26,18 @@ source("scripts/04-combine_dectree_and_cmprk_model_output.R", echo = TRUE)
 
 source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05i-output-tables.R")
-source("scripts/05-ceac-plot.R")
-source("scripts/05-net-benefit.R")
-source("scripts/05-netbenefit-threshold-analysis.R")
+
+# source("scripts/05-ceac-plot.R")
+# source("scripts/05-net-benefit.R")
+# source("scripts/05-netbenefit-threshold-analysis.R")
 # source("scripts/05-ternary plots.R")
-source("scripts/05f-tornado_plots.R")
-source("scripts/05-bayesglm_predictions.R")
+# source("scripts/05f-tornado_plots.R")
+# source("scripts/05-bayesglm_predictions.R")
 # source("scripts/05-stan_predictions.R")
-source("scripts/05-partial_correlation_coefficients.R")
-source("scripts/05-num_subset_dectree.R")
-source("scripts/05-CE_plane_trajectories.R")
-source("scripts/05-upper_triangle_contour_INMB.R")
+# source("scripts/05-partial_correlation_coefficients.R")
+# source("scripts/05-num_subset_dectree.R")
+# source("scripts/05-CE_plane_trajectories.R")
+# source("scripts/05-upper_triangle_contour_INMB.R")
 
 # source("scripts/05-aTB_histograms.R")
 # source("scripts/05a-output-plots_competing-risks.R")

@@ -48,3 +48,14 @@ scenario_parameters <- split(x = scenario_parameters,
 
 
 save(scenario_parameters, file = "data/scenario_parameters.RData")
+
+
+# convert to percentages and simplify names
+design_matrix <-
+  scenario_parameter_p %>%
+  mutate_at(vars(-matches("scenario")), funs(.*100)) %>%
+  set_names(~sub(' Treatment', '', .x)) %>%
+  set_names(~sub(' to Screen', '', .x))
+
+save(design_matrix, file = "data/design_matrix.RData")
+

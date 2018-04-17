@@ -21,7 +21,8 @@ write.csv(x = out_tab,
 
 # tb avoided --------------------------------------------------------------
 
-out_tb_tab <- table_tb_avoided(map(dectree_res, "mc_n.tb_screen"))
+out_tb_tab <- table_tb_avoided(map(dectree_res, "n_tb_screen_all"),
+                               map(dectree_res, "n_tb_screen_uk"))
 
 # print(out_tb_tab)
 

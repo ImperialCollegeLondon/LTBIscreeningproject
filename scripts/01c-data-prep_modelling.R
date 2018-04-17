@@ -9,8 +9,6 @@
 
 set.seed(23456)
 
-if (!exists("screen_age_range")) screen_age_range <- 18:45
-
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
@@ -34,7 +32,9 @@ rm_variables_names <-
     "uk_extrapulm_resist","cohort_end","cohort_end_visa","cohort_end_1yr","uk_anyriskfactor_risk",
     "uk_bcgvacc_risk","uk_prevdiag_risk","uk_delayindiag_cat","uk_clustersize_cat","uk_clustersize_n_cat",
     "uk_clusterno1_analysis_24_unique", "uk_max_loci_pre","uk_cluster_size_pre","uk_clustered_pre","uk_clustered_mi",
-    "uk_cluster_trans","uk_cluster_react","uk_first_in_cluster", "prop")
+    "uk_cluster_trans","uk_cluster_react","uk_first_in_cluster", "prop",
+    "dup_less365_10n", "dup_ref_id", "duplicates_refid", "duplicates_refid_dob", "ref_id_orig",
+    "prevalent_120", "prevalent_150", "prevalent_180", "prevalent_30", "prevalent_365", "prevalent_60", "prevalent_90")
 
 IMPUTED_sample <- IMPUTED_sample[ ,!names(IMPUTED_sample) %in% rm_variables_names]
 
@@ -59,10 +59,10 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 
 # eligible screening age range only
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                age_at_entry %in% screen_age_range)
+                                age_at_entry %in% interv$screen_age_range)
 
 
-if (force_everyone_stays) {
+if (interv$force_everyone_stays) {
 ##TODO: is this doing what we want?
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
@@ -82,13 +82,14 @@ pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3) %>% setNames(who_levels)
 
 ### assume >35 == 35 year olds ###
 # i.e. age independent
+##TODO: can be age-dependent
 
 pLatentTB.who_age <-
   matrix(data = pLatentTB.who,
-         ncol = 28,
+         ncol = length(interv$screen_age_range),
          nrow = length(pLatentTB.who)) %>%
   data.frame(who_levels, .) %>%
-  purrr::set_names("who_prev_cat_Pareek2011", as.character(screen_age_range))
+  purrr::set_names("who_prev_cat_Pareek2011", as.character(interv$screen_age_range))
 
 # join with main data set
 pLatentTB.who_age.long <- reshape2:::melt.data.frame(data = pLatentTB.who_age,
@@ -134,7 +135,7 @@ IMPUTED_sample <-
 FUP_DATE <- as.Date("2013-12-31")
 
 # days from 1960-01-01 to 2013-12-31
-date_origin <- as.Date("1960-01-01") #STATA
+date_origin <- as.Date("1960-01-01") #from STATA
 fup_limit <- FUP_DATE - date_origin
 
 IMPUTED_sample <-

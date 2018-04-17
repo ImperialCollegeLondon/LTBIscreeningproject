@@ -24,9 +24,9 @@ osNode.cost <- costeff.cost$osNode
 costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
 osNode.health <- costeff.health$osNode
 
-who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
+who_levels <- osNode.cost$Get('name', pruneFun = function(x) x$level <= 2)[-1] %>% 'names<-'(NULL)
 
-p_incid_grp <- prop_table(IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)
+p_incid_grp <- prop_table(cohort$who_prev_cat_Pareek2011)
 
 pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
                             LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
@@ -63,27 +63,17 @@ for (i in who_levels) {
   osNode.health$Set(pmin = pLTBI,
                     filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
 
-  osNode.cost$Set(pmin = 1 - pLTBI,
-                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
-  osNode.health$Set(pmin = 1 - pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "non-LTBI"))
-
   osNode.cost$Set(pmax = pLTBI,
                   filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
   osNode.health$Set(pmax = pLTBI,
                     filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
-
-  osNode.cost$Set(pmax = 1 - pLTBI,
-                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "non-LTBI"))
-  osNode.health$Set(pmax = 1 - pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "non-LTBI"))
 }
 
 
 # treatment ---------------------------------------------------------------
 
 ## cost
-cost <- unit_cost[[treatment]]
+cost <- unit_cost[[interv$treatment]]
 
 osNode.cost$Set(min = cost$full,
                 filterFun = function(x) x$name == "Complete Treatment")
@@ -100,7 +90,7 @@ osNode.cost$Set(max = cost$dropout,
 
 ## effectiveness
 
-eff <- effectiveness[[treatment]]
+eff <- effectiveness[[interv$treatment]]
 
 osNode.cost$Set(pmin = eff$pmin,
                 filterFun = function(x) x$name == "Effective")
@@ -117,7 +107,7 @@ osNode.health$Set(pmax = eff$pmax,
 
 # LTBI test ---------------------------------------------------------------
 
-performance <-  test_performance[[LTBI_test]]
+performance <-  test_performance[[interv$LTBI_test]]
 
 # cost
 

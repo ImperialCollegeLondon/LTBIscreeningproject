@@ -3,6 +3,7 @@
 # N Green
 # Oct 2016
 #
+# plot incidence curves
 
 
 data("activetb_year_pmf_sutherland")

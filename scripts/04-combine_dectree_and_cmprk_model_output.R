@@ -6,14 +6,6 @@
 # combine decision tree and competing risk model output
 
 
-if (!exists("aTB_CE_stats")) load(choose.files()) #load(pastef(diroutput, "aTB_CE_stats.RData"))
-if (!exists("dectree_res")) load(choose.files()) #dectree_res <- readRDS(paste0("Q:/R/cluster--LTBI-decision-tree/", cluster_output_filename))
-
-# if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-plus.xlsx", sheet = "p")
-if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_QFT-GIT.xlsx", sheet = "p")
-# if (!exists("scenario_parameter_p")) scenario_parameter_p <- readxl::read_excel("data/scenario-parameter-values_fullfactorial_TSPOT.xlsx", sheet = "p")
-
-
 # create BCEA dataframe ---------------------------------------------------
 
 from_list_to_BCEA <- function(scenario_list,
@@ -38,18 +30,10 @@ LTBI_QALYgain <- from_list_to_BCEA(purrr::map(dectree_res, "mc_health"), -screen
 c.total <- as.matrix(LTBI_cost + tb_cost)
 e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
 
+save(e.total, c.total, file = "data/e_and_c_totals.RData")
 
-# create design matrix ----------------------------------------------------
 
-# convert to percentages
-scenario_numbers <- scenario_parameter_p$scenario
-
-design_matrix <-
-  (scenario_parameter_p*100) %>%
-  dplyr::mutate(scenario = scenario_numbers)
-
-# convert to discrete levels
-# design_matrix <- apply(scenario_parameter_p, 2, as.factor)
+# create nmb matrix ----------------------------------------------------
 
 # discounting due to delay to screening
 dectree_res_mc_health <-
@@ -78,17 +62,12 @@ nmb_long <-
                                  wtp)) %>%
   do.call(what = rbind, args = .)
 
-# simplify names
-names(design_matrix) <-
-  gsub(pattern =  " Treatment", replacement = "", names(design_matrix))
+sim_matrix <-
+  merge(x = design_matrix,
+        y = nmb_long,
+        by = "scenario") %>%
+  mutate(policy = factor(policy, levels = c("statusquo", "screened")))
 
-names(design_matrix) <-
-  gsub(pattern =  " to Screen", replacement = "", names(design_matrix))
+save(sim_matrix, file = "data/sim_matrix.RData")
 
-sim_matrix <- merge(x = design_matrix,
-                    y = nmb_long,
-                    by = "scenario")
-# set baseline level
-sim_matrix <- within(sim_matrix,
-                     policy <- factor(policy, levels = c("statusquo", "screened")))
 

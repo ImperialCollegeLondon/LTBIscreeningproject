@@ -12,19 +12,15 @@
 
 # prep data ---------------------------------------------------------------
 
-# get combined e.total and c.total
-# source("05b-output-plots_cost_effectiveness.R")
-
 # drop columns
 positive_branch_only <-
-  names(scenario_parameter_p) %>%
+  names(design_matrix) %>%
   gsub(pattern = "Not |1 - ",
        replacement = "") %>%
   unique()
 
-
 tornado_params <-
-  scenario_parameter_p[positive_branch_only] %>%
+  design_matrix[positive_branch_only] %>%
   cbind(
     # tb_cases_avoided = ,
     "10000" = calc.INMB(e = e.total, c = c.total, wtp = 10000),
@@ -36,18 +32,20 @@ tornado_params <-
   dplyr::rename(INMB = value)
 
 # harmonise names
-tornado_pred <-
-  dplyr::rename(tornado_params,
-                'Start' = 'Start Treatment',
-                'Complete' = 'Complete Treatment',
-                'Agree' = 'Agree to Screen')
+tornado_pred <- tornado_params
+  # dplyr::rename(tornado_params,
+  #               'Start' = 'Start Treatment',
+  #               'Complete' = 'Complete Treatment',
+  #               'Agree' = 'Agree to Screen')
 
 # convert to percent
-tornado_pred[ ,c("Agree", "Start", "Complete", "Effective")] <-
-  tornado_pred[ ,c("Agree", "Start", "Complete", "Effective")] * 100
+# tornado_pred[ ,names(tornado_pred) %in% c("Agree", "Start", "Complete", "Effective")] <-
+#   tornado_pred[ ,names(tornado_pred) %in% c("Agree", "Start", "Complete", "Effective")] * 100
 
 tornado_pred <- merge(x = tornado_pred,
-                      y = rbind(pred_INMB_10000, pred_INMB_20000, pred_INMB_30000),
+                      y = rbind(pred_INMB_10000,
+                                pred_INMB_20000,
+                                pred_INMB_30000),
                       by = c('Start', 'Complete', 'Agree', 'Effective', 'wtp'),
                       suffixes = c('_sim', '_pred'),
                       all.y = FALSE)
