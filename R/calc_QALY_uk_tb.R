@@ -1,5 +1,5 @@
 
-#' Calculate QALYs for UK Active TB Cases
+#' Calculate QALYs for active TB cases
 #'
 #' Calculate the QALYs for each active TB individuals for each of 3 alternatives:
 #'  * diseasefree: to all-cause death
@@ -7,16 +7,16 @@
 #'  * cured: successfully treated
 #'
 #' Assume that death if it happens is within the first year of active TB.
-#' Assume that active TB cases when treated and survive first year are fully cured.
+#' Assume that active TB cases when treated and survive first year are ~~fully cured~~.
 #'
 #' Consider person-perspective (death) or NHS-perspective (exit uk)
 #' by defining the particular time-to-event end point.
 #'
-#' @param timetoevent Time (in years) from notification to final event (death)
-#' @param utility.disease_free Utility value of non-diseased individual
+#' @param timetoevent Time (in years) from TB notification to final event (death)
+#' @param utility.disease_free Utility value of non-diseased individual e.g. 1
 #' @param utility.case Utility value of diseased individual
 #' @param age Ages in years
-#' @param start_delay What time delay to origin, to shift discounting
+#' @param start_delay What time delay to time origin, to shift discounting to smaller values
 #' @param ... Additional arguments
 #'
 #' @return list of diseasefree, death, cured QALYs
@@ -28,36 +28,31 @@ calc_QALY_tb <- function(timetoevent,
                          utility.disease_free = 1,
                          utility.case,
                          age,
-                         start_delay = 0,
+                         start_delay = NA,
                          ...){
 
-  if (utility.disease_free < 0 | utility.disease_free > 1)
+  if (utility.disease_free < 0 || utility.disease_free > 1)
     stop("Utility of disease free must be between 0 and 1")
 
-  if (utility.case < 0 | utility.case > 1)
+  if (utility.case < 0 || utility.case > 1)
     stop("Utility of cases must be between 0 and 1")
 
   if (is.list(timetoevent)) {
-    timetoevent <- unlist(timetoevent) %>% unname()
+    timetoevent <-
+      timetoevent %>%
+      unlist() %>%
+      unname()
   }
 
   timetoevent[timetoevent < 0] <- 0
 
-  diseasefree <- QALY::calc_QALY_population(utility = utility.disease_free,
-                                            time_horizons = timetoevent,
-                                            age = age,
-                                            start_delay = start_delay)
+  QALY_partial <- partial(calc_QALY_population,
+                          age = age,
+                          start_delay = start_delay)
 
-  fatality <- QALY::calc_QALY_population(utility = utility.case,
-                                         time_horizons = pmin(timetoevent, 0.5), #ie 6 months
-                                         age = age,
-                                         start_delay = start_delay)
-
-
-  cured <- QALY::calc_QALY_population(utility = c(utility.case, utility.disease_free),
-                                      time_horizons = timetoevent,
-                                      age = age,
-                                      start_delay = start_delay)
+  diseasefree <- QALY_partial(utility = utility.disease_free, time_horizons = timetoevent)
+  fatality <- QALY_partial(utility = utility.case,  timetoevent = pmin(timetoevent, 0.5)) #ie 6 months
+  cured <- QALY_partial(utility = c(utility.case, utility.disease_free), time_horizons = timetoevent)
 
   #otherwise cured is better than disease_free
   for (i in seq_along(timetoevent)) {

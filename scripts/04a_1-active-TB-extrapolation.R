@@ -9,6 +9,7 @@ data("p_incid_sutherland")
 data("incidence_Lancet")
 
 
+# from per 100,000
 Lancet_prob <- incidence_Lancet$mean/100000
 
 max_years_obs <- length(Lancet_prob)

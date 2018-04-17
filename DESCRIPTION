@@ -9,7 +9,7 @@ Authors@R: c(
     person("RStudio", role = c("cph", "fnd"))
     )
 Maintainer: Nathan Green <nathan.green@imperial.ac.uk>
-Description: More about what it does (maybe more than one line)
+Description: Decision tree and competing risks individual level model.
 License: MIT
 LazyData: TRUE
 Imports:
@@ -45,5 +45,6 @@ Suggests:
     testthat,
     assertthat,
     denstrip,
-    plotCostEffectiveness
+    plotCostEffectiveness,
+    memoise
 VignetteBuilder: knitr

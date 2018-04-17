@@ -78,7 +78,9 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 
 # ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
 # ages 18-35 pooled
-pLatentTB.who <- c(0.03, 0.13, 0.2, 0.3, 0.3) %>% setNames(who_levels)
+pLatentTB.who <-
+  c(0.03, 0.13, 0.2, 0.3, 0.3) %>%
+  setNames(who_levels)
 
 ### assume >35 == 35 year olds ###
 # i.e. age independent
