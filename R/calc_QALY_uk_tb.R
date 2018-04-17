@@ -13,8 +13,7 @@
 #' by defining the particular time-to-event end point.
 #'
 #' @param timetoevent Time (in years) from TB notification to final event (death)
-#' @param utility.disease_free Utility value of non-diseased individual e.g. 1
-#' @param utility.case Utility value of diseased individual
+#' @param utility (list) Utility value of non-diseased individual e.g. 1. Utility value of diseased individual
 #' @param age Ages in years
 #' @param start_delay What time delay to time origin, to shift discounting to smaller values
 #' @param ... Additional arguments
@@ -25,19 +24,21 @@
 #' @examples
 #'
 calc_QALY_tb <- function(timetoevent,
-                         utility.disease_free = 1,
-                         utility.case,
+                         utility,
                          age,
                          start_delay = NA,
                          ...){
 
-  if (utility.disease_free < 0 || utility.disease_free > 1)
+  if (utility$disease_free < 0 || utility$disease_free > 1)
     stop("Utility of disease free must be between 0 and 1")
 
-  if (utility.case < 0 || utility.case > 1)
+  if (utility$case < 0 || utility$case > 1)
     stop("Utility of cases must be between 0 and 1")
 
-  if (is.list(timetoevent)) {
+  if (utility$postTx < 0 || utility$postTx > 1)
+    stop("Utility of post-treatment must be between 0 and 1")
+
+    if (is.list(timetoevent)) {
     timetoevent <-
       timetoevent %>%
       unlist() %>%
@@ -50,9 +51,12 @@ calc_QALY_tb <- function(timetoevent,
                           age = age,
                           start_delay = start_delay)
 
-  diseasefree <- QALY_partial(utility = utility.disease_free, time_horizons = timetoevent)
-  fatality <- QALY_partial(utility = utility.case,  timetoevent = pmin(timetoevent, 0.5)) #ie 6 months
-  cured <- QALY_partial(utility = c(utility.case, utility.disease_free), time_horizons = timetoevent)
+  diseasefree <- QALY_partial(utility = utility$disease_free,
+                              time_horizons = timetoevent)
+  fatality <- QALY_partial(utility = utility$case,
+                           time_horizons = pmin(timetoevent, 0.5)) #ie 6 months
+  cured <- QALY_partial(utility = c(utility$case, utility$postTx),
+                        time_horizons = timetoevent)
 
   #otherwise cured is better than disease_free
   for (i in seq_along(timetoevent)) {

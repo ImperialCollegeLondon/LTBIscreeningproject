@@ -12,32 +12,18 @@
 # cohort mean prevalence
 p_LTBI_cohort <- 0.279 #mean(IMPUTED_sample$pLTBI)
 
-# # brute force approach
-# IMPUTED_sample <-
-#   IMPUTED_sample %>%
-#   dplyr::mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
-#                                                       prob = p_incid_year/p_LTBI_cohort),
-#                 rNotificationDate_issdt.years = sim_uktb_times(data = .,
-#                                                                prob = p_incid_year/p_LTBI_cohort),
-#                 exituk_tb = !is.na(exituk_tb.years) &
-#                             !is.infinite(exituk_tb.years),
-#                 uk_tb = !is.na(rNotificationDate_issdt.years) &
-#                         !is.infinite(rNotificationDate_issdt.years))
-
-# two-step approach
+# brute force approach
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  dplyr::mutate(exituk_tb.years = sample_tb_year(fup_issdt = date_exit_uk1_issdt.year,
-                                                 death_issdt = date_death1_issdt.years,
-                                                 prob = p_incid_year/p_LTBI_cohort),
-
-                rNotificationDate_issdt.years = sample_tb_year(fup_issdt = fup_issdt,
-                                                               death_issdt = date_death1_issdt.years,
+  dplyr::mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
+                                                      prob = p_incid_year/p_LTBI_cohort),
+                rNotificationDate_issdt.years = sim_uktb_times(data = .,
                                                                prob = p_incid_year/p_LTBI_cohort),
                 exituk_tb = !is.na(exituk_tb.years) &
                             !is.infinite(exituk_tb.years),
                 uk_tb = !is.na(rNotificationDate_issdt.years) &
                         !is.infinite(rNotificationDate_issdt.years))
+
 
 # is someone screened before something else happens?
 IMPUTED_sample <-
@@ -86,8 +72,7 @@ QALY_all_tb <-
   IMPUTED_sample %>%
   subset(all_tb == TRUE) %$%
   calc_QALY_tb(timetoevent = all_death_rNotificationDate,
-               utility.disease_free = utility$disease_free,
-               utility.case = utility$activeTB,
+               utility = utility,
                age = age_all_notification,
                start_delay = all_tb_issdt)
 
