@@ -27,6 +27,8 @@ message(sprintf("[ policy level parameters ]\n WHO groups: %s\n min stay: %s\n c
                 green(interv$LTBI_test),
                 green(interv$treatment)))
 
+save(interv, file = pastef(diroutput, "interv.RData"))
+
 
 # folder locations --------------------------------------------------------
 
@@ -42,8 +44,6 @@ diroutput <- sprintf("%s/%s", parent_folder, scenario_name)
 dir.create(parent_folder, showWarnings = FALSE)
 dir.create(diroutput, showWarnings = FALSE)
 
-# create temporary output folder
-# diroutput <- tempdir()
 
 plots_folder <- system.file("output", "plots",
                             package = "LTBIscreeningproject")
@@ -52,4 +52,10 @@ dir.create(plots_folder_scenario, showWarnings = FALSE)
 
 cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", scenario_name,
                                    format(Sys.time(), "%Y-%m-%d %I-%p"))
+
+# project README
+sink(pastef(parent_folder, "session_info.txt"))
+sessioninfo::session_info()
+git2r::repository()
+sink()
 

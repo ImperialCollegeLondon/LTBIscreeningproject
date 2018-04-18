@@ -1,9 +1,9 @@
 
 #' subpop_by_exituk_year
 #'
-#' count number deaths & active TB cases in each exit uk year group
+#' Count number deaths & active TB cases in each exit uk year group
 #'
-#' @param data
+#' @param data Individual-level sample?
 #'
 #' @return
 #' @export

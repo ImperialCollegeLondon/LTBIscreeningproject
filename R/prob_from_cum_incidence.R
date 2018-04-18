@@ -25,9 +25,3 @@ prob_from_cum_incidence <- function(cum_incidence_event,
 
   return(diff(cum_incidence_event)/(1 - F_t))
 }
-
-
-trim_last <- function(x){
-
-  x[1:(length(x) - 1)]
-}

@@ -1,7 +1,22 @@
-#*************************************************************
+# *****************************************************
+# LTBI screening
+# N Green
+# 2018
 #
 # gridded plots of the subpopulation sizes over time
-# can do this on the raw, fitted, extrapolated, subsample data
+# can do this on the raw, fitted, extrapolated or subsample data
+
+
+event_times <- list(tb = cohort$rNotificationDate_issdt.years,
+                    exit_uk = cohort$date_exit_uk1_issdt.years,
+                    death = cohort$date_death1_issdt.years)
+
+strat_pop_year <- count_comprsk_events(event_times)
+
+
+filename <- paste(plots_folder_scenario, "time-to-event-grid-plot.png", sep = "/")
+
+png(filename, width = 400, height = 350, res = 45)
 
 par(mfrow = c(2,2))
 
@@ -20,4 +35,9 @@ strat_plot(unlist(strat_pop_year["exit_uk", ]),
 strat_plot(unlist(strat_pop_year["at-risk", ]),
       ylab = "remain in EWNI")
 
-knitr::kable(t(strat_pop_year))
+dev.off()
+
+
+# knitr::kable(t(strat_pop_year))
+
+write.csv(t(strat_pop_year), file =  pastef(diroutput, 'num-competing-events-by-year.csv'))

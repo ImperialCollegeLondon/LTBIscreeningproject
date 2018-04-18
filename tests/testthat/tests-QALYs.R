@@ -3,6 +3,7 @@ context("Calculate QALYs")
 library(QALY)
 library(treeSimR)
 library(dplyr)
+library(memoise)
 
 
 test_that("Compare different outcome QALYs", {
@@ -12,8 +13,9 @@ test_that("Compare different outcome QALYs", {
   start_delay <- rep(0,20)
 
   QALY_tb <- calc_QALY_tb(timetoevent = time_to_event,
-                          utility.disease_free = 1,
-                          utility.case = 0.9,
+                          utility = list(disease_free = 1,
+                                         postTx = 1,
+                                         activeTB = 0.9),
                           age = age_all_notification,
                           start_delay = start_delay)
 
@@ -23,10 +25,11 @@ test_that("Compare different outcome QALYs", {
 
 
   QALY_tb_50y <- calc_QALY_tb(timetoevent = time_to_event,
-                          utility.disease_free = 1,
-                          utility.case = 0.9,
-                          age = rep(50,20),
-                          start_delay = start_delay)
+                              utility = list(disease_free = 1,
+                                             postTx = 1,
+                                             activeTB = 0.9),
+                              age = rep(50,20),
+                              start_delay = start_delay)
 
   expect_true(all(QALY_tb$diseasefree > QALY_tb_50y$diseasefree))
   expect_true(all(QALY_tb$cured > QALY_tb_50y$cured))

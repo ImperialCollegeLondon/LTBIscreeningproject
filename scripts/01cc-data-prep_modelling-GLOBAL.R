@@ -31,6 +31,7 @@ cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all
 
 
 save(cohort, file = "data/cohort.RData")
+save(cohort, file = pastef(diroutput, "cohort.RData"))
 
 
 # discount cost and QALYs in decision tree  ---------------------------------

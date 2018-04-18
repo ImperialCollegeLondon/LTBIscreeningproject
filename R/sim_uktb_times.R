@@ -90,7 +90,6 @@ sample_tb_year <- function(fup_issdt,
 }
 
 
-
 #' Simulate (Unobserved) Active TB Progression Times for UK Individuals
 #'
 #' Basic brute-force approach.

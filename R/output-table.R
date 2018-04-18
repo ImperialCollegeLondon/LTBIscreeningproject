@@ -3,6 +3,7 @@
 #'
 #' Take \code{BCEA} package oject as input and
 #' creates a summary table.
+#' 15000, 20000, 25000, 30000 willingness to pay
 #'
 #' @param bcea_obj Pre-calculated output from BCEA package (class(bcea))
 #'
@@ -47,7 +48,7 @@ table_costeffectiveness <- function(bcea_obj,
 #' @param n_tb_screen_all
 #' @param n_tb_screen_uk
 #'
-#' @return
+#' @return EWNI and total 5%, 50% and 95% quantiles
 #' @export
 #'
 #' @examples
