@@ -39,7 +39,7 @@ source("scripts/05i-output-tables.R")
 # source("scripts/05-CE_plane_trajectories.R")
 # source("scripts/05-upper_triangle_contour_INMB.R")
 
-# source("scripts/05-aTB_histograms.R")
+# source("scripts/05-QALY_cost_distns_by_scenario_plots.R")
 # source("scripts/05a-output-plots_competing-risks.R")
 # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")
 # source("scripts/05g-INMB_ICER_histograms.R")

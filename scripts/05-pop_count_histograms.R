@@ -3,30 +3,31 @@
 # LTBI screening
 # N Green
 #
-# histograms
+# histograms of sampled input values in model
 
 
+# LTBI --------------------------------------------------------------------
 
-number <- NA
+number <- vector(length = 1000)
 for (i in 1:1000) {
 
-  number <- c(number,
-                  sample_tb(prob = 1 - IMPUTED_sample_year_cohort$pLTBI) %>%
-                    sum())
+  number[i] <-
+    sample_tb(prob = 1 - cohort$pLTBI) %>%
+    sum()
 }
 
-hist(number, breaks = 30, main = "")
+hist(number, breaks = 30, main = "", xlab = "Number LTBI in cohort")
 
-proportion <- number/nrow(IMPUTED_sample_year_cohort)
-hist(proportion, breaks = 30, main = "")
+proportion <- number/nrow(cohort)
+hist(proportion, breaks = 30, main = "", xlab = "Proportion LTBI in cohort")
 
 
+#  screening eligible by time -----------------------------------------------
 
-#  ------------------------------------------------------------------------
-
-number <- NA
+number <- vector(length = 1000)
 for (i in 1:1000) {
 
+  # 5 year window
   IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
 
   IMPUTED_sample %<>%
@@ -34,24 +35,23 @@ for (i in 1:1000) {
                                     date_exit_uk1_issdt.years >= screen_year &
                                     (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)), 1, 0))
 
-  number <- c(number, IMPUTED_sample$screen %>% sum())
+  number[i] <- IMPUTED_sample$screen %>% sum()
 }
 
-hist(number, breaks = 30, main = "")
+hist(number, breaks = 30, main = "", xlab = "Number offered screening w/ Unif[0,5] registration time")
 
 proportion <- number/nrow(IMPUTED_sample)
-hist(proportion, breaks = 30, main = "")
+hist(proportion, breaks = 30, main = "", xlab = "Proportion offered screening w/ Unif[0,5] registration time")
 
 
-#  ------------------------------------------------------------------------
+#  expected number of LTBI to start screening pathway ---------------------
+##TODO:
 
-
-# expected number of LTBI to start screening pathway
-x <- aggregate(x = IMPUTED_sample$pLTBI,
+x <-
+  aggregate(x = IMPUTED_sample$pLTBI,
           by = list(IMPUTED_sample$issdt_year),
           sum) %>%
   set_names(c("year", "LTBI"))
-
 
 probs <- p_complete_screen_lookup$prob[p_complete_screen_lookup$who_prev_cat_Pareek2011 == "(350,1e+05]"]
 

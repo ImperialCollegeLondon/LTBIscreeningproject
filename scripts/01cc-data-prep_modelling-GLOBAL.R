@@ -7,12 +7,6 @@
 # calculate associated stats
 
 
-##TODO: ??
-# IMPUTED_sample %>%
-# dplyr::count(who_prev_cat_Pareek2011) %>%
-#   mutate(cumsum = rev(cumsum(rev(n))))
-
-
 # single year cohort only
 cohort <- dplyr::filter(IMPUTED_sample,
                         issdt_year == interv$year_cohort)
@@ -33,8 +27,7 @@ if (interv$no_students) {
 cohort <- dplyr::filter(cohort,
                         who_prev_cat_Pareek2011 %in% interv$incidence_grps_screen)
 
-
-cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(n.all_tb, replace = FALSE)}
+cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
 
 
 save(cohort, file = "data/cohort.RData")
@@ -54,15 +47,7 @@ num_screen_year <- table(ceiling(cohort$screen_year))
 
 # count numbers of tb cases -----------------------------------------------
 
-n.exit_tb <-
-  cohort %>%
-  dplyr::filter(exituk_tb) %>%
-  dplyr::count()
-
-n.uk_tb <-
-  cohort %>%
-  dplyr::filter(uk_tb) %>%
-  dplyr::count()
-
+n.exit_tb <- sum(cohort$exituk_tb)
+n.uk_tb <- sum(cohort$uk_tb)
 n.all_tb <- n.uk_tb + n.exit_tb
 
