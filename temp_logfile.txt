@@ -1,0 +1,67 @@
+starting worker pid=8208 on localhost:11975 at 10:08:01.718
+starting worker pid=7780 on localhost:11975 at 10:08:03.968
+starting worker pid=11232 on localhost:11975 at 10:08:06.276
+starting worker pid=8872 on localhost:11975 at 10:08:08.326
+starting worker pid=10184 on localhost:11975 at 10:08:10.593
+starting worker pid=12612 on localhost:11975 at 10:08:12.709
+starting worker pid=14136 on localhost:11975 at 10:08:14.879
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+3: In gzfile(file, "rb") :
+  cannot open compressed file 'osNode_cost_2009.Rds', probable reason 'No such file or directory'
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+Execution halted
+Error in unserialize(node$con) : error reading from connection
+Calls: <Anonymous> ... doTryCatch -> recvData -> recvData.SOCKnode -> unserialize
+In addition: Warning messages:
+1: In file(filename, "r", encoding = encoding) :
+  cannot open file 'subset_pop_dectree.R': No such file or directory
+2: In file(filename, "r", encoding = encoding) :
+  cannot open file 'myToDataFrame_fns.R': No such file or directory
+3: In gzfile(file, "rb") :
+  cannot open compressed file 'osNode_cost_2009.Rds', probable reason 'No such file or directory'
+Execution halted

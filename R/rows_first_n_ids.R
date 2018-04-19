@@ -4,15 +4,15 @@
 #' Finds the rows corresponding to the first \code{n} individuals
 #' by ascending id numbers.
 #'
-#' @param id_avoided IDs, may have gaps/missing numbers
-#' @param n_avoided Number integer
+#' @param id_avoid IDs, may have gaps/missing numbers
+#' @param n_avoid Number integer
 #'
 #' @return logical vector
 #' @export
 #'
 #' @examples
-rows_first_n_ids <- function(id_avoided, n_avoided) {
+rows_first_n_ids <- function(id_avoid, n_avoid) {
 
-  id_avoided <- sort(id_avoided)[seq_len(n_avoided)]
-  id_avoided %in% id_avoided
+  who_avoid <- sort(id_avoid)[seq_len(n_avoid)]
+  id_avoid %in% who_avoid
 }

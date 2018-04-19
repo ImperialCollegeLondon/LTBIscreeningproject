@@ -16,9 +16,9 @@ test_that("basic structure", {
                                cost_dectree = "osNode_cost_2009.Rds",
                                health_dectree = "osNode_cost_2009.Rds")
 
-  expect_named(res, c("mc_cost", "mc_health", "n_tb_screen_all", "n_tb_screen_uk", "p_LTBI_to_effectiveTx", "subset_pop", "call", "N.mc"))
+  expect_named(res, c("mc_cost", "mc_health", "n_tb_screen_all", "n_tb_screen_uk", "p_LTBI_to_effectiveTx", "subset_pop", "osNode.cost", "osNode.health", "call", "N.mc"))
 
-  expect_length(res, 8)
+  expect_length(res, 10)
   expect_length(res$mc_cost, 2)
   expect_length(res$mc_health, 2)
   expect_length(res$p_LTBI_to_effectiveTx, 1)

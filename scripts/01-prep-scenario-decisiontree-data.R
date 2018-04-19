@@ -21,10 +21,12 @@ parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
-                                              sheet = "cost", na = c("", NA))
+                                              sheet = "cost", na = c("", NA),
+                                              col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
 
 scenario_parameter_p <- readxl::read_excel(parameter_values_file,
-                                           sheet = "p", na = c("", NA))
+                                           sheet = "p", na = c("", NA),
+                                           col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
 
 scenario_parameter_cost$val_type <- "cost"
 
@@ -38,6 +40,7 @@ if (nrow(scenario_parameter_p) > 0) {
                              "value" = "p")) %>%
     mutate(val_type = "QALYloss") %>%
     dplyr::bind_rows(scenario_parameter_cost, .)
+
 }else{
   scenario_parameters <- scenario_parameter_cost
 }
@@ -53,7 +56,8 @@ save(scenario_parameters, file = "data/scenario_parameters.RData")
 # convert to percentages and simplify names
 design_matrix <-
   scenario_parameter_p %>%
-  mutate_at(vars(-matches("scenario")), funs(.*100)) %>%
+  mutate_at(vars(-scenario),
+            funs(.*100)) %>%
   set_names(~sub(' Treatment', '', .x)) %>%
   set_names(~sub(' to Screen', '', .x))
 

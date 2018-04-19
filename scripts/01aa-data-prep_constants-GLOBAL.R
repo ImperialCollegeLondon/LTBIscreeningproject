@@ -27,8 +27,6 @@ message(sprintf("[ policy level parameters ]\n WHO groups: %s\n min stay: %s\n c
                 green(interv$LTBI_test),
                 green(interv$treatment)))
 
-save(interv, file = pastef(diroutput, "interv.RData"))
-
 
 # folder locations --------------------------------------------------------
 
@@ -55,7 +53,9 @@ cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", scenario_na
 
 # project README
 sink(pastef(parent_folder, "session_info.txt"))
-sessioninfo::session_info()
-git2r::repository()
+  sessioninfo::session_info()
+  git2r::repository()
 sink()
+
+save(interv, file = pastef(diroutput, "interv.RData"))
 

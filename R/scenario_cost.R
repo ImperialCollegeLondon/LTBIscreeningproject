@@ -48,7 +48,7 @@ scenario_cost <- function(endpoint,
                                    na.omit(discounts_1st))
   notif.screened <- notif.statusquo
 
-  who_tb_avoided <- rows_first_n_ids(costeff_cohort$id_tb_avoided, n_avoid)
+  who_tb_avoided <- rows_first_n_ids(costeff_cohort$id_avoided_tb, n_avoid)
 
   notif.screened[who_tb_avoided] <- 0
 

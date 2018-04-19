@@ -24,11 +24,14 @@ osNode.cost <- costeff.cost$osNode
 costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
 osNode.health <- costeff.health$osNode
 
-who_levels <- osNode.cost$Get('name', pruneFun = function(x) x$level <= 2)[-1] %>% 'names<-'(NULL)
+who_levels <-
+  osNode.cost$Get('name',
+                  pruneFun = function(x) x$level <= 2)[-1] %>%
+  'names<-'(NULL)
 
 p_incid_grp <- prop_table(cohort$who_prev_cat_Pareek2011)
 
-pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = names(p_incid_grp),
+pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = who_levels,
                             LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
 
 
@@ -146,3 +149,4 @@ save(osNode.health, file = paste0(data_folder, "/osNode_health_2009.RData"))
 
 saveRDS(osNode.cost, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_cost_2009.Rds"))
 saveRDS(osNode.health, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_health_2009.Rds"))
+

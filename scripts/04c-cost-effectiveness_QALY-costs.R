@@ -21,7 +21,6 @@ n_exit_tb <- unlist(unname(n.exit_tb))
 n_all_tb <- n_exit_tb + n_uk_tb
 
 # Numbers of individuals who avoid getting TB due to screening
-
 avoid_all_tb <-
   scenario_res$n_tb_screen_all %>%
   purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
@@ -75,7 +74,7 @@ costeff_cohort <-
          all_notif_discounts,
          uk_secondary_inf_discounts,
          all_secondary_inf_discounts,
-         id_tb_avoided) %>%
+         id_avoided_tb) %>%
   mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
          E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
          E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))

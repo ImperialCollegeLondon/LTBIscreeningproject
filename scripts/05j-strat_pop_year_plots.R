@@ -40,4 +40,9 @@ dev.off()
 
 # knitr::kable(t(strat_pop_year))
 
-write.csv(t(strat_pop_year), file =  pastef(diroutput, 'num-competing-events-by-year.csv'))
+screen <- table(ceiling(cohort$screen_year))
+screen <- c(screen, rep(0, 100 - length(screen)))
+strat_pop_year <- cbind(t(strat_pop_year), screen)
+
+write.csv(strat_pop_year, file =  pastef(diroutput, 'num-competing-events-by-year.csv'))
+

@@ -33,8 +33,8 @@ decision_tree_cluster <- function(parameters,
                        parameter_p = subset(parameters, val_type == "QALYloss"),
                        parameter_cost = subset(parameters, val_type == "cost"))
 
-  path_probs.screen <- calc_pathway_probs(osNode.cost)
-  osNode.cost$Set(path_probs = path_probs.screen)
+  osNode.cost$Set(path_probs = calc_pathway_probs(osNode.cost))
+  osNode.health$Set(path_probs = calc_pathway_probs(osNode.health))
 
   p_LTBI_to_effectiveTx <- p_complete_Tx(osNode.cost = osNode.cost,
                                          who_levels = c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"))
@@ -52,12 +52,17 @@ decision_tree_cluster <- function(parameters,
 
   subset_pop <- subset_pop_dectree(osNode.cost)
 
+  osNode.cost$Set(weighted_sampled = osNode.cost$Get('path_probs') * osNode.cost$Get('sampled'))
+  osNode.health$Set(weighted_sampled = osNode.health$Get('path_probs') * osNode.health$Get('sampled'))
+
   list(mc_cost = as.numeric(mc_cost$`expected values`),
        mc_health = as.numeric(mc_health$`expected values`),
        n_tb_screen_all = n_tb_screen$n.tb_screen.all_tb,
        n_tb_screen_uk  = n_tb_screen$n.tb_screen.uk_tb,
        p_LTBI_to_effectiveTx = p_LTBI_to_effectiveTx,
        subset_pop = subset_pop,
+       osNode.cost = osNode.cost,
+       osNode.health = osNode.health,
        call = mcall,
        N.mc = N.mc)
 }

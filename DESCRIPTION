@@ -37,7 +37,8 @@ Imports:
     parallel,
     ggtern,
     miscUtilities,
-    crayon
+    crayon,
+    tibble
 RoxygenNote: 6.0.1
 Suggests:
     knitr,

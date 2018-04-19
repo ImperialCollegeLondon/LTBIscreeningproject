@@ -1,12 +1,13 @@
 #
 # LTBI screening
 # N Green
+# combine-costeffectiveness-tables.R
 #
 # combine all CE output in to single table
 
 
-# flder <- list.dirs(parent_folder)[-1]
-flder <- list.dirs("ext-data/18_to_35_in_2009")[-1]
+flder <- list.dirs(parent_folder)[-1]
+# flder <- list.dirs("ext-data/18_to_35_in_2009")[-1]
 
 tab <- NULL
 

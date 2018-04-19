@@ -1,7 +1,11 @@
+# ***************************************************
+# project: LTBI screening
+# N Green
 #
 # 05-num_subset_dectree
 #
 
+num_screen_year <- table(ceiling(cohort$screen_year))
 
 num_subset_list <-
   map(dectree_res, "subset_pop") %>%

@@ -8,18 +8,18 @@
 
 # set-up ---------------------------------------------------------------
 
-source("scripts/01aa-data-prep_constants-GLOBAL.R", echo = TRUE)
-source("scripts/01cc-data-prep_modelling-GLOBAL.R", echo = TRUE)
+source("scripts/01aa-data-prep_constants-GLOBAL.R")#, echo = TRUE)
+source("scripts/01cc-data-prep_modelling-GLOBAL.R")#, echo = TRUE)
 
-source("scripts/cluster-prep-decisiontree-data_pdistn.R", echo = TRUE)
+source("scripts/cluster-prep-decisiontree-data_pdistn.R")#, echo = TRUE)
 
 # modelling ------------------------------------------------------------
 
-if (!interv$cluster) source("scripts/02-parallel-decision-tree.R", echo = TRUE)
+if (!interv$cluster) source("scripts/02-parallel-decision-tree.R")#, echo = TRUE)
 if (interv$cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
-source("scripts/04c-cost-effectiveness_QALY-costs.R", echo = TRUE)
-source("scripts/04-combine_dectree_and_cmprk_model_output.R", echo = TRUE)
+source("scripts/04c-cost-effectiveness_QALY-costs.R")#, echo = TRUE)
+source("scripts/04-combine_dectree_and_cmprk_model_output.R")#, echo = TRUE)
 
 
 # output plots/tables --------------------------------------------------
@@ -27,7 +27,7 @@ source("scripts/04-combine_dectree_and_cmprk_model_output.R", echo = TRUE)
 source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05i-output-tables.R")
 
-source("scripts/05j-stat_pop_year_plots.R")
+source("scripts/05j-strat_pop_year_plots.R")
 
 # source("scripts/05-ceac-plot.R")
 # source("scripts/05-net-benefit.R")

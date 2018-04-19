@@ -47,7 +47,7 @@ cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n
 
 
 gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
-gg + scale_colour_manual(values = cbPalette)
+suppressMessages(gg + scale_colour_manual(values = cbPalette))
 
 
 filename <- paste(plots_folder_scenario, "CE_plane2.png", sep = "/")

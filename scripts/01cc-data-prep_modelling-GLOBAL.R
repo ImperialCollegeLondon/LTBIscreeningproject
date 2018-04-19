@@ -37,14 +37,11 @@ save(cohort, file = pastef(diroutput, "cohort.RData"))
 # discount cost and QALYs in decision tree  ---------------------------------
 ## due to delayed start
 
-prop_screen_year <- ceiling(cohort$screen_year) %>% miscUtilities::prop_table()
+prop_screen_year <- ceiling(cohort$screen_year) %>% prop_table()
 screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
 
 # year cohort size potentially screened
 pop_year <- nrow(cohort)
-
-num_screen_year <- table(ceiling(cohort$screen_year))
-
 
 # count numbers of tb cases -----------------------------------------------
 

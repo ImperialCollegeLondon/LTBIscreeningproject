@@ -29,11 +29,11 @@ sources_correctly <- NULL
 
 runtime <- proc.time()
 
-# global_run <- 38
+# global_run <- 4
 # for (global_run in c(38,44,39,45)) {
 for (global_run in seq_along(global_params_scenarios_ls)) {
 
-  message(sprintf("[ programme level parameters ] scenario: %s", green(global_run)))
+  message(sprintf("[ policy level parameters ]\n scenario: %s", green(global_run)))
 
   try_out <- try(source("scripts/00-main.R"))
 
@@ -44,5 +44,9 @@ for (global_run in seq_along(global_params_scenarios_ls)) {
   sources_correctly <- c(sources_correctly, !inherits(try_out, "try-error"))
 }
 
+source("scripts/combine-costeffectiveness-tables.R")
+
 proc.time() - runtime
+
+print(sources_correctly)
 
