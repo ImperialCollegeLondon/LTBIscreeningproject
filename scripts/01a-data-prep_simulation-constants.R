@@ -17,7 +17,6 @@ no_students <- FALSE
 
 force_everyone_stays <- FALSE
 
-ENDPOINT_QALY <- "death" #"exit uk"
 
 # rather than screen _everyone_ on entry
 # screen at random 0-5 years from entry
@@ -45,11 +44,12 @@ year_cohort <- '2009' #largest cohort
 incidence_grps_screen <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 min_screen_length_of_stay <- 0
 ENDPOINT_cost <- "death"
+ENDPOINT_QALY <- "death" #"exit uk"
 
 
 interv <-
   list(force_everyone_stays = force_everyone_stays,
-       ENDPOINT_QALY = ENDPOINT_QALY,
+       # ENDPOINT_QALY = ENDPOINT_QALY,
        # ENDPOINT_cost = ENDPOINT_cost,
        # incidence_grps_screen = incidence_grps_screen,
        # min_screen_length_of_stay = min_screen_length_of_stay,

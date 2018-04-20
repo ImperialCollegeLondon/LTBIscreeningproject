@@ -11,6 +11,8 @@ data("051206 - IMPUTED_sample")
 
 # 1) define and clean data ---------------------------------------------
 
+source("script/global-parameters-environment-create.R")
+
 source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
 
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)

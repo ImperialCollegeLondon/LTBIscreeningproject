@@ -29,7 +29,7 @@ sources <- list.files(pattern = "[.]R$")[!grepl(x = list.files(pattern = "[.]R$"
 no_cores <- detectCores() - 1
 
 # Initiate cluster
-cl <- makeCluster(no_cores, outfile = "temp_logfile.txt")
+cl <- makeCluster(no_cores)#, outfile = "temp_logfile.txt")
 
 n.uk_tb <- unlist(n.uk_tb)
 n.exit_tb <- unlist(n.exit_tb)

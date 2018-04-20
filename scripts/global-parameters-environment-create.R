@@ -8,7 +8,6 @@
 
 programme_scenarios <- data.frame()
 
-
 incidence_list <-  list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
                         c("(150,250]", "(250,350]", "(350,1e+05]"),
                         c("(250,350]", "(350,1e+05]"))
@@ -24,37 +23,40 @@ LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 
 programme_level <- 1
 
-for (min_screen_length_of_stay in c(0,5)) {
+for (min_screen_length_of_stay in 0) {
   for (incidence in 1:length(incidence_list)) {
-    for (endpoint_cost in endpoints) {
-      for (test in LTBI_test) {
-        for (treat in treatment) {
+    for (endpoint_QALY in 1:2) {
+      for (endpoint_cost in endpoint_QALY:2) {
+        for (test in LTBI_test[3]) {
+          for (treat in treatment) {
 
-          programme_scenarios <- rbind(programme_scenarios,
-                                       cbind(policy = formatC(programme_level, width = 3, format = "d", flag = "0"),
-                                             min_screen_length_of_stay,
-                                             incid_grps = as.character(incidence_list[incidence]),
-                                             treatment = treat,
-                                             LTBI_test = test,
-                                             endpoint_cost))
+            programme_scenarios <- rbind(programme_scenarios,
+                                         cbind(policy = formatC(programme_level, width = 3, format = "d", flag = "0"),
+                                               min_screen_length_of_stay,
+                                               incid_grps = as.character(incidence_list[incidence]),
+                                               treatment = treat,
+                                               LTBI_test = test,
+                                               endpoint_cost = endpoints[endpoint_cost],
+                                               endpoint_QALY = endpoints[endpoint_QALY]))
 
-          environ_name <- sprintf("programme_level_scenario_%s",
-                                  formatC(programme_level, width = 3, format = "d", flag = "0"))
+            environ_name <- sprintf("programme_level_scenario_%s",
+                                    formatC(programme_level, width = 3, format = "d", flag = "0"))
 
-          assign(x = environ_name, value = new.env())
-          assign(x = "min_screen_length_of_stay", value = min_screen_length_of_stay, envir = eval(parse(text = environ_name)))
-          assign(x = "incidence_grps_screen", value = incidence_list[[incidence]], envir = eval(parse(text = environ_name)))
-          assign(x = "ENDPOINT_cost", value = endpoint_cost, envir = eval(parse(text = environ_name)))
-          assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
-          assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
+            assign(x = environ_name, value = new.env())
+            assign(x = "min_screen_length_of_stay", value = min_screen_length_of_stay, envir = eval(parse(text = environ_name)))
+            assign(x = "incidence_grps_screen", value = incidence_list[[incidence]], envir = eval(parse(text = environ_name)))
+            assign(x = "ENDPOINT_cost", value = endpoints[endpoint_cost], envir = eval(parse(text = environ_name)))
+            assign(x = "ENDPOINT_QALY", value = endpoints[endpoint_QALY], envir = eval(parse(text = environ_name)))
+            assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
+            assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
 
-          programme_level %<>% add(1)
+            programme_level %<>% add(1)
+          }
         }
       }
     }
   }
 }
-
 
 global_params <-
   programme_scenarios %>%

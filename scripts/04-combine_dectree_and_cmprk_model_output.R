@@ -30,7 +30,7 @@ LTBI_QALYgain <- from_list_to_BCEA(purrr::map(dectree_res, "mc_health"), -screen
 c.total <- as.matrix(LTBI_cost + tb_cost)
 e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
 
-save(e.total, c.total, file = "data/e_and_c_totals.RData")
+save(e.total, c.total, file = pastef(diroutput, "e_and_c_totals.RData"))
 
 
 # create nmb matrix ----------------------------------------------------

@@ -51,11 +51,5 @@ dir.create(plots_folder_scenario, showWarnings = FALSE)
 cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", scenario_name,
                                    format(Sys.time(), "%Y-%m-%d %I-%p"))
 
-# project README
-sink(pastef(parent_folder, "session_info.txt"))
-  sessioninfo::session_info()
-  git2r::repository()
-sink()
-
 save(interv, file = pastef(diroutput, "interv.RData"))
 
