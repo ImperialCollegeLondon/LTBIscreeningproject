@@ -1,35 +1,38 @@
 
 #' Calculate total QALYs of a scenario
 #'
-#' TODO: could generalise like for cost to select EWNI only too
-#'
 #' @param num_avoided Number avoided for each endpoint
-#' @param costeff_cohort Individual data
 #' @param endpoint 'death' or 'exit uk'
+#' @param costeff_cohort Individual data
 #'
-#' @return list of status-quo and screen life-time QALYs
+#' @return list of status-quo and screened life-time QALYs
 #' @export
 #'
 #' @examples
 scenario_QALY <- function(num_avoided,
-                          costeff_cohort,
-                          endpoint = 'death') {
+                          endpoint,
+                          costeff_cohort) {
 
-  QALY_statusquo <- costeff_cohort$QALY_statusquo
-  QALY_diseasefree <- costeff_cohort$QALY_diseasefree
+  assert_that(endpoint %in% c("death", "exit uk"))
 
-  screened <- QALY_statusquo
+  keep_tb <-
+    switch(endpoint,
+           "death" = costeff_cohort$all_tb,
+           "exit uk" = costeff_cohort$uk_tb)
 
-  who_avoid <- rows_first_n_ids(costeff_cohort$id_avoided_tb,
+  QALY_statusquo <- costeff_cohort$QALY_statusquo[keep_tb]
+  QALY_diseasefree <- costeff_cohort$QALY_diseasefree[keep_tb]
+  id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
+
+  QALY_screened <- QALY_statusquo
+
+  who_avoid <- rows_first_n_ids(id_avoided_tb,
                                 num_avoided[endpoint])
 
-  screened[who_avoid] <- QALY_diseasefree[who_avoid]
+  QALY_screened[who_avoid] <- QALY_diseasefree[who_avoid]
 
-  statusquo <- sum(QALY_statusquo)
-  screened  <- sum(screened)
-
-  return(list(statusquo = statusquo,
-              screened = screened))
+  return(list(statusquo = sum(QALY_statusquo),
+              screened = sum(QALY_screened)))
 }
 
 

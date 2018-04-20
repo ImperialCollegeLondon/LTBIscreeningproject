@@ -16,14 +16,17 @@ if (exists("global_run")) {
   interv$incidence_grps_screen <- get_current_scenario("incidence_grps_screen")
   interv$min_screen_length_of_stay <- get_current_scenario("min_screen_length_of_stay")
   interv$ENDPOINT_cost <- get_current_scenario("ENDPOINT_cost")
+  interv$ENDPOINT_QALY <- get_current_scenario("ENDPOINT_QALY")
   interv$LTBI_test <- get_current_scenario("LTBI_test")
   interv$treatment <- get_current_scenario("treatment")
 }
 
-message(sprintf("[ policy level parameters ]\n WHO groups: %s\n min stay: %s\n cost endpoint: %s\n test: %s\n treatment: %s",
+message(sprintf("[ policy level parameters ]\n scenario: %s\n WHO groups: %s\n min stay: %s\n cost endpoint: %s\n QALY endpoint: %s\n test: %s\n treatment: %s",
+                green(global_run),
                 green(paste(interv$incidence_grps_screen, collapse = "")),
                 green(interv$min_screen_length_of_stay),
                 green(interv$ENDPOINT_cost),
+                green(interv$ENDPOINT_QALY),
                 green(interv$LTBI_test),
                 green(interv$treatment)))
 

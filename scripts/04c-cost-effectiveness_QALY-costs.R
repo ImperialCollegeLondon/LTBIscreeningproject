@@ -66,6 +66,8 @@ costeff_cohort <-
   cohort %>%
   dplyr::filter(all_tb) %>%
   select(cfr,
+         uk_tb,
+         all_tb,
          QALY_statusquo,
          QALY_diseasefree,
          QALY_cured,
@@ -79,8 +81,6 @@ costeff_cohort <-
          E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
          E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))
 
-# save(costeff_cohort, file = "tests/testthat/costeff_cohort.RData")
-
 
 ########
 # main #
@@ -93,6 +93,7 @@ interv_scenario_cost <- partial(scenario_cost,
                                 costeff_cohort = costeff_cohort)
 
 interv_scenario_QALY <- partial(scenario_QALY,
+                                endpoint = interv$ENDPOINT_QALY,
                                 costeff_cohort = costeff_cohort)
 
 for (s in seq_len(n.scenarios)) {

@@ -18,12 +18,14 @@ library(assertthat)
 library(miscUtilities)
 library(crayon)
 library(tibble)
+library(memoise)
+library(QALY)
 
+save_session_info("session_info.txt")
 
-sink("session_info.txt")
-  sessioninfo::session_info()
-  git2r::repository()
-sink()
+##########
+# inputs #
+##########
 
 # source("scripts/create_LTBI_input_workspace.R")
 
@@ -44,13 +46,17 @@ Rout <- file("output/messages.Rout", open = "wt")
 sink(Rout, type = "message")
 
 
-# global_run <- 4
-# for (global_run in c(38,44,39,45)) {
+#########
+# model #
+#########
+
+# global_run <- 1
+# for (global_run in c(1,3,5)) {
 for (global_run in seq_along(global_params_scenarios_ls)) {
 
-  message(sprintf("[ policy level parameters ]\n scenario: %s", green(global_run)))
-
-  try_out <- try(source("scripts/00-main.R"))
+  try_out <- try(
+    source("scripts/00-main.R")
+  )
 
   if (inherits(try_out, "try-error")) {
     setwd(home_dir)
@@ -60,6 +66,9 @@ for (global_run in seq_along(global_params_scenarios_ls)) {
 }
 
 source("scripts/combine-costeffectiveness-tables.R")
+
+##TODO: policy-level CE planes
+
 
 elapsed <- proc.time() - runtime
 

@@ -3,8 +3,8 @@
 #'
 #' @param num_sec_inf
 #' @param unit_cost
-#' @param secondary_inf_discounts
 #' @param notif_discounts
+#' @param secondary_inf_discounts
 #'
 #' @return
 #' @export
@@ -13,8 +13,8 @@
 #'
 cost_tb_notif <- function(num_sec_inf,
                           unit_cost,
-                          secondary_inf_discounts,
-                          notif_discounts) {
+                          notif_discounts,
+                          secondary_inf_discounts) {
 
   cost_secondary_inf <- num_sec_inf * unit_cost * secondary_inf_discounts
   total_cost <- (notif_discounts * unit_cost) + cost_secondary_inf
