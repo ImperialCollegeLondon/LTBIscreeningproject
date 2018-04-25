@@ -38,7 +38,8 @@ Imports:
     ggtern,
     miscUtilities,
     crayon,
-    tibble
+    tibble,
+    withr
 RoxygenNote: 6.0.1
 Suggests:
     knitr,

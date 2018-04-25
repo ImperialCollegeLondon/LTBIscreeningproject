@@ -3,7 +3,7 @@
 # N Green
 # Oct 2016
 #
-# high-level script
+# high-level policy script
 
 
 # set-up ---------------------------------------------------------------
@@ -12,6 +12,7 @@ source("scripts/01aa-data-prep_constants-GLOBAL.R")#, echo = TRUE)
 source("scripts/01cc-data-prep_modelling-GLOBAL.R")#, echo = TRUE)
 
 source("scripts/cluster-prep-decisiontree-data_pdistn.R")#, echo = TRUE)
+
 
 # modelling ------------------------------------------------------------
 
@@ -22,7 +23,7 @@ source("scripts/04c-cost-effectiveness_QALY-costs.R")#, echo = TRUE)
 source("scripts/04-combine_dectree_and_cmprk_model_output.R")#, echo = TRUE)
 
 
-# output plots/tables --------------------------------------------------
+# plots/tables ---------------------------------------------------------
 
 source("scripts/05b-output-plots_cost-effectiveness.R")
 source("scripts/05i-output-tables.R")
