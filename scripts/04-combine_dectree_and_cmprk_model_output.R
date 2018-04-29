@@ -8,20 +8,6 @@
 
 # create BCEA dataframe ---------------------------------------------------
 
-from_list_to_BCEA <- function(scenario_list,
-                              discount = 1) {
-
-  scenario_names <-
-    c(0, seq_len(length(scenario_list))) %>%
-    as.character(.)
-
-  scenario_list %>%
-    do.call(cbind.data.frame, .) %>%
-    multiply_by(discount) %>%
-    add_column('0' = 0, .before = 1) %>%
-    set_names(nm = scenario_names)
-}
-
 tb_cost <- from_list_to_BCEA(aTB_CE_stats$cost_incur_person)
 tb_QALYgain <- from_list_to_BCEA(aTB_CE_stats$QALYgain_person)
 LTBI_cost <- from_list_to_BCEA(purrr::map(dectree_res, "mc_cost"), screen_discount)
@@ -30,7 +16,8 @@ LTBI_QALYgain <- from_list_to_BCEA(purrr::map(dectree_res, "mc_health"), -screen
 c.total <- as.matrix(LTBI_cost + tb_cost)
 e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
 
-save(e.total, c.total, file = pastef(diroutput, "e_and_c_totals.RData"))
+save(e.total, c.total,
+     file = pastef(diroutput, "e_and_c_totals.RData"))
 
 
 # create nmb matrix ----------------------------------------------------

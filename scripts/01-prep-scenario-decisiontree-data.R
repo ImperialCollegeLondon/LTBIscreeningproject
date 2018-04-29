@@ -35,7 +35,7 @@ scenario_parameter_cost$val_type <- "cost"
 if (nrow(scenario_parameter_p) > 0) {
 
   # transform to long format
-  scenario_parameters <-
+  scenario_parameters_df <-
     as.data.frame(scenario_parameter_p) %>%
     reshape2::melt(id.vars = "scenario") %>%
     plyr::rename(replace = c("variable" = "node",
@@ -44,14 +44,14 @@ if (nrow(scenario_parameter_p) > 0) {
     dplyr::bind_rows(scenario_parameter_cost, .)
 
 }else{
-  scenario_parameters <- scenario_parameter_cost
+  scenario_parameters_df <- scenario_parameter_cost
 }
 
 # split by scenario to lists
-scenario_parameters <- split(x = scenario_parameters,
-                             f = scenario_parameters$scenario)
+scenario_parameters <- split(x = scenario_parameters_df,
+                             f = scenario_parameters_df$scenario)
 
-
+write.csv(scenario_parameters_df, file = "data/scenario_parameters_df.csv")
 save(scenario_parameters, file = "data/scenario_parameters.RData")
 
 

@@ -129,6 +129,13 @@ unit_cost$LTBI_Tx_3mISORIF$dropout <- QALY::inflation_adjust_cost(from_year = 20
                                                                   reference = "Jit & White (2015)")
 
 
+unit_cost$GP_incentive <-
+  list(ltbi_positive = list(distn = "none",
+                            params = c(mean = 20)),
+       active_tb = list(distn = "none",
+                        params = c(mean = 100)))
+
+
 # active TB -----------------------------------------------------
 
 # diagnosis

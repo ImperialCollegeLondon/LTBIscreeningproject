@@ -33,9 +33,10 @@ save_session_info("session_info.txt")
 # model #
 #########
 
+data("policies_ls")
 # policies <- 1
 # policies <- c(1,3,5)
-# policies <- seq_along(policies_ls)
+policies <- seq_along(policies_ls)
 
 run_model(policies)
 

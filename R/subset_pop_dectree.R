@@ -35,14 +35,16 @@
 #' Subset Populations of Decision Tree
 #'
 #' Specific to the LTBI screening model, this gives the total
-#' probabilities of particular state on the pathway but summing
-#' across them.
+#' probabilities of particular state on the pathway by summing
+#' across nodes, using pathprobs.
 #'
-#' Absolute counts also TODO
+#' TODO: absolute counts also
+#' TODO: can we use data.tree:: functions instead
+#' of converting to data.table?
 #'
 #' @param osNode
 #'
-#' @return data.frame
+#' @return data.frame of probabilities
 #' @export
 #'
 #' @examples
@@ -50,19 +52,26 @@ subset_pop_dectree <- function(osNode) {
 
   dectree_df <- my_ToDataFrameTypeCol(osNode, "path_probs", "p")
 
+  # LTBI_pre <- leaf_df(dectree_df, level = 3, node_name = "LTBI")
+
   LTBI_pre <- dplyr::filter(dectree_df,
                             level_3 == "LTBI", is.na(level_4))
+
   tests <- dplyr::filter(dectree_df,
                          level_4 == "Agree to Screen", is.na(level_5))
+
   positive <- dplyr::filter(dectree_df,
                             (level_3 == "LTBI" & level_5 == "Sensitivity" & is.na(level_6)) |
                             (level_3 == "non-LTBI" & level_5 == "1-Specificity" & is.na(level_6)))
+
   startTx <- dplyr::filter(dectree_df,
                            level_6 == "Start Treatment", is.na(level_7))
+
   completeTx <- dplyr::filter(dectree_df,
                               level_9 == "Complete Treatment", is.na(level_10))
+
   cured <- dplyr::filter(dectree_df,
-                             level_10 == "Effective")
+                         level_10 == "Effective")
 
   data.frame(LTBI_pre = sum(LTBI_pre$path_probs),
              tests = sum(tests$path_probs),
@@ -72,3 +81,17 @@ subset_pop_dectree <- function(osNode) {
              cured = sum(cured$path_probs),
              LTBI_post = sum(LTBI_pre$path_probs) - sum(cured$path_probs))
 }
+
+
+leaf_df <- function(dectree_df,
+                    level,
+                    node_name) {
+
+  ##TODO: dont provide level and find level from label
+  ##      and then add one for NA
+
+  dplyr::filter(dectree_df,
+                paste0("level_", level) == node_name,
+                is.na(paste0("level_", level + 1)))
+}
+

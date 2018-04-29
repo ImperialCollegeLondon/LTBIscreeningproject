@@ -36,10 +36,11 @@ decision_tree_cluster <- function(parameters,
   osNode.cost$Set(path_probs = calc_pathway_probs(osNode.cost))
   osNode.health$Set(path_probs = calc_pathway_probs(osNode.health))
 
-  p_LTBI_to_effectiveTx <- p_complete_Tx(osNode.cost = osNode.cost,
-                                         who_levels = c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"))
+  subset_pop <- subset_pop_dectree(osNode.cost)
 
-  n_tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_effectiveTx,
+  p_LTBI_to_cured <- with(subset_pop, cured/LTBI_pre)
+
+  n_tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_cured,
                                         n.uk_tb = n.uk_tb,
                                         n.all_tb = n.uk_tb + n.exit_tb,
                                         n = N.mc)
@@ -50,8 +51,6 @@ decision_tree_cluster <- function(parameters,
   mc_health <- MonteCarlo_expectedValues(osNode = osNode.health,
                                          n = N.mc)
 
-  subset_pop <- subset_pop_dectree(osNode.cost)
-
   osNode.cost$Set(weighted_sampled = osNode.cost$Get('path_probs') * osNode.cost$Get('sampled'))
   osNode.health$Set(weighted_sampled = osNode.health$Get('path_probs') * osNode.health$Get('sampled'))
 
@@ -59,7 +58,7 @@ decision_tree_cluster <- function(parameters,
        mc_health = as.numeric(mc_health$`expected values`),
        n_tb_screen_all = n_tb_screen$n.tb_screen.all_tb,
        n_tb_screen_uk  = n_tb_screen$n.tb_screen.uk_tb,
-       p_LTBI_to_effectiveTx = p_LTBI_to_effectiveTx,
+       p_LTBI_to_effectiveTx = p_LTBI_to_cured,
        subset_pop = subset_pop,
        osNode.cost = osNode.cost,
        osNode.health = osNode.health,

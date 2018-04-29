@@ -41,11 +41,8 @@ avoid_tb <-
 rm(avoid_all_tb,
    avoid_uk_tb)
 
-n.scenarios <- length(dectree_res)
-N.mc <- interv$N.mc
-
-interv_cost <- vector(length = N.mc, mode = "list")
-interv_QALY <- vector(length = N.mc, mode = "list")
+interv_cost <- vector(length = interv$N.mc, mode = "list")
+interv_QALY <- vector(length = interv$N.mc, mode = "list")
 stats_scenario <- vector(length = n.scenarios, mode = "list")
 
 # expected statistics for reproducability/comparison with randomly generated values
@@ -100,7 +97,7 @@ for (s in seq_len(n.scenarios)) {
 
   message(sprintf("[ population model ] scenario: %s", green(s)))
 
-  for (i in seq_len(N.mc)) {
+  for (i in seq_len(interv$N.mc)) {
 
     # set.seed(12345)
 

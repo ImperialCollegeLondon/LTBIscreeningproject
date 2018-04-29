@@ -22,7 +22,7 @@ LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 programme_level <- 1
 
 for (min_screen_length_of_stay in 0) {
-  for (incidence in 1:length(incidence_list[1])) {
+  for (incidence in seq_along(incidence_list)) {
     for (endpoint_QALY in 1:2) {
       for (endpoint_cost in endpoint_QALY:2) {
         for (test in LTBI_test[3]) {

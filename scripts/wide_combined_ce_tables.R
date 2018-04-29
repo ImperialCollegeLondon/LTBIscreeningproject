@@ -43,6 +43,7 @@ for (i in seq_along(flder)) {
 
 
 res <- do.call(cbind, tab, quote = TRUE)
+# remove duplicate columns
 res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
 
 write.csv(res, file = "ext-data/wide_combined_costeffectiveness_tables.csv")

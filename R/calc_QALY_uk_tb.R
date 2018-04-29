@@ -32,11 +32,7 @@ calc_QALY_tb <- function(timetoevent,
   if (utility$disease_free < 0 || utility$disease_free > 1)
     stop("Utility of disease free must be between 0 and 1")
 
-<<<<<<< HEAD
   if (utility$activeTB < 0 || utility$activeTB > 1)
-=======
-  if (utility$case < 0 || utility$case > 1)
->>>>>>> origin/master
     stop("Utility of cases must be between 0 and 1")
 
   if (utility$postTx < 0 || utility$postTx > 1)
@@ -57,15 +53,11 @@ calc_QALY_tb <- function(timetoevent,
 
   diseasefree <- QALY_partial(utility = utility$disease_free,
                               time_horizons = timetoevent)
-<<<<<<< HEAD
+
   fatality <- QALY_partial(utility = utility$activeTB,
                            time_horizons = pmin(timetoevent, 0.5)) #ie 6 months
+
   cured <- QALY_partial(utility = c(utility$activeTB, utility$postTx),
-=======
-  fatality <- QALY_partial(utility = utility$case,
-                           time_horizons = pmin(timetoevent, 0.5)) #ie 6 months
-  cured <- QALY_partial(utility = c(utility$case, utility$postTx),
->>>>>>> origin/master
                         time_horizons = timetoevent)
 
   #otherwise cured is better than disease_free

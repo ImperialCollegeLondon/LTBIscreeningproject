@@ -108,7 +108,7 @@ osNode.health$Set(pmax = eff$pmax,
                   filterFun = function(x) x$name == "Effective")
 
 
-# LTBI test ---------------------------------------------------------------
+# LTBI test prob -----------------------------------------------------------
 
 performance <-  test_performance[[interv$LTBI_test]]
 
@@ -139,6 +139,24 @@ osNode.health$Set(pmin = performance$spec$pmin,
 
 osNode.health$Set(pmax = performance$spec$pmax,
                   filterFun = function(x) x$name == "Specificity")
+
+
+# GP incentives -----------------------------------------------------------
+
+ltbi_positive <- unit_cost$GP_incentive$ltbi_positive
+
+osNode.cost$Set(min = ltbi_positive$params['mean'],
+                filterFun = function(x) x$name == "Sensitivity")
+
+osNode.cost$Set(max = ltbi_positive$params['mean'],
+                filterFun = function(x) x$name == "Sensitivity")
+
+osNode.cost$Set(min = ltbi_positive$params['mean'],
+                filterFun = function(x) x$name == "1-Specificity")
+
+osNode.cost$Set(max = ltbi_positive$params['mean'],
+                filterFun = function(x) x$name == "1-Specificity")
+
 
 #  save -----------------------------------------------------------------
 
