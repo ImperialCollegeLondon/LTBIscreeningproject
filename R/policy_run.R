@@ -3,7 +3,7 @@
 #'
 #' a single policy simulation
 #'
-#' @return
+#' @return empty
 #' @export
 #'
 #' @examples
@@ -38,10 +38,14 @@ policy_run <- function() {
   # plots/tables ---------------------------------------------------------
 
   source("scripts/05b-output-plots_cost-effectiveness.R")
-  source("scripts/05i-output-tables.R")
-
   source("scripts/05j-strat_pop_year_plots.R")
+
+  table_costeffectiveness(screen.bcea, wtp_threshold, diroutput)
+
   num_subset_dectree(cohort, dectree_res, diroutput)
+  table_tb_avoided(dectree_res, diroutput)
+  cbind_all_subsets(diroutput)
+
 
   # source("scripts/05-ceac-plot.R")
   # source("scripts/05-net-benefit.R")

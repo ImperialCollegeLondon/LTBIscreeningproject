@@ -7,7 +7,7 @@
 # calculate associated stats
 
 
-cohohot <- policy_cohort(cohort, interv)
+cohort <- policy_cohort(cohort, interv)
 
 
 # discount cost and QALYs in decision tree  ---------------------------------

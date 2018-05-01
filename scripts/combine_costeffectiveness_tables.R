@@ -19,7 +19,7 @@ for (i in seq_along(flder)) {
     rbind(tab, .)
 }
 
-policy_desc <- read.csv("ext-data/programme-level-scenarios-inputs.csv")
+policy_desc <- read.csv("ext-data/policies-inputs.csv")
 
 tab <- merge(policy_desc, tab, by = 'policy', all.y = TRUE, all.x = FALSE)
 

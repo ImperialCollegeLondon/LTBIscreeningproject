@@ -1,7 +1,7 @@
 
 #' run_model
 #'
-#' @param policies
+#' @param policies Index number
 #' @param sink_out output to file?
 #'
 #' @return none
@@ -42,8 +42,8 @@ run_model <- function(policies,
                            !inherits(try_out, "try-error"))
   }
 
-  try(source("scripts/combine-costeffectiveness-tables.R"))
-  try(source("scripts/combine-num_screen-tables.R"))
+  try(source("scripts/combine_costeffectiveness_tables.R"))
+  try(source("scripts/combine_num_screen_tables.R"))
   try(source("scripts/e_and_c_totals_by_scenario.R"))
   try(source("scripts/wide_combined_ce_tables.R"))
   try(source("scripts/CE_plane_by_scenario.R"))

@@ -1,28 +1,32 @@
 #
 # LTBI screening
 # N Green
-# combine-num_screen-tables.R
+# combine_num_screen_tables.R
 
 
 flder <- list.dirs(parent_folder)[-1]
 
-tab <- NULL
+tab <-
+  read.csv(paste0(flder[1], "/all_subsets.csv")) %>%
+  select(-X)
 
-for (i in seq_along(flder)) {
+for (i in seq_along(flder)[-1]) {
 
   tab <-
-    read.csv(paste0(flder[i], "/num_subset_dectree.csv")) %>%
-    add_column('policy' = i) %>%
-    rbind(tab, .)
+    read.csv(paste0(flder[i], "/all_subsets.csv")) %>%
+    select(-X) %>%
+    merge(tab, .,
+          by = c("scenario", "X2"),
+          suffixes = c("", paste("_", i, sep = "")))
 }
 
-policy_desc <- read.csv("ext-data/programme-level-scenarios-inputs.csv")
 
-tab <- merge(policy_desc, tab,
-             by = 'policy',
-             all.y = TRUE, all.x = FALSE)
+tab <-
+  tab %>%
+  mutate(scenario = as.numeric(scenario)) %>%
+  arrange(scenario)
 
-write.csv(tab, file = "ext-data/combined_num_screen_tables.csv")
+write.csv(tab, file = "ext-data/combined_all_subsets.csv")
 
 
 

@@ -1,12 +1,12 @@
 
 #' num_subset_dectree
 #'
-#' @param cohort
+#' @param cohort individual level data
 #' @param dectree_res
-#' @param diroutput
-#' @param by_screen_year
+#' @param diroutput folder text string
+#' @param by_screen_year TRUE or FALSE
 #'
-#' @return
+#' @return tibble
 #' @export
 #'
 #' @examples
@@ -16,23 +16,38 @@ num_subset_dectree <- function(cohort,
                                diroutput,
                                by_screen_year = FALSE) {
 
-  if (by_screen_year) {num_screen_year <- table(ceiling(cohort$screen_year))
-  } else {num_screen_year <- nrow(cohort)}
+  num_screen_year <-
+    if (by_screen_year) {
+      table(ceiling(cohort$screen_year))
+    } else {
+      nrow(cohort)}
 
-  num_subset_list <-
-    map(dectree_res, "subset_pop") %>%
-    lapply(function(x) cbind(total = 1, x)) %>%
-    lapply(function(x) num_screen_year %o% t(x)) %>%
-    map(round)
+  ##TODO: update for each screen year
+  # num_subset_list <-
+  #   dectree_res %>%
+  #   map("subset_pop") %>%
+  #   lapply(function(x) cbind(total = 1, x)) %>%
+  #   lapply(function(x) num_screen_year %o% t(x)) %>%
+  #   map(round) %>%
+  #   plyr::ldply(data.frame,
+  #               .id = "scenario") %>%
+  #   cbind(year = seq_along(num_screen_year), .)
 
   num_subset_dectree <-
-    plyr::ldply(num_subset_list,
-                data.frame,
+    dectree_res %>%
+    map("subset_pop") %>%
+    map(select(-p_LTBI_to_cured)) %>%
+    map(reshape2::melt) %>%
+    plyr::ldply(data.frame,
                 .id = "scenario") %>%
-    cbind(year = seq_along(num_screen_year), .)
+    group_by(scenario, X2) %>%
+    summarise(L95 = quantile(value, 0.05) * num_screen_year,
+              mean = mean(value) * num_screen_year,
+              U95 = quantile(value, 0.95) * num_screen_year)
 
   write.csv(num_subset_dectree,
             file = pastef(diroutput, "num_subset_dectree.csv"))
 
   invisible(num_subset_dectree)
 }
+

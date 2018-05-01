@@ -42,10 +42,11 @@ clusterEvalQ(cl, library(data.tree))
 clusterEvalQ(cl, library(dplyr))
 clusterEvalQ(cl, library(treeSimR))
 clusterEvalQ(cl, library(purrr))
+clusterEvalQ(cl, library(LTBIscreeningproject))
 
 clusterEvalQ(cl, source("subset_pop_dectree.R"))
 clusterEvalQ(cl, source("myToDataFrame_fns.R"))
-# clusterCall(cl, function() { source("subset_pop_dectree.R") })
+clusterEvalQ(cl, source("sample_subset_pop_dectree.R"))
 
 set.seed(12345)
 
@@ -57,7 +58,7 @@ dectree_res <- parLapplyLB(cl,
                            N.mc = interv$N.mc,
                            n.uk_tb = n.uk_tb,
                            n.exit_tb = n.exit_tb)
-proc.time() - ptm
+(proc.time() - ptm)/60
 
 stopCluster(cl)
 
