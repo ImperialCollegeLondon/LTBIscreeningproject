@@ -80,7 +80,7 @@ readr::write_csv(x = my_ToDataFrameTypeCol(dectree_res[[1]]$osNode.health,
 
 setwd(exit_wd)
 
-
+#
 # dectree_res <- lapply(scenario_parameters[1:2],
 #                       decision_tree_cluster,
 #                       N.mc = 2,

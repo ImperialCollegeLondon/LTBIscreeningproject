@@ -44,6 +44,7 @@ policy_run <- function() {
 
   num_subset_dectree(cohort, dectree_res, diroutput)
   table_tb_avoided(dectree_res, diroutput)
+  num_subset_tb(n.all_tb, n.exit_tb, dectree_res, diroutput)
   cbind_all_subsets(diroutput)
 
 

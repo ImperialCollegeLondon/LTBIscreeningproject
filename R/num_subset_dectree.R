@@ -13,7 +13,7 @@
 #'
 num_subset_dectree <- function(cohort,
                                dectree_res,
-                               diroutput,
+                               diroutput = NA,
                                by_screen_year = FALSE) {
 
   num_screen_year <-
@@ -36,17 +36,19 @@ num_subset_dectree <- function(cohort,
   num_subset_dectree <-
     dectree_res %>%
     map("subset_pop") %>%
-    map(select(-p_LTBI_to_cured)) %>%
     map(reshape2::melt) %>%
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
     group_by(scenario, X2) %>%
     summarise(L95 = quantile(value, 0.05) * num_screen_year,
               mean = mean(value) * num_screen_year,
-              U95 = quantile(value, 0.95) * num_screen_year)
+              U95 = quantile(value, 0.95) * num_screen_year) %>%
+    dplyr::filter(X2 != 'p_LTBI_to_cured')
 
-  write.csv(num_subset_dectree,
-            file = pastef(diroutput, "num_subset_dectree.csv"))
+  if (!is.na(diroutput)) {
+    write.csv(num_subset_dectree,
+              file = pastef(diroutput, "num_subset_dectree.csv"))
+  }
 
   invisible(num_subset_dectree)
 }

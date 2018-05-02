@@ -7,8 +7,6 @@
 
 flder <- list.dirs(parent_folder)[-1]
 
-tab <- NULL
-
 e.total_scenario <- data.frame(matrix(data = 0,
                                       nrow = interv$N.mc,
                                       ncol = n.scenarios),
@@ -27,7 +25,8 @@ for (i in seq_along(flder)) {
   c.total_scenario <- map2(c.total_scenario, as.data.frame(c.total)[ ,-1], cbind)
 }
 
-save(e.total_scenario, c.total_scenario,
+save(e.total_scenario,
+     c.total_scenario,
      file = "ext-data/e_and_c_totals_by_scenario.RData")
 
 

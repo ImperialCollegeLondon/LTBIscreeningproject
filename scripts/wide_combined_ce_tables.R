@@ -4,7 +4,10 @@
 # combine-costeffectiveness-tables.R
 #
 # combine all CE output in to single wide table
-
+#
+# THIS IS TOTALLY DEPENDENT ON THE SCENARIO PARAMETER INPUT
+# FILE SO NEED TO COMMENT-OUT OTHERS!
+#
 
 flder <- list.dirs(parent_folder)[-1]
 
@@ -43,6 +46,7 @@ for (i in seq_along(flder)) {
 
 
 res <- do.call(cbind, tab, quote = TRUE)
+
 # remove duplicate columns
 res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
 

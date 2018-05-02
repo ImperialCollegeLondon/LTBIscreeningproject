@@ -43,7 +43,7 @@ table_costeffectiveness <- function(bcea_obj,
     }
 
   if (!is.na(diroutput)) {
-    write.csv(x = out_tab,
+    write.csv(x = out,
               file = paste(diroutput, "costeffectiveness_table.csv", sep = "/"))
   }
 
@@ -62,7 +62,7 @@ table_costeffectiveness <- function(bcea_obj,
 #' @examples
 #'
 table_tb_avoided_wide <- function(dectree_res,
-                                  diroutput) {
+                                  diroutput = NA) {
 
   n_tb_screen_all <- map(dectree_res, "n_tb_screen_all")
   n_tb_screen_uk <- map(dectree_res, "n_tb_screen_uk")
@@ -89,7 +89,7 @@ table_tb_avoided_wide <- function(dectree_res,
                            "Total","Total","Total"), colnames(out))
 
   if (!is.na(diroutput)) {
-    write.csv(x = out_tb_tab,
+    write.csv(x = out,
               file = paste(diroutput, "tb_avoided_table.csv", sep = "/"))
   }
 
@@ -108,7 +108,7 @@ table_tb_avoided_wide <- function(dectree_res,
 #' @examples
 #'
 table_tb_avoided <- function(dectree_res,
-                             diroutput) {
+                             diroutput = NA) {
 
   tb_all <-
     dectree_res %>%

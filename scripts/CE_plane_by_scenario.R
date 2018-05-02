@@ -4,10 +4,11 @@
 #
 # output cost-effectiveness plots
 # cost-effectiveness planes by scenario
+# rather than by policy
 
 
-diroutput <- sprintf("%s/%s", plots_folder, "CE_plane_by_scenario")
-dir.create(diroutput, showWarnings = FALSE)
+dir_temp <- sprintf("%s/%s", plots_folder, "CE_plane_by_scenario")
+dir.create(dir_temp, showWarnings = FALSE)
 
 for (i in seq_len(n.scenarios)) {
 
@@ -19,7 +20,7 @@ for (i in seq_len(n.scenarios)) {
 
   cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n.comparisons)
 
-  filename <- paste(diroutput, paste0("CE_plane_by_scenario_",i, ".png"), sep = "/")
+  filename <- paste(dir_temp, paste0("CE_plane_by_scenario_",i, ".png"), sep = "/")
 
   suppressMessages(
     try(
@@ -31,7 +32,8 @@ for (i in seq_len(n.scenarios)) {
               scale_colour_manual(values = cbPalette)),
       silent = TRUE))
 
-  ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
+  ggplot2::ggsave(file = filename,
+                  width = 30,
+                  height = 20,
+                  units = "cm")
 }
-
-
