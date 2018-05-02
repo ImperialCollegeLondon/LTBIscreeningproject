@@ -43,7 +43,6 @@ policy_run <- function() {
   table_costeffectiveness(screen.bcea, wtp_threshold, diroutput)
 
   num_subset_dectree(cohort, dectree_res, diroutput)
-  table_tb_avoided(dectree_res, diroutput)
   num_subset_tb(n.all_tb, n.exit_tb, dectree_res, diroutput)
   cbind_all_subsets(diroutput)
 

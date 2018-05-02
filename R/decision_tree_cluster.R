@@ -40,13 +40,6 @@ decision_tree_cluster <- function(params,
                                           n = N.mc,
                                           sample_p = TRUE)
 
-  p_LTBI_to_cured <- mean(subset_pop[ ,'p_LTBI_to_cured'])
-
-  n_tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_cured,
-                                        n.uk_tb = n.uk_tb,
-                                        n.all_tb = n.uk_tb + n.exit_tb,
-                                        n = N.mc)
-
   mc_cost <- MonteCarlo_expectedValues(osNode = osNode.cost,
                                        n = N.mc)
 
@@ -60,9 +53,6 @@ decision_tree_cluster <- function(params,
 
   list(mc_cost = as.numeric(mc_cost$`expected values`),
        mc_health = as.numeric(mc_health$`expected values`),
-       n_tb_screen_all = n_tb_screen$n.tb_screen.all_tb,
-       n_tb_screen_uk  = n_tb_screen$n.tb_screen.uk_tb,
-       p_LTBI_to_effectiveTx = p_LTBI_to_cured,
        subset_pop = subset_pop,
        osNode.cost = osNode.cost,
        osNode.health = osNode.health,
