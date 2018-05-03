@@ -231,9 +231,6 @@ test_performance <-
 
 utility <- list()
 
-# where from?
-utility$falsepos_Tx <- 0.9
-
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 
@@ -252,17 +249,6 @@ utility$postTx <- 0.921
 # utility$activeTB_preTx <- 0.9
 # utility$activeTB_acute <- 0.675 #2 months
 # utility$activeTB_postacute <- 0.813
-
-
-
-# overall mean QALY loss --------------------------------------------------
-##TODO: not used
-
-QALYloss <- list()
-
-QALYloss$activeTB <- 0.4  #15-34 year olds. includes Tx adverse events   #Mears J, et al. Thorax 2015
-QALYloss$falseposLTBI_adverse <- 0.0008   #Mears J, et al. Thorax 2015
-QALYloss$falsepos_activeTB_Tx <- 0.03     #Mears J, et al. Thorax 2015
 
 
 save(unit_cost, utility, QALYloss, cfr_age_lookup, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance,

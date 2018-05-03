@@ -20,26 +20,8 @@ n_uk_tb <- unlist(unname(n.uk_tb))
 n_exit_tb <- unlist(unname(n.exit_tb))
 n_all_tb <- n_exit_tb + n_uk_tb
 
-# Numbers of individuals who avoid getting TB due to screening
-avoid_all_tb <-
-  scenario_res$n_tb_screen_all %>%
-  purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
-  map(function(x) x$n)
-
-avoid_uk_tb  <-
-  scenario_res$n_tb_screen_uk %>%
-  purrr::map(function(x) dplyr::filter(x, status == "disease-free")) %>%
-  map(function(x) x$n)
-
-avoid_tb <-
-  mapply(function(x,y) cbind(x, y),
-         avoid_all_tb,
-         avoid_uk_tb,
-         SIMPLIFY = FALSE) %>%
-  map(`colnames<-`, c('death','exit uk'))
-
-rm(avoid_all_tb,
-   avoid_uk_tb)
+avoid_tb <- create_avoid_tb_list(scenario_res,
+                                 n_all_tb, n_uk_tb)
 
 interv_cost <- vector(length = interv$N.mc, mode = "list")
 interv_QALY <- vector(length = interv$N.mc, mode = "list")

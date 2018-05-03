@@ -5,13 +5,18 @@
 #' by ascending id numbers.
 #'
 #' @param id_avoid IDs, may have gaps/missing numbers
-#' @param n_avoid Number integer
+#' @param n_avoid Number. Converted to integer floor
 #'
 #' @return logical vector
 #' @export
 #'
 #' @examples
-rows_first_n_ids <- function(id_avoid, n_avoid) {
+rows_first_n_ids <- function(id_avoid,
+                             n_avoid) {
+
+  n_avoid <-
+    floor(n_avoid) %>%
+    as.integer()
 
   who_avoid <- sort(id_avoid)[seq_len(n_avoid)]
   id_avoid %in% who_avoid

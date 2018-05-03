@@ -1,4 +1,4 @@
-- Session info -------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Session info ----------------------------------------------------------------------------
  setting  value                       
  version  R version 3.4.4 (2018-03-15)
  os       Windows 7 x64 SP 1          
@@ -7,9 +7,9 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-05-01                  
+ date     2018-05-02                  
 
-- Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Packages --------------------------------------------------------------------------------
  package               * version    date       source                                 
  abind                   1.4-5      2016-07-21 CRAN (R 3.4.1)                         
  arm                     1.9-3      2016-11-27 CRAN (R 3.4.1)                         
@@ -111,4 +111,4 @@
  yaml                    2.1.18     2018-03-08 CRAN (R 3.4.3)                         
 Local:    master C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/
 Remote:   master @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [d7fd11d] 2018-05-01: ##create new tables
+Head:     [20b8007] 2018-05-02: ## delete n.tb_montecarlo() use in decision_tree_cluster()
