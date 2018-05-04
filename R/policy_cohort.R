@@ -1,11 +1,12 @@
 
-
 #' policy_cohort
 #'
-#' @param cohort
-#' @param interv
+#' filter individuals by policy
 #'
-#' @return
+#' @param cohort
+#' @param interv list of conditions
+#'
+#' @return cohort
 #' @export
 #'
 #' @examples
@@ -31,10 +32,10 @@ policy_cohort <- function(cohort,
 
   # remove individuals from 'lower' incidence countries
   cohort <- dplyr::filter(cohort,
-                          who_prev_cat_Pareek2011 %in% interv$incidence_grps_screen)
+                          who_inc_Pareek2011 %in% interv$incidence_grps_screen)
 
+  # assign each tb case unique id
   cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
-
 
   save(cohort, file = "data/cohort.RData")
   save(cohort, file = pastef(diroutput, "cohort.RData"))

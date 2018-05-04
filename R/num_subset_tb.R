@@ -4,20 +4,22 @@
 #' Uses dectree subset_pop output
 #' instead of separate montecarlo()
 #'
-#' @param n.all_tb
-#' @param n.exit_tb
+#' @param cohort
 #' @param dectree_res
-#' @param diroutput folder text string
+#' @param folder text string
 #'
 #' @return tibble
 #' @export
 #'
 #' @examples
 #'
-num_subset_tb_wide <- function(n.all_tb,
-                               n.exit_tb,
+num_subset_tb_wide <- function(cohort,
                                dectree_res,
-                               diroutput) {
+                               folder) {
+
+  n.exit_tb <- sum(cohort$exituk_tb)
+  n.all_tb <- sum(cohort$all_tb)
+
   num_subset_tb <-
     dectree_res %>%
     map("subset_pop") %>%
@@ -35,7 +37,7 @@ num_subset_tb_wide <- function(n.all_tb,
               U95_all = quantile(value, 0.95) * n.all_tb)
 
   write.csv(num_subset_tb,
-            file = pastef(diroutput, "num_subset_tb.csv"))
+            file = pastef(folder, "num_subset_tb.csv"))
 
   invisible(num_subset_tb)
 }
@@ -46,20 +48,21 @@ num_subset_tb_wide <- function(n.all_tb,
 #' Uses dectree subset_pop output
 #' instead of separate montecarlo()
 #'
-#' @param n.all_tb Number of TB cases in total
-#' @param n.exit_tb Number of TB cases occuring in EWNI only
+#' @param cohort
 #' @param dectree_res
-#' @param diroutput folder name text string
+#' @param folder name text string
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-num_subset_tb  <- function(n.all_tb,
-                           n.exit_tb,
+num_subset_tb  <- function(cohort,
                            dectree_res,
-                           diroutput = NA) {
+                           folder = NA) {
+
+  n.exit_tb <- sum(cohort$exituk_tb)
+  n.all_tb <- sum(cohort$all_tb)
 
   p_subset_tb <-
     dectree_res %>%
@@ -88,9 +91,9 @@ num_subset_tb  <- function(n.all_tb,
     rbind(tb_all, tb_uk) %>%
     select(scenario, X2, everything())
 
-  if (!is.na(diroutput)) {
+  if (!is.na(folder)) {
     write.csv(num_subset_tb,
-              file = pastef(diroutput, "num_subset_tb.csv"))
+              file = pastef(folder, "num_subset_tb.csv"))
   }
 
   invisible(num_subset_tb)

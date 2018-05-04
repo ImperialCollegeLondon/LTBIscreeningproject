@@ -3,7 +3,7 @@
 #'
 #' @param cohort individual level data
 #' @param dectree_res
-#' @param diroutput folder text string
+#' @param folder text string
 #' @param by_screen_year TRUE or FALSE
 #'
 #' @return tibble
@@ -13,7 +13,7 @@
 #'
 num_subset_dectree <- function(cohort,
                                dectree_res,
-                               diroutput = NA,
+                               folder = NA,
                                by_screen_year = FALSE) {
 
   num_screen_year <-
@@ -45,9 +45,9 @@ num_subset_dectree <- function(cohort,
               U95 = quantile(value, 0.95) * num_screen_year) %>%
     dplyr::filter(X2 != 'p_LTBI_to_cured')
 
-  if (!is.na(diroutput)) {
+  if (!is.na(folder)) {
     write.csv(num_subset_dectree,
-              file = pastef(diroutput, "num_subset_dectree.csv"))
+              file = pastef(folder, "num_subset_dectree.csv"))
   }
 
   invisible(num_subset_dectree)

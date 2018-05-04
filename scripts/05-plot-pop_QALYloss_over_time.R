@@ -27,7 +27,7 @@ for (SCENARIO in seq_len(num_scenarios)) {
 
   screen_prob_scenario <-
     p_complete_screen_lookup %>%
-    subset(who_prev_cat_Pareek2011 == "(350,1e+05]" &
+    subset(who_inc_Pareek2011 == "(350,1e+05]" &
              scenario == SCENARIO,
            select = prob)
 
@@ -36,7 +36,7 @@ for (SCENARIO in seq_len(num_scenarios)) {
   IMPUTED_sample_scenarios <-
     IMPUTED_sample_year_cohort %>%
     left_join(p_complete_screen_lookup,
-              by = "who_prev_cat_Pareek2011")
+              by = "who_inc_Pareek2011")
 
   for (i in 1:30) {
 

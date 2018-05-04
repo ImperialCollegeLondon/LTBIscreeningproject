@@ -5,7 +5,9 @@
 # e_and_c_totals_by_scenario.R
 
 
-flder <- list.dirs(parent_folder)[-1]
+flder <-
+  list.dirs(parent_folder)[-1] %>%
+  sort()
 
 e.total_scenario <- data.frame(matrix(data = 0,
                                       nrow = interv$N.mc,
@@ -27,7 +29,7 @@ for (i in seq_along(flder)) {
 
 save(e.total_scenario,
      c.total_scenario,
-     file = "ext-data/e_and_c_totals_by_scenario.RData")
+     file = paste0(parent_folder, "/e_and_c_totals_by_scenario.RData"))
 
 
 

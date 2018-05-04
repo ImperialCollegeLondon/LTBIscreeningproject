@@ -55,9 +55,7 @@ ptm <- proc.time()
 dectree_res <- parLapplyLB(cl,
                            scenario_parameters,
                            fun = decision_tree_cluster,
-                           N.mc = interv$N.mc,
-                           n.uk_tb = n.uk_tb,
-                           n.exit_tb = n.exit_tb)
+                           N.mc = interv$N.mc)
 (proc.time() - ptm)/60
 
 stopCluster(cl)
@@ -80,11 +78,9 @@ readr::write_csv(x = my_ToDataFrameTypeCol(dectree_res[[1]]$osNode.health,
 
 setwd(exit_wd)
 
-#
+
 # dectree_res <- lapply(scenario_parameters[1:2],
 #                       decision_tree_cluster,
-#                       N.mc = 2,
-#                       n.uk_tb = n.uk_tb,
-#                       n.exit_tb = n.exit_tb)
+#                       N.mc = 2)
 
 

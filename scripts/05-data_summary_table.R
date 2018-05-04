@@ -24,16 +24,16 @@ out <-
     rbind(
 
       cbind("Total" = table(IMPUTED_sample_year_cohort$uk_tb_orig),
-            table(IMPUTED_sample_year_cohort$uk_tb_orig, IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)),
+            table(IMPUTED_sample_year_cohort$uk_tb_orig, IMPUTED_sample_year_cohort$who_inc_Pareek2011)),
 
       cbind(table(IMPUTED_sample_year_cohort$uk_tb),
-            table(IMPUTED_sample_year_cohort$uk_tb, IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)),
+            table(IMPUTED_sample_year_cohort$uk_tb, IMPUTED_sample_year_cohort$who_inc_Pareek2011)),
 
       cbind(table(IMPUTED_sample_year_cohort$exituk_tb),
-            table(IMPUTED_sample_year_cohort$exituk_tb, IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)),
+            table(IMPUTED_sample_year_cohort$exituk_tb, IMPUTED_sample_year_cohort$who_inc_Pareek2011)),
 
       cbind(table(IMPUTED_sample_year_cohort$tb_fatality),
-            table(IMPUTED_sample_year_cohort$tb_fatality, IMPUTED_sample_year_cohort$who_prev_cat_Pareek2011)))#,
+            table(IMPUTED_sample_year_cohort$tb_fatality, IMPUTED_sample_year_cohort$who_inc_Pareek2011)))#,
     # rbind(
     #
     #   table(IMPUTED_sample_year_cohort$uk_tb_orig, IMPUTED_sample_year_cohort$visatype2),

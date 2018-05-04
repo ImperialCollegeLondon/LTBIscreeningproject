@@ -16,8 +16,8 @@ scenario_res <-
 
 n.scenarios <- length(dectree_res)
 
-n_uk_tb <- unlist(unname(n.uk_tb))
-n_exit_tb <- unlist(unname(n.exit_tb))
+n_uk_tb <- unlist(unname(sum(cohort$uk_tb)))
+n_exit_tb <- unlist(unname(sum(cohort$exituk_tb)))
 n_all_tb <- n_exit_tb + n_uk_tb
 
 avoid_tb <- create_avoid_tb_list(scenario_res,
@@ -92,7 +92,7 @@ for (s in seq_len(n.scenarios)) {
   stats_scenario[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
                                        interv_QALY = interv_QALY,
                                        interv_cost = interv_cost,
-                                       pop_year = pop_year)
+                                       pop_year = nrow(cohort))
 }
 
 aTB_CE_stats <-

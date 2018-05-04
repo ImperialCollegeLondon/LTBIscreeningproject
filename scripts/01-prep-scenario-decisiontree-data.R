@@ -10,8 +10,8 @@
 # grid of policy input parameter values
 
 # file_tag <- "_high-low"
-# file_tag <- "_baseline"
-file_tag <- "_effective"
+file_tag <- "_baseline"
+# file_tag <- "_effective"
 # file_tag <- "_test"
 # file_tag <- "_oneway"
 # file_tag <- "_fullfactorial"
@@ -28,7 +28,7 @@ scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
 
 scenario_parameter_p <- readxl::read_excel(parameter_values_file,
                                            sheet = "p", na = c("", NA),
-                                           col_types = c('numeric', 'numeric'))#, 'numeric', 'numeric'))
+                                           col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
 
 scenario_parameter_cost$val_type <- "cost"
 

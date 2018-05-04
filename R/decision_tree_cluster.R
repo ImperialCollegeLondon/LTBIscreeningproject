@@ -6,8 +6,6 @@
 #'
 #' @param params long format array
 #' @param N.mc integer
-#' @param n.uk_tb integer
-#' @param n.exit_tb integer
 #' @param cost_dectree Rds file names
 #' @param health_dectree Rds file names
 #'
@@ -18,8 +16,6 @@
 #'
 decision_tree_cluster <- function(params,
                                   N.mc = 2,
-                                  n.uk_tb,
-                                  n.exit_tb,
                                   cost_dectree = "osNode_cost_2009.Rds",
                                   health_dectree = "osNode_health_2009.Rds"){
 

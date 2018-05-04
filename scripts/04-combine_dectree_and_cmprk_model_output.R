@@ -6,6 +6,8 @@
 # combine decision tree and competing risk model output
 
 
+screen_discount <- screen_discount(cohort)
+
 # create BCEA dataframe ---------------------------------------------------
 
 tb_cost <- from_list_to_BCEA(aTB_CE_stats$cost_incur_person)

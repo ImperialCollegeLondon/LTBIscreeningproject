@@ -14,7 +14,7 @@ p_complete_screen_lookup <-
            header = FALSE) %>%
   set_names(who_levels) %>%
   dplyr::mutate(scenario = rownames(.)) %>%
-  gather(key = "who_prev_cat_Pareek2011",
+  gather(key = "who_inc_Pareek2011",
          value = "prob",
          -scenario)
 
@@ -28,14 +28,14 @@ n.tb_screen.uk_tb  <- vector(mode = 'list')
 who_prev_cat.all_tb <-
   IMPUTED_sample_year_cohort %>%
   dplyr::filter(all_tb == TRUE) %>%
-  dpylr::select(who_prev_cat_Pareek2011) %>%
+  dpylr::select(who_inc_Pareek2011) %>%
   unlist() %>%
   as.character()
 
 who_prev_cat.uk_tb <-
   IMPUTED_sample_year_cohort %>%
   dplyr::filter(as.logical(uk_tb) == TRUE) %>%
-  dplyr::select(who_prev_cat_Pareek2011) %>%
+  dplyr::select(who_inc_Pareek2011) %>%
   unlist() %>%
   as.character()
 
@@ -51,7 +51,7 @@ for (i in seq_len(n.scenarios)) {
     dplyr::filter(scenario == i) %>%
     as.data.table()
 
-  setkey(x = p.completeTx, "who_prev_cat_Pareek2011")
+  setkey(x = p.completeTx, "who_inc_Pareek2011")
 
   p.complete_treat.all_tb <- p.completeTx[who_prev_cat.all_tb, prob]
   p.complete_treat.uk_tb  <- p.completeTx[who_prev_cat.uk_tb, prob]

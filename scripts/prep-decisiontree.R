@@ -29,10 +29,11 @@ who_levels <-
                   pruneFun = function(x) x$level <= 2)[-1] %>%
   'names<-'(NULL)
 
-p_incid_grp <- prop_table(cohort$who_prev_cat_Pareek2011)
+p_incid_grp <- prop_table(cohort$who_inc_Pareek2011)
 
-pLatentTB.who <- data.frame(who_prev_cat_Pareek2011 = who_levels,
-                            LTBI = c(0.03, 0.13, 0.2, 0.3, 0.3))
+##TODO: this is a duplicate
+pLatentTB.who <- data.frame(who_inc_Pareek2011 = who_levels,
+                            LTBI = c(0.03, 0.13, 0.2, 0.3, 0.27))
 
 
 # insert probs in incidence group for given year (2009) -----------------
@@ -58,7 +59,7 @@ for (i in seq_along(p_incid_grp)) {
 for (i in who_levels) {
 
   pLTBI <- subset(pLatentTB.who,
-                  who_prev_cat_Pareek2011 == i,
+                  who_inc_Pareek2011 == i,
                   select = LTBI)
 
   osNode.cost$Set(pmin = pLTBI,

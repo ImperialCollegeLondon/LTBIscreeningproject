@@ -67,7 +67,7 @@ global_params <-
 save(global_params, file = "data/global_params.RData")
 rm(global_params)
 
-write.csv(policies, file = "ext-data/policies-inputs.csv")
+write.csv(policies, file = "data/policies-inputs.csv")
 
 rm(list = ls()[!ls() %in% ls(pattern = "policy")])
 

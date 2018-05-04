@@ -9,48 +9,53 @@
 # FILE SO NEED TO COMMENT-OUT OTHERS!
 #
 
-flder <- list.dirs(parent_folder)[-1]
+flder <-
+  list.dirs(parent_folder)[-1] %>%
+  sort()
 
 tab <- list()
 
 
 # test cost & baseline/perfect
 
-# for (i in seq_along(flder)) {
-#
-#   tab[[i]] <-
-#     read.csv(paste0(flder[i], "/costeffectiveness_table.csv")) %>%
-#     mutate(cascade = rep(c("baseline", "perfect"), 3),
-#            test_cost = c(100,100,50,50,25,25)) %>%
-#     select(cascade, everything()) %>%
-#     split(f = .$test_cost) %>%
-#     plyr::join_all(by = "cascade")
-# }
-#
-# res <- do.call(cbind, tab, quote = TRUE)
-# res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
-
-
-# include drug effectiveness
-
 for (i in seq_along(flder)) {
 
   tab[[i]] <-
     read.csv(paste0(flder[i], "/costeffectiveness_table.csv")) %>%
-    mutate(cascade = rep(seq(1, 0.3, by = -0.1), 3),
-           test_cost = rep(c(25,50,100), each = 8)) %>%
+    mutate(cascade = rep(c("baseline", "perfect"), 3),
+           test_cost = c(100,100,50,50,25,25)) %>%
     select(cascade, everything()) %>%
     split(f = .$test_cost) %>%
     plyr::join_all(by = "cascade")
 }
 
-
 res <- do.call(cbind, tab, quote = TRUE)
-
-# remove duplicate columns
 res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
 
-write.csv(res, file = "ext-data/wide_combined_costeffectiveness_tables.csv")
+write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
+
+
+
+# include drug effectiveness
+
+# for (i in seq_along(flder)) {
+#
+#   tab[[i]] <-
+#     read.csv(paste0(flder[i], "/costeffectiveness_table.csv")) %>%
+#     mutate(cascade = rep(seq(1, 0.3, by = -0.1), 3),
+#            test_cost = rep(c(25,50,100), each = 8)) %>%
+#     select(cascade, everything()) %>%
+#     split(f = .$test_cost) %>%
+#     plyr::join_all(by = "cascade")
+# }
+#
+#
+# res <- do.call(cbind, tab, quote = TRUE)
+#
+# # remove duplicate columns
+# res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
+#
+# write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
 
 #
 # for (i in seq_along(flder)) {
@@ -69,4 +74,4 @@ write.csv(res, file = "ext-data/wide_combined_costeffectiveness_tables.csv")
 #
 # res <- res[, !grepl(x = names(res), pattern = "X$")]
 #
-# write.csv(res, file = "ext-data/wide_combined_costeffectiveness_tables.csv")
+# write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))

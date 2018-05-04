@@ -53,7 +53,7 @@ x <-
           sum) %>%
   set_names(c("year", "LTBI"))
 
-probs <- p_complete_screen_lookup$prob[p_complete_screen_lookup$who_prev_cat_Pareek2011 == "(350,1e+05]"]
+probs <- p_complete_screen_lookup$prob[p_complete_screen_lookup$who_inc_Pareek2011 == "(350,1e+05]"]
 
 tab <-
   merge(x, probs) %>%

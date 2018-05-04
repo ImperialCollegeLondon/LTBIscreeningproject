@@ -42,6 +42,13 @@ rownames(cfr_age_lookup) <- cfr_age_lookup$age
 attr(cfr_age_lookup, "reference") <- "Crofts et al (2008)"
 
 
+# ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
+# ages 18-35 pooled
+pLatentTB.who <-
+  c(0.03, 0.13, 0.2, 0.3, 0.27) %>%
+  setNames(who_levels)
+
+
 #########
 # costs #
 #########
@@ -251,5 +258,5 @@ utility$postTx <- 0.921
 # utility$activeTB_postacute <- 0.813
 
 
-save(unit_cost, utility, QALYloss, cfr_age_lookup, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance,
+save(unit_cost, utility, QALYloss, cfr_age_lookup, pLatentTB.who, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance,
      file = "data/cost_effectiveness_params.RData")

@@ -7,7 +7,7 @@
 #'
 #' @param bcea_obj Pre-calculated output from BCEA package (class(bcea))
 #' @param wtp_threshold
-#' @param diroutput folder text string
+#' @param folder text string
 #'
 #' @return data.frame
 #' @export
@@ -16,7 +16,7 @@
 #'
 table_costeffectiveness <- function(bcea_obj,
                                     wtp_threshold = 20000,
-                                    diroutput = NA) {
+                                    folder = NA) {
 
   out <-
     if (bcea_obj$n.comparisons == 1) {
@@ -42,9 +42,9 @@ table_costeffectiveness <- function(bcea_obj,
                         "ceac_WTP30000" = ceac[k == 30000, ])))
     }
 
-  if (!is.na(diroutput)) {
+  if (!is.na(folder)) {
     write.csv(x = out,
-              file = paste(diroutput, "costeffectiveness_table.csv", sep = "/"))
+              file = paste(folder, "costeffectiveness_table.csv", sep = "/"))
   }
 
   invisible(out)
@@ -54,7 +54,7 @@ table_costeffectiveness <- function(bcea_obj,
 #' table_tb_avoided_wide
 #'
 #' @param dectree_res
-#' @param diroutput folder text string
+#' @param folder text string
 #'
 #' @return EWNI and total 5%, 50% and 95% quantiles
 #' @export
@@ -62,7 +62,7 @@ table_costeffectiveness <- function(bcea_obj,
 #' @examples
 #'
 table_tb_avoided_wide <- function(dectree_res,
-                                  diroutput = NA) {
+                                  folder = NA) {
 
   n_tb_screen_all <- map(dectree_res, "n_tb_screen_all")
   n_tb_screen_uk <- map(dectree_res, "n_tb_screen_uk")
@@ -88,9 +88,9 @@ table_tb_avoided_wide <- function(dectree_res,
   colnames(out) <- paste(c("EWNI","EWNI","EWNI",
                            "Total","Total","Total"), colnames(out))
 
-  if (!is.na(diroutput)) {
+  if (!is.na(folder)) {
     write.csv(x = out,
-              file = paste(diroutput, "tb_avoided_table.csv", sep = "/"))
+              file = paste(folder, "tb_avoided_table.csv", sep = "/"))
   }
 
   invisible(out)
@@ -100,7 +100,7 @@ table_tb_avoided_wide <- function(dectree_res,
 #' table_tb_avoided
 #'
 #' @param dectree_res
-#' @param diroutput folder text string
+#' @param folder text string
 #'
 #' @return EWNI and total 5%, 50% and 95% quantiles
 #' @export
@@ -108,7 +108,7 @@ table_tb_avoided_wide <- function(dectree_res,
 #' @examples
 #'
 table_tb_avoided <- function(dectree_res,
-                             diroutput = NA) {
+                             folder = NA) {
 
   tb_all <-
     dectree_res %>%
@@ -140,9 +140,9 @@ table_tb_avoided <- function(dectree_res,
 
   out <- rbind(tb_all, tb_uk)
 
-  if (!is.na(diroutput)) {
+  if (!is.na(folder)) {
     write.csv(x = out,
-              file = paste(diroutput, "tb_avoided.csv", sep = "/"))
+              file = paste(folder, "tb_avoided.csv", sep = "/"))
   }
 
   invisible(out)

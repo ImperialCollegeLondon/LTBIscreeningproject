@@ -6,8 +6,9 @@
 # combine all CE output in to single table
 
 
-flder <- list.dirs(parent_folder)[-1]
-# flder <- list.dirs("ext-data/18_to_35_in_2009")[-1]
+flder <-
+  list.dirs(parent_folder)[-1] %>%
+  sort()
 
 tab <- NULL
 
@@ -19,12 +20,10 @@ for (i in seq_along(flder)) {
     rbind(tab, .)
 }
 
-policy_desc <- read.csv("ext-data/policies-inputs.csv")
+policy_desc <- read.csv(paste0(parent_folder, "/policies-inputs.csv"))
 
-tab <- merge(policy_desc, tab, by = 'policy', all.y = TRUE, all.x = FALSE)
+tab <- merge(policy_desc, tab,
+             by = 'policy',
+             all.y = TRUE, all.x = FALSE)
 
-write.csv(tab, file = "ext-data/combined_costeffectiveness_tables.csv")
-
-
-
-
+write.csv(tab, file = paste0(parent_folder, "/combined_costeffectiveness_tables.csv"))

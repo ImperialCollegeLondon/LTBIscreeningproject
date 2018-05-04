@@ -9,17 +9,10 @@
 
 cohort <- policy_cohort(cohort, interv)
 
-
-# discount cost and QALYs in decision tree  ---------------------------------
-## due to delayed start
-
-prop_screen_year <- ceiling(cohort$screen_year) %>% prop_table()
-screen_discount  <- prop_screen_year %*% QALY::discount(t_limit = length(prop_screen_year)) %>% c()
+screen_discount <- screen_discount(cohort)
 
 # year cohort size potentially screened
 pop_year <- nrow(cohort)
-
-# count numbers of tb cases -----------------------------------------------
 
 n.exit_tb <- sum(cohort$exituk_tb)
 n.uk_tb <- sum(cohort$uk_tb)

@@ -4,7 +4,9 @@
 # combine_num_screen_tables.R
 
 
-flder <- list.dirs(parent_folder)[-1]
+flder <-
+  list.dirs(parent_folder)[-1] %>%
+  sort()
 
 tab <-
   read.csv(paste0(flder[1], "/all_subsets.csv")) %>%
@@ -26,8 +28,22 @@ tab <-
   mutate(scenario = as.numeric(scenario)) %>%
   arrange(scenario)
 
-write.csv(tab, file = "ext-data/combined_all_subsets.csv")
+write.csv(tab, file = paste0(parent_folder, "/combined_all_subsets.csv"))
 
+
+# double header Excel file
+##TODO: specify column names
+
+# XLConnect::writeWorksheetToFile(file = paste0(parent_folder, "/combined_all_subsets.xlsx"),
+#                                 data = header,
+#                                 sheet = "test",
+#                                 startRow = 1,
+#                                 header = FALSE)
+#
+# XLConnect::writeWorksheetToFile(file = paste0(parent_folder, "/combined_all_subsets.xlsx"),
+#                                 data = example,
+#                                 sheet = "test",
+#                                 startRow = 2)
 
 
 

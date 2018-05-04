@@ -1,6 +1,9 @@
 
 #' sample_subset_pop_dectree
 #'
+#' Iteratively randomly samples probabilities
+#' and then calculates subset sizes
+#'
 #' @param osNode data.tree object
 #' @param n Sample size
 #' @param sample_p TRUE/FALSE

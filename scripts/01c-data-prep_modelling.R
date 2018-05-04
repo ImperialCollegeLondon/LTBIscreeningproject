@@ -76,11 +76,17 @@ who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = c(0, 50, 150, 250, 350, 100000))
 
-# ref. Pareek M et al. Lancet Infect Dis. Elsevier Ltd; 2011;11(6)
-# ages 18-35 pooled
-pLatentTB.who <-
-  c(0.03, 0.13, 0.2, 0.3, 0.3) %>%
-  setNames(who_levels)
+# IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
+#                                               breaks = c(0, 39, 149, 349, 100000))
+
+IMPUTED_sample <-
+  merge(x = IMPUTED_sample,
+        y = TB_burden_countries,
+        by.x = 'iso_a3_country',
+        by.y = 'iso3')
+
+IMPUTED_sample$who_inc_Pareek2011 <- cut(IMPUTED_sample$e_inc_100k,
+                                         breaks = c(0, 50, 150, 250, 350, 100000))
 
 ### assume >35 == 35 year olds ###
 # i.e. age independent
@@ -91,18 +97,19 @@ pLatentTB.who_age <-
          ncol = length(interv$screen_age_range),
          nrow = length(pLatentTB.who)) %>%
   data.frame(who_levels, .) %>%
-  purrr::set_names("who_prev_cat_Pareek2011", as.character(interv$screen_age_range))
+  purrr::set_names("who_inc_Pareek2011", as.character(interv$screen_age_range))
 
 # join with main data set
-pLatentTB.who_age.long <- reshape2:::melt.data.frame(data = pLatentTB.who_age,
-                                                     id.vars = "who_prev_cat_Pareek2011",
-                                                     value.name = "pLTBI",
-                                                     variable.name = "age_at_entry")
+pLatentTB.who_age.long <-
+  reshape2:::melt.data.frame(data = pLatentTB.who_age,
+                             id.vars = "who_inc_Pareek2011",
+                             value.name = "pLTBI",
+                             variable.name = "age_at_entry")
 
 IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_entry",
-                               "who_prev_cat_Pareek2011"))
+                               "who_inc_Pareek2011"))
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 

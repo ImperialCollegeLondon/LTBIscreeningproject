@@ -76,7 +76,8 @@ QALY_all_tb <-
                age = age_all_notification,
                start_delay = all_tb_issdt)
 
-# case fatality rate for each active TB case
+# case fatality rate
+# for each active TB
 IMPUTED_sample <-
   IMPUTED_sample %>%
   left_join(cfr_age_lookup,

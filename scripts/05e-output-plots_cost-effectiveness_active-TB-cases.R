@@ -20,7 +20,7 @@ if (!exists("p.complete_treat_scenarios")) {
 
 LTBI_prob_lookup <-
   p.complete_treat_scenarios %>%
-  gather("who_prev_cat_Pareek2011", "value", -scenario)
+  gather("who_inc_Pareek2011", "value", -scenario)
 
 
 ######################
@@ -84,7 +84,7 @@ dev.off()
 SCENARIO <- 1#300
 
 p.completeTx <- subset(x = LTBI_prob_lookup,
-                       scenario == as.character(SCENARIO) & who_prev_cat_Pareek2011 == "(50,150]",
+                       scenario == as.character(SCENARIO) & who_inc_Pareek2011 == "(50,150]",
                        select = value) %>%
                 as.numeric()
 
@@ -217,7 +217,7 @@ dev.off()
 ############################
 
 p.completeTx_scenarios <- LTBI_prob_lookup %>%
-                            filter(who_prev_cat_Pareek2011 == "(50,150]") %>%
+                            filter(who_inc_Pareek2011 == "(50,150]") %>%
                             dplyr::select(value)
 
 counts.scenarios <- matrix(data = obs_uk_tb_year,
