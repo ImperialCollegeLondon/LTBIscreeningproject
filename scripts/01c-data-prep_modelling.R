@@ -71,10 +71,14 @@ if (interv$force_everyone_stays) {
 # create LTBI probs by WHO active TB group ---------------------------------
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
+who_level_breaks <- c(0, 50, 150, 250, 350, 100000)
+
+# extract uk entry year only
+IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
-                                              breaks = c(0, 50, 150, 250, 350, 100000))
+                                              breaks = who_level_breaks)
 
 # IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
 #                                               breaks = c(0, 39, 149, 349, 100000))
@@ -82,11 +86,11 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 IMPUTED_sample <-
   merge(x = IMPUTED_sample,
         y = TB_burden_countries,
-        by.x = 'iso_a3_country',
-        by.y = 'iso3')
+        by.x = c('iso_a3_country', 'issdt_year'),
+        by.y = c('iso3', 'year'))
 
 IMPUTED_sample$who_inc_Pareek2011 <- cut(IMPUTED_sample$e_inc_100k,
-                                         breaks = c(0, 50, 150, 250, 350, 100000))
+                                         breaks = who_level_breaks)
 
 ### assume >35 == 35 year olds ###
 # i.e. age independent
@@ -117,9 +121,6 @@ IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
 
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
-
-# extract uk entry year only
-IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 
 
 # create time-to-events -------------------------

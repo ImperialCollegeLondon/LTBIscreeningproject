@@ -6,33 +6,27 @@
 # plots of number of active tb cases over time
 
 
-<<<<<<< HEAD
 # histograms --------------------------------------------------------------
-=======
 hist(ceiling(IMPUTED_sample$exituk_tb.years), col = "blue",
      breaks = 150, #, xlim = c(0, 50), ylim = c(0,25),
      xlab = "Time (year)", main = "")
->>>>>>> origin/master
 
 hist_progression_times(IMPUTED_sample)
 
 hist_progression_times(cohort)
 
-<<<<<<< HEAD
-=======
 legend('topright', c('Observed', 'EWNI', 'Outside EWNI'), col = c('red', 'green', 'blue'), lty = 1)
 
 
-plot(x = 0:19,
-     y = num_uk_tb_year[1:20],
-     type = "o", ylim = c(0, 85),
-     lty = 1,
-     xlab = "Time (year)", ylab = "Frequency",
-     main = "Active TB cases")
->>>>>>> origin/master
-
 
 ##TODO: update
+
+# plot(x = 0:19,
+#      y = num_uk_tb_year[1:20],
+#      type = "o", ylim = c(0, 85),
+#      lty = 1,
+#      xlab = "Time (year)", ylab = "Frequency",
+#      main = "Active TB cases")
 
 # curves ------------------------------------------------------------------
 

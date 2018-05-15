@@ -1,16 +1,18 @@
 
 #' hist_progression_times
 #'
-#' @param dat Individual level data
+#' @param dat Individual level cohort data
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples
 #'
+#' hist_progression_times(cohort)
+#'
 hist_progression_times <- function(dat) {
 
-  # catch error when no tb activation outside of EWNI
+  # catch error when no TB activation outside of EWNI
   try_out <- try({
     hist(ceiling(dat$exituk_tb.years), col = "blue",
          breaks = 150,
