@@ -3,7 +3,7 @@
 #'
 #' filter individuals by policy
 #'
-#' @param cohort
+#' @param cohort_in total sample
 #' @param interv list of conditions
 #'
 #' @return cohort
@@ -11,11 +11,11 @@
 #'
 #' @examples
 #'
-policy_cohort <- function(cohort,
+policy_cohort <- function(cohort_in,
                           interv) {
 
   # single year cohort only
-  cohort <- dplyr::filter(IMPUTED_sample,
+  cohort <- dplyr::filter(cohort_in,
                           issdt_year == interv$year_cohort)
 
   # uk stay long enough
@@ -35,6 +35,7 @@ policy_cohort <- function(cohort,
                           who_inc_Pareek2011 %in% interv$incidence_grps_screen)
 
   # assign each tb case unique id
+  cohort$id_avoided_tb <- NA
   cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
 
   save(cohort, file = "data/cohort.RData")

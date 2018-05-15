@@ -18,6 +18,8 @@ rows_first_n_ids <- function(id_avoid,
     floor(n_avoid) %>%
     as.integer()
 
+  if (is.na(n_avoid)) return(NULL)
+
   who_avoid <- sort(id_avoid)[seq_len(n_avoid)]
   id_avoid %in% who_avoid
 }

@@ -1,4 +1,5 @@
-#**************************************************************************
+# ******************************************
+#
 # project: LTBI screening
 # N Green
 # Oct 2016
@@ -7,7 +8,11 @@
 # calculate associated stats
 
 
-cohort <- policy_cohort(cohort, interv)
+# so can over-ride
+if (!exists("cohort")) {
+
+  cohort <- policy_cohort(IMPUTED_sample, interv)
+}
 
 screen_discount <- screen_discount(cohort)
 

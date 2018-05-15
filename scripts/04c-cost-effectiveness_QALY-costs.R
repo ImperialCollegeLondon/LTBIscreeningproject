@@ -43,7 +43,7 @@ mean_num_sec_inf <-
 
 costeff_cohort <-
   cohort %>%
-  dplyr::filter(all_tb) %>%
+  dplyr::filter(as.logical(all_tb)) %>%
   select(cfr,
          uk_tb,
          all_tb,
@@ -82,6 +82,7 @@ for (s in seq_len(n.scenarios)) {
   for (i in seq_len(interv$N.mc)) {
 
     # set.seed(12345)
+
 
     num_avoided <- avoid_tb[[s]][i, ]
 

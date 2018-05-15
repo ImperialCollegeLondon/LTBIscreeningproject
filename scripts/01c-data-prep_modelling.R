@@ -83,6 +83,8 @@ IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
 # IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
 #                                               breaks = c(0, 39, 149, 349, 100000))
 
+data("TB_burden_countries")
+
 IMPUTED_sample <-
   merge(x = IMPUTED_sample,
         y = TB_burden_countries,

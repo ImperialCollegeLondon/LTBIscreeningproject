@@ -31,7 +31,7 @@ screen_age_range <- 18:35
 # screen_age_range <- 18:45
 
 # year_cohort <- '2012' #most recent complete year
-year_cohort <- '2009' #largest cohort
+year_cohort <- '2009' #largest cohort, corresponds with Pareek () LTBI risk
 
 # LIFETIME_RISK <- 0.10
 # LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years

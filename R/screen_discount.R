@@ -2,9 +2,9 @@
 #' screen_discount
 #'
 #' discount cost and QALYs in decision tree
-#' due to delayed start
+#' due to delayed start of screening from entry
 #'
-#' @param cohort
+#' @param cohort individual level data
 #'
 #' @return
 #' @export
@@ -15,12 +15,13 @@ screen_discount <- function(cohort) {
 
   prop_screen_year <-
     ceiling(cohort$screen_year) %>%
-    prop_table()
+    prop_table() %>%
+    matrix()
 
   t_limit_screen <- length(prop_screen_year)
   discounts_year <- QALY::discount(t_limit = t_limit_screen)
 
-  res <- prop_screen_year %*% discounts_year
+  res <- discounts_year %*% prop_screen_year
 
   return(as.numeric(res))
 }

@@ -1,4 +1,5 @@
-#**********************************************
+# *********************************************
+#
 # LTBI screening
 # N Green
 #
@@ -8,9 +9,9 @@
 
 policies <- data.frame()
 
-incidence_list <-  list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
-                        c("(150,250]", "(250,350]", "(350,1e+05]"),
-                        c("(250,350]", "(350,1e+05]"))
+incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
+                       c("(150,250]", "(250,350]", "(350,1e+05]"),
+                       c("(250,350]", "(350,1e+05]"))
 
 endpoints <- c("death", "exit uk")
 
@@ -19,7 +20,7 @@ treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
 LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 
 
-programme_level <- 1
+policy_num <- 1
 
 for (min_screen_length_of_stay in 0) {
   for (incidence in seq_along(incidence_list)) {
@@ -29,7 +30,7 @@ for (min_screen_length_of_stay in 0) {
           for (treat in treatment[1]) {
 
             policies <- rbind(policies,
-                              cbind(policy = formatC(programme_level, width = 3, format = "d", flag = "0"),
+                              cbind(policy = formatC(policy_num, width = 3, format = "d", flag = "0"),
                                     min_screen_length_of_stay,
                                     incid_grps = as.character(incidence_list[incidence]),
                                     treatment = treat,
@@ -38,7 +39,7 @@ for (min_screen_length_of_stay in 0) {
                                     endpoint_QALY = endpoints[endpoint_QALY]))
 
             environ_name <- sprintf("policy_%s",
-                                    formatC(programme_level, width = 3, format = "d", flag = "0"))
+                                    formatC(policy_num, width = 3, format = "d", flag = "0"))
 
             assign(x = environ_name, value = new.env())
             assign(x = "min_screen_length_of_stay", value = min_screen_length_of_stay, envir = eval(parse(text = environ_name)))
@@ -48,7 +49,7 @@ for (min_screen_length_of_stay in 0) {
             assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
             assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
 
-            programme_level %<>% add(1)
+            policy_num %<>% add(1)
           }
         }
       }

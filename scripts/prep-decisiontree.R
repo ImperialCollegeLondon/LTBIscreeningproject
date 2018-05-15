@@ -29,9 +29,9 @@ who_levels <-
                   pruneFun = function(x) x$level <= 2)[-1] %>%
   'names<-'(NULL)
 
-p_incid_grp <- prop_table(cohort$who_inc_Pareek2011)
+p_incid_grp <- factor(cohort$who_inc_Pareek2011, levels = who_levels) %>% prop_table()
 
-##TODO: this is a duplicate
+##TODO: this is a duplicated
 pLatentTB.who <- data.frame(who_inc_Pareek2011 = who_levels,
                             LTBI = c(0.03, 0.13, 0.2, 0.3, 0.27))
 
