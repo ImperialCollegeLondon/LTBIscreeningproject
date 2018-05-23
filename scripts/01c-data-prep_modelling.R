@@ -10,7 +10,6 @@
 set.seed(23456)
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
-rm(IMPUTED_IOM_ETS_WHO_merged_15_2_9)
 
 
 # remove duplicate and not needed ---------------------------------
@@ -57,15 +56,22 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 date_death1 >= issdt)
 
-# eligible screening age range only
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                age_at_entry %in% interv$screen_age_range)
-
 
 if (interv$force_everyone_stays) {
 ##TODO: is this doing what we want?
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
+
+# screening delay ---------------------------------------------------------
+
+##TODO: could use a more realistic distn
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
+
+IMPUTED_sample$age_at_screen <- IMPUTED_sample$age_at_entry + round(IMPUTED_sample$screen_year)
+
+# eligible screening age range only
+IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
+                                age_at_screen %in% interv$screen_age_range)
 
 
 # create LTBI probs by WHO active TB group ---------------------------------
@@ -110,17 +116,17 @@ pLatentTB.who_age.long <-
   reshape2:::melt.data.frame(data = pLatentTB.who_age,
                              id.vars = "who_inc_Pareek2011",
                              value.name = "pLTBI",
-                             variable.name = "age_at_entry")
+                             variable.name = "age_at_screen")
 
+##TODO:
+## where do some people go???
 IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
-                        by = c("age_at_entry",
+                        by = c("age_at_screen",
                                "who_inc_Pareek2011"))
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 
-##TODO: could use a more realistic distn
-IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
 
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
