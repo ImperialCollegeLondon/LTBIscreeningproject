@@ -67,7 +67,7 @@ leaf_df_by_name <- function(osNode,
                filterFun = function(x) x$name == node_name) %>%
     unique()
 
-  if (length(level) > 1) stop('Error')
+  if (length(level) > 1) stop('more than one level')
 
   ##TODO: how to do NSE with variable names as strings?
   # dplyr::filter(dectree_df,

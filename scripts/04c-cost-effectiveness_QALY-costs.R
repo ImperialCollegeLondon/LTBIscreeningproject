@@ -83,7 +83,6 @@ for (s in seq_len(n.scenarios)) {
 
     # set.seed(12345)
 
-
     num_avoided <- avoid_tb[[s]][i, ]
 
     interv_cost[[i]] <- interv_scenario_cost(num_avoided)

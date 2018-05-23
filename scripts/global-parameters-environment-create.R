@@ -20,7 +20,7 @@ treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
 LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 
 
-policy_num <- 1
+num_policy <- 1
 
 for (min_screen_length_of_stay in 0) {
   for (incidence in seq_along(incidence_list)) {
@@ -30,7 +30,7 @@ for (min_screen_length_of_stay in 0) {
           for (treat in treatment[1]) {
 
             policies <- rbind(policies,
-                              cbind(policy = formatC(policy_num, width = 3, format = "d", flag = "0"),
+                              cbind(policy = formatC(num_policy, width = 3, format = "d", flag = "0"),
                                     min_screen_length_of_stay,
                                     incid_grps = as.character(incidence_list[incidence]),
                                     treatment = treat,
@@ -39,7 +39,7 @@ for (min_screen_length_of_stay in 0) {
                                     endpoint_QALY = endpoints[endpoint_QALY]))
 
             environ_name <- sprintf("policy_%s",
-                                    formatC(policy_num, width = 3, format = "d", flag = "0"))
+                                    formatC(num_policy, width = 3, format = "d", flag = "0"))
 
             assign(x = environ_name, value = new.env())
             assign(x = "min_screen_length_of_stay", value = min_screen_length_of_stay, envir = eval(parse(text = environ_name)))
@@ -49,7 +49,7 @@ for (min_screen_length_of_stay in 0) {
             assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
             assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
 
-            policy_num %<>% add(1)
+            num_policy %<>% add(1)
           }
         }
       }
@@ -70,7 +70,7 @@ rm(global_params)
 
 write.csv(policies, file = "data/policies-inputs.csv")
 
-rm(list = ls()[!ls() %in% ls(pattern = "policy")])
+rm(list = ls()[!ls() %in% ls(pattern = "policy_")])
 
 save.image(file = "data/policies.RData")
 

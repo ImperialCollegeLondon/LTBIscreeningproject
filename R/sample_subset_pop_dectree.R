@@ -17,6 +17,7 @@ sample_subset_pop_dectree <- function(osNode,
                                       n = 1,
                                       sample_p = TRUE) {
 
+  # initiate
   out1 <- subset_pop_dectree(osNode = osNode)
   out <-
     matrix(NA, nrow = n, ncol = ncol(out1)) %>%

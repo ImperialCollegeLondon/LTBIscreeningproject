@@ -24,6 +24,8 @@ scenario_cost <- function(endpoint,
     treeSimR::sample_distributions() %>%
     sum()
 
+  ##TODO:
+  # pre-compute this and remove
   r2nd_inf <-
     num_2nd_inf %>%
     treeSimR::sample_distributions() %>%

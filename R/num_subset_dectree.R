@@ -1,10 +1,13 @@
 
 #' num_subset_dectree
 #'
+#' Counts frequency of subset sizes along
+#' screening pathway.
+#'
 #' @param cohort individual level data
-#' @param dectree_res
+#' @param dectree_res output of decision_tree_cluster()
 #' @param folder text string
-#' @param by_screen_year TRUE or FALSE
+#' @param by_screen_year TRUE or FALSE ##TODO:
 #'
 #' @return tibble
 #' @export

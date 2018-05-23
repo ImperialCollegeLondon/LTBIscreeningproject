@@ -17,7 +17,7 @@ source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
 
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 
-source("scripts/01-prep-scenario-decisiontree-data.R", echo = TRUE)
+source("scripts/01-data-prep_scenario.R", echo = TRUE)
 
 source("scripts/01c-data-prep_modelling.R", echo = TRUE)
 

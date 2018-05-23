@@ -16,6 +16,7 @@
 # for the QALY gain calculation only interested in active TB cases
 # since the other individuals unchanged
 
+TO_YEAR <- 2016
 
 # willingness to pay (£)
 wtp_threshold <- 2e+04
@@ -64,7 +65,7 @@ unit_cost <- list()
 ## adverse effects of LTBI treatment
 
 unit_cost$vomiting <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                  to_year = 2016,
+                                                  to_year = TO_YEAR,
                                                   from_cost = 63,
                                                   reference = "Jit & White (2015). NHS Reference costs (Curtis 2013)")
 
@@ -74,7 +75,7 @@ unit_cost$vomiting <- QALY::inflation_adjust_cost(from_year = 2015,
 
 
 unit_cost$hepatotoxicity <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                        to_year = 2016,
+                                                        to_year = TO_YEAR,
                                                         from_cost = 587,
                                                         reference = "Jit & White (2015). Pareek et al. (2011)")
 # unit_cost$hepatotoxicity <- list(distn = "gamma",
@@ -85,18 +86,18 @@ unit_cost$hepatotoxicity <- QALY::inflation_adjust_cost(from_year = 2015,
 
 # LFT test
 unit_cost$LFT_test <- QALY::inflation_adjust_cost(from_year = 2013,
-                                                  to_year = 2016,
+                                                  to_year = TO_YEAR,
                                                   from_cost = 2.69,
                                                   reference = "Lilford (2013)")
 
 # hepatitis B, C test
 unit_cost$hep_test <- QALY::inflation_adjust_cost(from_year = 2013,
-                                                  to_year = 2016,
+                                                  to_year = TO_YEAR,
                                                   from_cost = 25.42,
                                                   reference = "Lilford (2013)")
 # HIV test
 unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2011,
-                                                  to_year = 2016,
+                                                  to_year = TO_YEAR,
                                                   from_cost = 8,
                                                   reference = "Health Protection Agency (2011)")
 
@@ -117,33 +118,35 @@ unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2011,
 # these are 'low' conservative estimates
 # 6 months isoniazid
 unit_cost$LTBI_Tx_6mISO$full <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                       to_year = 2016,
+                                                       to_year = TO_YEAR,
                                                        from_cost = 531,
                                                        reference = "Jit & White (2015)")
 # 3 months isoniazid + rifampicin
 unit_cost$LTBI_Tx_3mISORIF$full <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                          to_year = 2016,
+                                                          to_year = TO_YEAR,
                                                           from_cost = 396,
                                                           reference = "Jit & White (2015)")
 
 # use ratio from Warwick evidence: appendix H, p 292
 
 unit_cost$LTBI_Tx_6mISO$dropout <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                               to_year = 2016,
+                                                               to_year = TO_YEAR,
                                                                from_cost = 88.5,
                                                                reference = "Jit & White (2015)")
 
 unit_cost$LTBI_Tx_3mISORIF$dropout <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                                  to_year = 2016,
+                                                                  to_year = TO_YEAR,
                                                                   from_cost = 66,
                                                                   reference = "Jit & White (2015)")
 
 
 unit_cost$GP_incentive <-
   list(ltbi_positive = list(distn = "none",
-                            params = c(mean = 20)),
+                            params = c(mean = 0)),
+                            # params = c(mean = 20)),
        active_tb = list(distn = "none",
-                        params = c(mean = 100)))
+                        params = c(mean = 0)))
+                        # params = c(mean = 100)))
 
 
 # active TB -----------------------------------------------------
@@ -151,7 +154,7 @@ unit_cost$GP_incentive <-
 # diagnosis
 
 culture <- QALY::inflation_adjust_cost(from_year = 2015,
-                                       to_year = 2016,
+                                       to_year = TO_YEAR,
                                        from_cost = 22.29,
                                        reference = "Drobniewski (2015)")
 
@@ -160,7 +163,7 @@ culture <- list(distn = "gamma",
                            scale = culture/100))
 
 xray <- QALY::inflation_adjust_cost(from_year = 2011,
-                                    to_year = 2016,
+                                    to_year = TO_YEAR,
                                     from_cost = 35,
                                     reference = "NICE guidance CG117 (March 2011)")
 xray <- list(distn = "pert",
@@ -170,7 +173,7 @@ xray <- list(distn = "pert",
 
 
 smear <- QALY::inflation_adjust_cost(from_year = 2015,
-                                     to_year = 2016,
+                                     to_year = TO_YEAR,
                                      from_cost = 8.23,
                                      reference = "(2015) Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis")
 smear <- list(distn = "gamma",
@@ -190,7 +193,7 @@ followup_visit <- list(distn = "gamma",
 
 # treatment
 aTB_Tx_mean <- QALY::inflation_adjust_cost(from_year = 2015,
-                                           to_year = 2016,
+                                           to_year = TO_YEAR,
                                            from_cost = 5329,
                                            reference = "Jit & White (2015)")
 aTB_Tx <- list(distn = "gamma",

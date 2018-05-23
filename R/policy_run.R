@@ -65,4 +65,6 @@ policy_run <- function() {
   # source("scripts/05l-output-plots_twoway-sensitivity-analysis.R")
   # source("scripts/05-pop_count_histograms.R")
   # source("scripts/05-plot-pop_QALYloss_over_time.R")
+
+  rm(cohort)
 }

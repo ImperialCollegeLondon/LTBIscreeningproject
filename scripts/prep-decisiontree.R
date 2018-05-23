@@ -29,7 +29,8 @@ who_levels <-
                   pruneFun = function(x) x$level <= 2)[-1] %>%
   'names<-'(NULL)
 
-p_incid_grp <- factor(cohort$who_inc_Pareek2011, levels = who_levels) %>% prop_table()
+p_incid_grp <- factor(cohort$who_inc_Pareek2011,
+                      levels = who_levels) %>% prop_table()
 
 ##TODO: this is a duplicated
 pLatentTB.who <- data.frame(who_inc_Pareek2011 = who_levels,

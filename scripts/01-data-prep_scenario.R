@@ -1,4 +1,5 @@
-#******************************************************
+# *****************************************************
+#
 # LTBI screening model
 # N Green
 # Sept 2017
@@ -23,12 +24,12 @@ parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%
                                      package = "LTBIscreeningproject")
 
 scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
-                                              sheet = "cost", na = c("", NA),
-                                              col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
+                                              sheet = "cost", na = c("", NA))#,
+                                              # col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
 
 scenario_parameter_p <- readxl::read_excel(parameter_values_file,
-                                           sheet = "p", na = c("", NA),
-                                           col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
+                                           sheet = "p", na = c("", NA))#,
+                                           # col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
 
 scenario_parameter_cost$val_type <- "cost"
 
