@@ -16,7 +16,7 @@ policy_cohort <- function(cohort_in,
 
   # single year cohort only
   cohort <- dplyr::filter(cohort_in,
-                          issdt_year == interv$year_cohort)
+                          issdt_year %in% interv$year_cohort)
 
   # uk stay long enough
   cohort <- dplyr::filter(cohort,

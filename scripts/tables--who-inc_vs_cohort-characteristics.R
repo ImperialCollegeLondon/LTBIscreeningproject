@@ -1,5 +1,6 @@
 #
-# tables of characteristic by who incidence
+# tables of characteristic:
+# by who incidence
 # screening target group
 # for the total data set
 #
@@ -15,6 +16,8 @@ library(LTBIscreeningproject)
 
 data("model_input_cohort")
 
+
+# time in EWNI columns ----------------------------------------------------
 
 out <-
   rbind(
@@ -43,6 +46,7 @@ sjPlot::tab_df(out)
 
 
 
+# incidence category columns ----------------------------------------------
 
 row_vars <- c("visatype2", "agegp2", "uk_tb", "all_tb", "LTBI", "screen")
 col_var <- "who_inc_Pareek2011"

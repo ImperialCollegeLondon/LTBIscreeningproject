@@ -5,7 +5,7 @@
 #' @param unit_cost.aTB_TxDx diagnosis and treatment cost distributions
 #' @param num_2nd_inf average number of secondary tb infections from a single index case
 #' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
-#' @param num_avoided named vector elements 'uk' and 'all'
+#' @param prop_avoided p_LTBI_to_cured
 #'
 #' @return list 'statusquo' and 'screened'
 #' @export
@@ -15,7 +15,7 @@ scenario_cost <- function(endpoint,
                           unit_cost.aTB_TxDx,
                           num_2nd_inf,
                           costeff_cohort,
-                          num_avoided) {
+                          prop_avoided) {
 
   assert_that(endpoint %in% c("death", "exit uk"))
 
@@ -38,6 +38,7 @@ scenario_cost <- function(endpoint,
 
   discounts_1st <- costeff_cohort$all_notif_discounts[keep_tb]
   discounts_2nd <- costeff_cohort$all_secondary_inf_discounts[keep_tb]
+
   id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
 
   notif_statusquo <- cost_tb_notif(r2nd_inf,
@@ -47,7 +48,7 @@ scenario_cost <- function(endpoint,
   notif_screened <- notif_statusquo
 
   who_avoided <- rows_first_n_ids(id_avoided_tb,
-                                  num_avoided[endpoint])
+                                  prop_avoided)
 
   notif_screened[who_avoided] <- 0
 

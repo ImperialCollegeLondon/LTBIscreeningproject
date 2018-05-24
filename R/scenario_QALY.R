@@ -1,7 +1,7 @@
 
 #' Calculate total QALYs of a scenario
 #'
-#' @param num_avoided Number avoided for each endpoint
+#' @param prop_avoided
 #' @param endpoint 'death' or 'exit uk'
 #' @param costeff_cohort Individual data
 #'
@@ -9,7 +9,7 @@
 #' @export
 #'
 #' @examples
-scenario_QALY <- function(num_avoided,
+scenario_QALY <- function(prop_avoided,
                           endpoint,
                           costeff_cohort) {
 
@@ -27,7 +27,7 @@ scenario_QALY <- function(num_avoided,
   QALY_screened <- QALY_statusquo
 
   who_avoid <- rows_first_n_ids(id_avoided_tb,
-                                num_avoided[endpoint])
+                                prop_avoided)
 
   QALY_screened[who_avoid] <- QALY_diseasefree[who_avoid]
 

@@ -16,13 +16,6 @@ scenario_res <-
 
 n.scenarios <- length(dectree_res)
 
-n_uk_tb <- unlist(unname(sum(cohort$uk_tb)))
-n_exit_tb <- unlist(unname(sum(cohort$exituk_tb)))
-n_all_tb <- n_exit_tb + n_uk_tb
-
-avoid_tb <- create_avoid_tb_list(scenario_res,
-                                 n_all_tb, n_uk_tb)
-
 interv_cost <- vector(length = interv$N.mc, mode = "list")
 interv_QALY <- vector(length = interv$N.mc, mode = "list")
 stats_scenario <- vector(length = n.scenarios, mode = "list")
@@ -83,10 +76,10 @@ for (s in seq_len(n.scenarios)) {
 
     # set.seed(12345)
 
-    num_avoided <- avoid_tb[[s]][i, ]
+    p_LTBI_to_cured <- scenario_res$subset_pop[[s]][i, 'p_LTBI_to_cured']
 
-    interv_cost[[i]] <- interv_scenario_cost(num_avoided)
-    interv_QALY[[i]] <- interv_scenario_QALY(num_avoided)
+    interv_cost[[i]] <- interv_scenario_cost(prop_avoided = p_LTBI_to_cured)
+    interv_QALY[[i]] <- interv_scenario_QALY(prop_avoided = p_LTBI_to_cured)
   }
 
   stats_scenario[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
