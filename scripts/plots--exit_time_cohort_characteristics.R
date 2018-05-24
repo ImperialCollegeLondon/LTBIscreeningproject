@@ -1,3 +1,13 @@
+#
+# stacked bar chart and violin plots
+# for the total data set
+#
+# - country by visa status
+# - who incidence category by time in EWNI
+# - age group incidence category by time in EWNI
+# - country by time in EWNI
+# - visa status by time in EWNI
+
 
 library(ggplot2)
 library(reshape2)

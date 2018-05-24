@@ -74,7 +74,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_screen %in% interv$screen_age_range)
 
 
-# create LTBI probs by WHO active TB group ---------------------------------
+# LTBI probs by WHO active TB group ---------------------------------
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 who_level_breaks <- c(0, 50, 150, 250, 350, 100000)
@@ -118,8 +118,6 @@ pLatentTB.who_age.long <-
                              value.name = "pLTBI",
                              variable.name = "age_at_screen")
 
-##TODO:
-## where do some people go???
 IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_screen",
@@ -163,7 +161,6 @@ IMPUTED_sample <-
                 fup1_date = as.Date(fup1, origin = date_origin),
                 fup_issdt_days = fup1_date - issdt,
                 fup_issdt = fup_issdt_days/365.25,
-                LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1,
                 cens1 = fup1_date == FUP_DATE,
                 death1 = fup1_date == date_death1,
                 exit_uk1 = fup1_date == date_exit_uk1)
@@ -171,6 +168,10 @@ IMPUTED_sample <-
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 fup1_date > issdt)
+
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  dplyr::mutate(LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1)
 
 # remove tb before entry
 IMPUTED_sample <-
