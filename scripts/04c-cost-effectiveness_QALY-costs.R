@@ -48,6 +48,7 @@ costeff_cohort <-
          all_notif_discounts,
          uk_secondary_inf_discounts,
          all_secondary_inf_discounts,
+         num_2nd_inf,
          id_avoided_tb) %>%
   mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
          E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
@@ -61,7 +62,6 @@ costeff_cohort <-
 interv_scenario_cost <- partial(scenario_cost,
                                 endpoint = interv$ENDPOINT_cost,
                                 unit_cost.aTB_TxDx = unit_cost$aTB_TxDx,
-                                num_2nd_inf = NUM_SECONDARY_INF,
                                 costeff_cohort = costeff_cohort)
 
 interv_scenario_QALY <- partial(scenario_QALY,

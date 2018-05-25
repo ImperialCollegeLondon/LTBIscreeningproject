@@ -1,9 +1,8 @@
 
-#' Calculate the total cost of a scenario
+#' Calculate total cost of a scenario
 #'
 #' @param endpoint 'death' or 'exit uk'
 #' @param unit_cost.aTB_TxDx diagnosis and treatment cost distributions
-#' @param num_2nd_inf average number of secondary tb infections from a single index case
 #' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured
 #'
@@ -13,7 +12,6 @@
 #' @examples
 scenario_cost <- function(endpoint,
                           unit_cost.aTB_TxDx,
-                          num_2nd_inf,
                           costeff_cohort,
                           prop_avoided) {
 
@@ -24,24 +22,18 @@ scenario_cost <- function(endpoint,
     treeSimR::sample_distributions() %>%
     sum()
 
-  ##TODO:
-  # pre-compute this and remove
-  r2nd_inf <-
-    num_2nd_inf %>%
-    treeSimR::sample_distributions() %>%
-    unlist()
-
   keep_tb <-
     switch(endpoint,
            "death" = costeff_cohort$all_tb,
            "exit uk" = costeff_cohort$uk_tb)
 
+  num_2nd_inf <- costeff_cohort$num_2nd_inf[keep_tb]
   discounts_1st <- costeff_cohort$all_notif_discounts[keep_tb]
   discounts_2nd <- costeff_cohort$all_secondary_inf_discounts[keep_tb]
 
   id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
 
-  notif_statusquo <- cost_tb_notif(r2nd_inf,
+  notif_statusquo <- cost_tb_notif(num_2nd_inf,
                                    rcost,
                                    discounts_1st,
                                    discounts_2nd)

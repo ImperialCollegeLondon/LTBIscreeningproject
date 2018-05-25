@@ -120,5 +120,17 @@ IMPUTED_sample <-
          uk_secondary_inf_discounts = ydiscounts[uk_notif_issdt + 1],
          all_secondary_inf_discounts = ydiscounts[all_notif_issdt + 1])
 
+num_2nd_inf <-
+  rep(list(NUM_SECONDARY_INF), sum(IMPUTED_sample$all_tb)) %>%
+  sample_distributions() %>%
+  sapply(FUN = rbernoulli, n = 1)
+
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(num_2nd_inf =
+           ifelse(all_tb,
+                  yes = num_2nd_inf,
+                  no = NA_real_))
+
 save(IMPUTED_sample, file = "data/model_input_cohort.RData")
 

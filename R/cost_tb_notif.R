@@ -1,10 +1,10 @@
 
-#' Total Costs of First and Secondary Active TB Cases
+#' Total costs of first and secondary active TB cases
 #'
-#' @param num_sec_inf
-#' @param unit_cost
-#' @param notif_discounts
-#' @param secondary_inf_discounts
+#' @param num_sec_inf Number of secondary infections for each index TB case; vector of integer (0 or 1)
+#' @param unit_cost Single value
+#' @param notif_discounts for each index TB case; vector
+#' @param secondary_inf_discounts for each index TB case; vector
 #'
 #' @return
 #' @export

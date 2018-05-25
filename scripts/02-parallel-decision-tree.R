@@ -31,13 +31,6 @@ no_cores <- detectCores() - 1
 # Initiate cluster
 cl <- makeCluster(no_cores)#, outfile = "temp_logfile.txt")
 
-n.uk_tb <- unlist(n.uk_tb)
-n.exit_tb <- unlist(n.exit_tb)
-
-clusterExport(cl, "n.uk_tb")
-clusterExport(cl, "n.exit_tb")
-# clusterExport(cl, "N.mc")
-
 clusterEvalQ(cl, library(data.tree))
 clusterEvalQ(cl, library(dplyr))
 clusterEvalQ(cl, library(treeSimR))
