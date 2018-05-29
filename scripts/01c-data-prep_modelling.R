@@ -37,7 +37,6 @@ rm_variables_names <-
 
 IMPUTED_sample <- IMPUTED_sample[ ,!names(IMPUTED_sample) %in% rm_variables_names]
 
-
 # remove duplicate pre-entry screened
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 dup_ref_id_orig == 0)
@@ -124,7 +123,10 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                                "who_inc_Pareek2011"))
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
+IMPUTED_sample$LTBI[as.logical(IMPUTED_sample$uk_tb)] <- TRUE
 
+##TODO: this over-samples LTBI
+# either remove observed tb beforehand or adjust downwards
 
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
@@ -168,10 +170,6 @@ IMPUTED_sample <-
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 fup1_date > issdt)
-
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  dplyr::mutate(LTBI_or_activeTB = LTBI == 1 | uk_tb_orig == 1)
 
 # remove tb before entry
 IMPUTED_sample <-

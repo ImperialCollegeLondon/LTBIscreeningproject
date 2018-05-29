@@ -1,4 +1,4 @@
-table(IMPUTED_sample$LTBI_or_activeTB, IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
+table(IMPUTED_sample$LTBI, IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
 
 # (0,50]  (50,150] (150,250] (250,350] (350,1e+05]
 # FALSE        0.8683032 0.7985021 0.6978383   0.6971831

@@ -110,7 +110,7 @@ sim_uktb_times <- function(data,
   mat <- cbind(fup_issdt = ceiling(data$fup_issdt),
                death_issdt = ceiling(data$date_death1_issdt.years),
                tb_issdt = ceiling(data$rNotificationDate_issdt.years),
-               LTBI_or_activeTB = (data$LTBI_or_activeTB == 0),
+               LTBI = as.logical(data$LTBI),
                exit_uk = as.logical(data$exit_uk1),
                death = as.logical(data$death1),
                uk_tb = as.logical(data$uk_tb))
@@ -121,8 +121,7 @@ sim_uktb_times <- function(data,
 
     tb_year[i] <-
 
-      # LTBI-free
-      if (mati['LTBI_or_activeTB']) {
+      if (!mati['LTBI']) {
 
         Inf
 
@@ -167,7 +166,7 @@ sim_exituk_tb_times <- function(data,
 
   mat <- cbind(fup_issdt = ceiling(data$date_exit_uk1_issdt.years),
                death_issdt = ceiling(data$date_death1_issdt.years),
-               LTBI_or_activeTB = (data$LTBI_or_activeTB == 0),
+               LTBI = as.logical(data$LTBI),
                exit_uk = as.logical(data$exit_uk1))
 
   for (i in seq_len(pop)) {
@@ -176,8 +175,7 @@ sim_exituk_tb_times <- function(data,
 
     tb_year[i] <-
 
-      # LTBI-free
-      if (mati['LTBI_or_activeTB']) {
+      if (!mati['LTBI']) {
 
         Inf
 

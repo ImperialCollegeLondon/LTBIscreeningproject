@@ -10,7 +10,7 @@
 # individually SIMULATE active TB progression times after exit uk and followup
 
 # cohort mean prevalence
-p_LTBI_cohort <- 0.279 #mean(IMPUTED_sample$pLTBI)
+p_LTBI_cohort <- mean(IMPUTED_sample$pLTBI) #0.279
 
 # brute force approach
 IMPUTED_sample <-

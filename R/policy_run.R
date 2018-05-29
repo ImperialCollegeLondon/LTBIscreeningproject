@@ -19,7 +19,7 @@ policy_run <- function() {
 
   # set-up ---------------------------------------------------------------
 
-  source("scripts/01aa-data-prep_constants-GLOBAL.R")#, echo = TRUE)
+  source("scripts/data-prep_constants-policy.R")#, echo = TRUE)
   source("scripts/setup_folders.R")#, echo = TRUE)
   source("scripts/prep-decisiontree.R")#, echo = TRUE)
 
@@ -36,7 +36,7 @@ policy_run <- function() {
   # plots/tables ---------------------------------------------------------
 
   source("scripts/05b-output-plots_cost-effectiveness.R")
-  source("scripts/05j-strat_pop_year_plots.R")
+  source("scripts/05j-strat_pop_year.R")
 
   table_costeffectiveness(screen.bcea, wtp_threshold, diroutput)
   num_subset_dectree(cohort, dectree_res, diroutput)

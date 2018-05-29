@@ -38,18 +38,18 @@ dat_surv_naive <-
   data.frame(cens = cens,
              times = times,
              times_years = times_years) #%>%
-  # dplyr::filter(IMPUTED_sample$LTBI_or_activeTB == TRUE)
+  # dplyr::filter(IMPUTED_sample$LTBI)
 
 
 # impute progression time after follow-up in uk
 # from exponential distn
 
-n.LTBI <- sum(IMPUTED_sample$LTBI_or_activeTB)
+n.LTBI <- sum(IMPUTED_sample$LTBI)
 imputed_uk_tb_excess <- rexp(n = n.LTBI, rate = 1e-5)  #days
 
 dat_surv_etm_imputed_uk_tb <-
   IMPUTED_sample %>%
-  dplyr::filter(LTBI_or_activeTB == TRUE) %>%
+  dplyr::filter(LTBI) %>%
   transmute(
     # imputed_uk_tb_times = fup1_issdt + imputed_uk_tb_excess,
     imputed_uk_tb_times = fup_issdt + imputed_uk_tb_excess,
@@ -79,10 +79,10 @@ data_etm <-
              to = event,
              time_days = fup_issdt[ ,"fup1_issdt"],
              time = days_to_years(fup_issdt[ ,"fup1_issdt"]),
-             LTBI_or_activeTB = IMPUTED_sample$LTBI_or_activeTB) %>%
-  dplyr::filter(LTBI_or_activeTB == TRUE,
+             LTBI = IMPUTED_sample$LTBI) %>%
+  dplyr::filter(LTBI,
                 time > 0) %>%
-  dplyr::select(-LTBI_or_activeTB)
+  dplyr::select(-LTBI)
 
 data_etm_cens_exituk <-
   data_etm %>%
@@ -102,9 +102,9 @@ dat_surv <-
             event3 = as.numeric(event == 3), #death
             event2 = as.numeric(event == 2), #exit_uk
             event1 = as.numeric(event == 1), #uk_tb
-            LTBI_or_activeTB = LTBI_or_activeTB) %>%
-  dplyr::filter(LTBI_or_activeTB == TRUE) %>%
-  dplyr::select(-LTBI_or_activeTB)
+            LTBI = LTBI) %>%
+  dplyr::filter(LTBI) %>%
+  dplyr::select(-LTBI)
 
 
 # fup1_issdt fup1_issdt_year age_at_entry id         from     to status trans
@@ -136,7 +136,7 @@ dat_surv_long_cens_exit_uk <-
 
 dat_surv_impute <-
   IMPUTED_sample %>%
-  dplyr::filter(LTBI_or_activeTB == TRUE) %>%
+  dplyr::filter(LTBI) %>%
   transmute(id = rownames(.),
             death1 = as.numeric(death1),
             exit_uk1 = as.numeric(exit_uk1),
