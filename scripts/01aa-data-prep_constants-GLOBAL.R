@@ -29,3 +29,16 @@ message(sprintf("[ policy level parameters ]\n policy: %s\n WHO groups: %s\n min
                 green(interv$LTBI_test),
                 green(interv$treatment)))
 
+
+# subset complete data set ----------------------------------------------
+
+# so can over-write
+if (!exists("cohort")) {
+
+  cohort <- policy_cohort(IMPUTED_sample, interv)
+}
+
+screen_discount <- screen_discount(cohort)
+
+# size potentially screened
+pop_year <- nrow(cohort)

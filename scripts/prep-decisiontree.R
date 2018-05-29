@@ -42,15 +42,11 @@ pLatentTB.who <- data.frame(who_inc_Pareek2011 = who_levels,
 for (i in seq_along(p_incid_grp)) {
 
   osNode.cost$Set(pmin = p_incid_grp[i],
+                  pmax = p_incid_grp[i],
                   filterFun = function(x) x$name == names(p_incid_grp)[i])
 
   osNode.health$Set(pmin = p_incid_grp[i],
-                    filterFun = function(x) x$name == names(p_incid_grp)[i])
-
-  osNode.cost$Set(pmax = p_incid_grp[i],
-                  filterFun = function(x) x$name == names(p_incid_grp)[i])
-
-  osNode.health$Set(pmax = p_incid_grp[i],
+                    pmax = p_incid_grp[i],
                     filterFun = function(x) x$name == names(p_incid_grp)[i])
 }
 
@@ -64,13 +60,11 @@ for (i in who_levels) {
                   select = LTBI)
 
   osNode.cost$Set(pmin = pLTBI,
+                  pmax = pLTBI,
                   filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
-  osNode.health$Set(pmin = pLTBI,
-                    filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
 
-  osNode.cost$Set(pmax = pLTBI,
-                  filterFun = function(x) x$pathString == pastef("LTBI screening cost", i, "LTBI"))
-  osNode.health$Set(pmax = pLTBI,
+  osNode.health$Set(pmin = pLTBI,
+                    pmax = pLTBI,
                     filterFun = function(x) x$pathString == pastef("LTBI screening QALY loss", i, "LTBI"))
 }
 
@@ -81,17 +75,12 @@ for (i in who_levels) {
 cost <- unit_cost[[interv$treatment]]
 
 osNode.cost$Set(min = cost$full,
-                filterFun = function(x) x$name == "Complete Treatment")
-
-osNode.cost$Set(max = cost$full,
+                max = cost$full,
                 filterFun = function(x) x$name == "Complete Treatment")
 
 osNode.cost$Set(min = cost$dropout,
+                max = cost$dropout,
                 filterFun = function(x) x$name == "Not Complete Treatment")
-
-osNode.cost$Set(max = cost$dropout,
-                filterFun = function(x) x$name == "Not Complete Treatment")
-
 
 ## effectiveness
 
@@ -148,15 +137,11 @@ osNode.health$Set(pmax = performance$spec$pmax,
 ltbi_positive <- unit_cost$GP_incentive$ltbi_positive
 
 osNode.cost$Set(min = ltbi_positive$params['mean'],
-                filterFun = function(x) x$name == "Sensitivity")
-
-osNode.cost$Set(max = ltbi_positive$params['mean'],
+                max = ltbi_positive$params['mean'],
                 filterFun = function(x) x$name == "Sensitivity")
 
 osNode.cost$Set(min = ltbi_positive$params['mean'],
-                filterFun = function(x) x$name == "1-Specificity")
-
-osNode.cost$Set(max = ltbi_positive$params['mean'],
+                max = ltbi_positive$params['mean'],
                 filterFun = function(x) x$name == "1-Specificity")
 
 

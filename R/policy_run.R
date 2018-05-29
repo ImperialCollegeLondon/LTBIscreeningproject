@@ -21,8 +21,6 @@ policy_run <- function() {
 
   source("scripts/01aa-data-prep_constants-GLOBAL.R")#, echo = TRUE)
   source("scripts/setup_folders.R")#, echo = TRUE)
-  source("scripts/01cc-data-prep_modelling-GLOBAL.R")#, echo = TRUE)
-
   source("scripts/prep-decisiontree.R")#, echo = TRUE)
 
 
