@@ -9,18 +9,21 @@
 # prob: scaled progression probs with IMPUTED_sample weighted average LTBI prob
 # individually SIMULATE active TB progression times after exit uk and followup
 
-# cohort mean prevalence
-p_LTBI_cohort <- mean(IMPUTED_sample$pLTBI) #0.279
+# cohort mean prevalence? incidence atm
+p_LTBI_cohort <- mean(IMPUTED_sample$pLTBI)
+p_tb_given_LTBI_year <- p_incid_year/p_LTBI_cohort
 
 # brute force approach
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(exituk_tb.years = sim_exituk_tb_times(data = .,
-                                                      prob = p_incid_year/p_LTBI_cohort),
+                                                      prob = p_tb_given_LTBI_year),
                 rNotificationDate_issdt.years = sim_uktb_times(data = .,
-                                                               prob = p_incid_year/p_LTBI_cohort),
+                                                               prob = p_tb_given_LTBI_year),
                 exituk_tb = !is.na(exituk_tb.years) &
                             !is.infinite(exituk_tb.years),
+                # exituk_tb = !is.na_OR_is.inf(exituk_tb.years),
+                # uk_tb = !is.na_OR_is.inf(rNotificationDate_issdt.years),
                 uk_tb = !is.na(rNotificationDate_issdt.years) &
                         !is.infinite(rNotificationDate_issdt.years))
 

@@ -5,6 +5,7 @@
 #'
 #' @param cohort_in total sample
 #' @param interv list of conditions
+#' @param diroutput
 #'
 #' @return cohort
 #' @export
@@ -12,7 +13,8 @@
 #' @examples
 #'
 policy_cohort <- function(cohort_in,
-                          interv) {
+                          interv,
+                          diroutput) {
 
   # single year cohort only
   cohort <- dplyr::filter(cohort_in,
@@ -38,7 +40,6 @@ policy_cohort <- function(cohort_in,
   cohort$id_avoided_tb <- NA
   cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
 
-  save(cohort, file = "data/cohort.RData")
   save(cohort, file = pastef(diroutput, "cohort.RData"))
 
   return(cohort)

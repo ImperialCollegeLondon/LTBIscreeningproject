@@ -130,15 +130,17 @@ sim_uktb_times <- function(data,
 
         NA
 
-      }else if (mati['uk_tb']) {
-
-        mati['tb_issdt']
+      # }else if (mati['uk_tb']) {
+      #
+      #   mati['tb_issdt']
 
       }else {
 
-        sample_tb_year(mati['fup_issdt'],
-                       mati['death_issdt'],
-                       prob)
+        sample_tb_year(
+          # fup_issdt = mati['fup_issdt'],
+          fup_issdt = 0,
+          mati['death_issdt'],
+          prob)
       }
   }
 

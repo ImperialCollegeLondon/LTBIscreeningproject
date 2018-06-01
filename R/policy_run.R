@@ -19,8 +19,8 @@ policy_run <- function() {
 
   # set-up ---------------------------------------------------------------
 
-  source("scripts/data-prep_constants-policy.R")#, echo = TRUE)
   source("scripts/setup_folders.R")#, echo = TRUE)
+  source("scripts/data-prep_constants-policy.R")#, echo = TRUE)
   source("scripts/prep-decisiontree.R")#, echo = TRUE)
 
 

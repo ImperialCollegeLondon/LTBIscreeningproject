@@ -27,7 +27,8 @@ dir.create(plots_folder_scenario, showWarnings = FALSE)
 cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", policy_name,
                                    format(Sys.time(), "%Y-%m-%d %I-%p"))
 
-save(interv, file = pastef(diroutput, "interv.RData"))
+
+# save --------------------------------------------------------------------
 
 file.copy(from = "data/scenario_parameters_df.csv",
           to = pastef(parent_folder, "scenario_parameters_df.csv"))

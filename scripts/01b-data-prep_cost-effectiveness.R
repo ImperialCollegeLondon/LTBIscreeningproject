@@ -233,6 +233,14 @@ test_performance <-
          list(sens = list(pmin = 0.85, pmax = 0.93),
               spec = list(pmin = 0.86, pmax = 1.0)))
 
+means <- list(cost.aTB_TxDx =
+                unit_cost$aTB_TxDx %>%
+                means_distributions() %>%
+                sum(),
+              num_sec_inf =
+                NUM_SECONDARY_INF %>%
+                means_distributions() %>%
+                unlist())
 
 ##########
 # health #
@@ -262,5 +270,5 @@ utility$postTx <- 0.921
 # utility$activeTB_postacute <- 0.813
 
 
-save(unit_cost, utility, cfr_age_lookup, pLatentTB.who, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance,
+save(unit_cost, utility, cfr_age_lookup, pLatentTB.who, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance, means,
      file = "data/cost_effectiveness_params.RData")

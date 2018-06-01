@@ -20,17 +20,6 @@ interv_cost <- vector(length = interv$N.mc, mode = "list")
 interv_QALY <- vector(length = interv$N.mc, mode = "list")
 stats_scenario <- vector(length = n.scenarios, mode = "list")
 
-# expected statistics for reproducability/comparison with randomly generated values
-
-mean_cost.aTB_TxDx <-
-  unit_cost$aTB_TxDx %>%
-  means_distributions() %>%
-  sum()
-
-mean_num_sec_inf <-
-  NUM_SECONDARY_INF %>%
-  means_distributions() %>%
-  unlist()
 
 # extract cost-effectiveness variables
 
@@ -50,8 +39,8 @@ costeff_cohort <-
          all_secondary_inf_discounts,
          num_2nd_inf,
          id_avoided_tb) %>%
-  mutate(E_cost_sec_inf = mean_num_sec_inf * mean_cost.aTB_TxDx * all_secondary_inf_discounts,
-         E_cost_statusquo = (all_notif_discounts * mean_cost.aTB_TxDx) + E_cost_sec_inf,
+  mutate(E_cost_sec_inf = means$num_sec_inf * means$cost.aTB_TxDx * all_secondary_inf_discounts,
+         E_cost_statusquo = (all_notif_discounts * means$cost.aTB_TxDx) + E_cost_sec_inf,
          E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))
 
 
