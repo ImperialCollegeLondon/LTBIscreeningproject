@@ -2,22 +2,57 @@
 # LTBI screening
 # N Green
 # 2018
+# strat_pop_year_statusquo.R
 #
 # gridded plots of the subpopulation sizes over time
 # can do this on the raw, fitted, extrapolated or subsample data
-
+#
 # tb is for cases in EWNI only
-# status-quo
+
+
+# subset by covariate?
+cohort <-
+  IMPUTED_sample %>%
+  # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(50,150]")
+  # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(150,250]")
+  # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(250,350]")
+  subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(350,1e+05]")
+
+# sample fixed size cohort?
+cohort <- cohort[sample.int(n = nrow(cohort), size = 100000, replace = TRUE), ]
 
 event_times <-
   list(
-    # tb = cohort$exituk_tb.years,
-    # exit_uk = rep(1000, nrow(cohort)),
     tb = cohort$rNotificationDate_issdt.years,
-    cohort$date_exit_uk1_issdt.years,
+    exit_uk = cohort$date_exit_uk1_issdt.years,
     death = cohort$date_death1_issdt.years)
 
+
 strat_pop_year <- count_comprsk_events(event_times)
+
+
+##########
+# tables #
+##########
+
+strat_pop_year <-
+  t(strat_pop_year) %>%
+  data.frame(row.names = NULL) %>%
+  mutate(tb_diff = diff(c(0, tb)),
+         discount = discount(t_limit = n()),
+         c_tb = means$cost.aTB_TxDx + (means$num_sec_inf * means$cost.aTB_TxDx)/1.035,
+         t_tb = tb_diff * c_tb,
+         dis_tb = discount * t_tb)
+
+plot(strat_pop_year$tb_diff, type = 'o')
+lines(strat_pop_year$tb_diff, type = 'o', col = "blue")
+lines(strat_pop_year$tb_diff, type = 'o', col = "red")
+legend('topright', legend = c("(150,250]","(250,350]","(350,1e+05]"), col = c("black","blue","red"), lty = 1)
+
+
+write.csv(res,
+          file = pastef(diroutput, 'num-competing-events-by-year_statusquo.csv'))
+
 
 
 #########
@@ -45,21 +80,3 @@ strat_plot(unlist(strat_pop_year["at-risk", ]),
            ylab = "remain in EWNI")
 
 dev.off()
-
-
-##########
-# tables #
-##########
-
-strat_pop_year <-
-  t(strat_pop_year) %>%
-  data.frame(row.names = NULL) %>%
-  mutate(tb_diff = diff(c(0, tb)),
-         discount = discount(t_limit = n()),
-         c_tb = means$cost.aTB_TxDx + (means$num_sec_inf * means$cost.aTB_TxDx)/1.035,
-         t_tb = tb_diff * c_tb,
-         dis_tb = discount * t_tb)
-
-write.csv(res,
-          file = pastef(diroutput, 'num-competing-events-by-year_statusquo.csv'))
-

@@ -13,7 +13,7 @@ data("051206 - IMPUTED_sample")
 
 source("scripts/global-parameters-environment-create.R")
 
-source("scripts/01a-data-prep_simulation-constants.R", echo = TRUE)
+source("scripts/01a-data-prep_interv-constants.R", echo = TRUE)
 
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 

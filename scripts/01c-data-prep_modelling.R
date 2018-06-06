@@ -57,7 +57,6 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 
 
 if (interv$force_everyone_stays) {
-##TODO: is this doing what we want?
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
 
@@ -72,21 +71,21 @@ IMPUTED_sample$age_at_screen <- IMPUTED_sample$age_at_entry + round(IMPUTED_samp
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_screen %in% interv$screen_age_range)
 
+# extract uk entry year only
+IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
+
 
 # LTBI probs by WHO active TB group ---------------------------------
 
 who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
 who_level_breaks <- c(0, 50, 150, 250, 350, 100000)
 
-# extract uk entry year only
-IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
-
 # match active TB prevalence groups in dataset to Pareek (2011)
 IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
                                               breaks = who_level_breaks)
 
-# IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
-#                                               breaks = c(0, 39, 149, 349, 100000))
+IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
+                                                breaks = c(0, 39, 149, 349, 100000))
 
 data("TB_burden_countries")
 
@@ -108,7 +107,8 @@ pLatentTB.who_age <-
          ncol = length(interv$screen_age_range),
          nrow = length(pLatentTB.who)) %>%
   data.frame(who_levels, .) %>%
-  purrr::set_names("who_inc_Pareek2011", as.character(interv$screen_age_range))
+  purrr::set_names("who_inc_Pareek2011",
+                   as.character(interv$screen_age_range))
 
 # join with main data set
 pLatentTB.who_age.long <-
@@ -121,6 +121,17 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         y = pLatentTB.who_age.long,
                         by = c("age_at_screen",
                                "who_inc_Pareek2011"))
+
+
+
+## TODO:
+## testing code...
+## over-ride sample with same fixed value for everyone
+## do this to control for the effect of time in EWNI vs pLTBI
+## run model targetting different who groups
+# IMPUTED_sample$pLTBI <- 0.3
+
+
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 IMPUTED_sample$LTBI[as.logical(IMPUTED_sample$uk_tb)] <- TRUE
@@ -160,16 +171,16 @@ IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(fup_limit_issdt_days = FUP_DATE - issdt,
                 fup_limit_issdt = fup_limit_issdt_days/365.25,
-                fup1_date = as.Date(fup1, origin = date_origin),
-                fup_issdt_days = fup1_date - issdt,
+                fup_date = as.Date(fup1, origin = date_origin),
+                fup_issdt_days = fup_date - issdt,
                 fup_issdt = fup_issdt_days/365.25,
-                cens1 = fup1_date == FUP_DATE,
-                death1 = fup1_date == date_death1,
-                exit_uk1 = fup1_date == date_exit_uk1)
+                cens1 = fup_date == FUP_DATE,
+                death1 = fup_date == date_death1,
+                exit_uk1 = fup_date == date_exit_uk1)
 
 # remove indiv follow-up date before entry
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                fup1_date > issdt)
+                                fup_date > issdt)
 
 # remove tb before entry
 IMPUTED_sample <-

@@ -1,7 +1,7 @@
 context("test-subset_pop_dectree.R")
 
 
-dectree <- treeSimR::costeffectiveness_tree(yaml_tree = "data/LTBI_dectree-cost.yaml")
+dectree <- treeSimR::costeffectiveness_tree(yaml_tree = "../../data/LTBI_dectree-cost.yaml")
 osNode <- dectree$osNode
 
 test_that("against monte carlo samples", {
@@ -12,21 +12,21 @@ test_that("against monte carlo samples", {
   parameter_cost <- tibble(node = "Agree to Screen", min = 100, max = 100, distn = "unif",
                         scenario = 1, val_type = "cost", p = NA)
 
-  assign_branch_values(osNode,
-                       osNode,
-                       parameter_p = parameter_p,
-                       parameter_cost = parameter_cost)
+  treeSimR::assign_branch_values(osNode,
+                                 osNode,
+                                 parameter_p = parameter_p,
+                                 parameter_cost = parameter_cost)
 
-  osNode.cost$Set(path_probs = calc_pathway_probs(osNode.cost))
+  osNode.cost$Set(path_probs = treeSimR::calc_pathway_probs(osNode.cost))
 
   subset_pop <- subset_pop_dectree(osNode.cost)
 
   p_LTBI_to_cured <- with(subset_pop, cured/LTBI_pre)
 
-  n_tb_screen <- MonteCarlo_n.tb_screen(p_LTBI_to_cured,
-                                        n.uk_tb = 10,
-                                        n.all_tb = 100,
-                                        n = 2)
+  n_tb_screen <- treeSimR::MonteCarlo_n.tb_screen(p_LTBI_to_cured,
+                                                  n.uk_tb = 10,
+                                                  n.all_tb = 100,
+                                                  n = 2)
 
   uk_tb_screen <- n_tb_screen$n.tb_screen.uk_tb
   all_tb_screen <- n_tb_screen$n.tb_screen.all_tb

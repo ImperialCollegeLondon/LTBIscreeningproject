@@ -6,7 +6,7 @@
 # simulation specific constants
 
 
-N.mc <- 100#0#2
+N.mc <- 3
 
 cluster <- FALSE
 
@@ -15,7 +15,8 @@ cluster <- FALSE
 
 no_students <- FALSE
 
-force_everyone_stays <- FALSE
+# force_everyone_stays <- FALSE
+force_everyone_stays <- TRUE
 
 
 # rather than screen _everyone_ on entry
@@ -25,7 +26,7 @@ screen_with_delay <- TRUE
 MAX_SCREEN_DELAY <- 5
 
 # time horizon for active TB progression
-FUP_MAX_YEAR <- 100 #10, 20, 50
+FUP_MAX_YEAR <- 100
 
 screen_age_range <- 18:35
 # screen_age_range <- 18:45

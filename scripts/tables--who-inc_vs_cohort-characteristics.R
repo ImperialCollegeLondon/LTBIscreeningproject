@@ -48,7 +48,7 @@ sjPlot::tab_df(out)
 
 # incidence category columns ----------------------------------------------
 
-row_vars <- c("visatype2", "agegp2", "uk_tb", "all_tb", "LTBI", "screen")
+row_vars <- c("visatype2", "agegp2", "LTBI", "screen", "uk_tb", "all_tb")
 col_var <- "who_inc_Pareek2011"
 wide_df <- IMPUTED_sample[ , c(col_var, row_vars)]
 wide_df$uk_tb <- as.factor(as.numeric(wide_df$uk_tb))

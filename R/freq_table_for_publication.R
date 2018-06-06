@@ -33,17 +33,18 @@ freq_table_for_publication <- function(wide_df,
                   data = res,
                   fill = "missing") #use drop=F to prevent silent missings
   #'silent missings'
-  output$variable <- as.character(output$variable)
+  output$variable <- factor(output$variable, levels = unique(output$variable))
   #make 'empty lines'
   empties <- data.frame(variable = unique(output$variable), stringsAsFactors = FALSE)
   empties[ ,colnames(output)[-1]] <- ""
 
   #bind them together
-  output2 <- rbind(empties,output)
-  output2 <- output2[order(output2$variable,output2$value), ]
+  output2 <- rbind(empties, output)
+  output2 <- output2[order(output2$variable, output2$value), ]
 
   #optional: 'remove' variable if value present
 
+  output2$variable <- as.character(output2$variable)
   output2$variable[output2$value != ""] <- ""
   rownames(output2) <- NULL
 
