@@ -8,6 +8,7 @@
 #' @param dectree_res output of decision_tree_cluster()
 #' @param folder text string
 #' @param by_screen_year TRUE or FALSE ##TODO:
+#' @param probs Return probabilities or numbers
 #'
 #' @return tibble
 #' @export
@@ -17,13 +18,18 @@
 num_subset_dectree <- function(cohort,
                                dectree_res,
                                folder = NA,
-                               by_screen_year = FALSE) {
+                               by_screen_year = FALSE,
+                               probs = TRUE) {
 
   num_screen_year <-
-    if (by_screen_year) {
-      table(ceiling(cohort$screen_year))
+    if (probs) {
+      1
     } else {
-      nrow(cohort)}
+      if (by_screen_year) {
+        table(ceiling(cohort$screen_year))
+      } else {
+        nrow(cohort)}
+    }
 
   ##TODO: update for each screen year
   # num_subset_list <-
@@ -36,7 +42,7 @@ num_subset_dectree <- function(cohort,
   #               .id = "scenario") %>%
   #   cbind(year = seq_along(num_screen_year), .)
 
-  num_subset_dectree <-
+  num_subset <-
     dectree_res %>%
     map("subset_pop") %>%
     map(reshape2::melt) %>%
@@ -45,14 +51,14 @@ num_subset_dectree <- function(cohort,
     group_by(scenario, X2) %>%
     summarise(L95 = quantile(value, 0.05) * num_screen_year,
               mean = mean(value) * num_screen_year,
-              U95 = quantile(value, 0.95) * num_screen_year) %>%
-    dplyr::filter(X2 != 'p_LTBI_to_cured')
+              U95 = quantile(value, 0.95) * num_screen_year) #%>%
+    # dplyr::filter(X2 != 'p_LTBI_to_cured')
 
   if (!is.na(folder)) {
-    write.csv(num_subset_dectree,
+    write.csv(num_subset,
               file = pastef(folder, "num_subset_dectree.csv"))
   }
 
-  invisible(num_subset_dectree)
+  invisible(num_subset)
 }
 

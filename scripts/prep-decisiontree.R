@@ -87,15 +87,11 @@ osNode.cost$Set(min = cost$dropout,
 eff <- effectiveness[[interv$treatment]]
 
 osNode.cost$Set(pmin = eff$pmin,
-                filterFun = function(x) x$name == "Effective")
-
-osNode.cost$Set(pmax = eff$pmax,
+                pmax = eff$pmax,
                 filterFun = function(x) x$name == "Effective")
 
 osNode.health$Set(pmin = eff$pmin,
-                  filterFun = function(x) x$name == "Effective")
-
-osNode.health$Set(pmax = eff$pmax,
+                  pmax = eff$pmax,
                   filterFun = function(x) x$name == "Effective")
 
 
@@ -106,29 +102,21 @@ performance <-  test_performance[[interv$LTBI_test]]
 # cost
 
 osNode.cost$Set(pmin = performance$sens$pmin,
-                filterFun = function(x) x$name == "Sensitivity")
-
-osNode.cost$Set(pmax = performance$sens$pmax,
+                pmax = performance$sens$pmax,
                 filterFun = function(x) x$name == "Sensitivity")
 
 osNode.cost$Set(pmin = performance$spec$pmin,
-                filterFun = function(x) x$name == "Specificity")
-
-osNode.cost$Set(pmax = performance$spec$pmax,
+                pmax = performance$spec$pmax,
                 filterFun = function(x) x$name == "Specificity")
 
 # health
 
 osNode.health$Set(pmin = performance$sens$pmin,
-                  filterFun = function(x) x$name == "Sensitivity")
-
-osNode.health$Set(pmax = performance$sens$pmax,
+                  pmax = performance$sens$pmax,
                   filterFun = function(x) x$name == "Sensitivity")
 
 osNode.health$Set(pmin = performance$spec$pmin,
-                  filterFun = function(x) x$name == "Specificity")
-
-osNode.health$Set(pmax = performance$spec$pmax,
+                  pmax = performance$spec$pmax,
                   filterFun = function(x) x$name == "Specificity")
 
 

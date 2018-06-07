@@ -5,7 +5,6 @@
 #' probabilities of particular state on the pathway by summing
 #' across nodes, using pathprobs.
 #'
-#' TODO: absolute counts also
 #' TODO: can we use data.tree:: functions instead
 #' TODO: convert to data.table?
 #'
@@ -15,24 +14,28 @@
 #' @export
 #'
 #' @examples
+#'
 subset_pop_dectree <- function(osNode) {
 
   dectree_df <- my_ToDataFrameTypeCol(osNode, "path_probs", "p")
 
-  LTBI_pre <- leaf_df_by_name(osNode, node_name = "LTBI")
-
-  tests <- leaf_df_by_name(osNode, node_name = "Agree to Screen")
-
-  positive <- dplyr::filter(dectree_df,
-                            (level_3 == "LTBI" & level_5 == "Sensitivity" & is.na(level_6)) |
-                            (level_3 == "non-LTBI" & level_5 == "1-Specificity" & is.na(level_6)))
-
-  startTx <- leaf_df_by_name(osNode, node_name = "Start Treatment")
-
-  completeTx <- leaf_df_by_name(osNode, node_name = "Complete Treatment")
-
-  cured <- dplyr::filter(dectree_df,
-                         level_10 == "Effective")
+  LTBI_pre      <- leaf_df_by_name(osNode, node_name = "LTBI")
+  tests         <- leaf_df_by_name(osNode, node_name = "Agree to Screen")
+  LTBI_tests    <- dplyr::filter(dectree_df,
+                                 (level_3 == "LTBI" & level_4 == "Agree to Screen" & is.na(level_5)))
+  positive      <- dplyr::filter(dectree_df,
+                                 (level_3 == "LTBI" & level_5 == "Sensitivity" & is.na(level_6)) |
+                                   (level_3 == "non-LTBI" & level_5 == "1-Specificity" & is.na(level_6)))
+  LTBI_positive <- dplyr::filter(dectree_df,
+                                 (level_3 == "LTBI" & level_5 == "Sensitivity" & is.na(level_6)))
+  startTx       <- leaf_df_by_name(osNode, node_name = "Start Treatment")
+  LTBI_startTx  <- dplyr::filter(dectree_df,
+                                 (level_3 == "LTBI" & level_6 == "Start Treatment" & is.na(level_7)))
+  completeTx    <- leaf_df_by_name(osNode, node_name = "Complete Treatment")
+  LTBI_completeTx <- dplyr::filter(dectree_df,
+                                   (level_3 == "LTBI" & level_9 == "Complete Treatment" & is.na(level_10)))
+  cured         <- dplyr::filter(dectree_df,
+                                 level_10 == "Effective")
 
   data.frame(LTBI_pre = sum(LTBI_pre$path_probs),
              tests = sum(tests$path_probs),
@@ -41,8 +44,13 @@ subset_pop_dectree <- function(osNode) {
              completeTx = sum(completeTx$path_probs),
              cured = sum(cured$path_probs),
              LTBI_post = sum(LTBI_pre$path_probs) - sum(cured$path_probs)) %>%
-    mutate(p_LTBI_to_cured = cured/LTBI_pre)
+    mutate(p_LTBI_to_cured = cured/LTBI_pre,
+           LTBI_tests = sum(LTBI_tests$path_probs)/LTBI_pre,
+           LTBI_positive = sum(LTBI_positive$path_probs)/LTBI_pre,
+           LTBI_startTx = sum(LTBI_startTx$path_probs)/LTBI_pre,
+           LTBI_completeTx = sum(LTBI_completeTx$path_probs)/LTBI_pre)
 }
+
 
 
 #' leaf_df_by_name

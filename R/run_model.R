@@ -48,6 +48,8 @@ run_model <- function(policies,
   try(source("scripts/wide_combined_ce_tables.R"))
   try(source("scripts/CE_plane_by_scenario.R"))
 
+  # try(source("scripts/plot-care_cascade.R"))
+
   elapsed <- proc.time() - runtime
 
   message(" run time: ", green(elapsed['elapsed']/60))

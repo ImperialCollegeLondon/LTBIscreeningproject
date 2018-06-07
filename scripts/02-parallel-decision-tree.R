@@ -15,7 +15,7 @@
 if (getwd() != "Q:/R/cluster--LTBI-decision-tree") {
   exit_wd <- getwd()}
 
-## MAKE SURE THIS IS UPTO DATE WITH PACKAGE
+## MAKE SURE THIS IS UPTO DATE WITH PACKAGE ##
 setwd("Q:/R/cluster--LTBI-decision-tree")
 
 sources <- list.files(pattern = "[.]R$")[!grepl(x = list.files(pattern = "[.]R$"), pattern = "^cluster-master")]
@@ -74,6 +74,6 @@ setwd(exit_wd)
 
 # dectree_res <- lapply(scenario_parameters[1],
 #                       decision_tree_cluster,
-#                       N.mc = 2)
+#                       N.mc = 3)
 
 

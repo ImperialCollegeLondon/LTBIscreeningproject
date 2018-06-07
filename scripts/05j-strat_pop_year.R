@@ -44,7 +44,7 @@ for (i in seq_len(n.scenarios)) {
     data.frame(strat_pop_year, row.names = NULL) %>%
     mutate(tb_diff = c(0, diff(tb)),
            discount = discount(t_limit = n()),
-           c_tb = round(mean_cost.aTB_TxDx + (mean_num_sec_inf * mean_cost.aTB_TxDx)/1.035, 2),
+           c_tb = round(means$cost.aTB_TxDx + (means$num_sec_inf * means$cost.aTB_TxDx)/1.035, 2),
            c_screen = round(mean(dectree_res[[i]]$mc_cost), 2),
            t_screen = screen * c_screen,
            t_tb = tb_diff * c_tb,
