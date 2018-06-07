@@ -9,32 +9,37 @@
 
 policies <- data.frame()
 
-## subsets
+## WHO incidence groups: subsets
 # incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
 #                        c("(150,250]", "(250,350]", "(350,1e+05]"),
 #                        c("(250,350]", "(350,1e+05]"))
 
-## mutually exclusive
+## WHO incidence groups: mutually exclusive
 incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
                        c("(50,150]"),
                        c("(150,250]"),
                        c("(250,350]"))
-
 endpoints <- c("death", "exit uk")
+treatment <- c("LTBI_Tx_3mISORIF")
+LTBI_test <- c("TSPOT")
+# treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
+# LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 
-treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
 
-LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
+## test: single
+incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"))
+endpoints <- c("death")
+treatment <- c("LTBI_Tx_3mISORIF")
 
 
 num_policy <- 1
 
 for (min_screen_length_of_stay in 0) {
   for (incidence in seq_along(incidence_list)) {
-    for (endpoint_QALY in 1:2) {
-      for (endpoint_cost in endpoint_QALY:2) {
-        for (test in LTBI_test[3]) {
-          for (treat in treatment[1]) {
+    for (endpoint_QALY in seq_along(endpoints)) {
+      for (endpoint_cost in endpoint_QALY:length(endpoints)) {
+        for (test in LTBI_test) {
+          for (treat in treatment) {
 
             policies <- rbind(policies,
                               cbind(policy = formatC(num_policy, width = 3, format = "d", flag = "0"),

@@ -55,10 +55,10 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 date_death1 >= issdt)
 
-
 if (interv$force_everyone_stays) {
     IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
+
 
 # screening delay ---------------------------------------------------------
 
@@ -67,12 +67,14 @@ IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
 
 IMPUTED_sample$age_at_screen <- IMPUTED_sample$age_at_entry + round(IMPUTED_sample$screen_year)
 
+# remove
 # eligible screening age range only
 IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 age_at_screen %in% interv$screen_age_range)
 
 # extract uk entry year only
 IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
+##TODO: why are these are different to $year??
 
 
 # LTBI probs by WHO active TB group ---------------------------------
@@ -92,8 +94,9 @@ data("TB_burden_countries")
 IMPUTED_sample <-
   merge(x = IMPUTED_sample,
         y = TB_burden_countries,
-        by.x = c('iso_a3_country', 'issdt_year'),
+        by.x = c('iso_a3_country', 'year'),#issdt_year'),
         by.y = c('iso3', 'year'))
+
 
 IMPUTED_sample$who_inc_Pareek2011 <- cut(IMPUTED_sample$e_inc_100k,
                                          breaks = who_level_breaks)
@@ -122,6 +125,10 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
                         by = c("age_at_screen",
                                "who_inc_Pareek2011"))
 
+##TODO:
+## why are there multiple prevalence values for each country/year group??
+# table(IMPUTED_sample$who_prevalence[IMPUTED_sample$year == 2009],
+#       IMPUTED_sample$iso_a3_country[IMPUTED_sample$year == 2009])
 
 
 ## TODO:

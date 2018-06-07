@@ -15,8 +15,7 @@ cluster <- FALSE
 
 no_students <- FALSE
 
-# force_everyone_stays <- FALSE
-force_everyone_stays <- TRUE
+force_everyone_stays <- FALSE
 
 
 # rather than screen _everyone_ on entry
