@@ -39,7 +39,10 @@ policy_run <- function() {
   source("scripts/05j-strat_pop_year.R")
 
   table_costeffectiveness(screen.bcea, wtp_threshold, diroutput)
+
   num_subset_dectree(cohort, dectree_res, diroutput)
+  prob_subset_dectree(cohort, dectree_res, diroutput)
+
   num_subset_tb(cohort, dectree_res, diroutput)
   cbind_all_subsets(diroutput)
 

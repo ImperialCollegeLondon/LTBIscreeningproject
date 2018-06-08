@@ -43,15 +43,19 @@ run_model <- function(policies,
   }
 
   try(source("scripts/combine_costeffectiveness_tables.R"))
-  try(source("scripts/combine_num_screen_tables.R"))
+
+  combine_freq_tables(parent_folder, file_name = "all_subsets.csv")
+  combine_freq_tables(parent_folder, file_name = "prob_subset_dectree.csv")
+
   try(source("scripts/e_and_c_totals_by_scenario.R"))
-  try(source("scripts/wide_combined_ce_tables.R"))
+  #######try(source("scripts/wide_combined_ce_tables.R"))
   try(source("scripts/CE_plane_by_scenario.R"))
 
-  # try(source("scripts/plot-care_cascade.R"))
+  plot_care_cascade(parent_folder, prob_or_num = "num")
+  plot_care_cascade(parent_folder, prob_or_num = "prob")
 
   elapsed <- proc.time() - runtime
 
-  message(" run time: ", green(elapsed['elapsed']/60))
+  message(" run time: ", green(elapsed['elapsed']/60), " mins")
   message(" scenarios source correctly: ", green(sources_correctly))
 }

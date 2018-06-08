@@ -1,47 +1,21 @@
 
 #' num_subset_dectree
 #'
-#' Counts frequency of subset sizes along
+#' Counts or proportion frequency of subset sizes along
 #' screening pathway.
 #'
 #' @param cohort individual level data
 #' @param dectree_res output of decision_tree_cluster()
-#' @param folder text string
-#' @param by_screen_year TRUE or FALSE ##TODO:
-#' @param probs Return probabilities or numbers
+#' @param num_screen
 #'
 #' @return tibble
 #' @export
 #'
 #' @examples
 #'
-num_subset_dectree <- function(cohort,
-                               dectree_res,
-                               folder = NA,
-                               by_screen_year = FALSE,
-                               probs = TRUE) {
-
-  num_screen_year <-
-    if (probs) {
-      1
-    } else {
-      if (by_screen_year) {
-        table(ceiling(cohort$screen_year))
-      } else {
-        nrow(cohort)}
-    }
-
-  ##TODO: update for each screen year
-  # num_subset_list <-
-  #   dectree_res %>%
-  #   map("subset_pop") %>%
-  #   lapply(function(x) cbind(total = 1, x)) %>%
-  #   lapply(function(x) num_screen_year %o% t(x)) %>%
-  #   map(round) %>%
-  #   plyr::ldply(data.frame,
-  #               .id = "scenario") %>%
-  #   cbind(year = seq_along(num_screen_year), .)
-
+subset_dectree <- function(cohort,
+                           dectree_res,
+                           num_screen = 1) {
   num_subset <-
     dectree_res %>%
     map("subset_pop") %>%
@@ -49,16 +23,64 @@ num_subset_dectree <- function(cohort,
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
     group_by(scenario, X2) %>%
-    summarise(L95 = quantile(value, 0.05) * num_screen_year,
-              mean = mean(value) * num_screen_year,
-              U95 = quantile(value, 0.95) * num_screen_year) #%>%
-    # dplyr::filter(X2 != 'p_LTBI_to_cured')
-
-  if (!is.na(folder)) {
-    write.csv(num_subset,
-              file = pastef(folder, "num_subset_dectree.csv"))
-  }
+    summarise(L95 = quantile(value, 0.05) * num_screen,
+              mean = mean(value) * num_screen,
+              U95 = quantile(value, 0.95) * num_screen)
 
   invisible(num_subset)
 }
+
+#' prob_subset_dectree
+#'
+#' @param cohort
+#' @param dectree_res
+#' @param diroutput
+#'
+#' @return
+#' @export
+#'
+#' @examples
+prob_subset_dectree <- function(cohort,
+                                dectree_res,
+                                diroutput = NA) {
+
+  out <- subset_dectree(cohort,
+                        dectree_res,
+                        num_screen = 1)
+
+  if (!is.na(diroutput)) {
+    write.csv(out,
+              file = pastef(diroutput, "prob_subset_dectree.csv"))
+  }
+
+  invisible(out)
+}
+
+#' num_subset_dectree
+#'
+#' @param cohort
+#' @param dectree_res
+#' @param diroutput
+#'
+#' @return
+#' @export
+#'
+#' @examples
+num_subset_dectree <- function(cohort,
+                               dectree_res,
+                               diroutput = NA) {
+
+  out <- subset_dectree(cohort,
+                        dectree_res,
+                        num_screen = nrow(cohort))
+
+  if (!is.na(diroutput)) {
+    write.csv(out,
+              file = pastef(diroutput, "num_subset_dectree.csv"))
+  }
+
+  invisible(out)
+}
+
+
 

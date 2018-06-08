@@ -20,7 +20,6 @@ policies <- data.frame()
 #                        c("(150,250]"),
 #                        c("(250,350]"))
 # endpoints <- c("death", "exit uk")
-# treatment <- c("LTBI_Tx_3mISORIF")
 
 # LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 # treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
