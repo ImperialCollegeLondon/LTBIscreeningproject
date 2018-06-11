@@ -10,27 +10,32 @@
 policies <- data.frame()
 
 ## WHO incidence groups: subsets
-# incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
-#                        c("(150,250]", "(250,350]", "(350,1e+05]"),
-#                        c("(250,350]", "(350,1e+05]"))
+incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
+                       c("(150,250]", "(250,350]", "(350,1e+05]"),
+                       c("(250,350]", "(350,1e+05]"))
 
 ## WHO incidence groups: mutually exclusive
 # incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
 #                        c("(50,150]"),
 #                        c("(150,250]"),
 #                        c("(250,350]"))
-# endpoints <- c("death", "exit uk")
+
+endpoints <- c("death", "exit uk")
 
 # LTBI_test <- c("QFT_GIT", "QFT_plus", "TSPOT")
 # treatment <- c("LTBI_Tx_3mISORIF", "LTBI_Tx_6mISO")
 
 
 ## test:
-incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]"),
-                       c("(250,350]", "(350,1e+05]"))
-endpoints <- c("death")
+# incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]"),
+#                        c("(250,350]", "(350,1e+05]"))
+# endpoints <- c("death")
+
 LTBI_test <- c("TSPOT")
 treatment <- c("LTBI_Tx_3mISORIF")
+
+
+# create policies ---------------------------------------------------------
 
 num_policy <- 1
 

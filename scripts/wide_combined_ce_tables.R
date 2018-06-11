@@ -5,73 +5,28 @@
 #
 # combine all CE output in to single wide table
 #
-# THIS IS TOTALLY DEPENDENT ON THE SCENARIO PARAMETER INPUT
-# FILE SO NEED TO COMMENT-OUT OTHERS!
-#
+
+##TODO: this is just a cbind version of long combined_costeffectiveness_table
+
 
 flder <-
   list.dirs(parent_folder)[-1] %>%
   sort()
 
-tab <- list()
-
-
-# test cost & baseline/perfect
+tab <- matrix(seq_len(n.scenarios), ncol = 1)
 
 for (i in seq_along(flder)) {
 
-  tab[[i]] <-
+  tab <-
     read.csv(paste0(flder[i], "/costeffectiveness_table.csv")) %>%
-    mutate(cascade = rep(c("baseline", "perfect"), 3),
-           test_cost = c(100,100,50,50,25,25)) %>%
-    select(cascade, everything()) %>%
-    split(f = .$test_cost) %>%
-    plyr::join_all(by = "cascade")
+    cbind(tab, .)
 }
 
-res <- do.call(cbind, tab, quote = TRUE)
-res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
+tab <-  tab[ ,!names(tab) == 'X']
 
-write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
+policy_desc <- read.csv(paste0(parent_folder, "/policies-inputs.csv"))
+
+write.csv(tab, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
 
 
 
-# include drug effectiveness
-
-# for (i in seq_along(flder)) {
-#
-#   tab[[i]] <-
-#     read.csv(paste0(flder[i], "/costeffectiveness_table.csv")) %>%
-#     mutate(cascade = rep(seq(1, 0.3, by = -0.1), 3),
-#            test_cost = rep(c(25,50,100), each = 8)) %>%
-#     select(cascade, everything()) %>%
-#     split(f = .$test_cost) %>%
-#     plyr::join_all(by = "cascade")
-# }
-#
-#
-# res <- do.call(cbind, tab, quote = TRUE)
-#
-# # remove duplicate columns
-# res <- res[, !grepl(x = names(res), pattern = "X|test_cost|cascade\\.")]
-#
-# write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
-
-#
-# for (i in seq_along(flder)) {
-#
-#   ce_tab <- read.csv(paste0(flder[i], "/costeffectiveness_table.csv"))
-#   empty_tab <- matrix(NA, nrow = nrow(ce_tab), ncol = ncol(ce_tab) - 1, dimnames = NULL)
-#
-#   tab[[i]] <-
-#     data.frame(ce_tab, empty_tab, empty_tab)
-# }
-#
-#
-# res <-
-#   do.call(cbind, tab, quote = TRUE) %>%
-#   add_column(cascade = seq(1, 0.3, by = -0.1), .before = 1)
-#
-# res <- res[, !grepl(x = names(res), pattern = "X$")]
-#
-# write.csv(res, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))

@@ -1,5 +1,8 @@
 context("test-subset_pop_dectree.R")
 
+library(purrr)
+library(data.tree)
+
 
 dectree <- treeSimR::costeffectiveness_tree(yaml_tree = "../../data/LTBI_dectree-cost.yaml")
 osNode <- dectree$osNode
@@ -65,13 +68,13 @@ test_that("order of subgroup sizes", {
 
   # all vs LTBI
 
-  expect_lt(as.numeric(subset_pop['LTBI_positive']),
+  expect_gt(as.numeric(subset_pop['LTBI_positive']),
             as.numeric(subset_pop['positive']))
 
-  expect_lt(as.numeric(subset_pop['LTBI_startTx']),
+  expect_gt(as.numeric(subset_pop['LTBI_startTx']),
             as.numeric(subset_pop['startTx']))
 
-  expect_lt(as.numeric(subset_pop['LTBI_completeTx']),
+  expect_gt(as.numeric(subset_pop['LTBI_completeTx']),
             as.numeric(subset_pop['completeTx']))
 })
 
