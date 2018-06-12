@@ -23,9 +23,11 @@ subset_dectree <- function(cohort,
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
     group_by(scenario, X2) %>%
-    summarise(L95 = quantile(value, 0.05) * num_screen,
+    summarise(L95 = quantile(value, 0.025) * num_screen,
+              L50 = quantile(value, 0.25) * num_screen,
               mean = mean(value) * num_screen,
-              U95 = quantile(value, 0.95) * num_screen)
+              U50 = quantile(value, 0.75) * num_screen,
+              U95 = quantile(value, 0.975) * num_screen)
 
   invisible(num_subset)
 }

@@ -1,8 +1,9 @@
 
-#' plot_care_cascade
+#' Plot care cascade
 #'
-#' @param parent_folder
-#' @param prob_or_num
+#' @param parent_folder string
+#' @param prob_or_num Probabilities or absolute numbers
+#' @param box_plot default: FALSE
 #'
 #' @return
 #' @export
@@ -13,7 +14,8 @@
 #'                   prob_or_num = "prob")
 #'
 plot_care_cascade <- function(parent_folder,
-                              prob_or_num) {
+                              prob_or_num,
+                              box_plot = FALSE) {
 
   file_name <-
     if (prob_or_num == "prob") {
@@ -54,39 +56,67 @@ plot_care_cascade <- function(parent_folder,
                                       pattern = paste0("._", i))
 
     dat <- cascade_LTBI[ ,cols_policy]
-    gg_care_cascade(dat, plots_folder, prob_or_num, policies_ls[i], "LTBI")
+    gg_care_cascade(dat, plots_folder, prob_or_num, policies_ls[i], "LTBI", box_plot)
 
     dat <- cascade_all[ ,cols_policy]
-    gg_care_cascade(dat, plots_folder, prob_or_num, policies_ls[i], "all")
+    gg_care_cascade(dat, plots_folder, prob_or_num, policies_ls[i], "all", box_plot)
 
   }
 
 }
 
 
+#' gg_care_cascade
+#'
+#' @param dat
+#' @param plots_folder
+#' @param prob_or_num
+#' @param policy_name
+#' @param grp
+#' @param box_plot
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
 gg_care_cascade <- function(dat,
                             plots_folder,
                             prob_or_num,
                             policy_name,
-                            grp) {
+                            grp,
+                            box_plot = FALSE) {
 
   names(dat) <- gsub(pattern = "_.+",
                      replacement = "",
                      names(dat))
 
   p <-
-    ggplot(dat, aes(x = X2, y = mean, fill = scenario)) +
-    geom_bar(stat = "identity", color = "white",
-             position = position_dodge()) +
-    geom_errorbar(aes(ymin = L95, ymax = U95), width = 0.2,
-                  position = position_dodge(0.9)) +
+    if (box_plot) {
+
+      ggplot(dat, aes(x = factor(X2), fill = scenario, col = scenario)) +
+        geom_boxplot(aes(lower = mean, middle = mean, upper = mean,
+                         ymin = L95, ymax = U95),
+                     stat = "identity")
+    } else {
+
+      ggplot(dat, aes(x = X2, y = mean, fill = scenario)) +
+        geom_bar(stat = "identity", color = "white",
+                 position = position_dodge()) +
+        geom_errorbar(aes(ymin = L95, ymax = U95), width = 0.2,
+                      position = position_dodge(0.9))
+    }
+
+  p <-
+    p +
     # ggplot2::ylim(0, 1) +
     theme_bw() +
     ylab('Number in cohort intended for screening') +
     xlab('')
 
-  ggplot2::ggsave(p, file = paste(plots_folder, policy_name,
-                                  paste0(prob_or_num, "_cascade_", grp, ".png"), sep = "/"),
+  ggplot2::ggsave(p,
+                  file = paste(plots_folder, policy_name,
+                               paste0(prob_or_num, "_cascade_", grp, ".png"), sep = "/"),
                   width = 30, height = 20, units = "cm")
 }
 
