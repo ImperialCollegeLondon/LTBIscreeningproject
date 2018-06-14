@@ -1,0 +1,54 @@
+
+#' sim_tb_times
+#'
+#' @param data
+#' @param prob
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+sim_tb_times <- function(data,
+                         prob) {
+  pop <- nrow(data)
+
+  tb_year <- vector(length = pop,
+                    mode = "double")
+
+  mat <- cbind(death_issdt = ceiling(data$date_death1_issdt.years),
+               exit_issdt = ceiling(data$date_exit_uk1_issdt.years),
+               LTBI = as.logical(data$LTBI),
+               exit_uk = as.logical(data$exit_uk1),
+               death = as.logical(data$death1))
+
+  for (i in seq_len(pop)) {
+
+    mati <- mat[i, ]
+
+    tb_year[i] <-
+
+      if (!mati['LTBI']) {
+
+        Inf
+
+      }else if (mati['death']) {
+
+        NA
+
+      }else {
+
+        t_left_trunc <-
+          if (mati['exit_uk']) {
+            mati['exit_issdt']
+          }else 0 #sample over observed times
+
+        sample_tb_year(
+          fup_issdt = t_left_trunc,
+          mati['death_issdt'],
+          prob)
+      }
+  }
+
+  return(tb_year)
+}
