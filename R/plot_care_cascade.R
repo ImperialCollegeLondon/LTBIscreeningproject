@@ -29,6 +29,8 @@ plot_care_cascade <- function(parent_folder,
   cascade_data$scenario <- as.factor(cascade_data$scenario)
   names(cascade_data)[names(cascade_data) == "L95"] <- "L95_1"
   names(cascade_data)[names(cascade_data) == "U95"] <- "U95_1"
+  # names(cascade_data)[names(cascade_data) == "L95"] <- "L50_1"
+  # names(cascade_data)[names(cascade_data) == "U95"] <- "U50_1"
   names(cascade_data)[names(cascade_data) == "mean"] <- "mean_1"
 
   # select columns to plot

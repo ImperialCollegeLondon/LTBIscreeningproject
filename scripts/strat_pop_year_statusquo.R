@@ -13,13 +13,14 @@
 # subset by covariate?
 cohort <-
   IMPUTED_sample %>%
-  # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(50,150]")
   # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(150,250]")
   # subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(250,350]")
   subset(IMPUTED_sample$who_inc_Pareek2011 %in% "(350,1e+05]")
 
 # sample fixed size cohort?
-cohort <- cohort[sample.int(n = nrow(cohort), size = 100000, replace = TRUE), ]
+cohort <- cohort[sample.int(n = nrow(cohort),
+                            size = 100000,
+                            replace = TRUE), ]
 
 event_times <-
   list(
@@ -44,10 +45,31 @@ strat_pop_year <-
          t_tb = tb_diff * c_tb,
          dis_tb = discount * t_tb)
 
-plot(strat_pop_year$tb_diff, type = 'o')
+plot('incidence', type = 'n', xlim = c(0, 100), ylim = c(0, 150))
+lines(strat_pop_year$tb_diff, type = 'o')
 lines(strat_pop_year$tb_diff, type = 'o', col = "blue")
 lines(strat_pop_year$tb_diff, type = 'o', col = "red")
 legend('topright', legend = c("(150,250]","(250,350]","(350,1e+05]"), col = c("black","blue","red"), lty = 1)
+
+
+# smoothed fit
+lo <- loess(tb_diff~year, strat_pop_year, span = 0.1, degree = 2)
+lines(predict(lo), col = 'black', lwd = 2, type = 'l')
+lines(predict(lo), col = 'blue', lwd = 2, type = 'l')
+lines(predict(lo), col = 'red', lwd = 2, type = 'l')
+
+
+hist(cohort$rNotificationDate_issdt.years, breaks = 50)
+
+
+
+
+
+
+
+
+
+
 
 
 write.csv(res,
