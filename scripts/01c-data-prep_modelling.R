@@ -133,7 +133,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
 
 ## TODO:
 ## testing code...
-## over-ride sample with same fixed value for everyone
+## over-write sample with same fixed value for everyone
 ## do this to control for the effect of time in EWNI vs pLTBI
 ## run model targetting different who groups
 #

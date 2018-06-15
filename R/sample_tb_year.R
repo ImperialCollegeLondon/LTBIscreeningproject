@@ -20,34 +20,24 @@ sample_tb_year <- function(fup_issdt,
                            death_issdt,
                            prob) {
 
-  tb_year <- Inf
-
   disease_free_yrs <- 0:fup_issdt
   prob[disease_free_yrs] <- 0
 
   noevent <- sum(prob) < runif(1)
+  early_death <- fup_issdt >= death_issdt
 
-  if (noevent) {
+  if (noevent | early_death) {
 
-    return(tb_year)
+    return(Inf)
 
   }else{
-    i <- 1
 
-    if (fup_issdt == death_issdt) {
-      return(fup_issdt)
-    }
+    prob[death_issdt:length(prob)] <- 0
 
-    while (tb_year > death_issdt) {
-
-      if (i %% 100 == 0) message("taking a long time to sample a TB event time")
-
-      tb_year <- sample(x = seq_along(prob),
-                        size = 1,
-                        prob = prob)
-      i <- i + 1
-    }
-
-    return(tb_year)
+    tb_year <- sample(x = seq_along(prob),
+                      size = 1,
+                      prob = prob)
   }
+
+  return(tb_year)
 }

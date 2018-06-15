@@ -18,8 +18,8 @@ IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(tb_years = sim_tb_times(data = .,
                                         prob = p_tb_given_LTBI_year),
-                exituk_tb.years2 = ifelse(exit_uk1, tb_years, NA),
-                rNotificationDate_issdt.years2 = ifelse(exit_uk1, NA, tb_years),
+                exituk_tb.years = ifelse(exit_uk1, tb_years, NA),
+                rNotificationDate_issdt.years = ifelse(exit_uk1, NA, tb_years),
                 exituk_tb = !is.na(exituk_tb.years) &
                             !is.infinite(exituk_tb.years),
                 # exituk_tb = !is.na_OR_is.inf(exituk_tb.years),
