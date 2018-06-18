@@ -1,13 +1,13 @@
 #' Sample active TB progression time after right censoring
 #'
 #' Given that an individual progresses then this approach
-#' samples active TB times until one is before the death date.
+#' samples active TB times.
 #'
 #' Two-step mixture model for tb sampling:
 #'   1. Do they progress?
 #'   2. Sample TB time
 #'
-#' @param fup_issdt Time to follow-up/exit UK
+#' @param fup_issdt Time to follow-up/exit EWNI
 #' @param death_issdt Time to all-cause death (competing risk)
 #' @param prob Incidence density of progression
 #'
@@ -20,20 +20,18 @@ sample_tb_year <- function(fup_issdt,
                            death_issdt,
                            prob) {
 
-  disease_free_yrs <- 0:fup_issdt
-  prob[disease_free_yrs] <- 0
-
+  # competing risk
+  prob[death_issdt:length(prob)] <- 0
   noevent <- sum(prob) < runif(1)
-  early_death <- fup_issdt >= death_issdt
 
-  if (noevent | early_death) {
+  if (noevent) {
 
     return(Inf)
 
   }else{
 
-    prob[death_issdt:length(prob)] <- 0
-
+    # left truncation
+    prob[0:fup_issdt] <- 0
     tb_year <- sample(x = seq_along(prob),
                       size = 1,
                       prob = prob)

@@ -1,5 +1,5 @@
 
-#' sim_tb_times
+#' Simulate TB progression times
 #'
 #' @param data
 #' @param prob
@@ -19,9 +19,7 @@ sim_tb_times <- function(data,
   mat <- cbind(death_issdt = ceiling(data$date_death1_issdt.years),
                exit_issdt = ceiling(data$date_exit_uk1_issdt.years),
                LTBI = as.logical(data$LTBI),
-               # death = as.logical(data$death1),
-               exit_uk = as.logical(data$exit_uk1)
-               )
+               exit_uk = as.logical(data$exit_uk1))
 
   for (i in seq_len(pop)) {
 
