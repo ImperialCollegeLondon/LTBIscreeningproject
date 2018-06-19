@@ -10,30 +10,33 @@
 # tb is for cases in EWNI only
 
 
+SCREENED <- c(0,1)
+# SCREENED <- 1
+
 # subset by covariate?
 cohort1 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(150,250]",
-                screen == 1)
+                screen %in% SCREENED)
 cohort2 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(250,350]",
-                screen == 1)
+                screen %in% SCREENED)
 cohort3 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(350,1e+05]",
-                screen == 1)
+                screen %in% SCREENED)
 
 # sample fixed size cohort?
-cohort1 <- cohort1[sample.int(n = nrow(cohort1),
-                              size = 100000,
-                              replace = TRUE), ]
-cohort2 <- cohort2[sample.int(n = nrow(cohort2),
-                              size = 100000,
-                              replace = TRUE), ]
-cohort3 <- cohort3[sample.int(n = nrow(cohort3),
-                              size = 100000,
-                              replace = TRUE), ]
+# cohort1 <- cohort1[sample.int(n = nrow(cohort1),
+#                               size = 100000,
+#                               replace = TRUE), ]
+# cohort2 <- cohort2[sample.int(n = nrow(cohort2),
+#                               size = 100000,
+#                               replace = TRUE), ]
+# cohort3 <- cohort3[sample.int(n = nrow(cohort3),
+#                               size = 100000,
+#                               replace = TRUE), ]
 
 event_times1 <-
   list(
@@ -91,16 +94,22 @@ strat_pop_year3 <-
 #           file = pastef(diroutput, 'num-competing-events-by-year_statusquo.csv'))
 
 
-
 #########
 # plots #
 #########
 
-plot('incidence', type = 'n', xlim = c(0, 100), ylim = c(0, 250))
+
+# incidence ---------------------------------------------------------------
+
+plot('incidence', type = 'n', xlim = c(0, 100), ylim = c(0, 1000))
 lines(strat_pop_year1$tb_diff, type = 'o')
 lines(strat_pop_year2$tb_diff, type = 'o', col = "blue")
 lines(strat_pop_year3$tb_diff, type = 'o', col = "red")
-legend('topright', legend = c("(150,250]","(250,350]","(350,1e+05]"), col = c("black","blue","red"), lty = 1)
+lines(strat_pop_year1$tb_diff + strat_pop_year2$tb_diff + strat_pop_year3$tb_diff, type = 'o', col = "green")
+lines(p_incid_year*nrow(IMPUTED_sample), type = 'o', col = "magenta")
+legend('topright',
+       legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
+       col = c("black","blue","red","green","magenta"), lty = 1)
 
 
 # smoothed fit
@@ -112,7 +121,49 @@ lines(predict(lo2), col = 'blue', lwd = 2, type = 'l')
 lines(predict(lo3), col = 'red', lwd = 2, type = 'l')
 
 
-# grid --------------------------------------------------------------------
+# cumulative incidence -----------------------------------------------------
+
+plot('incidence', type = 'n', xlim = c(0, 100), ylim = c(0, 5000))
+lines(cumsum(strat_pop_year1$tb_diff), type = 'o')
+lines(cumsum(strat_pop_year2$tb_diff), type = 'o', col = "blue")
+lines(cumsum(strat_pop_year3$tb_diff), type = 'o', col = "red")
+lines(cumsum(strat_pop_year1$tb_diff) + cumsum(strat_pop_year2$tb_diff) + cumsum(strat_pop_year3$tb_diff), type = 'o', col = "green")
+lines(cumsum(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
+legend('topright',
+       legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
+       col = c("black","blue","red","green","magenta"), lty = 1)
+
+
+# log-incidence -----------------------------------------------------------
+
+strat_pop_year1$tb_diff_log <- log(strat_pop_year1$tb_diff)
+strat_pop_year2$tb_diff_log <- log(strat_pop_year2$tb_diff)
+strat_pop_year3$tb_diff_log <- log(strat_pop_year3$tb_diff)
+
+strat_pop_year1$tb_diff_log[strat_pop_year1$tb_diff_log < 0] <- NA
+strat_pop_year2$tb_diff_log[strat_pop_year2$tb_diff_log < 0] <- NA
+strat_pop_year3$tb_diff_log[strat_pop_year3$tb_diff_log < 0] <- NA
+
+plot('log-incidence', type = 'n', xlim = c(0, 100), ylim = c(0, log(3500)))
+lines(log(strat_pop_year1$tb_diff), type = 'o')
+lines(log(strat_pop_year2$tb_diff), type = 'o', col = "blue")
+lines(log(strat_pop_year3$tb_diff), type = 'o', col = "red")
+lines(log(strat_pop_year1$tb_diff + strat_pop_year2$tb_diff + strat_pop_year3$tb_diff), type = 'o', col = "green")
+lines(log(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
+legend('topright',
+       legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
+       col = c("black","blue","red","green","magenta"), lty = 1)
+
+# smoothed fit
+lo1 <- loess(tb_diff_log~year, strat_pop_year1, span = 0.3, degree = 2)
+lo2 <- loess(tb_diff_log~year, strat_pop_year2, span = 0.3, degree = 2)
+lo3 <- loess(tb_diff_log~year, strat_pop_year3, span = 0.3, degree = 2)
+lines(2:(length(predict(lo1)) + 1), predict(lo1), col = 'black', lwd = 2, type = 'l')
+lines(2:(length(predict(lo2)) + 1), predict(lo2), col = 'blue', lwd = 2, type = 'l')
+lines(2:(length(predict(lo3)) + 1), predict(lo3), col = 'red', lwd = 2, type = 'l')
+
+
+# grid of separate events -----------------------------------------------------
 
 filename <- paste(plots_folder_scenario, "time-to-event-grid-plot.png", sep = "/")
 png(filename, width = 400, height = 350, res = 45)

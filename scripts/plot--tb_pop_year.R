@@ -1,17 +1,25 @@
+#
+#
+#
+#
+#
 
+SCREENED <- c(0,1)
+# SCREENED <- 1
+
+# subset by covariate?
 cohort1 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(150,250]",
-                screen == 1)
+                screen %in% SCREENED)
 cohort2 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(250,350]",
-                screen == 1)
+                screen %in% SCREENED)
 cohort3 <-
   IMPUTED_sample %>%
   dplyr::filter(IMPUTED_sample$who_inc_Pareek2011 %in% "(350,1e+05]",
-                screen == 1)
-
+                screen %in% SCREENED)
 
 
 # histograms with different bin sizes -------------------------------------
@@ -47,6 +55,10 @@ lines(density(cohort2$rNotificationDate_issdt.years, from = 0, bw = 1, na.rm = T
 lines(density(cohort3$rNotificationDate_issdt.years, from = 0, bw = 1, na.rm = TRUE),
       lwd = 2, col = "red")
 
+legend('topright',
+       legend = c("(150,250]","(250,350]","(350,1e+05]"),
+       col = c("black","blue","red"),
+       lty = 1)
 
 
 # survival plots ----------------------------------------------------------

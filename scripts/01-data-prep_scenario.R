@@ -12,10 +12,10 @@
 
 # file_tag <- "_high-low"
 # file_tag <- "_baseline"
-file_tag <- "_effective"
+# file_tag <- "_effective"
 # file_tag <- "_test"
 # file_tag <- "_oneway"
-# file_tag <- "_fullfactorial"
+file_tag <- "_fullfactorial"
 
 
 # load data ---------------------------------------------------------------

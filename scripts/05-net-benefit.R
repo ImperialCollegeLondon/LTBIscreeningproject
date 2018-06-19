@@ -105,7 +105,8 @@ png(filename, width = 600, height = 600)#, res = 45)
 print(
   arm::coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
                 summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"],
-                mar = c(1,15,5.1,2), varnames = var_labels, main = "", xlim = c(-1,4), cex.var = 1.2))
+                mar = c(1,15,5.1,2), varnames = var_labels, main = "",
+                xlim = c(-1,7), cex.var = 1.2))
 print(
   arm::coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
                 summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"],

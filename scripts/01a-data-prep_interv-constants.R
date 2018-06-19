@@ -6,7 +6,7 @@
 # simulation specific constants
 
 
-N.mc <- 100
+N.mc <- 3#100
 
 cluster <- FALSE
 

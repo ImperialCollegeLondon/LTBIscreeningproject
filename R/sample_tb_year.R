@@ -1,4 +1,5 @@
-#' Sample active TB progression time after right censoring
+
+#' Sample active TB progression time
 #'
 #' Given that an individual progresses then this approach
 #' samples active TB times.

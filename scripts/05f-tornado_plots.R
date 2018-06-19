@@ -15,8 +15,8 @@
 # drop columns
 positive_branch_only <-
   names(design_matrix) %>%
-  gsub(pattern = "Not |1 - ",
-       replacement = "") %>%
+  # gsub(pattern = "Not |1 - ",
+  #      replacement = "") %>%
   unique()
 
 tornado_params <-
@@ -42,6 +42,7 @@ tornado_pred <- tornado_params
 # tornado_pred[ ,names(tornado_pred) %in% c("Agree", "Start", "Complete", "Effective")] <-
 #   tornado_pred[ ,names(tornado_pred) %in% c("Agree", "Start", "Complete", "Effective")] * 100
 
+# join predictions
 tornado_pred <- merge(x = tornado_pred,
                       y = rbind(pred_INMB_10000,
                                 pred_INMB_20000,
@@ -55,23 +56,27 @@ tornado_pred$wtp <- as.numeric(as.character(tornado_pred$wtp))
 
 # tornado plots with regression mean predictions --------------------------
 
-s_analysis_INMB <- model.frame(formula = INMB_pred ~ .,
-                               data = dplyr::select(tornado_pred ,-scenario, -ICER, -Sensitivity, -Specificity, -INMB_sim, -screened, -statusquo, -CE))
+# s_analysis_INMB <- model.frame(formula = INMB_pred ~ .,
+s_analysis_INMB <- model.frame(formula = INMB ~ .,
+                               data = dplyr::select(tornado_pred ,-scenario, -ICER))#, -Sensitivity, -Specificity, -INMB_sim, -screened, -statusquo, -CE))
 
-tornado_plot_data_INMB <- s_analysis_to_tornado_plot_data(s_analysis_INMB)
+tornado_plot_data_INMB <-
+  s_analysis_INMB %>%
+  s_analysis_to_tornado_plot_data()
 
 
 png(paste(plots_folder_scenario, "tornado_INMB_pred.png", sep = "/"),
     width = 400, height = 350, res = 45)
 
-print(ggplot_tornado(dat = tornado_plot_data_INMB,
-                     ORDER = FALSE) +
-        ylab("INMB") +
-        # ylim(0, 150) +
-        coord_cartesian(ylim = c(0, 150)) +
-        coord_flip() +
-        theme(legend.position = "none")
-      )
+print(
+  ggplot_tornado(dat = tornado_plot_data_INMB,
+                 ORDER = FALSE) +
+    ylab("INMB") +
+    # ylim(0, 150) +
+    coord_cartesian(ylim = c(0, 150)) +
+    coord_flip() +
+    theme(legend.position = "none")
+)
 
 dev.off()
 
