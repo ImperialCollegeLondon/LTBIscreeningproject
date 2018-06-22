@@ -21,7 +21,9 @@ if (getwd() != cluster_folder) {
   setwd(cluster_folder)
 }
 
-sources <- list.files(pattern = "[.]R$")[!grepl(x = list.files(pattern = "[.]R$"), pattern = "^cluster-master")]
+exclude_regex <- "^cluster-master"
+dir_R_files <- list.files(pattern = "[.]R$")
+sources <- dir_R_files[!grepl(x = dir_R_files, pattern = exclude_regex)]
 
 # source("decision_tree_cluster.R")
 
@@ -59,7 +61,7 @@ stopCluster(cl)
 
 # save --------------------------------------------------------------------
 
-saveRDS(dectree_res, file = pastef("output", cluster_output_filename))
+# saveRDS(dectree_res, file = pastef("output", cluster_output_filename))
 save(dectree_res, file = pastef(exit_wd, diroutput, "dectree_res.RData"))
 
 readr::write_csv(x = my_ToDataFrameTypeCol(dectree_res[[1]]$osNode.cost,
@@ -75,8 +77,8 @@ readr::write_csv(x = my_ToDataFrameTypeCol(dectree_res[[1]]$osNode.health,
 setwd(exit_wd)
 
 
-dectree_res <- lapply(scenario_parameters[1],
-                      decision_tree_cluster,
-                      N.mc = 3)
+# dectree_res <- lapply(scenario_parameters[1],
+#                       decision_tree_cluster,
+#                       N.mc = 3)
 
 

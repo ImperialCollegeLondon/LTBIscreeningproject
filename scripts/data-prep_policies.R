@@ -20,7 +20,7 @@ policies <- data.frame()
 #                        c("(150,250]"),
 #                        c("(250,350]"))
 
-## just everyone
+## everyone
 incidence_list <- list(c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"))
 
 endpoints <- c("death", "exit uk")

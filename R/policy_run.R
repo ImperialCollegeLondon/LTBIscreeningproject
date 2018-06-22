@@ -20,7 +20,10 @@ policy_run <- function() {
   # set-up ---------------------------------------------------------------
 
   source("scripts/setup_folders.R")#, echo = TRUE)
+
+  ## use single-migrant-cohort here instead?
   source("scripts/data-prep_constants-policy.R")#, echo = TRUE)
+
   source("scripts/prep-decisiontree.R")#, echo = TRUE)
 
 

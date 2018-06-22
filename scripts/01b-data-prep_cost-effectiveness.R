@@ -219,6 +219,7 @@ aTB_Tx <- list(distn = "gamma",
 #                            #                            max = unit_cost$hep_test)),
 #                            aTB_Tx = aTB_Tx)
 
+# fixed constant
 unit_cost$aTB_TxDx <- list(distn = "none",
                            params = c(mean = 5410))
 
@@ -287,5 +288,8 @@ utility$postTx <- 0.921
 # utility$activeTB_postacute <- 0.813
 
 
-save(unit_cost, utility, cfr_age_lookup, pLatentTB.who, NUM_SECONDARY_INF, wtp_threshold, effectiveness, test_performance, means,
+save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold,
      file = "data/cost_effectiveness_params.RData")
+
+save(cfr_age_lookup, NUM_SECONDARY_INF,
+     file = "data/synthetic_cohort_params.RData")
