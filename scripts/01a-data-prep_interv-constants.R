@@ -17,7 +17,6 @@ no_students <- FALSE
 
 force_everyone_stays <- FALSE
 
-
 # rather than screen _everyone_ on entry
 # screen at random 0-5 years from entry
 screen_with_delay <- TRUE

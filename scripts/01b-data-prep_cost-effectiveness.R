@@ -30,7 +30,7 @@ NUM_SECONDARY_INF <- list(distn = "pert",
 
 cfr_age_breaks <- c(15, 45, 65, 200)
 cfr_age_levels <- cut(0, cfr_age_breaks, right = FALSE) %>%
-                    levels()
+  levels()
 
 cfr_age_lookup <- data.frame(age = cfr_age_levels,
                              cfr = c(0.012, 0.048, 0.176),
@@ -118,14 +118,14 @@ unit_cost$HIV_test <- QALY::inflation_adjust_cost(from_year = 2011,
 # these are 'low' conservative estimates
 # 6 months isoniazid
 unit_cost$LTBI_Tx_6mISO$full <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                       to_year = TO_YEAR,
-                                                       from_cost = 531,
-                                                       reference = "Jit & White (2015)")
+                                                            to_year = TO_YEAR,
+                                                            from_cost = 531,
+                                                            reference = "Jit & White (2015)")
 # 3 months isoniazid + rifampicin
 unit_cost$LTBI_Tx_3mISORIF$full <- QALY::inflation_adjust_cost(from_year = 2015,
-                                                          to_year = TO_YEAR,
-                                                          from_cost = 396,
-                                                          reference = "Jit & White (2015)")
+                                                               to_year = TO_YEAR,
+                                                               from_cost = 396,
+                                                               reference = "Jit & White (2015)")
 
 # use ratio from Warwick evidence: appendix H, p 292
 
@@ -143,10 +143,10 @@ unit_cost$LTBI_Tx_3mISORIF$dropout <- QALY::inflation_adjust_cost(from_year = 20
 unit_cost$GP_incentive <-
   list(ltbi_positive = list(distn = "none",
                             params = c(mean = 0)),
-                            # params = c(mean = 20)),
+       # params = c(mean = 20)),
        active_tb = list(distn = "none",
                         params = c(mean = 0)))
-                        # params = c(mean = 100)))
+# params = c(mean = 100)))
 
 
 # active TB -----------------------------------------------------
@@ -201,23 +201,37 @@ aTB_Tx <- list(distn = "gamma",
                           scale = aTB_Tx_mean/8.333))
 
 
-unit_cost$aTB_TxDx <- list(culture = culture,
-                           xray = xray,
-                           smear = smear,
-                           first_visit = first_visit,
-                           followup_visit = followup_visit,
-                           LFT_test = list(distn = "unif",
-                                           params = c(min = unit_cost$LFT_test,
-                                                      max = unit_cost$LFT_test)),
-                           # HIV_test = list(distn = "unif",
-                           #                 params = c(min = unit_cost$HIV_test,
-                           #                            max = unit_cost$HIV_test)),
-                           # hep_test = list(distn = "unif",
-                           #                 params = c(min = unit_cost$hep_test,
-                           #                            max = unit_cost$hep_test)),
-                           aTB_Tx = aTB_Tx)
+## COMMENT OUT FOR TEST CASES ##
 
+# unit_cost$aTB_TxDx <- list(culture = culture,
+#                            xray = xray,
+#                            smear = smear,
+#                            first_visit = first_visit,
+#                            followup_visit = followup_visit,
+#                            LFT_test = list(distn = "unif",
+#                                            params = c(min = unit_cost$LFT_test,
+#                                                       max = unit_cost$LFT_test)),
+#                            # HIV_test = list(distn = "unif",
+#                            #                 params = c(min = unit_cost$HIV_test,
+#                            #                            max = unit_cost$HIV_test)),
+#                            # hep_test = list(distn = "unif",
+#                            #                 params = c(min = unit_cost$hep_test,
+#                            #                            max = unit_cost$hep_test)),
+#                            aTB_Tx = aTB_Tx)
 
+unit_cost$aTB_TxDx <- list(distn = "none",
+                           params = c(mean = 5410))
+
+means <- list(cost.aTB_TxDx =
+                unit_cost$aTB_TxDx %>%
+                means_distributions() %>%
+                sum(),
+              num_sec_inf =
+                NUM_SECONDARY_INF %>%
+                means_distributions() %>%
+                unlist())
+
+# probabilities
 
 effectiveness <-
   list(
@@ -244,14 +258,6 @@ test_performance <-
       )
   )
 
-means <- list(cost.aTB_TxDx =
-                unit_cost$aTB_TxDx %>%
-                means_distributions() %>%
-                sum(),
-              num_sec_inf =
-                NUM_SECONDARY_INF %>%
-                means_distributions() %>%
-                unlist())
 
 ##########
 # health #

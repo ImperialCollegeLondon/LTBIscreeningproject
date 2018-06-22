@@ -5,6 +5,11 @@
 #
 # set-up folder locations
 
+# setup_folders()
+# setup_folders <- function(policy,
+#                           interv,
+#                           policy_ls,
+#                           parent_folder) {
 
 policy_name <- policies_ls[policy]
 
@@ -24,10 +29,6 @@ plots_folder <- system.file("output", "plots",
 plots_folder_scenario <- sprintf("%s/%s", plots_folder, policy_name)
 dir.create(plots_folder_scenario, showWarnings = FALSE)
 
-cluster_output_filename <- sprintf("decisiontree-results_%s_%s.rds", policy_name,
-                                   format(Sys.time(), "%Y-%m-%d %I-%p"))
-
-
 # save --------------------------------------------------------------------
 
 file.copy(from = "data/scenario_parameters_df.csv",
@@ -35,3 +36,5 @@ file.copy(from = "data/scenario_parameters_df.csv",
 
 file.copy(from = "data/policies-inputs.csv",
           to = pastef(parent_folder, "policies-inputs.csv"))
+
+#}

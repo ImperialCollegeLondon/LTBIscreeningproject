@@ -1,6 +1,6 @@
 
 
-# no LTBI - exit
+# no LTBI - exit EWNI
 cohort <-
   data.frame(
     age_at_entry                  = 18              ,
@@ -26,7 +26,8 @@ cohort <-
     all_notif_discounts           = 1               ,
     uk_secondary_inf_discounts    = 1               ,
     all_secondary_inf_discounts   = 1               ,
-    id_avoided_tb                 = NA
+    id_avoided_tb                 = NA              ,
+    num_2nd_inf                   = 0
   )
 
 # tb uk
@@ -56,10 +57,11 @@ cohort <-
     all_notif_discounts           = 1               ,
     uk_secondary_inf_discounts    = 1               ,
     all_secondary_inf_discounts   = 1               ,
-    id_avoided_tb                 = 1
+    id_avoided_tb                 = 1              ,
+    num_2nd_inf                   = 0
   )
 
-# tb exit
+# tb exit EWNI
 cohort <-
   data.frame(
     age_at_entry                  = "18"            ,
@@ -85,10 +87,11 @@ cohort <-
     all_notif_discounts           = 1               ,
     uk_secondary_inf_discounts    = 1               ,
     all_secondary_inf_discounts   = 1               ,
-    id_avoided_tb                 = 1
+    id_avoided_tb                 = 1              ,
+    num_2nd_inf                   = 0
   )
 
-# # LTBI - exit
+# # LTBI - exit EWNI
 # cohort <-
 #   data.frame(
 #     age_at_entry                  = "18"            ,
@@ -100,7 +103,8 @@ cohort <-
 #     screen_year                   = "1"             ,
 #     date_death1                   = "2040-01-01"    ,
 #     date_exit_uk1                 = "2011-01-01"    ,
-#     rNotificationDate             = NA
+#     rNotificationDate             = NA              ,
+#     num_2nd_inf                   = 0
 #   )
 #
 # # no LTBI - death
@@ -115,7 +119,8 @@ cohort <-
 #     screen_year                   = "1"             ,
 #     date_death1                   = "2011-01-01"    ,
 #     date_exit_uk1                 = "2040-01-01"    ,
-#     rNotificationDate             = NA
+#     rNotificationDate             = NA              ,
+#     num_2nd_inf                   = 0
 #   )
 #
 # # LTBI - death
@@ -130,6 +135,7 @@ cohort <-
 #     screen_year                   = "1"             ,
 #     date_death1                   = "2011-01-01"    ,
 #     date_exit_uk1                 = "2040-01-01"    ,
-#     rNotificationDate             = NA
+#     rNotificationDate             = NA              ,
+#     num_2nd_inf                   = 0
 #   )
 #

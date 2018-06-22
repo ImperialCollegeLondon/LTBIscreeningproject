@@ -22,6 +22,7 @@ stats_scenario <- vector(length = n.scenarios, mode = "list")
 
 
 # extract cost-effectiveness variables
+# for tb cases
 
 costeff_cohort <-
   cohort %>%

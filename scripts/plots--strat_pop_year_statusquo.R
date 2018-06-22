@@ -106,7 +106,7 @@ lines(strat_pop_year1$tb_diff, type = 'o')
 lines(strat_pop_year2$tb_diff, type = 'o', col = "blue")
 lines(strat_pop_year3$tb_diff, type = 'o', col = "red")
 lines(strat_pop_year1$tb_diff + strat_pop_year2$tb_diff + strat_pop_year3$tb_diff, type = 'o', col = "green")
-lines(p_incid_year*nrow(IMPUTED_sample), type = 'o', col = "magenta")
+lines(2:(length(p_incid_year) + 1), p_incid_year*nrow(IMPUTED_sample), type = 'o', col = "magenta")
 legend('topright',
        legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
        col = c("black","blue","red","green","magenta"), lty = 1)
@@ -128,7 +128,7 @@ lines(cumsum(strat_pop_year1$tb_diff), type = 'o')
 lines(cumsum(strat_pop_year2$tb_diff), type = 'o', col = "blue")
 lines(cumsum(strat_pop_year3$tb_diff), type = 'o', col = "red")
 lines(cumsum(strat_pop_year1$tb_diff) + cumsum(strat_pop_year2$tb_diff) + cumsum(strat_pop_year3$tb_diff), type = 'o', col = "green")
-lines(cumsum(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
+lines(2:(length(p_incid_year) + 1), cumsum(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
 legend('topright',
        legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
        col = c("black","blue","red","green","magenta"), lty = 1)
@@ -149,7 +149,7 @@ lines(log(strat_pop_year1$tb_diff), type = 'o')
 lines(log(strat_pop_year2$tb_diff), type = 'o', col = "blue")
 lines(log(strat_pop_year3$tb_diff), type = 'o', col = "red")
 lines(log(strat_pop_year1$tb_diff + strat_pop_year2$tb_diff + strat_pop_year3$tb_diff), type = 'o', col = "green")
-lines(log(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
+lines(2:(length(p_incid_year) + 1), log(p_incid_year*nrow(IMPUTED_sample)), type = 'o', col = "magenta")
 legend('topright',
        legend = c("(150,250]","(250,350]","(350,1e+05]","combined","Aldridge"),
        col = c("black","blue","red","green","magenta"), lty = 1)
