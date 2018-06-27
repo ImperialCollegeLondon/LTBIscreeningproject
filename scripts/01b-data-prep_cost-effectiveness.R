@@ -201,27 +201,31 @@ aTB_Tx <- list(distn = "gamma",
                           scale = aTB_Tx_mean/8.333))
 
 
-## COMMENT OUT FOR TEST CASES ##
+## COMMENT OUT FOR TEST CASES ######
 
-# unit_cost$aTB_TxDx <- list(culture = culture,
-#                            xray = xray,
-#                            smear = smear,
-#                            first_visit = first_visit,
-#                            followup_visit = followup_visit,
-#                            LFT_test = list(distn = "unif",
-#                                            params = c(min = unit_cost$LFT_test,
-#                                                       max = unit_cost$LFT_test)),
-#                            # HIV_test = list(distn = "unif",
-#                            #                 params = c(min = unit_cost$HIV_test,
-#                            #                            max = unit_cost$HIV_test)),
-#                            # hep_test = list(distn = "unif",
-#                            #                 params = c(min = unit_cost$hep_test,
-#                            #                            max = unit_cost$hep_test)),
-#                            aTB_Tx = aTB_Tx)
+unit_cost$aTB_TxDx <- list(culture = culture,
+                           xray = xray,
+                           smear = smear,
+                           first_visit = first_visit,
+                           followup_visit = followup_visit,
+                           LFT_test = list(distn = "unif",
+                                           params = c(min = unit_cost$LFT_test,
+                                                      max = unit_cost$LFT_test)),
+                           # HIV_test = list(distn = "unif",
+                           #                 params = c(min = unit_cost$HIV_test,
+                           #                            max = unit_cost$HIV_test)),
+                           # hep_test = list(distn = "unif",
+                           #                 params = c(min = unit_cost$hep_test,
+                           #                            max = unit_cost$hep_test)),
+                           aTB_Tx = aTB_Tx)
 
 # fixed constant
-unit_cost$aTB_TxDx <- list(distn = "none",
-                           params = c(mean = 5410))
+# unit_cost$aTB_TxDx <- list(distn = "none",
+#                            params = c(mean = 5410))
+
+#####################################
+
+
 
 means <- list(cost.aTB_TxDx =
                 unit_cost$aTB_TxDx %>%

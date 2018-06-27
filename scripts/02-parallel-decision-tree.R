@@ -25,8 +25,6 @@ exclude_regex <- "^cluster-master"
 dir_R_files <- list.files(pattern = "[.]R$")
 sources <- dir_R_files[!grepl(x = dir_R_files, pattern = exclude_regex)]
 
-# source("decision_tree_cluster.R")
-
 
 # parallel config ---------------------------------------------------------
 
@@ -43,7 +41,6 @@ clusterEvalQ(cl, library(purrr))
 clusterEvalQ(cl, library(LTBIscreeningproject))
 
 clusterEvalQ(cl, source("subset_pop_dectree.R"))
-clusterEvalQ(cl, source("myToDataFrame_fns.R"))
 clusterEvalQ(cl, source("sample_subset_pop_dectree.R"))
 
 set.seed(12345)
@@ -77,7 +74,7 @@ readr::write_csv(x = my_ToDataFrameTypeCol(dectree_res[[1]]$osNode.health,
 setwd(exit_wd)
 
 
-# dectree_res <- lapply(scenario_parameters[1],
+# dectree_res <- lapply(scenario_parameters[1:3],
 #                       decision_tree_cluster,
 #                       N.mc = 3)
 

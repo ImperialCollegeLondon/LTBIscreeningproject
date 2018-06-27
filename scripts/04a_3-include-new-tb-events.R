@@ -22,17 +22,8 @@ IMPUTED_sample <-
                 rNotificationDate_issdt.years = ifelse(exit_uk1, NA, tb_years),
                 exituk_tb = !is.na(exituk_tb.years) &
                             !is.infinite(exituk_tb.years),
-                # exituk_tb = !is.na_OR_is.inf(exituk_tb.years),
-                # uk_tb = !is.na_OR_is.inf(rNotificationDate_issdt.years),
                 uk_tb = !is.na(rNotificationDate_issdt.years) &
                         !is.infinite(rNotificationDate_issdt.years))
-
-
-xx <-
-  IMPUTED_sample %>%
-  mutate(exituk_tb.years2 = ifelse(exit_uk1, tb_years, NA),
-         rNotificationDate_issdt.years2 = ifelse(exit_uk1, NA, tb_years))
-
 
 
 # is someone screened before something else happens?

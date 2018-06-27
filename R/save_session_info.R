@@ -1,7 +1,7 @@
 
 #' save_session_info
 #'
-#' @param file
+#' @param file string
 #'
 #' @return
 #' @export

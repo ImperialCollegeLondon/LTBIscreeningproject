@@ -26,7 +26,7 @@ save_session_info("session_info.txt")
 # inputs #
 ##########
 
-source("scripts/create_LTBI_input_workspace.R")
+# source("scripts/create_LTBI_input_workspace.R")
 
 
 #########
@@ -34,8 +34,6 @@ source("scripts/create_LTBI_input_workspace.R")
 #########
 
 data("policies_ls")
-# policies <- 1
-# policies <- c(1,3,5)
 policies <- seq_along(policies_ls)
 
 run_model(policies)

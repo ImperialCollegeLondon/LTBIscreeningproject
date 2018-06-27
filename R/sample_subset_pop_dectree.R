@@ -6,7 +6,7 @@
 #'
 #' @param osNode data.tree object
 #' @param n Sample size
-#' @param sample_p TRUE/FALSE
+#' @param sample_p Random sample TRUE/FALSE
 #'
 #' @return matrix
 #' @export
@@ -19,6 +19,7 @@ sample_subset_pop_dectree <- function(osNode,
 
   # initiate
   out1 <- subset_pop_dectree(osNode = osNode)
+
   out <-
     matrix(NA, nrow = n, ncol = ncol(out1)) %>%
     `colnames<-`(colnames(out1))
@@ -27,7 +28,7 @@ sample_subset_pop_dectree <- function(osNode,
 
     osNode$Set(path_probs =
                  calc_pathway_probs(osNode,
-                                    sample_p = TRUE))
+                                    sample_p = sample_p))
     out[i, ] <-
       subset_pop_dectree(osNode = osNode) %>%
       as.matrix()

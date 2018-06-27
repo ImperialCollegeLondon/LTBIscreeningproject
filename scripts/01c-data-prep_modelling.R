@@ -131,6 +131,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
 #       IMPUTED_sample$iso_a3_country[IMPUTED_sample$year == 2009])
 
 
+##############################################################
 ## TODO:
 ## testing code...
 ## over-write sample with same fixed value for everyone
@@ -138,7 +139,7 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
 ## run model targetting different who groups
 #
 # IMPUTED_sample$pLTBI <- 0.3
-
+##############################################################
 
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)

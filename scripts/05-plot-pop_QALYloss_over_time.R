@@ -5,16 +5,15 @@
 # plot QALY loss over time
 #
 
+#
+# sapply(QALY_diseasefree,
+#        FUN = function(x) attr(x, "yearly_QALYs")) %>%
+#   rowSums(na.rm = TRUE) %>%
+#   cumsum %>%
+#   plot(type = 'l',
+#        main = "100% fatality cumulative active TB QALY loss",
+#        xlab = "Time")
 
-sapply(QALY_diseasefree,
-       FUN = function(x) attr(x, "yearly_QALYs")) %>%
-  rowSums(na.rm = TRUE) %>%
-  cumsum %>%
-  plot(type = 'l',
-       main = "100% fatality cumulative active TB QALY loss",
-       xlab = "Time")
-
-num_scenarios <- length(unique(p_complete_screen_lookup$scenario))
 
 x11()
 par(mfrow = c(4,4))
@@ -40,20 +39,21 @@ for (SCENARIO in seq_len(num_scenarios)) {
 
   for (i in 1:30) {
 
-    try(plot_dat <-
-      IMPUTED_sample_scenarios %>%
+    try(
+      plot_dat <-
+        IMPUTED_sample_scenarios %>%
         dplyr::mutate(fatality = runif(n()) < cfr,
                       screen_success = runif(n()) < prob) %>%
         dplyr::filter(fatality == TRUE,
                       scenario == SCENARIO,
                       screen_success == TRUE) %$%
-             map2(.x = age_all_notification,
-                  .y = all_death_rNotificationDate,
-                  .f = QALY::adjusted_life_years,
-                  start_year = 0,
-                  end_year = NA,
-                  utility = utility$disease_free,
-                  discount_rate = 0.035) %>%
+        map2(.x = age_all_notification,
+             .y = all_death_rNotificationDate,
+             .f = QALY::adjusted_life_years,
+             start_year = 0,
+             end_year = NA,
+             utility = utility$disease_free,
+             discount_rate = 0.035) %>%
         map(total_QALYs) %>%
         sapply(.,
                FUN = function(x) attr(x, "yearly_QALYs")) %>%
