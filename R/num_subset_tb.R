@@ -61,15 +61,17 @@ num_subset_tb  <- function(cohort,
                            dectree_res,
                            folder = NA) {
 
+  ##TODO: DRY remove duplication
+
   n.exit_tb <- sum(cohort$exituk_tb)
   n.all_tb <- sum(cohort$all_tb)
 
-  p_subset_tb <-
+  p_avoid <-
     dectree_res %>%
     map("subset_pop") %>%
-    map(as.tibble) %>%
+    map(as.data.frame) %>%
     map(~select(.x, "p_LTBI_to_cured")) %>%
-    map(reshape2::melt) %>%
+    map(reshape2::melt, id.vars = NULL) %>%
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
     group_by(scenario) %>%
@@ -77,18 +79,45 @@ num_subset_tb  <- function(cohort,
               mean = mean(value),
               U95 = quantile(value, 0.95))
 
-  tb_uk <-
-    p_subset_tb %>%
+  tb_avoid_uk <-
+    p_avoid %>%
     mutate_at(vars(-scenario), `*`, n.exit_tb) %>%
     mutate(X2 = "tb_avoid_uk")
 
-  tb_all <-
-    p_subset_tb %>%
+  tb_avoid_all <-
+    p_avoid %>%
     mutate_at(vars(-scenario), `*`, n.all_tb) %>%
     mutate(X2 = "tb_avoid_all")
 
+  p_tb <-
+    dectree_res %>%
+    map("subset_pop") %>%
+    map(as.data.frame) %>%
+    map(~select(.x, "p_LTBI_to_cured")) %>%
+    map(reshape2::melt, id.vars = NULL) %>%
+    plyr::ldply(data.frame,
+                .id = "scenario") %>%
+    mutate(value = 1 - value) %>%
+    group_by(scenario) %>%
+    summarise(L95 = quantile(value, 0.05),
+              mean = mean(value),
+              U95 = quantile(value, 0.95))
+
+  tb_uk <-
+    p_tb %>%
+    mutate_at(vars(-scenario), `*`, n.exit_tb) %>%
+    mutate(X2 = "tb_uk")
+
+  tb_all <-
+    p_tb %>%
+    mutate_at(vars(-scenario), `*`, n.all_tb) %>%
+    mutate(X2 = "tb_all")
+
   num_subset_tb <-
-    rbind(tb_all, tb_uk) %>%
+    rbind(tb_avoid_uk,
+          tb_avoid_all,
+          tb_uk,
+          tb_all) %>%
     select(scenario, X2, everything())
 
   if (!is.na(folder)) {

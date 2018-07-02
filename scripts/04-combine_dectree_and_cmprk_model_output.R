@@ -6,7 +6,20 @@
 # combine decision tree and competing risk model output
 
 
-screen_discount <- screen_discount(cohort)
+screen_discount <- screen_discount(cohort,
+                                   discount_rate = interv$discount_rate)
+
+
+# model checking subsets
+# from_list_to_BCEA(QALYloss_scenario$statusquo_morbidity)
+# from_list_to_BCEA(QALYloss_scenario$statusquo_mortality)
+# from_list_to_BCEA(QALYloss_scenario$screened_morbidity)
+# from_list_to_BCEA(QALYloss_scenario$screened_mortality)
+# from_list_to_BCEA(QALYloss_scenario$statusquo_morb_pp)
+# from_list_to_BCEA(QALYloss_scenario$statusquo_mort_pp)
+# from_list_to_BCEA(QALYloss_scenario$screened_morb_pp)
+# from_list_to_BCEA(QALYloss_scenario$screened_mort_pp)
+
 
 # create BCEA dataframe ---------------------------------------------------
 

@@ -21,9 +21,9 @@ IMPUTED_sample <-
                 exituk_tb.years = ifelse(exit_uk1, tb_years, NA),
                 rNotificationDate_issdt.years = ifelse(exit_uk1, NA, tb_years),
                 exituk_tb = !is.na(exituk_tb.years) &
-                            !is.infinite(exituk_tb.years),
+                  !is.infinite(exituk_tb.years),
                 uk_tb = !is.na(rNotificationDate_issdt.years) &
-                        !is.infinite(rNotificationDate_issdt.years))
+                  !is.infinite(rNotificationDate_issdt.years))
 
 
 # is someone screened before something else happens?
@@ -33,8 +33,8 @@ IMPUTED_sample <-
                 screened_before_tb = (rNotificationDate_issdt.years >= screen_year) | is.na(rNotificationDate_issdt.years),
                 screened_before_death = date_death1_issdt.years >= screen_year,
                 screen = ifelse(screened_before_death &
-                                screened_before_exit &
-                                screened_before_tb,
+                                  screened_before_exit &
+                                  screened_before_tb,
                                 yes = 1, no = 0))
 
 
@@ -72,10 +72,15 @@ IMPUTED_sample <-
 QALY_all_tb <-
   IMPUTED_sample %>%
   subset(all_tb == TRUE) %$%
-  calc_QALY_tb(timetoevent = all_death_rNotificationDate,
-               utility = utility,
-               age = age_all_notification,
-               start_delay = all_tb_issdt)
+  calc_QALY_tb(
+    timetoevent = all_death_rNotificationDate,
+    utility = utility,
+    age = age_all_notification,
+    # age = NA, #commentout
+    start_delay = 0,
+    discount_rate = interv$discount_rate,
+    utility_method = "add"
+  )
 
 # case fatality rate
 # for each active TB
@@ -110,7 +115,9 @@ max_tb_issdt <-
        all_tb_issdt[is.finite(all_tb_issdt)] %>%
          max(na.rm = TRUE))
 
-ydiscounts <- QALY::discount(t_limit = max_tb_issdt + 1)
+ydiscounts <-
+    QALY::discount(t_limit = max_tb_issdt + 1,
+                   discount_rate = interv$discount_rate)
 
 IMPUTED_sample <-
   IMPUTED_sample %>%

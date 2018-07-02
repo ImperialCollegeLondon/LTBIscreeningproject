@@ -18,7 +18,10 @@ n.scenarios <- length(dectree_res)
 
 interv_cost <- vector(length = interv$N.mc, mode = "list")
 interv_QALY <- vector(length = interv$N.mc, mode = "list")
+interv_QALYloss <- vector(length = interv$N.mc, mode = "list")
+
 stats_scenario <- vector(length = n.scenarios, mode = "list")
+QALYloss_scenario <- vector(length = n.scenarios, mode = "list")
 
 
 # extract cost-effectiveness variables
@@ -30,6 +33,7 @@ costeff_cohort <-
   select(cfr,
          uk_tb,
          all_tb,
+         tb_fatality,
          QALY_statusquo,
          QALY_diseasefree,
          QALY_cured,
@@ -70,16 +74,30 @@ for (s in seq_len(n.scenarios)) {
 
     interv_cost[[i]] <- interv_scenario_cost(prop_avoided = p_LTBI_to_cured)
     interv_QALY[[i]] <- interv_scenario_QALY(prop_avoided = p_LTBI_to_cured)
+
+    ##TODO: this is a hack to get some numbers for code checking
+    interv_QALYloss[[i]] <- scenario_QALYloss(prop_avoided = p_LTBI_to_cured,
+                                              endpoint = interv$ENDPOINT_cost,
+                                              costeff_cohort = costeff_cohort)
   }
 
   stats_scenario[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
                                        interv_QALY = interv_QALY,
                                        interv_cost = interv_cost,
                                        pop_year = nrow(cohort))
+
+  QALYloss_scenario[[s]] <-
+    interv_QALYloss %>%
+    purrr::transpose() %>%
+    simplify_all()
 }
 
 aTB_CE_stats <-
   stats_scenario %>%
+  purrr::transpose()
+
+QALYloss_scenario <-
+  QALYloss_scenario %>%
   purrr::transpose()
 
 save(aTB_CE_stats,

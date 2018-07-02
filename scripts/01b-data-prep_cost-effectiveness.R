@@ -268,7 +268,7 @@ test_performance <-
 # health #
 ##########
 
-# utility -----------------------------------------------------------------
+# health state utility values (HSUV) ------------------------------------------------------
 
 utility <- list()
 
@@ -281,9 +281,9 @@ utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2015), on treatment, 
 # utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
 
 # Pasipanodya (2007)?
-##TODO: check this number
-utility$postTx <- 0.921
-# utility$postTx <- 1 #perfectly recovered
+##TODO: check this number ...
+# utility$postTx <- 0.921
+utility$postTx <- 1 #perfectly recovered
 
 
 # where are these from??

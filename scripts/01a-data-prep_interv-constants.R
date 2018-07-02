@@ -6,12 +6,14 @@
 # simulation specific constants
 
 
-N.mc <- 100
+N.mc <- 5#100
 
 cluster <- FALSE
 
 
 # global fixed constants --------------------------------------------------
+
+use_discount <- FALSE
 
 no_students <- FALSE
 
@@ -58,7 +60,8 @@ interv <-
        year_cohort = year_cohort,
        N.mc = N.mc,
        cluster = cluster,
-       no_students = no_students)
+       no_students = no_students,
+       discount_rate = ifelse(use_discount, 0.035, 0))
 
 save(interv,
      file = "data/intervention_constants.RData")

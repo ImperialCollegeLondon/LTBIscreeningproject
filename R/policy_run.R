@@ -47,6 +47,7 @@ policy_run <- function() {
   prob_subset_dectree(cohort, dectree_res, diroutput)
 
   num_subset_tb(cohort, dectree_res, diroutput)
+
   cbind_all_subsets(diroutput)
 
   # source("scripts/05-ceac-plot.R")

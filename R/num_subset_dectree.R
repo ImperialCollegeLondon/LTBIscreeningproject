@@ -18,7 +18,7 @@ subset_dectree <- function(cohort,
                            num_screen = 1) {
   num_subset <-
     subset_pop %>%
-    map(reshape2::melt) %>%
+    map(reshape2::melt, id.vars = NULL) %>%
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
     group_by(scenario, variable) %>%
@@ -81,9 +81,14 @@ num_subset_dectree <- function(cohort,
     map("subset_pop") %>%
     map(as.data.frame)
 
+  ##TODO:hack
+  subset_pop_tot <-
+    lapply(subset_pop_tot,
+           function(x) cbind(x, startTx_to_curedTB = x[,'p_LTBI_to_cured']/x[,'LTBI_startTx'] * x[,'LTBI_pre'] * 0.1))
+
   # separate marginal and conditional probs
   # different denominators
-  subset_LTBI <- map(subset_pop_tot, `[`, c("LTBI_tests", "LTBI_positive", "LTBI_startTx", "LTBI_completeTx", "p_LTBI_to_cured"))
+  subset_LTBI <- map(subset_pop_tot, `[`, c("LTBI_tests", "LTBI_positive", "LTBI_startTx", "LTBI_completeTx", "p_LTBI_to_cured", "startTx_to_curedTB"))
   subset_all <- map(subset_pop_tot, `[`, c("LTBI_pre", "tests", "positive", "startTx", "completeTx", "cured", "LTBI_post"))
 
   out_LTBI <- subset_dectree(cohort,

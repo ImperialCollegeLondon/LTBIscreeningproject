@@ -16,6 +16,7 @@
 #' @param utility (list) Utility value of non-diseased individual e.g. 1. Utility value of diseased individual
 #' @param age Ages in years
 #' @param start_delay What time delay to time origin, to shift discounting to smaller values
+#' @param discount_rate default 3.5\%
 #' @param ... Additional arguments
 #'
 #' @return list of diseasefree, death, cured QALYs
@@ -27,6 +28,7 @@ calc_QALY_tb <- function(timetoevent,
                          utility,
                          age,
                          start_delay = NA,
+                         discount_rate = 0.035,
                          ...){
 
   if (utility$disease_free < 0 || utility$disease_free > 1)
@@ -38,7 +40,7 @@ calc_QALY_tb <- function(timetoevent,
   if (utility$postTx < 0 || utility$postTx > 1)
     stop("Utility of post-treatment must be between 0 and 1")
 
-    if (is.list(timetoevent)) {
+  if (is.list(timetoevent)) {
     timetoevent <-
       timetoevent %>%
       unlist() %>%
@@ -49,7 +51,8 @@ calc_QALY_tb <- function(timetoevent,
 
   QALY_partial <- partial(calc_QALY_population,
                           age = age,
-                          start_delay = start_delay)
+                          start_delay = start_delay,
+                          discount_rate = discount_rate, ...)
 
   diseasefree <- QALY_partial(utility = utility$disease_free,
                               time_horizons = timetoevent)
