@@ -44,11 +44,27 @@ subset_dectree <- function(cohort,
 #' @examples
 prob_subset_dectree <- function(cohort,
                                 dectree_res,
-                                diroutput = NA) {
+                                diroutput = NA,
+                                LTBI_to_TB = 0.1) {
   subset_pop_tot <-
     dectree_res %>%
     map("subset_pop") %>%
     map(as.data.frame)
+
+  ##TODO: hack
+  startTx_to_curedTB <- function(x) x[,'cured']/x[,'startTx'] * LTBI_to_TB
+  test_to_curedTB <- function(x) x[,'cured']/x[,'tests'] * LTBI_to_TB
+
+  subset_pop_tot <-
+    lapply(subset_pop_tot,
+           function(x) cbind(x,
+                             startTx_to_curedTB = ifelse(is.nan(startTx_to_curedTB(x)),
+                                                         0,
+                                                         startTx_to_curedTB(x)),
+                             test_to_curedTB = ifelse(is.nan(test_to_curedTB(x)),
+                                                      0,
+                                                      test_to_curedTB(x))
+           ))
 
   out <- subset_dectree(cohort,
                         subset_pop_tot,
@@ -81,14 +97,9 @@ num_subset_dectree <- function(cohort,
     map("subset_pop") %>%
     map(as.data.frame)
 
-  ##TODO:hack
-  subset_pop_tot <-
-    lapply(subset_pop_tot,
-           function(x) cbind(x, startTx_to_curedTB = x[,'p_LTBI_to_cured']/x[,'LTBI_startTx'] * x[,'LTBI_pre'] * 0.1))
-
   # separate marginal and conditional probs
   # different denominators
-  subset_LTBI <- map(subset_pop_tot, `[`, c("LTBI_tests", "LTBI_positive", "LTBI_startTx", "LTBI_completeTx", "p_LTBI_to_cured", "startTx_to_curedTB"))
+  subset_LTBI <- map(subset_pop_tot, `[`, c("LTBI_tests", "LTBI_positive", "LTBI_startTx", "LTBI_completeTx", "p_LTBI_to_cured"))
   subset_all <- map(subset_pop_tot, `[`, c("LTBI_pre", "tests", "positive", "startTx", "completeTx", "cured", "LTBI_post"))
 
   out_LTBI <- subset_dectree(cohort,

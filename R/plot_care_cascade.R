@@ -83,10 +83,10 @@ plot_care_cascade <- function(parent_folder,
 #' @examples
 #'
 gg_care_cascade <- function(dat,
-                            plots_folder,
-                            prob_or_num,
-                            policy_name,
-                            grp,
+                            plots_folder = NA,
+                            prob_or_num = "prob",
+                            policy_name = NA,
+                            grp = NA,
                             box_plot = FALSE) {
 
   names(dat) <- gsub(pattern = "_.+",
@@ -116,9 +116,14 @@ gg_care_cascade <- function(dat,
     ylab('Number in cohort intended for screening') +
     xlab('')
 
+  if (!is.na(plots_folder)) {
+
   ggplot2::ggsave(p,
                   file = paste(plots_folder, policy_name,
                                paste0(prob_or_num, "_cascade_", grp, ".png"), sep = "/"),
                   width = 30, height = 20, units = "cm")
+  } else {
+    return(p)
+  }
 }
 

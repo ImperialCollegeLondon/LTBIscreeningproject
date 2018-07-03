@@ -146,7 +146,7 @@ unit_cost$GP_incentive <-
        # params = c(mean = 20)),
        active_tb = list(distn = "none",
                         params = c(mean = 0)))
-# params = c(mean = 100)))
+       # params = c(mean = 100)))
 
 
 # active TB -----------------------------------------------------

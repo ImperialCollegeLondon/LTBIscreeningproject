@@ -129,7 +129,8 @@ IMPUTED_sample <-
          all_secondary_inf_discounts = ydiscounts[all_notif_issdt + 1])
 
 num_2nd_inf <-
-  rep(list(NUM_SECONDARY_INF), sum(IMPUTED_sample$all_tb)) %>%
+  rep(list(NUM_SECONDARY_INF),
+      sum(IMPUTED_sample$all_tb)) %>%
   sample_distributions() %>%
   sapply(FUN = rbernoulli, n = 1)
 
