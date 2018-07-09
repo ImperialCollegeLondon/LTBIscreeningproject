@@ -37,10 +37,19 @@ policy_cohort <- function(cohort_in,
                           who_inc_Pareek2011 %in% interv$incidence_grps_screen)
 
   # assign each tb case unique id
-  cohort$id_avoided_tb <- NA
-  cohort$id_avoided_tb[cohort$all_tb] <- {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
+  cohort <- set_id_avoided_tb(cohort)
 
   save(cohort, file = pastef(diroutput, "cohort.RData"))
+
+  return(cohort)
+}
+
+set_id_avoided_tb <- function(cohort) {
+
+  cohort$id_avoided_tb <- NA
+
+  cohort$id_avoided_tb[cohort$all_tb] <-
+    {set.seed(111); sample.int(sum(cohort$all_tb), replace = FALSE)}
 
   return(cohort)
 }

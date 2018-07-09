@@ -77,7 +77,7 @@ for (s in seq_len(n.scenarios)) {
 
     ##TODO: this is a hack to get some numbers for code checking
     interv_QALYloss[[i]] <- scenario_QALYloss(prop_avoided = p_LTBI_to_cured,
-                                              endpoint = interv$ENDPOINT_cost,
+                                              endpoint = interv$ENDPOINT_QALY,
                                               costeff_cohort = costeff_cohort)
   }
 

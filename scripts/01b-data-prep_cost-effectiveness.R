@@ -240,26 +240,43 @@ means <- list(cost.aTB_TxDx =
 
 effectiveness <-
   list(
-    LTBI_Tx_3mISORIF = list(pmin = 0.33, pmax = 0.84),
-    LTBI_Tx_6mISO = list(pmin = 0.48, pmax = 0.77)
+    LTBI_Tx_3mISORIF = branch_unif_params(pmin = 0.33,
+                                          pmax = 0.84,
+                                          name = "Effective"),
+    LTBI_Tx_6mISO = branch_unif_params(pmin = 0.48,
+                                       pmax = 0.77,
+                                       name = "Effective")
   )
+
 
 test_performance <-
   list(
     QFT_GIT =
-      list(
-        sens = list(pmin = 0.81, pmax = 0.87),
-        spec = list(pmin = 0.98, pmax = 1.0)
+      test(
+        sens = branch_unif_params(pmin = 0.81,
+                                  pmax = 0.87,
+                                  name = "Sensitivity"),
+        spec = branch_unif_params(pmin = 0.98,
+                                  pmax = 1.0,
+                                  name = "Specificity")
       ),
     QFT_plus =
-      list(
-        sens = list(pmin = 0.88, pmax = 0.88),
-        spec = list(pmin = 0.9717, pmax = 0.9717)
+      test(
+        sens = branch_unif_params(pmin = 0.88,
+                                  pmax = 0.88,
+                                  name = "Sensitivity"),
+        spec = branch_unif_params(pmin = 0.9717,
+                                  pmax = 0.9717,
+                                  name = "Specificity")
       ),
     TSPOT =
-      list(
-        sens = list(pmin = 0.85, pmax = 0.93),
-        spec = list(pmin = 0.86, pmax = 1.0)
+      test(
+        sens = branch_unif_params(pmin = 0.85,
+                                  pmax = 0.93,
+                                  name = "Sensitivity"),
+        spec = branch_unif_params(pmin = 0.86,
+                                  pmax = 1.0,
+                                  name = "Specificity")
       )
   )
 

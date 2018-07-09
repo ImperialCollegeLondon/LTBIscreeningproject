@@ -86,38 +86,16 @@ osNode.cost$Set(min = cost$dropout,
 
 eff <- effectiveness[[interv$treatment]]
 
-osNode.cost$Set(pmin = eff$pmin,
-                pmax = eff$pmax,
-                filterFun = function(x) x$name == "Effective")
-
-osNode.health$Set(pmin = eff$pmin,
-                  pmax = eff$pmax,
-                  filterFun = function(x) x$name == "Effective")
+set_branch_uniform_params(eff, osNode.cost)
+set_branch_uniform_params(eff, osNode.health)
 
 
 # LTBI test prob -----------------------------------------------------------
 
 performance <-  test_performance[[interv$LTBI_test]]
 
-# cost
-
-osNode.cost$Set(pmin = performance$sens$pmin,
-                pmax = performance$sens$pmax,
-                filterFun = function(x) x$name == "Sensitivity")
-
-osNode.cost$Set(pmin = performance$spec$pmin,
-                pmax = performance$spec$pmax,
-                filterFun = function(x) x$name == "Specificity")
-
-# health
-
-osNode.health$Set(pmin = performance$sens$pmin,
-                  pmax = performance$sens$pmax,
-                  filterFun = function(x) x$name == "Sensitivity")
-
-osNode.health$Set(pmin = performance$spec$pmin,
-                  pmax = performance$spec$pmax,
-                  filterFun = function(x) x$name == "Specificity")
+set_branch_uniform_params(performance, osNode.cost)
+set_branch_uniform_params(performance, osNode.health)
 
 
 # GP incentives -----------------------------------------------------------

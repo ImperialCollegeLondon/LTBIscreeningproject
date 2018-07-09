@@ -67,6 +67,14 @@ IMPUTED_sample <-
                                                 breaks = cfr_age_breaks,
                                                 right = FALSE))
 
+# case fatality rate
+# for each active TB
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  left_join(cfr_age_lookup,
+            by = c("agegroup_all_notification" = "age")) %>%
+  dplyr::select(-distn, -a, -b)
+
 # calculate QALYs for all tb cases for all outcomes
 # so can sample later
 QALY_all_tb <-
@@ -81,14 +89,6 @@ QALY_all_tb <-
     discount_rate = interv$discount_rate,
     utility_method = "add"
   )
-
-# case fatality rate
-# for each active TB
-IMPUTED_sample <-
-  IMPUTED_sample %>%
-  left_join(cfr_age_lookup,
-            by = c("agegroup_all_notification" = "age")) %>%
-  dplyr::select(-distn, -a, -b)
 
 IMPUTED_sample <-
   IMPUTED_sample %>%
@@ -109,7 +109,6 @@ IMPUTED_sample <-
                                         no = QALY_cured))
 
 # future discounts for costs of active TB cases
-
 max_tb_issdt <-
   with(IMPUTED_sample,
        all_tb_issdt[is.finite(all_tb_issdt)] %>%

@@ -37,6 +37,19 @@ scenario_QALY <- function(prop_avoided,
 
 
 
+#' scenario_QALYloss
+#'
+#' splits output also into due to
+#' morbidity and mortality.
+#'
+#' @param prop_avoided
+#' @param endpoint
+#' @param costeff_cohort
+#'
+#' @return
+#' @export
+#'
+#' @examples
 scenario_QALYloss <- function(prop_avoided,
                               endpoint,
                               costeff_cohort) {
