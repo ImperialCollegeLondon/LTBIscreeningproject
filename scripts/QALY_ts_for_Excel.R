@@ -26,13 +26,13 @@ interv$discount_rate <- 0#0.035
 
 attach(cohort)
 
-all_death_rNotificationDate[all_death_rNotificationDate < 0] <- 0
+all_death_notif[all_death_notif < 0] <- 0
 
 diseasefree <- calc_QALY_population(age = age_all_notification,
                                     start_delay = 0,
                                     discount_rate = interv$discount_rate,
                                     utility = utility$disease_free,
-                                    time_horizons = all_death_rNotificationDate,
+                                    time_horizons = all_death_notif,
                                     sum_res = FALSE,
                                     # utility_method = "prod")
                                     utility_method = "add")
@@ -41,7 +41,7 @@ fatality <- calc_QALY_population(age = age_all_notification,
                                  start_delay = 0,
                                  discount_rate = interv$discount_rate,
                                  utility = utility$activeTB,
-                                 time_horizons = pmin(all_death_rNotificationDate, 0.5),
+                                 time_horizons = pmin(all_death_notif, 0.5),
                                  sum_res = FALSE,
                                  # utility_method = "prod")
                                  utility_method = "add")
@@ -50,7 +50,7 @@ cured <- calc_QALY_population(age = age_all_notification,
                               start_delay = 0,
                               discount_rate = interv$discount_rate,
                               utility = c(utility$activeTB, utility$postTx),
-                              time_horizons = all_death_rNotificationDate,
+                              time_horizons = all_death_notif,
                               sum_res = FALSE,
                               # utility_method = "prod")
                               utility_method = "add")
@@ -58,7 +58,7 @@ cured <- calc_QALY_population(age = age_all_notification,
 detach(cohort)
 
 QALY_all_tb <- calc_QALY_tb(
-  timetoevent = cohort$all_death_rNotificationDate,
+  timetoevent = cohort$all_death_notif,
   utility = utility,
   age = cohort$age_all_notification,
   # age = NA, #commentout

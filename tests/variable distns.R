@@ -14,7 +14,7 @@ table(IMPUTED_sample$tb_fatality, IMPUTED_sample$who_inc_Pareek2011, useNA = "al
 #   FALSE        0.00511238803 0.00750756157 0.01105725141 0.01119435567
 # TRUE         0.00008450228 0.00019804119 0.00045853531 0.00046453956
 # <NA>         0.99480310968 0.99229439723 0.98848421328 0.98834110477
-table(IMPUTED_sample$agegroup_all_notification, IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
+table(IMPUTED_sample$agegroup_all_notif, IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
 
 # (0,50]  (50,150] (150,250] (250,350] (350,1e+05]
 # [15,45)         0.6422764 0.6051402 0.6257110   0.6464949
@@ -29,14 +29,14 @@ lines(xx[ ,"(150,250]"], col = "green")
 lines(xx[ ,"(250,350]"], col = "red")
 lines(xx[ ,"(350,1e+05]"], col = "blue")
 
-xx <- table(ceiling(IMPUTED_sample$all_death_rNotificationDate), IMPUTED_sample$who_inc_Pareek2011, useNA = "always") %>% prop.table(margin = 2)
+xx <- table(ceiling(IMPUTED_sample$all_death_notif), IMPUTED_sample$who_inc_Pareek2011, useNA = "always") %>% prop.table(margin = 2)
 
 plot(xx[ -1,"(50,150]"], type = "l", xlim = c(0,80), ylim = c(0,0.001))
 lines(xx[ ,"(150,250]"], col = "green")
 lines(xx[ ,"(250,350]"], col = "red")
 lines(xx[ ,"(350,1e+05]"], col = "blue")
 
-xx <- table(ceiling(IMPUTED_sample$rNotificationDate_issdt.years), IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
+xx <- table(ceiling(IMPUTED_sample$notif_issdt.years), IMPUTED_sample$who_inc_Pareek2011) %>% prop.table(margin = 2)
 
 plot(xx[ -nrow(xx),"(50,150]"], type = "l", xlim = c(0,80), ylim = c(0,0.001))
 lines(xx[ ,"(150,250]"], col = "green")

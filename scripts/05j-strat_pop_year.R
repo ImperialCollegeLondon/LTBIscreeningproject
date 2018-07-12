@@ -8,7 +8,7 @@
 
 # tb is for cases in EWNI only
 
-event_times <- list(tb = cohort$rNotificationDate_issdt.years,
+event_times <- list(tb = cohort$notif_issdt.years,
                     exit_uk = cohort$date_exit_uk1_issdt.years,
                     death = cohort$date_death1_issdt.years)
 
@@ -30,9 +30,9 @@ for (i in seq_len(n.scenarios)) {
                                   prop_avoid)
 
   cohort_screen <- cohort
-  cohort_screen$rNotificationDate_issdt.years[who_avoided] <- Inf
+  cohort_screen$notif_issdt.years[who_avoided] <- Inf
 
-  event_times$tb = cohort_screen$rNotificationDate_issdt.years
+  event_times$tb = cohort_screen$notif_issdt.years
 
   strat_pop_year <- count_comprsk_events(event_times)
 

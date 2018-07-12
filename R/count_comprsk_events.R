@@ -21,7 +21,7 @@
 #'
 #' attach(cohort)
 #'
-#' event_times <- list(tb = rNotificationDate_issdt.years,
+#' event_times <- list(tb = notif_issdt.years,
 #'                        exit_uk = date_exit_uk1_issdt.years,
 #'                        death = date_death1_issdt.years)
 #'

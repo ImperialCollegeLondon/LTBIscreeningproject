@@ -18,21 +18,21 @@ hist_progression_times <- function(dat) {
          breaks = 150,
          xlab = "Time (year)", main = "");
 
-    hist(ceiling(dat$rNotificationDate_issdt.years), add = T, col = "green",
+    hist(ceiling(dat$notif_issdt.years), add = T, col = "green",
          breaks = 150);
 
-    hist(ceiling(dat$rNotificationDate_issdt.years[dat$uk_tb_orig == 1]), add = T,
+    hist(ceiling(dat$notif_issdt.years[dat$uk_tb_orig == 1]), add = T,
          breaks = 12, col = "red")
   } , silent = T)
 
 
   if (inherits(try_out, "try-error")) {
 
-    hist(ceiling(dat$rNotificationDate_issdt.years), col = "green",
+    hist(ceiling(dat$notif_issdt.years), col = "green",
          breaks = 150,
          xlab = "Time (year)", main = "")
 
-    hist(ceiling(dat$rNotificationDate_issdt.years[dat$uk_tb_orig == 1]), add = T,
+    hist(ceiling(dat$notif_issdt.years[dat$uk_tb_orig == 1]), add = T,
          breaks = 12, col = "red")
   }
 

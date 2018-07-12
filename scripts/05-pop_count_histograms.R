@@ -33,7 +33,7 @@ for (i in 1:1000) {
   IMPUTED_sample %<>%
     dplyr::mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
                                     date_exit_uk1_issdt.years >= screen_year &
-                                    (rNotificationDate_issdt.years >= screen_year | is.na(rNotificationDate_issdt.years)), 1, 0))
+                                    (notif_issdt.years >= screen_year | is.na(notif_issdt.years)), 1, 0))
 
   number[i] <- IMPUTED_sample$screen %>% sum()
 }

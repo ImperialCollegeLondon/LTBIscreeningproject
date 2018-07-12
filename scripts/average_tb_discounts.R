@@ -1,7 +1,7 @@
 library(QALY)
 
 # EWNI
-tb_tab <- table(IMPUTED_sample$rNotificationDate_issdt.years)
+tb_tab <- table(IMPUTED_sample$notif_issdt.years)
 tb_tab <- prop.table(tb_tab[-length(tb_tab)])
 tb_tab %*% discount(t_limit = length(tb_tab))
 

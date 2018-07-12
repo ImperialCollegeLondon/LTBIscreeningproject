@@ -281,6 +281,16 @@ test_performance <-
   )
 
 
+# Rodger (2003) BMJ
+# in years
+treatment_delay <-
+  list(
+    distn = "pert",
+    params = c(min = 14/365.25,
+               mode = 49/365.25,
+               max = 103/365.25))
+
+
 ##########
 # health #
 ##########
@@ -296,6 +306,8 @@ utility$disease_free <- 1.0 #assume perfect health. only interested in relative 
 utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2015), on treatment, outpatient p.83
 # utility$activeTB <- 0.9   #pre-treatment #Mears, J., (2015) The prospective evaluation of the TB strain typing service in England: a mixed methods study. Thorax
 # utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
+
+utility$TB_Tx <- 0.813 ##TODO: find a good number for this...
 
 # Pasipanodya (2007)?
 ##TODO: check this number ...

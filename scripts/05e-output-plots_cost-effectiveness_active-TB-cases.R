@@ -179,7 +179,7 @@ dev.off()
 
 
 # cumulative counts
-# h <- hist(rNotificationDate_issdt.years, breaks = 0:5, plot = FALSE)
+# h <- hist(notif_issdt.years, breaks = 0:5, plot = FALSE)
 # h$counts <- cumsum(h$counts)
 # plot(h)
 

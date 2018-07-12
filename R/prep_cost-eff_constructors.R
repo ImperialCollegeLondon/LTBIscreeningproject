@@ -1,3 +1,4 @@
+
 #' test constructor
 #'
 #' @param sens
@@ -43,5 +44,3 @@ branch_unif_params <- function(pmin,
   return(res)
 }
 
-
-##TODO: where sens, spec used can now use method... eg branch assignment

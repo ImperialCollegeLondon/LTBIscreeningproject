@@ -195,13 +195,13 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(rNotificationDate_issdt = rNotificationDate - issdt,
-                uk_tb = ifelse(rNotificationDate_issdt < 0 | is.na(rNotificationDate_issdt),
+                rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0,
+                                                 yes = NA,
+                                                 no = rNotificationDate_issdt),
+                uk_tb = ifelse(is.na(rNotificationDate_issdt),
                                yes = 0,
                                no = 1),
-                rNotificationDate_issdt = ifelse(uk_tb,
-                                                 yes = rNotificationDate_issdt,
-                                                 no = NA),
-                rNotificationDate_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)
+                notif_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)
 
 
 save(IMPUTED_sample, file = "data/sample_cleaned.RData")

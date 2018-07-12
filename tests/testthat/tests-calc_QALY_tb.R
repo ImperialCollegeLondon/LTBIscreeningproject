@@ -41,7 +41,7 @@ test_that("edge cases", {
 
   QALY <-
       calc_QALY_tb(
-      timetoevent = all_death_rNotificationDate,
+      timetoevent = all_death_notif,
       # timetoevent = 2,
       # utility = utility,
       utility = list(disease_free = 1, activeTB = 1, postTx = 1),

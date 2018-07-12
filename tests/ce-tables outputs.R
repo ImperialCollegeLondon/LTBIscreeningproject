@@ -28,12 +28,12 @@ xx <- IMPUTED_sample_year_cohort %>%
 xx[xx$cured > xx$diseasefree, ]
 
 IMPUTED_sample[IMPUTED_sample$QALY_cured > IMPUTED_sample$QALY_diseasefree & !is.na(IMPUTED_sample$QALY_diseasefree),
-               c("QALY_cured", "QALY_diseasefree", "ref_id", "all_death_rNotificationDate")]
+               c("QALY_cured", "QALY_diseasefree", "ref_id", "all_death_notif")]
 
 
 IMPUTED_sample %>%
   subset(ref_id == "PKISB010002125118346") %$%
-  calc_QALY_tb(timetoevent = all_death_rNotificationDate,
+  calc_QALY_tb(timetoevent = all_death_notif,
                utility.disease_free = utility$disease_free,
                utility.case = utility$activeTB,
                age = age_all_notification)

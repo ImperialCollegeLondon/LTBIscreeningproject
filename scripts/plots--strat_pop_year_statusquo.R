@@ -40,17 +40,17 @@ cohort3 <-
 
 event_times1 <-
   list(
-    tb = cohort1$rNotificationDate_issdt.years,
+    tb = cohort1$notif_issdt.years,
     exit_uk = cohort1$date_exit_uk1_issdt.years,
     death = cohort1$date_death1_issdt.years)
 event_times2 <-
   list(
-    tb = cohort2$rNotificationDate_issdt.years,
+    tb = cohort2$notif_issdt.years,
     exit_uk = cohort2$date_exit_uk1_issdt.years,
     death = cohort2$date_death1_issdt.years)
 event_times3 <-
   list(
-    tb = cohort3$rNotificationDate_issdt.years,
+    tb = cohort3$notif_issdt.years,
     exit_uk = cohort3$date_exit_uk1_issdt.years,
     death = cohort3$date_death1_issdt.years)
 

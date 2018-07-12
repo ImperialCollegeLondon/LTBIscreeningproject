@@ -48,7 +48,7 @@ for (SCENARIO in seq_len(num_scenarios)) {
                       scenario == SCENARIO,
                       screen_success == TRUE) %$%
         map2(.x = age_all_notification,
-             .y = all_death_rNotificationDate,
+             .y = all_death_notif,
              .f = QALY::adjusted_life_years,
              start_year = 0,
              end_year = NA,

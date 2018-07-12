@@ -45,7 +45,7 @@ num_all_tb_QALY <-
 
 # adjusted_life_years type object equivalent calc
 # useful for plotting...
-##TODO: may need to pmax(0, .) in all_death_rNotificationDate definition...
+##TODO: may need to pmax(0, .) in all_death_notif definition...
 #
 # QALY_diseasefree <- list()
 #
@@ -53,7 +53,7 @@ num_all_tb_QALY <-
 #   IMPUTED_sample_year_cohort %>%
 #   subset(all_tb == TRUE) %$%
 #        map2(.x = age_all_notification,
-#             .y = all_death_rNotificationDate,
+#             .y = all_death_notif,
 #             .f = QALY::adjusted_life_years,
 #             start_year = 0,
 #             end_year = NA,

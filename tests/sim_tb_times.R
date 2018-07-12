@@ -2,7 +2,7 @@ data_test <- data.frame(LTBI = c(0,1,1,1),
                         exit_uk1 = c(T,F,F,F),
                         death1 = c(F,T,F,F),
                         uk_tb = c(F,F,T,F),
-                        rNotificationDate_issdt.years = c(2,2,2,2),
+                        notif_issdt.years = c(2,2,2,2),
                         fup_issdt = c(3,3,3,3),
                         date_death1_issdt.years = c(8,8,8,8))
 
