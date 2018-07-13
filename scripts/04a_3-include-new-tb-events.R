@@ -3,11 +3,11 @@
 # N Green
 #
 # include new tb events and update dependencies
-
-
+#
 # impute missing/unobserved time to active tb
 # prob: scaled progression probs with IMPUTED_sample weighted average LTBI prob
 # individually SIMULATE active TB progression times after exit uk and followup
+
 
 # cohort mean prevalence? incidence atm
 p_LTBI_cohort <- mean(IMPUTED_sample$pLTBI)
@@ -95,20 +95,19 @@ IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(
     symptoms_to_Tx = symptoms_to_Tx,
-    LTBI_to_symptoms = all_death_notif - symptoms_to_Tx,
+    LTBI_to_symptoms = all_tb_issdt - symptoms_to_Tx,
     Tx_to_cured = 1,
     cured_to_death = date_death1_issdt.years - all_death_notif - Tx_to_cured)
 
 
 # calculate QALYs for all tb cases for all outcomes
-# so can sample later
 QALY_all_tb <-
   IMPUTED_sample %>%
   subset(all_tb == TRUE) %$%
   calc_QALY_tb(
-    intervals = c(symptoms_to_Tx,
-                  Tx_to_cured,
-                  cured_to_death),
+    intervals = data.frame(symptoms_to_Tx,
+                           Tx_to_cured,
+                           cured_to_death),
     utility = utility,
     age = age_all_notification,
     start_delay = LTBI_to_symptoms,

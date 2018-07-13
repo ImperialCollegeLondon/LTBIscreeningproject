@@ -4,10 +4,12 @@
 # Oct 2016
 #
 # input data for QALY gains and costs
+#
+# for more details and alternative references see:
+# see C:\Users\ngreen1\Google Drive\LTBI-screening-cost-effectiveness\parameter-table_all_refs.xlsx
 
-
-# details -----------------------------------------------------------------
-
+# assumptions --------------------------------------------------------------
+#
 # assume that after active TB notification the risk of TB related death
 # is in the first year only
 #
@@ -15,6 +17,7 @@
 #
 # for the QALY gain calculation only interested in active TB cases
 # since the other individuals unchanged
+
 
 TO_YEAR <- 2016
 
@@ -300,6 +303,10 @@ treatment_delay <-
 utility <- list()
 
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
+
+## move comment to spreadsheet and delete
+#...
+
 
 
 # relative to disease-free = 1

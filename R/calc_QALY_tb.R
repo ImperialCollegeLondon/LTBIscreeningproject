@@ -12,7 +12,6 @@
 #' Consider person-perspective (death) or NHS-perspective (exit uk)
 #' by defining the particular time-to-event end point.
 #'
-#' @param timetoevent Time (in years) from TB notification to final event (death)
 #' @param intervals Time intervals for each utility
 #' @param utility (list) Utility value of non-diseased individual e.g. 1. Utility value of diseased individual
 #' @param age Ages in years
@@ -25,50 +24,80 @@
 #'
 #' @examples
 #'
-calc_QALY_tb <- function(timetoevent = NA,
-                         intervals = NA,
+calc_QALY_tb <- function(intervals = NA,
                          utility,
                          age,
                          start_delay = NA,
                          discount_rate = 0.035,
                          ...){
 
-  if (is.list(timetoevent)) {
-    timetoevent <-
-      timetoevent %>%
-      unlist() %>%
-      unname()
-  }
+  utils_pop <- make_utilities_pop_list(utility, n_pop = nrow(intervals))
+  intervals_pop <- make_intervals_pop_list(intervals)
 
   QALY_partial <- partial(calc_QALY_population,
                           age = age,
                           start_delay = start_delay,
-                          discount_rate = discount_rate, ...)
+                          discount_rate = discount_rate)
 
-  diseasefree <- QALY_partial(utility = utility$disease_free,
-                              intervals = sum(intervals))
+  diseasefree <- QALY_partial(utility = utils_pop$diseasefree,
+                              intervals = intervals_pop$diseasefree)
 
-  ##TODO:...
-  fatality <- QALY_partial(utility = c(utility$activeTB, utility$TB_Tx),
-                           intervals = intervals[1] + intervals[2]/2)
-                           # time_horizons = pmin(timetoevent, 0.5)) #ie 6 months
+  fatality <- QALY_partial(utility = utils_pop$fatality,
+                           intervals = intervals_pop$fatality)
 
-  cured <- QALY_partial(utility = c(utility$activeTB, utility$TB_Tx, utility$postTx),
-                        intervals = intervals[1:3])
-                        # time_horizons = timetoevent)
+  cured <- QALY_partial(utility = utils_pop$cured,
+                        intervals = intervals_pop$cured)
 
-  #otherwise cured is better than disease_free
-  for (i in seq_along(cured)) {
-
-    cured[i] <-
-      if (timetoevent[i] < 1) {
-        fatality[i]
-      } else {
-        cured[i]
-      }
-  }
+  # otherwise cured is better than diseasefree
+  cured <- pmax(cured, fatality)
 
   return(list(diseasefree = diseasefree,
               fatality = fatality,
               cured = cured))
+}
+
+
+make_intervals_pop_list <- function(intervals) {
+
+  list(
+    diseasefree = diseasefree_intervals(intervals),
+    cured = cured_intervals(intervals),
+    fatality = fatality_intervals(intervals))
+}
+
+diseasefree_intervals <- function(x) {
+  rowSums(x) %>%
+    as.list(as.data.frame(t(.)))
+}
+
+fatality_intervals <- function(x) {
+  cbind(x$symptoms_to_Tx,
+        x$Tx_to_cured/2) %>%
+    split(., seq(nrow(.)))
+}
+
+cured_intervals <- function(x) {
+    split(x, seq(nrow(x)))
+}
+
+
+make_utilities_pop_list <- function(utility,
+                                    n_pop) {
+
+  list(
+    diseasefree =
+      replicate(exp = utility$disease_free,
+                n = n_pop,
+                simplify = FALSE),
+    fatality =
+      replicate(expr = c(utility$activeTB,
+                         utility$TB_Tx),
+                n = n_pop,
+                simplify = FALSE),
+    cured =
+      replicate(expr = c(utility$activeTB,
+                         utility$TB_Tx,
+                         utility$postTx),
+                n = n_pop,
+                simplify = FALSE))
 }

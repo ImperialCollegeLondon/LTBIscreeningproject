@@ -25,8 +25,8 @@ suth2 <- c(suth2, rep(tail(suth2,1), length(suth) - length(suth2) + 1))
 suth4 <- suth[seq(1,length(suth), by = 4)]
 suth4 <- c(suth4, rep(tail(suth4,1), length(suth) - length(suth4) + 1))
 
-p_incid_year <- c(Lancet_prob,
-                  p_incid_sutherland[max_years_obs:(interv$FUP_MAX_YEAR - max_years_obs)])
+p_incid_year  <- c(Lancet_prob,
+                   p_incid_sutherland[max_years_obs:(interv$FUP_MAX_YEAR - max_years_obs)])
 p_incid_year2 <- c(Lancet_prob,
                    suth2)
 p_incid_year4 <- c(Lancet_prob,
