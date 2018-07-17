@@ -298,35 +298,19 @@ treatment_delay <-
 # health #
 ##########
 
-# health state utility values (HSUV) ------------------------------------------------------
-
 utility <- list()
 
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
-## move comment to spreadsheet and delete
-#...
-
-
-
 # relative to disease-free = 1
 utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2015), on treatment, outpatient p.83
-# utility$activeTB <- 0.9   #pre-treatment #Mears, J., (2015) The prospective evaluation of the TB strain typing service in England: a mixed methods study. Thorax
-# utility$activeTB <- 0.82  #post-acute #Mears, J., (2015)
 
 utility$TB_Tx <- 0.813 ##TODO: find a good number for this...
 
-# Pasipanodya (2007)?
-##TODO: check this number ...
-# utility$postTx <- 0.921
 utility$postTx <- 1 #perfectly recovered
 
 
-# where are these from??
-# utility$activeTB_preTx <- 0.9
-# utility$activeTB_acute <- 0.675 #2 months
-# utility$activeTB_postacute <- 0.813
-
+# save --------------------------------------------------------------------
 
 save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold,
      file = "data/cost_effectiveness_params.RData")

@@ -96,7 +96,7 @@ IMPUTED_sample <-
   dplyr::mutate(
     symptoms_to_Tx = symptoms_to_Tx,
     LTBI_to_symptoms = all_tb_issdt - symptoms_to_Tx,
-    Tx_to_cured = 1,
+    Tx_to_cured = 0.5,
     cured_to_death = date_death1_issdt.years - all_death_notif - Tx_to_cured)
 
 
@@ -109,7 +109,8 @@ QALY_all_tb <-
                            Tx_to_cured,
                            cured_to_death),
     utility = utility,
-    age = age_all_notification,
+    # age = age_all_notification,
+    age = NA, #test
     start_delay = LTBI_to_symptoms,
     discount_rate = interv$discount_rate,
     utility_method = "add"

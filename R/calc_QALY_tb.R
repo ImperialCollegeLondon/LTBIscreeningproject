@@ -77,7 +77,8 @@ fatality_intervals <- function(x) {
 }
 
 cured_intervals <- function(x) {
-    split(x, seq(nrow(x)))
+  as.matrix(x) %>%
+    split(., seq(nrow(.)))
 }
 
 
