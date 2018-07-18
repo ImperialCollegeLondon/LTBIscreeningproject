@@ -7,8 +7,6 @@
 # random sampling individuals
 
 
-# data format prep --------------------------------------------------------
-
 # convert from scenario-wise to remain-exit format
 scenario_res <-
   dectree_res %>%
@@ -22,10 +20,6 @@ interv_QALYloss <- vector(length = interv$N.mc, mode = "list")
 
 stats_scenario <- vector(length = n.scenarios, mode = "list")
 QALYloss_scenario <- vector(length = n.scenarios, mode = "list")
-
-
-# extract cost-effectiveness variables
-# for tb cases
 
 costeff_cohort <-
   cohort %>%
@@ -43,10 +37,12 @@ costeff_cohort <-
          uk_secondary_inf_discounts,
          all_secondary_inf_discounts,
          num_2nd_inf,
-         id_avoided_tb) %>%
-  mutate(E_cost_sec_inf = means$num_sec_inf * means$cost.aTB_TxDx * all_secondary_inf_discounts,
-         E_cost_statusquo = (all_notif_discounts * means$cost.aTB_TxDx) + E_cost_sec_inf,
-         E_QALY_statusquo = (cfr * QALY_fatality) + ((1 - cfr) * QALY_cured))
+         num_contacts,
+         id_avoided_tb)
+
+costeff_cohort <-
+  costeff_cohort %>%
+  expected_cost_QALY(means)
 
 
 ########
@@ -55,7 +51,8 @@ costeff_cohort <-
 
 interv_scenario_cost <- partial(scenario_cost,
                                 endpoint = interv$ENDPOINT_cost,
-                                unit_cost.aTB_TxDx = unit_cost$aTB_TxDx,
+                                unit_costs = unit_cost,
+                                probs = p_contact_tracing,
                                 costeff_cohort = costeff_cohort)
 
 interv_scenario_QALY <- partial(scenario_QALY,
@@ -75,16 +72,18 @@ for (s in seq_len(n.scenarios)) {
     interv_cost[[i]] <- interv_scenario_cost(prop_avoided = p_LTBI_to_cured)
     interv_QALY[[i]] <- interv_scenario_QALY(prop_avoided = p_LTBI_to_cured)
 
-    ##TODO: this is a hack to get some numbers for code checking
-    interv_QALYloss[[i]] <- scenario_QALYloss(prop_avoided = p_LTBI_to_cured,
-                                              endpoint = interv$ENDPOINT_QALY,
-                                              costeff_cohort = costeff_cohort)
+    ##TODO: rewrite; this is a hack to get some numbers for code checking
+    interv_QALYloss[[i]] <-
+      scenario_QALYloss(prop_avoided = p_LTBI_to_cured,
+                        endpoint = interv$ENDPOINT_QALY,
+                        costeff_cohort = costeff_cohort)
   }
 
-  stats_scenario[[s]] <- costeff_stats(scenario_dat = dectree_res[[s]],
-                                       interv_QALY = interv_QALY,
-                                       interv_cost = interv_cost,
-                                       pop_year = nrow(cohort))
+  stats_scenario[[s]] <-
+    costeff_stats(scenario_dat = dectree_res[[s]],
+                  interv_QALY = interv_QALY,
+                  interv_cost = interv_cost,
+                  pop_year = nrow(cohort))
 
   QALYloss_scenario[[s]] <-
     interv_QALYloss %>%

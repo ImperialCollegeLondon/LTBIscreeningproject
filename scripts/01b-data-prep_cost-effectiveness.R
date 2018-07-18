@@ -193,6 +193,17 @@ followup_visit <- list(distn = "gamma",
                        params = c(shape = 18.78,
                                   scale = 7.62)) #143
 
+LFT_test = list(distn = "unif",
+                params = c(min = unit_cost$LFT_test,
+                           max = unit_cost$LFT_test))
+
+HIV_test = list(distn = "unif",
+                params = c(min = unit_cost$HIV_test,
+                           max = unit_cost$HIV_test))
+
+hep_test = list(distn = "unif",
+                params = c(min = unit_cost$hep_test,
+                           max = unit_cost$hep_test))
 
 # treatment
 aTB_Tx_mean <- QALY::inflation_adjust_cost(from_year = 2015,
@@ -211,24 +222,38 @@ unit_cost$aTB_TxDx <- list(culture = culture,
                            smear = smear,
                            first_visit = first_visit,
                            followup_visit = followup_visit,
-                           LFT_test = list(distn = "unif",
-                                           params = c(min = unit_cost$LFT_test,
-                                                      max = unit_cost$LFT_test)),
-                           # HIV_test = list(distn = "unif",
-                           #                 params = c(min = unit_cost$HIV_test,
-                           #                            max = unit_cost$HIV_test)),
-                           # hep_test = list(distn = "unif",
-                           #                 params = c(min = unit_cost$hep_test,
-                           #                            max = unit_cost$hep_test)),
+                           LFT_test = LFT_test,
+                           # HIV_test = HIV_test,
+                           # hep_test = hep_test,
                            aTB_Tx = aTB_Tx)
 
 # fixed constant
 # unit_cost$aTB_TxDx <- list(distn = "none",
 #                            params = c(mean = 5410))
 
+# Warwick evidence (2016)
+unit_cost$TSPOT = list(distn = "unif",
+                       params = c(min = 50,
+                                  max = 106))
+# NICE CG117
+unit_cost$TST = list(distn = "unif",
+                       params = c(min = 8,
+                                  max = 36))
+
+# contact tracing
+
+unit_cost$aTB_Dx =
+  list(
+    culture = culture,
+    xray = xray)
+
+unit_cost$LTBI_DxTx =
+  list(
+    IGRA = unit_cost$TSPOT,
+    LTBI_Tx = unit_cost$LTBI_Tx_6mISO$full)
+
+
 #####################################
-
-
 
 means <- list(cost.aTB_TxDx =
                 unit_cost$aTB_TxDx %>%
@@ -292,6 +317,14 @@ treatment_delay <-
     params = c(min = 14/365.25,
                mode = 49/365.25,
                max = 103/365.25))
+
+# Cavany (2017)
+p_contact_tracing <-
+  list(
+    contact = 1,
+    aTB_Dx = 0.1 + 0.018,
+    aTB_Tx = 0.018,
+    LTBI_DxTx = 0.1) #for children but only available
 
 
 ##########

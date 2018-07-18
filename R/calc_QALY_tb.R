@@ -67,7 +67,8 @@ make_intervals_pop_list <- function(intervals) {
 
 diseasefree_intervals <- function(x) {
   rowSums(x) %>%
-    as.list(as.data.frame(t(.)))
+    as.data.frame(t(.)) %>%
+    as.list()
 }
 
 fatality_intervals <- function(x) {
@@ -77,6 +78,9 @@ fatality_intervals <- function(x) {
 }
 
 cured_intervals <- function(x) {
+
+  x$cured_to_death <- pmax(0, x$cured_to_death)
+
   as.matrix(x) %>%
     split(., seq(nrow(.)))
 }

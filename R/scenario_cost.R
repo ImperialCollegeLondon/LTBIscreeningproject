@@ -2,7 +2,8 @@
 #' Calculate total cost of a scenario
 #'
 #' @param endpoint 'death' or 'exit uk'
-#' @param unit_cost.aTB_TxDx diagnosis and treatment cost distributions
+#' @param unit_costs diagnosis and treatment cost distributions
+#' @param probs_contact Proportions of individuals in subsets
 #' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured
 #'
@@ -11,32 +12,52 @@
 #'
 #' @examples
 scenario_cost <- function(endpoint,
-                          unit_cost.aTB_TxDx,
+                          unit_costs,
+                          probs_contact,
                           costeff_cohort,
                           prop_avoided) {
 
   assert_that(endpoint %in% c("death", "exit uk"))
 
   rcost <-
-    unit_cost.aTB_TxDx %>%
-    treeSimR::sample_distributions() %>%
-    sum()
+    c(
+      contact =
+        unit_costs$TST %>%
+        sample_distributions() %>%
+        sum(),
+      aTB_Dx =
+        unit_costs$TB_Dx %>%
+        sample_distributions() %>%
+        sum(),
+      aTB_Tx =
+        unit_costs$TB_Tx %>%
+        sample_distributions() %>%
+        sum(),
+      LTBI_DxTx =
+        unit_costs$LTBI_DxTx %>%
+        sample_distributions() %>%
+        sum(),
+      index =
+        unit_costs$aTB_TxDx %>%
+        sample_distributions() %>%
+        sum()
+    )
 
   keep_tb <-
     switch(endpoint,
            "death" = costeff_cohort$all_tb,
            "exit uk" = costeff_cohort$uk_tb)
 
-  num_2nd_inf <- costeff_cohort$num_2nd_inf[keep_tb]
-  discounts_1st <- costeff_cohort$all_notif_discounts[keep_tb]
-  discounts_2nd <- costeff_cohort$all_secondary_inf_discounts[keep_tb]
-
+  num_contacts <- costeff_cohort$num_contacts[keep_tb]
+  discounts <- costeff_cohort$all_notif_discounts[keep_tb]
   id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
 
-  notif_statusquo <- cost_tb_notif(num_2nd_inf,
-                                   rcost,
-                                   discounts_1st,
-                                   discounts_2nd)
+  notif_statusquo <-
+    notif_cost(rcost,
+               probs_contact,
+               num_contacts,
+               discounts)
+
   notif_screened <- notif_statusquo
 
   who_avoided <- rows_first_n_ids(id_avoided_tb,
@@ -48,3 +69,29 @@ scenario_cost <- function(endpoint,
               screened = sum(notif_screened)))
 }
 
+#
+notif_cost <- function(cost,
+                       probs,
+                       num_contacts,
+                       discounts) {
+
+  ccontact <-
+    contact_tracing_cost(num_contacts,
+                         cost,
+                         probs)
+
+  ctotal <- (cost$index + ccontact) * discounts
+
+  return(ctotal)
+}
+
+#
+contact_tracing_cost <- function(num_contacts,
+                                 costs,
+                                 probs) {
+
+  cnames <- names(probs)
+  c_per_contact <- costs[cnames] %*% probs[cnames]
+
+  return(c_per_contact * num_contacts)
+}

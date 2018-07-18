@@ -171,5 +171,12 @@ IMPUTED_sample <-
              no = NA_real_))
 
 
+##TODO: could sample but very small interval anyway
+# Cavany (2017)
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  mutate(num_contacts = 4.5)
+
+
 save(IMPUTED_sample, file = "data/model_input_cohort.RData")
 
