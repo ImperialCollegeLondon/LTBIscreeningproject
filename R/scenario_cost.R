@@ -80,7 +80,7 @@ notif_cost <- function(cost,
                          cost,
                          probs)
 
-  ctotal <- (cost$index + ccontact) * discounts
+  ctotal <- (cost['index'] + ccontact) * discounts
 
   return(ctotal)
 }
@@ -93,5 +93,5 @@ contact_tracing_cost <- function(num_contacts,
   cnames <- names(probs)
   c_per_contact <- costs[cnames] %*% probs[cnames]
 
-  return(c_per_contact * num_contacts)
+  return(as.vector(c_per_contact) * num_contacts)
 }

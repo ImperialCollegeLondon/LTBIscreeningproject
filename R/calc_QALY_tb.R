@@ -67,7 +67,8 @@ make_intervals_pop_list <- function(intervals) {
 
 diseasefree_intervals <- function(x) {
   rowSums(x) %>%
-    as.data.frame(t(.)) %>%
+    t() %>%
+    as.data.frame() %>%
     as.list()
 }
 

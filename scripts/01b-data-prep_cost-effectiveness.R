@@ -320,8 +320,7 @@ treatment_delay <-
 
 # Cavany (2017)
 p_contact_tracing <-
-  list(
-    contact = 1,
+  c(contact = 1,
     aTB_Dx = 0.1 + 0.018,
     aTB_Tx = 0.018,
     LTBI_DxTx = 0.1) #for children but only available
@@ -345,7 +344,7 @@ utility$postTx <- 1 #perfectly recovered
 
 # save --------------------------------------------------------------------
 
-save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold,
+save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold, p_contact_tracing, treatment_delay,
      file = "data/cost_effectiveness_params.RData")
 
 save(cfr_age_lookup, NUM_SECONDARY_INF,
