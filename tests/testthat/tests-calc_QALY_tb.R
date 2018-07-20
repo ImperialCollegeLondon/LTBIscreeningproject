@@ -125,3 +125,50 @@ test_that("specific values", {
 })
 
 
+test_that("negative intervals", {
+
+expect_error(
+  calc_QALY_tb(
+      intervals = data.frame(symptoms_to_Tx = c(-1.5),
+                             Tx_to_cured = c(1),
+                             cured_to_death = c(0.1)),
+      utility = list(disease_free = 1,
+                     activeTB = 1,
+                     TB_Tx = 1,
+                     postTx = 1),
+      age = NA,
+      start_delay = c(0,0,0),
+      discount_rate = 0
+    ))
+
+  expect_error(
+    calc_QALY_tb(
+      intervals = data.frame(symptoms_to_Tx = c(1.5),
+                             Tx_to_cured = c(-1),
+                             cured_to_death = c(0.1)),
+      utility = list(disease_free = 1,
+                     activeTB = 1,
+                     TB_Tx = 1,
+                     postTx = 1),
+      age = NA,
+      start_delay = c(0,0,0),
+      discount_rate = 0
+    ))
+
+  expect_error(
+    calc_QALY_tb(
+      intervals = data.frame(symptoms_to_Tx = c(1.5),
+                             Tx_to_cured = c(1),
+                             cured_to_death = c(-0.1)),
+      utility = list(disease_free = 1,
+                     activeTB = 1,
+                     TB_Tx = 1,
+                     postTx = 1),
+      age = NA,
+      start_delay = c(0,0,0),
+      discount_rate = 0
+    ))
+})
+
+
+

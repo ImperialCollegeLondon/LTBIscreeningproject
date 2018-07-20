@@ -8,10 +8,6 @@
 ##TODO: save separate files for subsets (possibly single) lines
 
 
-# using BCEA package functions --------------------------------------------
-
-# BCEA::ceac.plot(screen.bcea)
-#
 # BCEA::ceac.plot(screen.bcea, graph = "ggplot2") +
 #   theme(legend.position = c(0.2, 0.4)) +
 #   geom_abline(slope = 0, intercept = 0.5) +
@@ -22,15 +18,16 @@
 
 #  custom function --------------------------------------------------------
 
-# filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
-filename <- paste(plots_folder_scenario, "ceac.png", sep = "/")
+# filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
+filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
 
 png(filename, width = 400, height = 350, res = 45)
 
 # for (i in seq_len(screen.bcea$n.comparators)) {
 try(
   print(
-    my_ceac.plot(screen.bcea)))#, new_window = TRUE)))
+    BCEA::ceac.plot(screen.bcea)))
+    # my_ceac.plot(screen.bcea)))#, new_window = TRUE)))
 # }
 
 dev.off()

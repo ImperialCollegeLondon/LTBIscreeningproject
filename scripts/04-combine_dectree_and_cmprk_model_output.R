@@ -64,6 +64,7 @@ nmb_long <-
                                  wtp)) %>%
   do.call(what = rbind, args = .)
 
+# join inputs and outputs
 sim_matrix <-
   merge(x = design_matrix,
         y = nmb_long,

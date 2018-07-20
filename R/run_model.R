@@ -46,6 +46,9 @@ run_model <- function(policies,
   # table and plots #
   ###################
 
+  parent_folder <- system.file("output", "plots",
+                               package = "LTBIscreeningproject")
+
   try(source("scripts/combine_costeffectiveness_tables.R"))
 
   combine_freq_tables(parent_folder, file_name = "all_subsets.csv")

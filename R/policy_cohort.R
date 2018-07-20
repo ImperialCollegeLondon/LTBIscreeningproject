@@ -1,16 +1,14 @@
 
-#' policy_cohort
+#' Create policy cohort
 #'
-#' filter individuals by policy
+#' Filter individuals by policy type
 #'
 #' @param cohort_in total sample
 #' @param interv list of conditions
-#' @param diroutput
+#' @param diroutput string
 #'
 #' @return cohort
 #' @export
-#'
-#' @examples
 #'
 policy_cohort <- function(cohort_in,
                           interv,

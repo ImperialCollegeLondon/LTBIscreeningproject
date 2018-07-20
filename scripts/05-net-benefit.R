@@ -5,7 +5,7 @@
 #
 # net benefit regression (not incremental)
 # note: covariates are bounded [0,100]
-# is this a problem?
+#   is this a problem?
 
 
 # library(stargazer)
@@ -38,8 +38,9 @@ library(rstanarm)
 
 
 ###############
-# multiariate -----------------------------------------------
+# multivariate
 ###############
+
 ## centre at high prob
 nmb_formula <- as.formula(NMB ~
                             policy * (I(Agree - 90)*I(Start - 90) +
@@ -49,27 +50,7 @@ nmb_formula <- as.formula(NMB ~
                                         I(Start - 90) * I(Effective - 90) +
                                         I(Complete - 90) * I(Effective - 90)))
 
-# expanded formula
-# terms = attr(terms.formula(nmb_formula), "term.labels")
-# f = as.formula(sprintf("y ~ %s", paste(terms, collapse="+")))
-
-# fit model
-
-# lm_multi_wtp <- lm_wtp(nmb_formula, sim_matrix)
-lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
-
-lm_multi <-
-  lapply(wtp_seq, lm_multi_wtp) %>%
-  purrr::set_names(wtp_seq)
-
-# create wide output table
-lm_multi_all <-
-  lapply(lm_multi, function(x) dplyr::select(tidy(x), -statistic)) %>%
-  plyr::join_all(by = "term") %>%
-  rbind(c("wtp", rep(wtp_seq, each = 3)))
-
-# format values
-lm_multi_all[ ,-1] <- round(sapply(lm_multi_all[ ,-1], as.numeric), 4)
+lm_multi_wtp <- lm_multi_wtp(nmb_formula, sim_matrix)
 
 
 # save ------------
@@ -79,48 +60,8 @@ lm_multi_save <- lm_multi_all[ ,lm_multi_all[lm_multi_all$term == "wtp", ] %in% 
 
 try(
   write.csv(x = lm_multi_save,
-            file = paste(diroutput, "lm_multi_all_table.csv", sep = "/")))
+            file = paste(folders$output$scenario, "lm_multi_all_table.csv", sep = "/")))
 
-
-# coefficient plots -------------------------------------------------------------------
-
-var_names <- c("policyscreened:I(Agree - 90)",
-               "policyscreened:I(Start - 90)",
-               "policyscreened:I(Complete - 90)",
-               "policyscreened:I(Effective - 90)")#,
-               # "policyscreened:I(Start - 90):I(Effective - 90)",
-               # "policyscreened:I(Start - 90):I(Complete - 90)",
-               # "policyscreened:I(Agree - 90):I(Effective - 90)",
-               # "policyscreened:I(Agree - 90):I(Complete - 90)",
-               # "policyscreened:I(Agree - 90):I(Start - 90)",
-               # "policyscreened:I(Complete - 90):I(Effective - 90)")
-
-var_labels <- c("Agree", "Start", "Complete", "Effective")
-
-
-filename <- paste(plots_folder_scenario, "coef_plot.png", sep = "/")
-
-png(filename, width = 600, height = 600)#, res = 45)
-
-print(
-  arm::coefplot(summary(lm_multi$`30000`)$coefficients[var_names, "Estimate"],
-                summary(lm_multi$`30000`)$coefficients[var_names, "Std. Error"],
-                mar = c(1,15,5.1,2), varnames = var_labels, main = "",
-                xlim = c(-1,7), cex.var = 1.2))
-print(
-  arm::coefplot(summary(lm_multi$`20000`)$coefficients[var_names, "Estimate"],
-                summary(lm_multi$`20000`)$coefficients[var_names, "Std. Error"],
-                mar = c(1,15,5.1,2), varnames = var_labels, main = "", add = TRUE, col = "red"))
-print(
-  arm::coefplot(summary(lm_multi$`10000`)$coefficients[var_names, "Estimate"],
-                summary(lm_multi$`10000`)$coefficients[var_names, "Std. Error"],
-                mar = c(1,15,5.1,2), varnames = var_labels, main = "", add = TRUE, col = "blue"))
-
-legend("bottomright",
-       legend = c("£10k","£20k","£30k"),
-       col = c("blue", "red", "black"), lty = 1, horiz = TRUE)
-
-dev.off()
 
 
 ################

@@ -31,6 +31,8 @@ calc_QALY_tb <- function(intervals = NA,
                          discount_rate = 0.035,
                          ...){
 
+  if (any(intervals < 0)) stop("Negative intervals not permitted.")
+
   utils_pop <- make_utilities_pop_list(utility, n_pop = nrow(intervals))
   intervals_pop <- make_intervals_pop_list(intervals)
 

@@ -51,7 +51,7 @@ costeff_cohort <-
 
 interv_scenario_cost <- partial(scenario_cost,
                                 endpoint = interv$ENDPOINT_cost,
-                                unit_costs = unit_cost,
+                                unit_cost = unit_cost,
                                 probs = p_contact_tracing,
                                 costeff_cohort = costeff_cohort)
 

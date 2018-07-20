@@ -2,7 +2,7 @@
 #' Calculate total cost of a scenario
 #'
 #' @param endpoint 'death' or 'exit uk'
-#' @param unit_costs diagnosis and treatment cost distributions
+#' @param unit_cost diagnosis and treatment cost distributions
 #' @param probs_contact Proportions of individuals in subsets
 #' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured
@@ -12,7 +12,7 @@
 #'
 #' @examples
 scenario_cost <- function(endpoint,
-                          unit_costs,
+                          unit_cost,
                           probs_contact,
                           costeff_cohort,
                           prop_avoided) {
@@ -22,23 +22,23 @@ scenario_cost <- function(endpoint,
   rcost <-
     c(
       contact =
-        unit_costs$TST %>%
+        unit_cost$TST %>%
         sample_distributions() %>%
         sum(),
       aTB_Dx =
-        unit_costs$TB_Dx %>%
+        unit_cost$aTB_Dx %>%
         sample_distributions() %>%
         sum(),
       aTB_Tx =
-        unit_costs$TB_Tx %>%
+        unit_cost$aTB_Tx %>%
         sample_distributions() %>%
         sum(),
       LTBI_DxTx =
-        unit_costs$LTBI_DxTx %>%
+        unit_cost$LTBI_DxTx %>%
         sample_distributions() %>%
         sum(),
       index =
-        unit_costs$aTB_TxDx %>%
+        unit_cost$aTB_TxDx %>%
         sample_distributions() %>%
         sum()
     )

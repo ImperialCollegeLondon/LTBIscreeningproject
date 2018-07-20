@@ -9,9 +9,12 @@
 
 # policy-level sensitivity parameters -------------------------------------------
 
+policy_name <- policies_ls[policy]
+diroutput <- diroutput(policy_name, interv)
+
 if (exists("policy")) {
 
-  interv <- policy_interv(policy_name = policies_ls[policy],
+  interv <- policy_interv(policy_name,
                           interv,
                           diroutput)
 }

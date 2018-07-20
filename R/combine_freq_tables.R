@@ -15,13 +15,13 @@
 #' combine_freq_tables(parent_folder,
 #'                     file_name = "prob_subset_dectree.csv")
 #'
-combine_freq_tables <- function(parent_folder,
+combine_freq_tables <- function(folder,
                                 file_name) {
 
   # initiate
 
   flder <-
-    list.dirs(parent_folder)[-1] %>%
+    list.dirs(folder)[-1] %>%
     sort()
 
   tab <-
@@ -43,7 +43,7 @@ combine_freq_tables <- function(parent_folder,
     mutate(scenario = as.numeric(scenario)) %>%
     arrange(scenario)
 
-  write.csv(tab, file = paste0(parent_folder, "/combined_", file_name))
+  write.csv(tab, file = paste0(folder, "/combined_", file_name))
 }
 
 

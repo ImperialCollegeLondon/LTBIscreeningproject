@@ -50,7 +50,7 @@ gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
 suppressMessages(gg + scale_colour_manual(values = cbPalette))
 
 
-filename <- paste(plots_folder_scenario, "CE_plane2.png", sep = "/")
+filename <- paste(folders$plots$scenario, "CE_plane2.png", sep = "/")
 
 # png(filename)
 

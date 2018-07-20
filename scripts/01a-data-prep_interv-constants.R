@@ -6,14 +6,14 @@
 # simulation specific constants
 
 
-N.mc <- 5#100
+N.mc <- 200
 
 cluster <- FALSE
 
 
 # global fixed constants --------------------------------------------------
 
-use_discount <- FALSE
+use_discount <- TRUE
 
 no_students <- FALSE
 

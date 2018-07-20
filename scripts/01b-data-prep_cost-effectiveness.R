@@ -237,8 +237,8 @@ unit_cost$TSPOT = list(distn = "unif",
                                   max = 106))
 # NICE CG117
 unit_cost$TST = list(distn = "unif",
-                       params = c(min = 8,
-                                  max = 36))
+                     params = c(min = 8,
+                                max = 36))
 
 # contact tracing
 
@@ -250,7 +250,9 @@ unit_cost$aTB_Dx =
 unit_cost$LTBI_DxTx =
   list(
     IGRA = unit_cost$TSPOT,
-    LTBI_Tx = unit_cost$LTBI_Tx_6mISO$full)
+    LTBI_Tx = list(distn = "none",
+                   params = c("mean" = unit_cost$LTBI_Tx_6mISO$full))
+  )
 
 
 #####################################
