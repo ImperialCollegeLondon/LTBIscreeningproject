@@ -29,11 +29,7 @@ policy_run <- function() {
 
   # modelling ------------------------------------------------------------
 
-  if (!interv$cluster) {
-    dectree_res <- parallel_decision_tree(scenario_parameters, interv, folders)
-  }
-
-  if (interv$cluster) source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
+  dectree_res <- parallel_decision_tree(scenario_parameters, interv, folders)
 
   activetb_qaly_cost(dectree_res, interv, cohort, folders)
 
