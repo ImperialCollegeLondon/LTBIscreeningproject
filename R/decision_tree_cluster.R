@@ -26,7 +26,7 @@ decision_tree_cluster <- function(params,
 
   assign_branch_values(osNode.cost,
                        osNode.health,
-                       parameter_p = subset(params, val_type == "QALYloss"),
+                       parameter_p = subset(params, val_type == "p"),
                        parameter_cost = subset(params, val_type == "cost"))
 
   osNode.cost$Set(path_probs = calc_pathway_probs(osNode.cost))

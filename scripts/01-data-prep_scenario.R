@@ -11,8 +11,8 @@
 # grid of policy input parameter values
 
 # file_tag <- "_high-low"
-file_tag <- "_baseline"
-# file_tag <- "_effective"
+# file_tag <- "_baseline"
+file_tag <- "_effective"
 # file_tag <- "_test"
 # file_tag <- "_oneway"
 # file_tag <- "_fullfactorial"
@@ -41,7 +41,7 @@ if (nrow(scenario_parameter_p) > 0) {
     reshape2::melt(id.vars = "scenario") %>%
     plyr::rename(replace = c("variable" = "node",
                              "value" = "p")) %>%
-    mutate(val_type = "QALYloss") %>%
+    mutate(val_type = "p") %>%
     dplyr::bind_rows(scenario_parameter_cost, .)
 
 }else{

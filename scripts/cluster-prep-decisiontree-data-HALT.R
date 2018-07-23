@@ -33,7 +33,7 @@ scenario_parameter_p.melt <-
 # combine probs and costs in to a single array
 
 scenario_parameter_cost$val_type <- "cost"
-scenario_parameter_p.melt$val_type <- "QALYloss"
+scenario_parameter_p.melt$val_type <- "p"
 
 scenario_parameters <- plyr::rbind.fill(scenario_parameter_cost,
                                         scenario_parameter_p.melt)

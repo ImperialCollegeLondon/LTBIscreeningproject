@@ -115,8 +115,8 @@ pLatentTB.who_age <-
 
 # join with main data set
 pLatentTB.who_age.long <-
-  reshape2:::melt.data.frame(data = pLatentTB.who_age,
-                             id.vars = "who_inc_Pareek2011",
+  pLatentTB.who_age %>%
+  reshape2:::melt.data.frame(id.vars = "who_inc_Pareek2011",
                              value.name = "pLTBI",
                              variable.name = "age_at_screen")
 
@@ -144,9 +144,6 @@ IMPUTED_sample <- merge(x = IMPUTED_sample,
 
 IMPUTED_sample$LTBI <- sample_tb(prob = 1 - IMPUTED_sample$pLTBI)
 IMPUTED_sample$LTBI[as.logical(IMPUTED_sample$uk_tb)] <- TRUE
-
-##TODO: this over-samples LTBI
-# either remove observed tb beforehand or adjust downwards
 
 IMPUTED_sample$uk_tb_orig <- IMPUTED_sample$uk_tb
 
@@ -188,8 +185,9 @@ IMPUTED_sample <-
                 exit_uk1 = fup_date == date_exit_uk1)
 
 # remove indiv follow-up date before entry
-IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
-                                fup_date > issdt)
+IMPUTED_sample <-
+  IMPUTED_sample %>%
+  dplyr::filter(fup_date > issdt)
 
 # remove tb before entry
 IMPUTED_sample <-

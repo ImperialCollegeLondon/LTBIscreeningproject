@@ -29,8 +29,11 @@ policy_run <- function() {
 
   # modelling ------------------------------------------------------------
 
-  if (!interv$cluster) source("scripts/02-parallel-decision-tree.R")#, echo = TRUE)
-  if (interv$cluster)  source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
+  if (!interv$cluster) {
+    dectree_res <- parallel_decision_tree(scenario_parameters, interv, folders)
+  }
+
+  if (interv$cluster) source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
   source("scripts/04c-cost-effectiveness_QALY-costs.R")#, echo = TRUE)
   source("scripts/04-combine_dectree_and_cmprk_model_output.R")#, echo = TRUE)

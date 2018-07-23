@@ -59,15 +59,15 @@ interv_scenario_QALY <- partial(scenario_QALY,
                                 endpoint = interv$ENDPOINT_QALY,
                                 costeff_cohort = costeff_cohort)
 
-for (s in seq_len(n.scenarios)) {
+for (ss in seq_len(n.scenarios)) {
 
-  message(sprintf("[ population model ] scenario: %s", green(s)))
+  message(sprintf("[ population model ] scenario: %s", green(ss)))
 
   for (i in seq_len(interv$N.mc)) {
 
     # set.seed(12345)
 
-    p_LTBI_to_cured <- scenario_res$subset_pop[[s]][i, 'p_LTBI_to_cured']
+    p_LTBI_to_cured <- scenario_res$subset_pop[[ss]][i, 'p_LTBI_to_cured']
 
     interv_cost[[i]] <- interv_scenario_cost(prop_avoided = p_LTBI_to_cured)
     interv_QALY[[i]] <- interv_scenario_QALY(prop_avoided = p_LTBI_to_cured)
@@ -79,13 +79,13 @@ for (s in seq_len(n.scenarios)) {
                         costeff_cohort = costeff_cohort)
   }
 
-  stats_scenario[[s]] <-
-    costeff_stats(scenario_dat = dectree_res[[s]],
+  stats_scenario[[ss]] <-
+    costeff_stats(scenario_dat = dectree_res[[ss]],
                   interv_QALY = interv_QALY,
                   interv_cost = interv_cost,
                   pop_year = nrow(cohort))
 
-  QALYloss_scenario[[s]] <-
+  QALYloss_scenario[[ss]] <-
     interv_QALYloss %>%
     purrr::transpose() %>%
     simplify_all()
@@ -100,5 +100,5 @@ QALYloss_scenario <-
   purrr::transpose()
 
 save(aTB_CE_stats,
-     file = pastef(diroutput, "aTB_CE_stats.RData"))
+     file = pastef(folders$output$scenario, "aTB_CE_stats.RData"))
 

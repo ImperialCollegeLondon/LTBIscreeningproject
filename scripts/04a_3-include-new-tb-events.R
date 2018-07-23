@@ -95,6 +95,9 @@ IMPUTED_sample <- time_intervals(IMPUTED_sample)
 # calculate QALYs for all tb cases for all outcomes
 QALY_all_tb <-
   IMPUTED_sample %>%
+  # assert(symptoms_to_Tx >= 0 | !not_na(symptoms_to_Tx)) %>%
+  # assert(Tx_to_cured >= 0 | !not_na(Tx_to_cured)) %>%
+  # assert(cured_to_death >= 0 | !not_na(cured_to_death)) %>%
   subset(all_tb == TRUE) %$%
   calc_QALY_tb(
     intervals = data.frame(symptoms_to_Tx,
