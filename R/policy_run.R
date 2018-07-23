@@ -35,7 +35,8 @@ policy_run <- function() {
 
   if (interv$cluster) source("Q:/R/cluster--LTBI-decision-tree/cluster-master.R")
 
-  source("scripts/04c-cost-effectiveness_QALY-costs.R")#, echo = TRUE)
+  activetb_qaly_cost(dectree_res, interv, cohort, folders)
+
   source("scripts/04-combine_dectree_and_cmprk_model_output.R")#, echo = TRUE)
 
 
