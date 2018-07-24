@@ -10,24 +10,22 @@
 # policy-level sensitivity parameters -------------------------------------------
 
 policy_name <- policies_ls[policy]
-diroutput <- diroutput(policy_name, interv)
 
 if (exists("policy")) {
 
   interv <- policy_interv(policy_name,
-                          interv,
-                          diroutput)
+                          interv)
 }
 
 # subset complete data set ----------------------------------------------
 # so can over-write
 
-if (!exists("cohort")) {
+# if (!exists("cohort")) {
 
   cohort <- policy_cohort(IMPUTED_sample,
-                          interv,
-                          diroutput)
-}
+                          policy_name,
+                          interv)
+# }
 
 screen_discount <- screen_discount(cohort)
 

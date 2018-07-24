@@ -4,15 +4,17 @@
 #' Filter individuals by policy type
 #'
 #' @param cohort_in total sample
+#' @param policy_name
 #' @param interv list of conditions
-#' @param diroutput string
 #'
 #' @return cohort
 #' @export
 #'
 policy_cohort <- function(cohort_in,
-                          interv,
-                          diroutput) {
+                          policy_name,
+                          interv) {
+
+  diroutput <- diroutput(policy_name, interv)
 
   # single year cohort only
   cohort <- dplyr::filter(cohort_in,
@@ -42,6 +44,7 @@ policy_cohort <- function(cohort_in,
   return(cohort)
 }
 
+#
 set_id_avoided_tb <- function(cohort) {
 
   cohort$id_avoided_tb <- NA

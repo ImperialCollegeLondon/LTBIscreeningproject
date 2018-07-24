@@ -15,8 +15,14 @@
 screen_discount <- function(cohort,
                             discount_rate = 0.035) {
 
+    # cohort <-
+    #   cohort %>%
+    #   assert(not_na, screen_year) %>%
+    #   assert(screen_year >= 0)
+
   prop_screen_year <-
-    ceiling(cohort$screen_year) %>%
+    cohort$screen_year %>%
+    ceiling() %>%
     prop_table() %>%
     matrix()
 

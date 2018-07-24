@@ -1,7 +1,8 @@
 
 #' Plot care cascade
 #'
-#' @param parent_folder string
+#' @param data_folder string
+#' @param plots_folder string
 #' @param prob_or_num Probabilities or absolute numbers
 #' @param box_plot default: FALSE
 #'
@@ -13,7 +14,8 @@
 #' plot_care_cascade(parent_folder,
 #'                   prob_or_num = "prob")
 #'
-plot_care_cascade <- function(parent_folder,
+plot_care_cascade <- function(data_folder,
+                              plots_folder,
                               prob_or_num,
                               box_plot = FALSE) {
 
@@ -24,7 +26,7 @@ plot_care_cascade <- function(parent_folder,
       "combined_all_subsets.csv"
     }
 
-  cascade_data <- readr::read_csv(pastef(parent_folder, file_name))
+  cascade_data <- readr::read_csv(pastef(data_folder, file_name))
 
   cascade_data$scenario <- as.factor(cascade_data$scenario)
   names(cascade_data)[names(cascade_data) == "L95"] <- "L95_1"
@@ -37,20 +39,20 @@ plot_care_cascade <- function(parent_folder,
 
   cascade_LTBI <-
     cascade_data %>%
-    subset(X2 %in% c("LTBI_completeTx","LTBI_positive","LTBI_startTx","LTBI_tests","p_LTBI_to_cured"))
+    subset(variable %in% c("LTBI_completeTx","LTBI_positive","LTBI_startTx","LTBI_tests","p_LTBI_to_cured"))
 
   cascade_all <-
     cascade_data %>%
-    subset(X2 %in% c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post"))
+    subset(variable %in% c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post"))
 
   # reorder
-  cascade_all$X2 <- factor(cascade_all$X2,
+  cascade_all$variable <- factor(cascade_all$variable,
                            levels = c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post"))
 
-  cascade_LTBI$X2 <- factor(cascade_LTBI$X2,
+  cascade_LTBI$variable <- factor(cascade_LTBI$variable,
                             levels = c("LTBI_tests","LTBI_positive","LTBI_startTx","LTBI_completeTx","p_LTBI_to_cured"))
 
-  const_cols <- grepl(x = names(cascade_LTBI), pattern = "X1|scenario|X2")
+  const_cols <- grepl(x = names(cascade_LTBI), pattern = "X1|scenario|variable")
 
   for (i in policies) {
 
@@ -96,13 +98,13 @@ gg_care_cascade <- function(dat,
   p <-
     if (box_plot) {
 
-      ggplot(dat, aes(x = factor(X2), fill = scenario, col = scenario)) +
+      ggplot(dat, aes(x = factor(variable), fill = scenario, col = scenario)) +
         geom_boxplot(aes(lower = mean, middle = mean, upper = mean,
                          ymin = L95, ymax = U95),
                      stat = "identity")
     } else {
 
-      ggplot(dat, aes(x = X2, y = mean, fill = scenario)) +
+      ggplot(dat, aes(x = variable, y = mean, fill = scenario)) +
         geom_bar(stat = "identity", color = "white",
                  position = position_dodge()) +
         geom_errorbar(aes(ymin = L95, ymax = U95), width = 0.2,

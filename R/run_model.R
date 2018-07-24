@@ -42,26 +42,7 @@ run_model <- function(policies,
                            !inherits(try_out, "try-error"))
   }
 
-  ###################
-  # table and plots #
-  ###################
-
-  parent_folder <- system.file("output", "plots",
-                               package = "LTBIscreeningproject")
-
-  try(source("scripts/combine_costeffectiveness_tables.R"))
-
-  combine_freq_tables(parent_folder, file_name = "all_subsets.csv")
-  combine_freq_tables(parent_folder, file_name = "prob_subset_dectree.csv")
-
-  try(source("scripts/e_and_c_totals_by_scenario.R"))
-
-  try(source("scripts/wide_combined_ce_tables.R"))
-
-  try(source("scripts/CE_plane_by_scenario.R"))
-
-  plot_care_cascade(parent_folder, prob_or_num = "num")
-  plot_care_cascade(parent_folder, prob_or_num = "prob")
+  plots_and_tables_policies()
 
   elapsed <- proc.time() - runtime
 

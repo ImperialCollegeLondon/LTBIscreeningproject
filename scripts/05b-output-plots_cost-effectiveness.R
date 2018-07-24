@@ -7,15 +7,6 @@
 # cost-effectiveness planes
 
 
-screen.bcea <- BCEA::bcea(e = -e.total,  # Q1 - Q0 different way round in function!
-                          c =  -c.total,
-                          ref = 1,
-                          interventions = colnames(e.total))
-
-#########
-# plots #
-#########
-
 # cost-effectiveness planes -----------------------------------------------
 
 # SCENARIO_LABELS <- c("1: Baseline (6m iso £low)",
@@ -43,10 +34,10 @@ screen.bcea <- BCEA::bcea(e = -e.total,  # Q1 - Q0 different way round in functi
 #                      "23: screen probs=1 sensitivity=0.98 & £20 test",
 #                      "24: Best case: screen probs = 1, perfect test/treat, test £0")
 
-cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen.bcea$n.comparisons)
+cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen_bcea$n.comparisons)
 
 
-gg <- contour2(screen.bcea, graph = "ggplot2", wtp = 20000)
+gg <- contour2(screen_bcea, graph = "ggplot2", wtp = 20000)
 suppressMessages(gg + scale_colour_manual(values = cbPalette))
 
 
@@ -57,7 +48,7 @@ filename <- paste(folders$plots$scenario, "CE_plane2.png", sep = "/")
 ##TODO: error when matrix isnt symmetric. Think its lack of variability/multimodal...
 suppressMessages(
 try(
-  print(my_contour2(screen.bcea,
+  print(my_contour2(screen_bcea,
                     graph = "ggplot2",
                     wtp = 20000,
                     CONTOUR_PC = "50%") +
@@ -69,6 +60,3 @@ ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 
 # dev.off()
 
-
-
-# ce_plane_with_annotations()

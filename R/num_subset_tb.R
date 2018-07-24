@@ -118,7 +118,8 @@ num_subset_tb  <- function(cohort,
           tb_avoid_all,
           tb_uk,
           tb_all) %>%
-    select(scenario, X2, everything())
+    select(scenario, X2, everything()) %>%
+    dplyr::rename(variable = X2)
 
   if (!is.na(folder)) {
     write.csv(num_subset_tb,

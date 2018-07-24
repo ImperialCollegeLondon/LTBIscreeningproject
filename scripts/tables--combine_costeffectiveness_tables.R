@@ -7,8 +7,10 @@
 
 
 flder <-
-  list.dirs(parent_folder)[-1] %>%
+  list.dirs(data_folder) %>%
   sort()
+
+flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 tab <- NULL
 
@@ -20,10 +22,10 @@ for (i in seq_along(flder)) {
     rbind(tab, .)
 }
 
-policy_desc <- read.csv(paste0(parent_folder, "/policies-inputs.csv"))
+policy_desc <- read.csv(paste0(data_folder, "/policies-inputs.csv"))
 
 tab <- merge(policy_desc, tab,
              by = 'policy',
              all.y = TRUE, all.x = FALSE)
 
-write.csv(tab, file = paste0(parent_folder, "/combined_costeffectiveness_tables.csv"))
+write.csv(tab, file = paste0(data_folder, "/combined_costeffectiveness_tables.csv"))

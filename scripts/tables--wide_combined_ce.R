@@ -10,8 +10,10 @@
 
 
 flder <-
-  list.dirs(parent_folder)[-1] %>%
+  list.dirs(data_folder) %>%
   sort()
+
+flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 tab <- matrix(seq_len(n.scenarios), ncol = 1)
 
@@ -24,9 +26,9 @@ for (i in seq_along(flder)) {
 
 tab <-  tab[ ,!names(tab) == 'X']
 
-policy_desc <- read.csv(paste0(parent_folder, "/policies-inputs.csv"))
+policy_desc <- read.csv(paste0(data_folder, "/policies-inputs.csv"))
 
-write.csv(tab, file = paste0(parent_folder, "/wide_combined_costeffectiveness_tables.csv"))
+write.csv(tab, file = paste0(data_folder, "/wide_combined_costeffectiveness_tables.csv"))
 
 
 

@@ -320,12 +320,14 @@ treatment_delay <-
                mode = 49/365.25,
                max = 103/365.25))
 
-# Cavany (2017)
 p_contact_tracing <-
   c(contact = 1,
-    aTB_Dx = 0.1 + 0.018,
-    aTB_Tx = 0.018,
-    LTBI_DxTx = 0.1) #for children but only available
+    aTB_Tx = 0.018, # Cavany (2017)
+    # LTBI_DxTx = 0.1) ## Cavany (2017); for children but only available
+    LTBI_DxTx = 0.281) # Fox (2013)
+
+p_contact_tracing['aTB_Dx'] <-
+  p_contact_tracing['LTBI_DxTx'] + p_contact_tracing['aTB_Tx']
 
 
 ##########

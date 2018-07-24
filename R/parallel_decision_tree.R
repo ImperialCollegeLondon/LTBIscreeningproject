@@ -7,6 +7,10 @@
 #'
 #' https://www.r-bloggers.com/how-to-go-parallel-in-r-basics-tips/
 #'
+#' @param scenario_parameters
+#' @param interv
+#' @param folders
+#'
 #' @return
 #' @export
 #'

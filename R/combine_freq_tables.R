@@ -34,7 +34,7 @@ combine_freq_tables <- function(folder,
       read.csv(pastef(flder[i], file_name)) %>%
       select(-X) %>%
       merge(tab, .,
-            by = c("scenario", "X2"),
+            by = c("scenario", "variable"),
             suffixes = c("", paste("_", i, sep = "")))
   }
 

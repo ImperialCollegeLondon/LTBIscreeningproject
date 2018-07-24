@@ -6,18 +6,21 @@
 
 
 flder <-
-  list.dirs(parent_folder)[-1] %>%
+  list.dirs(data_folder)[-1] %>%
   sort()
 
+load(paste0(flder[1], "/e_and_c_totals.RData"))
+
+n.scenarios <- ncol(c.total) - 1
+N.mc <- nrow(c.total)
+
 e.total_scenario <- data.frame(matrix(data = 0,
-                                      nrow = interv$N.mc,
+                                      nrow = N.mc,
                                       ncol = n.scenarios),
                                check.names = FALSE)
 
-c.total_scenario <- data.frame(matrix(data = 0,
-                                      nrow = interv$N.mc,
-                                      ncol = n.scenarios),
-                               check.names = FALSE)
+c.total_scenario <- e.total_scenario
+
 
 for (i in seq_along(flder)) {
 
@@ -29,7 +32,7 @@ for (i in seq_along(flder)) {
 
 save(e.total_scenario,
      c.total_scenario,
-     file = paste0(parent_folder, "/e_and_c_totals_by_scenario.RData"))
+     file = paste0(data_folder, "/e_and_c_totals_by_scenario.RData"))
 
 
 
