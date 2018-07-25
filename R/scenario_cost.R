@@ -19,29 +19,7 @@ scenario_cost <- function(endpoint,
 
   assert_that(endpoint %in% c("death", "exit uk"))
 
-  rcost <-
-    c(
-      contact =
-        unit_cost$TST %>%
-        sample_distributions() %>%
-        sum(),
-      aTB_Dx =
-        unit_cost$aTB_Dx %>%
-        sample_distributions() %>%
-        sum(),
-      aTB_Tx =
-        unit_cost$aTB_Tx %>%
-        sample_distributions() %>%
-        sum(),
-      LTBI_DxTx =
-        unit_cost$LTBI_DxTx %>%
-        sample_distributions() %>%
-        sum(),
-      index =
-        unit_cost$aTB_TxDx %>%
-        sample_distributions() %>%
-        sum()
-    )
+  rcost <- rcontact_tracing_costs(unit_cost)
 
   keep_tb <-
     switch(endpoint,
@@ -76,9 +54,9 @@ notif_cost <- function(cost,
                        discounts) {
 
   ccontact <-
-    contact_tracing_cost(num_contacts,
-                         cost,
-                         probs)
+    total_contact_tracing_cost(num_contacts,
+                               cost,
+                               probs)
 
   ctotal <- (cost['index'] + ccontact) * discounts
 
@@ -86,12 +64,39 @@ notif_cost <- function(cost,
 }
 
 #
-contact_tracing_cost <- function(num_contacts,
-                                 costs,
-                                 probs) {
+total_contact_tracing_cost <- function(num_contacts,
+                                       costs,
+                                       probs) {
 
   cnames <- names(probs)
   c_per_contact <- costs[cnames] %*% probs[cnames]
 
   return(as.vector(c_per_contact) * num_contacts)
+}
+
+#
+rcontact_tracing_costs <- function(unit_cost) {
+
+  c(
+    contact =
+      unit_cost$TST %>%
+      sample_distributions() %>%
+      sum(),
+    aTB_Dx =
+      unit_cost$aTB_Dx %>%
+      sample_distributions() %>%
+      sum(),
+    aTB_Tx =
+      unit_cost$aTB_Tx %>%
+      sample_distributions() %>%
+      sum(),
+    LTBI_DxTx =
+      unit_cost$LTBI_DxTx %>%
+      sample_distributions() %>%
+      sum(),
+    index =
+      unit_cost$aTB_TxDx %>%
+      sample_distributions() %>%
+      sum()
+  )
 }

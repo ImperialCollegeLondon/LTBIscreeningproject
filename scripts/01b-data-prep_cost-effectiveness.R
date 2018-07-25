@@ -236,9 +236,10 @@ unit_cost$TSPOT = list(distn = "unif",
                        params = c(min = 50,
                                   max = 106))
 # NICE CG117
-unit_cost$TST = list(distn = "unif",
-                     params = c(min = 8,
-                                max = 36))
+# unit_cost$TST = list(distn = "unif",
+#                      params = c(min = 8,
+#                                 max = 36))
+
 
 # contact tracing
 
