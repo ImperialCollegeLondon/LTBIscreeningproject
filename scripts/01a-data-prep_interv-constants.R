@@ -35,9 +35,6 @@ screen_age_range <- 18:35
 year_cohort <- '2009' #largest cohort, corresponds with Pareek () LTBI risk
 
 # LIFETIME_RISK <- 0.10
-# LIFETIME_RISK <- 0.163  #Choudhury (2013) 15 years
-# LIFETIME_RISK <- 0.18   #NICE economic appraisal (2006)
-# LIFETIME_RISK <- 0.067  #Marks (2000) 40 years
 
 # these parameters will be modified in the
 # deterministic sensitivity analysis

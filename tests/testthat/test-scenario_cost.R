@@ -1,7 +1,6 @@
 context("test-scenario_cost.R")
 
 library(assertthat)
-
 library(treeSimR)
 
 
@@ -21,10 +20,10 @@ test_that("struct", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -55,10 +54,10 @@ test_that("edge cases", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -81,10 +80,10 @@ test_that("edge cases", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -116,10 +115,10 @@ test_that("uk vs all cases", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -142,10 +141,10 @@ test_that("uk vs all cases", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -176,10 +175,10 @@ test_that("prop_avoided", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
@@ -202,10 +201,10 @@ test_that("prop_avoided", {
       unit_cost = list(TST =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Dx =
+                       aTB_Dx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
-                       TB_Tx =
+                       aTB_Tx =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        LTBI_DxTx =
