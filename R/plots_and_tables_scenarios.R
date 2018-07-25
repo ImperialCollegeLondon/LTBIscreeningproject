@@ -14,6 +14,7 @@
 plots_and_tables_scenarios <- function(cohort,
                                        dectree_res,
                                        total,
+                                       aTB_CE_stats,
                                        folders) {
 
   screen_bcea <- screen_bcea(total)

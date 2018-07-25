@@ -6,8 +6,10 @@
 
 
 flder <-
-  list.dirs(data_folder)[-1] %>%
+  list.dirs(data_folder) %>%
   sort()
+
+flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 load(paste0(flder[1], "/e_and_c_totals.RData"))
 

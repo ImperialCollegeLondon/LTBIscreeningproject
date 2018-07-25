@@ -119,4 +119,4 @@
  yaml                    2.1.18     2018-03-08 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [aa30e2f] 2018-07-23: replace activetb_qaly-ost script with function
+Head:     [bc8964a] 2018-07-24: fixing the scoping when sourcing inside of functions. changed to functions in most cases

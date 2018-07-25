@@ -33,7 +33,7 @@ policy_run <- function() {
 
   total <- combine_dectree_and_pop_outputs(cohort, interv, aTB_CE_stats, dectree_res, folders)
 
-  plots_and_tables_scenarios(cohort, dectree_res, total, folders)
+  plots_and_tables_scenarios(cohort, dectree_res, total, aTB_CE_stats, folders)
 
   rm(cohort)
 }

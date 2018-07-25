@@ -51,6 +51,11 @@ combine_dectree_and_pop_outputs <- function(cohort,
 
 #' nmb_matrix
 #'
+#' @param dectree_res
+#' @param cohort
+#' @param interv
+#' @param aTB_CE_stats
+#'
 #' @return
 #' @export
 #'

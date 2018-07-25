@@ -21,8 +21,10 @@ combine_freq_tables <- function(folder,
   # initiate
 
   flder <-
-    list.dirs(folder)[-1] %>%
+    list.dirs(data_folder) %>%
     sort()
+
+  flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
   tab <-
     read.csv(pastef(flder[1], file_name)) %>%
