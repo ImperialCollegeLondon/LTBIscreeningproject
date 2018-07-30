@@ -13,7 +13,7 @@
 run_model <- function(policies,
                       sink_out = FALSE) {
 
-  home_dir <- find.package("LTBIscreeningproject")
+  home_dir <- here::here()
   sources_correctly <- NULL
   runtime <- proc.time()
 

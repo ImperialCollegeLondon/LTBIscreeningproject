@@ -19,7 +19,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   screen_bcea <- screen_bcea(total)
 
-  source("scripts/05b-output-plots_cost-effectiveness.R", local = TRUE)
+  ceplane_plot_and_save(folders, screen_bcea)
   # ce_plane_with_annotations()
 
   source("scripts/05j-strat_pop_year.R", local = TRUE)

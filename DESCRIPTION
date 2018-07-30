@@ -37,7 +37,8 @@ Imports:
     crayon,
     tibble,
     withr,
-    assertr
+    assertr,
+    devtools
 RoxygenNote: 6.0.1
 Suggests:
     knitr,

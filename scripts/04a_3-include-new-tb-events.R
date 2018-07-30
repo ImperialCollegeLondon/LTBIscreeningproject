@@ -170,7 +170,7 @@ IMPUTED_sample <-
 # Cavany (2017)
 IMPUTED_sample <-
   IMPUTED_sample %>%
-  mutate(num_contacts = 4.5)
+  mutate(num_contacts = NUM_CONTACTS)
 
 
 # add secondary TB QALYs
@@ -181,7 +181,7 @@ mean_QALY <-
 IMPUTED_sample <-
   IMPUTED_sample %>%
   mutate(sec_QALY_statusquo = num_contacts * mean_QALY$statusquo,
-         sec_QALY_diseasefree = num_contacts * mean_QALY$$diseasefree,
+         sec_QALY_diseasefree = num_contacts * mean_QALY$diseasefree,
          QALY_statusquo = QALY_statusquo + sec_QALY_statusquo,
          QALY_diseasefree = QALY_diseasefree + sec_QALY_diseasefree)
 

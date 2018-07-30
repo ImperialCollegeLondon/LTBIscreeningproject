@@ -3,7 +3,7 @@
 #'
 #' a single policy simulation
 #'
-#' @return empty
+#' @return
 #' @export
 #'
 #' @examples

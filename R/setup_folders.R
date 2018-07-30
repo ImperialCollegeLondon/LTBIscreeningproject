@@ -2,7 +2,7 @@
 #' setup_folders
 #'
 #' @param policy_name
-#' @param interv
+#' @param interv List of model run constants
 #'
 #' @return
 #' @export
@@ -12,7 +12,7 @@
 setup_folders <- function(policy_name,
                           interv) {
 
-  root_wd <- getwd()
+  root_wd <- here::here()
   on.exit(setwd(root_wd))
   folders <- list()
 
@@ -21,18 +21,31 @@ setup_folders <- function(policy_name,
   dir.create(folders$output$scenario, showWarnings = FALSE, recursive = TRUE)
 
   folders$plots$parent <- system.file("output", "plots",
-                              package = "LTBIscreeningproject")
+                                      package = "LTBIscreeningproject")
 
   folders$plots$scenario <- sprintf("%s/%s", folders$plots$parent, policy_name)
   dir.create(folders$plots$scenario, showWarnings = FALSE)
 
-  setwd(folders$output$scenario)
-
-  file.copy(from = paste(root_wd, "data/scenario_parameters_df.csv", sep = "/"),
-            to = "../scenario_parameters_df.csv")
-
-  file.copy(from = paste(root_wd, "data/policies-inputs.csv", sep = "/"),
-            to = "../policies-inputs.csv")
+  cp_in_data_to_out_dir(file_names = c("scenario_parameters_df.csv",
+                                       "policies-inputs.csv"),
+                        to_dir = folders$output$scenario)
 
   return(folders)
+}
+
+
+#
+cp_in_data_to_out_dir <- function(file_names,
+                                  to_dir) {
+
+  home_dir <- here::here()
+  setwd(to_dir)
+
+  for (i in seq_along(file_names)) {
+
+    file.copy(from = paste(home_dir, "data", file_names[i], sep = "/"),
+              to = paste("..", file_names[i], sep = "/"))
+  }
+
+  return()
 }

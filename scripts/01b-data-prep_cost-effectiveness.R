@@ -331,6 +331,9 @@ p_contact_tracing <-
 p_contact_tracing['aTB_Dx'] <-
   p_contact_tracing['LTBI_DxTx'] + p_contact_tracing['aTB_Tx']
 
+# Cavany (2017)
+NUM_CONTACTS <- 4.5
+
 
 ##########
 # health #
@@ -351,5 +354,5 @@ utility$postTx <- 1 #perfectly recovered
 save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold, p_contact_tracing, treatment_delay,
      file = "data/cost_effectiveness_params.RData")
 
-save(cfr_age_lookup, NUM_SECONDARY_INF,
+save(cfr_age_lookup, NUM_SECONDARY_INF, NUM_CONTACTS,
      file = "data/synthetic_cohort_params.RData")
