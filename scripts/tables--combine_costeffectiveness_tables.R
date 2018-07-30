@@ -6,11 +6,15 @@
 # combine all CE output in to single table
 
 
+##TODO:test
 flder <-
-  list.dirs(data_folder) %>%
+  list.files(data_folder, pattern = 'policy_[0-9]*$') %>%
   sort()
 
-flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
+# flder <-
+#   list.dirs(data_folder) %>%
+#   sort()
+# flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 tab <- NULL
 

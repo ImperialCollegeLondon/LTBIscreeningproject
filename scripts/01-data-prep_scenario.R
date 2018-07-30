@@ -1,10 +1,12 @@
-# *****************************************************
-#
-# LTBI screening model
-# N Green
-# Sept 2017
-#
-# prep scenario decision tree cost & QALY data
+
+#' ---
+#' title: "TBI screening model: prep scenario decision tree cost & QALY data"
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 # deterministic sensitivity analysis --------------------------------------

@@ -17,7 +17,7 @@ test_that("struct", {
   res <-
     scenario_cost(
       endpoint = "death",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -51,7 +51,7 @@ test_that("edge cases", {
   res <-
     scenario_cost(
       endpoint = "death",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -77,7 +77,7 @@ test_that("edge cases", {
   res_uk <-
     scenario_cost(
       endpoint = "exit uk",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -112,7 +112,7 @@ test_that("uk vs all cases", {
   res <-
     scenario_cost(
       endpoint = "death",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -138,7 +138,7 @@ test_that("uk vs all cases", {
   res_uk <-
     scenario_cost(
       endpoint = "exit uk",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -172,7 +172,7 @@ test_that("prop_avoided", {
   res_05 <-
     scenario_cost(
       endpoint = "death",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =
@@ -198,7 +198,7 @@ test_that("prop_avoided", {
   res_1 <-
     scenario_cost(
       endpoint = "death",
-      unit_cost = list(TST =
+      unit_cost = list(IGRA =
                          list(distn = "unif",
                               params = c(min = 1, max = 1)),
                        aTB_Dx =

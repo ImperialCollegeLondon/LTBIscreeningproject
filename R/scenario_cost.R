@@ -79,7 +79,7 @@ rcontact_tracing_costs <- function(unit_cost) {
 
   c(
     contact =
-      unit_cost$TST %>%
+      unit_cost$IGRA %>%
       sample_distributions() %>%
       sum(),
     aTB_Dx =

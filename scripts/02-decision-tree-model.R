@@ -104,20 +104,9 @@ for (i in who_levels) {
 # delete old output files
 ##TODO: move this to a MakeFile
 
-if (file.exists(pastef(diroutput, "mc_cost.csv"))) {
-
-  file.remove(pastef(diroutput, "mc_cost.csv"))
-}
-
-if (file.exists(pastef(diroutput, "mc_health.csv"))) {
-
-  file.remove(pastef(diroutput, "mc_health.csv"))
-}
-
-if (file.exists(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))) {
-
-  file.remove(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv"))
-}
+suppressWarnings(file.remove(pastef(diroutput, "mc_cost.csv")))
+suppressWarnings(file.remove(pastef(diroutput, "mc_health.csv")))
+suppressWarnings(file.remove(pastef(diroutput, "prob_complete_Tx_given_LTBI_by_who.csv")))
 
 
 # transform to tidy format

@@ -243,14 +243,15 @@ unit_cost$TSPOT = list(distn = "unif",
 
 # contact tracing
 
-unit_cost$aTB_Dx =
+unit_cost$aTB_Dx <-
   list(
     culture = culture,
     xray = xray)
 
-unit_cost$LTBI_DxTx =
+unit_cost$IGRA <- unit_cost$TSPOT
+
+unit_cost$LTBI_DxTx <-
   list(
-    IGRA = unit_cost$TSPOT,
     LTBI_Tx = list(distn = "none",
                    params = c("mean" = unit_cost$LTBI_Tx_6mISO$full))
   )
@@ -340,10 +341,8 @@ utility <- list()
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 # relative to disease-free = 1
-utility$activeTB <- 0.933  #Drobniewski/Kruijshaar et al. (2015), on treatment, outpatient p.83
-
-utility$TB_Tx <- 0.813 ##TODO: find a good number for this...
-
+utility$activeTB <- 0.912 #Mears; 0.88 - 0.88*0.9
+utility$TB_Tx <- 0.933  #Mears; 0.88 – 0.813 = 0.067
 utility$postTx <- 1 #perfectly recovered
 
 
