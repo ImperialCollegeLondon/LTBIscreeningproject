@@ -217,19 +217,23 @@ aTB_Tx <- list(distn = "gamma",
 
 ## COMMENT OUT FOR TEST CASES ######
 
-unit_cost$aTB_TxDx <- list(culture = culture,
-                           xray = xray,
-                           smear = smear,
-                           first_visit = first_visit,
-                           followup_visit = followup_visit,
-                           LFT_test = LFT_test,
-                           # HIV_test = HIV_test,
-                           # hep_test = hep_test,
-                           aTB_Tx = aTB_Tx)
+# unit_cost$aTB_TxDx <- list(culture = culture,
+#                            xray = xray,
+#                            smear = smear,
+#                            first_visit = first_visit,
+#                            followup_visit = followup_visit,
+#                            LFT_test = LFT_test,
+#                            # HIV_test = HIV_test,
+#                            # hep_test = hep_test,
+#                            aTB_Tx = aTB_Tx)
 
 # fixed constant
-# unit_cost$aTB_TxDx <- list(distn = "none",
-#                            params = c(mean = 5410))
+unit_cost$aTB_TxDx <- list(distn = "none",
+                           params = c(mean = 5410))
+
+#####################################
+
+
 
 # Warwick evidence (2016)
 unit_cost$TSPOT = list(distn = "unif",

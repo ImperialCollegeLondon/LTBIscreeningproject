@@ -16,14 +16,17 @@ policy_run <- function() {
   data("model_input_cohort")
   data("policies"); data("policies_ls")
 
+  on.exit(rm(cohort))
 
   # set-up ---------------------------------------------------------------
 
   folders <- setup_folders(policy_name = policies_ls[policy], interv)
 
   ## use single-migrant-cohort here instead?
-  source("scripts/data-prep_constants-policy.R", local = TRUE)#, echo = TRUE)
-  source("scripts/prep-decisiontree.R", local = TRUE)#, echo = TRUE)
+  # cohort <- cohort_single[[4]]
+
+  source("scripts/data-prep_constants-policy.R", local = TRUE)
+  source("scripts/prep-decisiontree.R", local = TRUE)
 
 
   # modelling ------------------------------------------------------------
@@ -35,5 +38,5 @@ policy_run <- function() {
 
   plots_and_tables_scenarios(cohort, dectree_res, total, aTB_CE_stats, folders)
 
-  rm(cohort)
+  return()
 }

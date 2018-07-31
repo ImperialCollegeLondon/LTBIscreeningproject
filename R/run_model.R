@@ -13,9 +13,8 @@
 run_model <- function(policies,
                       sink_out = FALSE) {
 
-  home_dir <- here::here()
-  sources_correctly <- NULL
-  runtime <- proc.time()
+  run <- list(src_correct = NULL,
+              start_runtime = proc.time())
 
   if (sink_out) {
     msges <- file("output/messages.Rout", open = "wt")
@@ -29,23 +28,17 @@ run_model <- function(policies,
 
     policy <<- pp
 
-    try_out <- try(
-      policy_run()
-    )
+    try_out <-
+      try(
+        policy_run()
+      )
 
-    if (inherits(try_out, "try-error")) {
-      setwd(home_dir)
-      sink(type = "message")
-    }
+    handle_try_error(try_out)
 
-    sources_correctly <- c(sources_correctly,
-                           !inherits(try_out, "try-error"))
+    run$src_correct <- c(run$src_correct,
+                         !inherits(try_out, "try-error"))
   }
 
   plots_and_tables_policies()
-
-  elapsed <- proc.time() - runtime
-
-  message(" run time: ", green(elapsed['elapsed']/60), " mins")
-  message(" scenarios source correctly: ", green(sources_correctly))
+  run_final_message(run)
 }

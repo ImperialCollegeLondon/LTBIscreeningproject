@@ -32,9 +32,21 @@ who_levels <-
 p_incid_grp <- factor(cohort$who_inc_Pareek2011,
                       levels = who_levels) %>% prop_table()
 
-##TODO: this is a duplicated elsewhere
-pLatentTB.who <- data.frame(who_inc_Pareek2011 = who_levels,
-                            LTBI = c(0.03, 0.13, 0.2, 0.3, 0.27))
+pLatentTB.who <-
+  aggregate(cohort$LTBI,
+            by = list(cohort$who_inc_Pareek2011),
+            function(x) mean(as.numeric(x), na.rm = TRUE)) %>%
+  setNames(c("who_inc_Pareek2011", "LTBI"))
+
+# fill in missing levels
+pLatentTB.who <-
+  pLatentTB.who %>%
+  right_join(data.frame(who_inc_Pareek2011 = who_levels),
+            by = "who_inc_Pareek2011") %>%
+  mutate(LTBI = ifelse(is.na(LTBI), 0, LTBI))
+
+# should be close to
+# data.frame(who_inc_Pareek2011 = who_levels, LTBI = c(0.03, 0.13, 0.2, 0.3, 0.27))
 
 
 # insert probs in incidence group for given year (2009) -----------------

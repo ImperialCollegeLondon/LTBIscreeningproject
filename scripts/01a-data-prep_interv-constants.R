@@ -13,7 +13,7 @@ cluster <- FALSE
 
 # global fixed constants --------------------------------------------------
 
-use_discount <- TRUE
+use_discount <- FALSE
 
 no_students <- FALSE
 

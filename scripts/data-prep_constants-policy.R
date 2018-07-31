@@ -20,12 +20,12 @@ if (exists("policy")) {
 # subset complete data set ----------------------------------------------
 # so can over-write
 
-# if (!exists("cohort")) {
+if (!exists("cohort")) {
 
   cohort <- policy_cohort(IMPUTED_sample,
                           policy_name,
                           interv)
-# }
+}
 
 screen_discount <- screen_discount(cohort)
 
