@@ -114,7 +114,7 @@ num_subset_dectree <- function(cohort,
                             num_screen = nrow(cohort))
 
   out <-
-    rbind.data.frame(out_LTBI, out_all) %>%
+    rbind(out_LTBI, out_all) %>%
     arrange(scenario, variable)
 
   if (!is.na(diroutput)) {

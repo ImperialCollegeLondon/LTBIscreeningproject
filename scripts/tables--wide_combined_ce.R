@@ -10,10 +10,8 @@
 
 
 flder <-
-  list.dirs(data_folder) %>%
+  list.files(data_folder, pattern = 'policy_[0-9]*$') %>%
   sort()
-
-flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 tab <- matrix(seq_len(n.scenarios), ncol = 1)
 

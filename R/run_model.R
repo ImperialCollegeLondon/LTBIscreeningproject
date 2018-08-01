@@ -24,7 +24,8 @@ run_model <- function(policies,
 
   policy <<- NA
 
-  for (pp in policies) {
+  # for (pp in policies) {
+  for (pp in 1:2) {
 
     policy <<- pp
 

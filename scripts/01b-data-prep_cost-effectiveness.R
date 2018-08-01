@@ -1,9 +1,14 @@
-#
-# project: LTBI screening
-# N Green
-# Oct 2016
-#
-# input data for QALY gains and costs
+
+#' ---
+#' title: "LTBI screening model:
+#' input data for QALY gains and costs"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 #
 # for more details and alternative references see:
 # see C:\Users\ngreen1\Google Drive\LTBI-screening-cost-effectiveness\parameter-table_all_refs.xlsx
@@ -24,6 +29,7 @@ TO_YEAR <- 2016
 # willingness to pay (£)
 wtp_threshold <- 2e+04
 
+#ref?
 NUM_SECONDARY_INF <- list(distn = "pert",
                           params = c(mode = 0.2,
                                      min = 0.1,
@@ -217,19 +223,19 @@ aTB_Tx <- list(distn = "gamma",
 
 ## COMMENT OUT FOR TEST CASES ######
 
-# unit_cost$aTB_TxDx <- list(culture = culture,
-#                            xray = xray,
-#                            smear = smear,
-#                            first_visit = first_visit,
-#                            followup_visit = followup_visit,
-#                            LFT_test = LFT_test,
-#                            # HIV_test = HIV_test,
-#                            # hep_test = hep_test,
-#                            aTB_Tx = aTB_Tx)
+unit_cost$aTB_TxDx <- list(culture = culture,
+                           xray = xray,
+                           smear = smear,
+                           first_visit = first_visit,
+                           followup_visit = followup_visit,
+                           LFT_test = LFT_test,
+                           # HIV_test = HIV_test,
+                           # hep_test = hep_test,
+                           aTB_Tx = aTB_Tx)
 
 # fixed constant
-unit_cost$aTB_TxDx <- list(distn = "none",
-                           params = c(mean = 5410))
+# unit_cost$aTB_TxDx <- list(distn = "none",
+#                            params = c(mean = 5410))
 
 #####################################
 

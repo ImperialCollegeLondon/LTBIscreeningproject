@@ -1,10 +1,14 @@
-#***********************************************************************
-# project: LTBI screening
-# N Green
-# Oct 2016
-# 01c-data-prep_modelling.R
-#
-# pre-process imputed dataset, from Aldridge (2016) Lancet
+
+#' ---
+#' title: "LTBI screening model:
+#' pre-process imputed dataset, from Aldridge (2016) Lancet
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 set.seed(23456)

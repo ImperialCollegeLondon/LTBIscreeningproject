@@ -1,8 +1,13 @@
-# **************************************
-# project: LTBI screening
-# N Green
-# Oct 2016
-#
+
+#' ---
+#' title: "LTBI screening model"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 data("p_incid_sutherland")

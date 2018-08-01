@@ -1,8 +1,14 @@
-# *************************************************
-# LTBI screening
-# N Green
-#
-# include new tb events and update dependencies
+
+#' ---
+#' title: "LTBI screening model:
+#' include new tb events and update dependencies"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 #
 # impute missing/unobserved time to active tb
 # prob: scaled progression probs with IMPUTED_sample weighted average LTBI prob

@@ -10,11 +10,11 @@
 #'
 policy_run <- function() {
 
+  data("policies"); data("policies_ls")
   data("intervention_constants")
   data("cost_effectiveness_params")
   data("scenario_parameters")
   data("model_input_cohort")
-  data("policies"); data("policies_ls")
 
   on.exit(rm(cohort))
 

@@ -1,9 +1,14 @@
-#**************************************************************************
-# project: LTBI screening
-# N Green
-# Oct 2016
-#
-# simulation specific constants
+
+#' ---
+#' title: "LTBI screening model:
+#' simulation specific constants
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 N.mc <- 2#00
@@ -13,7 +18,7 @@ cluster <- FALSE
 
 # global fixed constants --------------------------------------------------
 
-use_discount <- FALSE
+use_discount <- TRUE
 
 no_students <- FALSE
 
