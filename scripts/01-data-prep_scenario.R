@@ -22,11 +22,12 @@ create_and_save_scenarios(file_tag)
 
 
 # convert to percentages and simplify names
-design_matrix <-
-  scenario_parameter_p %>%
-  mutate_at(vars(-scenario),
-            funs(.*100)) %>%
-  set_names(~sub(' Treatment', '', .x)) %>%
-  set_names(~sub(' to Screen', '', .x))
-
-save(design_matrix, file = paste0(here::here(), "/data/design_matrix.RData"))
+##TODO:
+# design_matrix <-
+#   scenario_parameter_p %>%
+#   mutate_at(vars(-scenario),
+#             funs(.*100)) %>%
+#   set_names(~sub(' Treatment', '', .x)) %>%
+#   set_names(~sub(' to Screen', '', .x))
+#
+# save(design_matrix, file = here::here("data/design_matrix.RData"))

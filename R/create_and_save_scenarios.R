@@ -31,6 +31,6 @@ create_and_save_scenarios <- function(file_tag) {
   scenario_parameters <- split(x = scenario_parameters_df,
                                f = scenario_parameters_df$scenario)
 
-  write.csv(scenario_parameters_df, file = paste0(here::here(), "/data/scenario_parameters_df.csv"))
-  save(scenario_parameters, file = paste0(here::here(), "/data/scenario_parameters.RData"))
+  write.csv(scenario_parameters_df, file = here::here("data/scenario_parameters_df.csv"))
+  save(scenario_parameters, file = here::here("data/scenario_parameters.RData"))
 }

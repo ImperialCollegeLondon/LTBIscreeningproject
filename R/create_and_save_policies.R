@@ -16,6 +16,7 @@ create_and_save_policies <- function(incidence_list,
                                      LTBI_test,
                                      treatment) {
   policies <- data.frame()
+  policies_ls <- vector(mode = "character")
   num_policy <- 1
 
   for (min_screen_length_of_stay in 0) {
@@ -45,6 +46,7 @@ create_and_save_policies <- function(incidence_list,
               assign(x = "treatment", value = treat, envir = eval(parse(text = environ_name)))
               assign(x = "LTBI_test", value = test, envir = eval(parse(text = environ_name)))
 
+              policies_ls <- c(policies_ls, environ_name)
               num_policy <- num_policy + 1
             }
           }
@@ -61,15 +63,9 @@ create_and_save_policies <- function(incidence_list,
 
   # save --------------------------------------------------------------------
 
-  save(global_params, file = paste0(here::here(), "/data/global_params.RData"))
-  rm(global_params)
-
-  write.csv(policies, file = paste0(here::here(), "/data/policies-inputs.csv"))
-
-  rm(list = ls()[!ls() %in% ls(pattern = "policy_")])
-
-  save.image(file = paste0(here::here(), "/data/policies.RData"))
-
-  policies_ls <- ls()
-  save(policies_ls, file = paste0(here::here(), "/data/policies_ls.RData"))
+  save(global_params, file = here::here("data/global_params.RData"))
+  write.csv(policies, file = here::here("data/policies-inputs.csv"))
+  save(list = policies_ls, file = here::here("data/policies.RData"))
+  save(policies_ls, file = here::here("data/policies_ls.RData"))
 }
+

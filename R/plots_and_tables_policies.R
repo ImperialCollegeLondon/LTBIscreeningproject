@@ -9,8 +9,8 @@
 plots_and_tables_policies <- function() {
 
   ##TODO: dont want this hardcoded
-  data_folder <- paste0(here::here(), "/ext-data/18_to_35_in_2009")
-  plots_folder <- paste0(here::here(), "/output/plots")
+  data_folder <- here::here("ext-data/18_to_35_in_2009")
+  plots_folder <- here::here("output/plots")
 
   source("scripts/tables--combine_costeffectiveness_tables.R", local = TRUE)
 
