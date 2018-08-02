@@ -1,9 +1,15 @@
-#*******************************************************************
-# LTBI screening model
-# N Green
-# May 2017
+
+#' ---
+#' title: "LTBI screening model:
+#' prep decision tree with scenario data for parallel batch runs"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 #
-# create data in a format for parallel batch runs
 # e.g. use in DIDE computer cluster functions
 # run jobs using network drive Q:\R\cluster--LTBI-decision-tree
 

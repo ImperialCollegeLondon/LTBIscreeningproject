@@ -1,7 +1,6 @@
 
 #' Run model
 #'
-#' @param policies Index number
 #' @param sink_out output to file? Default: FALSE
 #'
 #' @return none
@@ -10,8 +9,10 @@
 #'
 #' @examples
 #'
-run_model <- function(policies,
-                      sink_out = FALSE) {
+run_model <- function(sink_out = FALSE) {
+
+  data("policies_ls")
+  policies <- seq_along(policies_ls)
 
   run <- list(src_correct = NULL,
               start_runtime = proc.time())

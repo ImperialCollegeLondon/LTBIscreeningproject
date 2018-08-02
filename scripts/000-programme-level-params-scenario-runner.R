@@ -22,19 +22,6 @@ library(QALY)
 
 save_session_info("session_info.txt")
 
-##########
-# inputs #
-##########
-
 # source("scripts/create_LTBI_input_workspace.R")
 
-
-#########
-# model #
-#########
-
-data("policies_ls")
-policies <- seq_along(policies_ls)
-
-run_model(policies)
-
+run_model()

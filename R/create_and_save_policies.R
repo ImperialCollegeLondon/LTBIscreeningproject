@@ -64,8 +64,8 @@ create_and_save_policies <- function(incidence_list,
   # save --------------------------------------------------------------------
 
   save(global_params, file = here::here("data/global_params.RData"))
-  write.csv(policies, file = here::here("data/policies-inputs.csv"))
-  save(list = policies_ls, file = here::here("data/policies.RData"))
   save(policies_ls, file = here::here("data/policies_ls.RData"))
+  save(list = policies_ls, file = here::here("data/policies.RData"))
+  write.csv(policies, file = here::here("data/policies-inputs.csv"))
 }
 

@@ -11,7 +11,7 @@
 #' ---
 
 
-N.mc <- 2#00
+N.mc <- 5#00
 
 cluster <- FALSE
 

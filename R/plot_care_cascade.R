@@ -118,14 +118,11 @@ gg_care_cascade <- function(dat,
     ylab('Number in cohort intended for screening') +
     xlab('')
 
-  if (!is.na(plots_folder)) {
+  if (is.na(plots_folder)) return(p)
 
   ggplot2::ggsave(p,
                   file = paste(plots_folder, policy_name,
                                paste0(prob_or_num, "_cascade_", grp, ".png"), sep = "/"),
                   width = 30, height = 20, units = "cm")
-  } else {
-    return(p)
-  }
 }
 
