@@ -8,13 +8,8 @@
 
 ##TODO:test
 flder <-
-  list.files(data_folder, pattern = 'policy_[0-9]*$') %>%
+  list.files(data_folder, pattern = 'policy_[0-9]*$', full.names = TRUE) %>%
   sort()
-
-# flder <-
-#   list.dirs(data_folder) %>%
-#   sort()
-# flder <- flder[grep(flder, pattern = 'policy_[0-9]*$')]
 
 tab <- NULL
 

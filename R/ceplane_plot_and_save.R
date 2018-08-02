@@ -2,6 +2,7 @@
 #' ceplane_plot_and_save
 #'
 #' @param folders
+#' @param screen_bcea
 #' @param ...
 #'
 #' @return
@@ -9,7 +10,8 @@
 #'
 #' @examples
 #'
-ceplane_plot_and_save <- function(folders, ...) {
+ceplane_plot_and_save <- function(folders,
+                                  screen_bcea, ...) {
 
   if (!missing(folders)) {
 
@@ -23,18 +25,19 @@ ceplane_plot_and_save <- function(folders, ...) {
   # gg <- contour2(screen_bcea, graph = "ggplot2", wtp = 20000)
   # suppressMessages(gg + scale_colour_manual(values = cbPalette))
 
-  # cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen_bcea$n.comparisons)
+  cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(screen_bcea$n.comparisons)
 
-  suppressMessages(
+  # suppressMessages(
     try(
-      print(my_contour2(...,
+      print(my_contour2(screen_bcea,
                         graph = "ggplot2",
                         wtp = 20000,
-                        CONTOUR_PC = "50%") +
+                        CONTOUR_PC = "50%", ...) +
               coord_cartesian(xlim = c(0, 0.04),
                               ylim = c(-200, 200)) +
               scale_colour_manual(values = cbPalette)),
-      silent = TRUE))
+      silent = TRUE)
+  # )
 
   # ggplot2::ggsave(file = filename, width = 30, height = 20, units = "cm")
 

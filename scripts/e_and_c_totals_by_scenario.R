@@ -6,7 +6,7 @@
 
 
 flder <-
-  list.files(data_folder, pattern = 'policy_[0-9]*$') %>%
+  list.files(data_folder, pattern = 'policy_[0-9]*$', full.names = TRUE) %>%
   sort()
 
 load(paste0(flder[1], "/e_and_c_totals.RData"))

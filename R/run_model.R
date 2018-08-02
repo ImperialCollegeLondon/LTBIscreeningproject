@@ -25,8 +25,7 @@ run_model <- function(sink_out = FALSE) {
 
   policy <<- NA
 
-  # for (pp in policies) {
-  for (pp in 1:2) {
+  for (pp in policies) {
 
     policy <<- pp
 

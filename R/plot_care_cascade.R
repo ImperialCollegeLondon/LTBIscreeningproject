@@ -26,6 +26,9 @@ plot_care_cascade <- function(data_folder,
       "combined_all_subsets.csv"
     }
 
+  policies_ls <-
+    list.files(data_folder, pattern = 'policy_[0-9]*$')
+
   cascade_data <- readr::read_csv(pastef(data_folder, file_name))
 
   cascade_data$scenario <- as.factor(cascade_data$scenario)
@@ -54,10 +57,10 @@ plot_care_cascade <- function(data_folder,
 
   const_cols <- grepl(x = names(cascade_LTBI), pattern = "X1|scenario|variable")
 
-  for (i in policies) {
+  for (i in seq_along(policies_ls)) {
 
-    cols_policy <- const_cols | grepl(x = names(cascade_LTBI),
-                                      pattern = paste0("._", i))
+    num_column <- grepl(x = names(cascade_LTBI), pattern = paste0("._", i))
+    cols_policy <- const_cols | num_column
 
     dat <- cascade_LTBI[ ,cols_policy]
     gg_care_cascade(dat, plots_folder, prob_or_num, policies_ls[i], "LTBI", box_plot)

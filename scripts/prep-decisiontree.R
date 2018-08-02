@@ -16,18 +16,12 @@
 
 # load input files ---------------------------------------------------------
 
-osNode.cost.fileName <- system.file("data", "LTBI_dectree-cost.yaml",
-                                    package = "LTBIscreeningproject")
-
-osNode.health.fileName <- system.file("data", "LTBI_dectree-QALY.yaml",
-                                      package = "LTBIscreeningproject")
-
-## cost
-costeff.cost <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.cost.fileName)
+costeff.cost <-
+  costeffectiveness_tree(yaml_tree = here::here("data", "LTBI_dectree-cost.yaml"))
 osNode.cost <- costeff.cost$osNode
 
-## health
-costeff.health <- treeSimR::costeffectiveness_tree(yaml_tree = osNode.health.fileName)
+costeff.health <-
+  costeffectiveness_tree(yaml_tree = here::here("data", "LTBI_dectree-QALY.yaml"))
 osNode.health <- costeff.health$osNode
 
 who_levels <-
@@ -131,11 +125,8 @@ osNode.cost$Set(min = ltbi_positive$params['mean'],
 
 #  save -----------------------------------------------------------------
 
-data_folder <- system.file("data", package = "LTBIscreeningproject")
-
-save(osNode.cost, file = paste0(data_folder, "/osNode_cost_2009.RData"))
-save(osNode.health, file = paste0(data_folder, "/osNode_health_2009.RData"))
+save(osNode.cost, file = here::here("data", "osNode_cost_2009.RData"))
+save(osNode.health, file = here::here("data", "osNode_health_2009.RData"))
 
 saveRDS(osNode.cost, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_cost_2009.Rds"))
 saveRDS(osNode.health, file = paste0("Q:/R/cluster--LTBI-decision-tree", "/osNode_health_2009.Rds"))
-

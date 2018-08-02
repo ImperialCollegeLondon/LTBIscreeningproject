@@ -20,7 +20,7 @@ combine_freq_tables <- function(folder,
 
   # initiate
   flder <-
-    list.files(data_folder, pattern = 'policy_[0-9]*$') %>%
+    list.files(data_folder, pattern = 'policy_[0-9]*$', full.names = TRUE) %>%
     sort()
 
   tab <-
