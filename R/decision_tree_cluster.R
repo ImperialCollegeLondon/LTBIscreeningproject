@@ -1,13 +1,14 @@
 
-#' decision_tree_cluster
+#' Decision tree
 #'
 #' Calculate decision tree expected costs and QALY loss
-#' for \code{N} simulations
+#' for \code{N} simulations.
 #'
 #' @param params long format array
 #' @param N.mc integer
-#' @param cost_dectree Rds file names
-#' @param health_dectree Rds file names
+#' @param cost_dectree Rds file names (string)
+#' @param health_dectree Rds file names (string)
+#' @param out_datatree Output full datatree object? Default: FALSE
 #'
 #' @return list
 #' @export
@@ -17,7 +18,8 @@
 decision_tree_cluster <- function(params,
                                   N.mc = 2,
                                   cost_dectree = "osNode_cost_2009.Rds",
-                                  health_dectree = "osNode_health_2009.Rds"){
+                                  health_dectree = "osNode_health_2009.Rds",
+                                  out_datatree = FALSE){
 
   mcall <- match.call()
 
@@ -46,6 +48,11 @@ decision_tree_cluster <- function(params,
                     osNode.cost$Get('path_probs') * osNode.cost$Get('sampled'))
   osNode.health$Set(weighted_sampled =
                       osNode.health$Get('path_probs') * osNode.health$Get('sampled'))
+
+  if (!out_datatree) {
+    osNode.cost <- NULL
+    osNode.health <- NULL
+  }
 
   list(mc_cost = as.numeric(mc_cost$`expected values`),
        mc_health = as.numeric(mc_health$`expected values`),

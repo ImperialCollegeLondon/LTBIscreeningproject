@@ -1,6 +1,13 @@
 
-#' ceac_plot_and_save
+
+ceac_plot_and_save <- function(bcea, ...) {
+  UseMethod("ceac_plot_and_save", bcea)
+}
+
+
+#' Cost-effectiveness acceptability curve plot and save
 #'
+#' @param bcea
 #' @param folders
 #' @param ...
 #'
@@ -9,11 +16,12 @@
 #'
 #' @examples
 #'
-ceac_plot_and_save <- function(folders, ...) {
+ceac_plot_and_save.bcea <- function(bcea,
+                                    folders, ...) {
 
   ##TODO: save separate files for subsets (possibly single) lines
 
-  # BCEA::ceac.plot(screen.bcea, graph = "ggplot2") +
+  # BCEA::ceac.plot(bcea, graph = "ggplot2") +
   #   theme(legend.position = c(0.2, 0.4)) +
   #   geom_abline(slope = 0, intercept = 0.5) +
   #   scale_color_discrete(labels = SCENARIO_LABELS) +
@@ -31,11 +39,11 @@ ceac_plot_and_save <- function(folders, ...) {
     on.exit(dev.off())
   }
 
-  # for (i in seq_len(screen.bcea$n.comparators)) {
+  # for (i in seq_len(bcea$n.comparators)) {
   try(
     print(
-      BCEA::ceac.plot(...)))
-  # my_ceac.plot(screen.bcea)))#, new_window = TRUE)))
+      BCEA::ceac.plot(bcea,...)))
+  # my_ceac.plot(bcea)))#, new_window = TRUE)))
   # }
 
   ##TODO:

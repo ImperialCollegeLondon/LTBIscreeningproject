@@ -1,7 +1,7 @@
 
 #' policy_run
 #'
-#' a single policy simulation
+#' A single policy simulation
 #'
 #' @return
 #' @export
@@ -13,7 +13,7 @@ policy_run <- function() {
   data("policies"); data("policies_ls")
   data("intervention_constants")
   data("cost_effectiveness_params")
-  data("scenario_parameters")
+  data("scenario_params")
   data("model_input_cohort")
 
   on.exit(rm(cohort))
@@ -31,7 +31,7 @@ policy_run <- function() {
 
   # modelling ------------------------------------------------------------
 
-  dectree_res <- parallel_decision_tree(scenario_parameters, interv, folders)
+  dectree_res <- parallel_decision_tree(scenario_params, interv, folders)
   aTB_CE_stats <- activetb_qaly_cost(dectree_res, interv, cohort, folders)
 
   total <- combine_dectree_and_pop_outputs(cohort, interv, aTB_CE_stats, dectree_res, folders)

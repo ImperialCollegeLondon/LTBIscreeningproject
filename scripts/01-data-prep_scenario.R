@@ -1,6 +1,6 @@
 
 #' ---
-#' title: "TBI screening model:
+#' title: "LTBI screening model:
 #' prep scenario decision tree cost & QALY data"
 #'
 #' author: "N Green"
@@ -11,23 +11,16 @@
 #' ---
 
 
-# file_tag <- "_high-low"
+## grid of values/design
 # file_tag <- "_baseline"
-file_tag <- "_effective"
-# file_tag <- "_test"
-# file_tag <- "_oneway"
-# file_tag <- "_fullfactorial"
+# file_tag <- "_effective-cost"
+# file_tag <- "_Excel_test"
+# file_tag <- "_ff"
+# file_tag <- "_ff_current_tech"
+file_tag <- "_ff_future_effic"
+# file_tag <- "_ff_future_test"
+# file_tag <- "_future_test"
+# file_tag <- "_tornado"
 
 create_and_save_scenarios(file_tag)
 
-
-# convert to percentages and simplify names
-##TODO:
-# design_matrix <-
-#   scenario_parameter_p %>%
-#   mutate_at(vars(-scenario),
-#             funs(.*100)) %>%
-#   set_names(~sub(' Treatment', '', .x)) %>%
-#   set_names(~sub(' to Screen', '', .x))
-#
-# save(design_matrix, file = here::here("data/design_matrix.RData"))

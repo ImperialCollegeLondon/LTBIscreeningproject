@@ -1,4 +1,10 @@
 
+
+table_costeffectiveness <- function(bcea, ...) {
+  UseMethod("table_costeffectiveness", bcea)
+}
+
+
 #' Table of Cost-Effectiveness Statistics
 #'
 #' Take \code{BCEA} package oject as input and
@@ -6,7 +12,7 @@
 #' 15000, 20000, 25000, 30000 willingness to pay
 #'
 #' @param bcea_obj Pre-calculated output from BCEA package (class(bcea))
-#' @param wtp_threshold
+#' @param wtp_threshold Default: 20000
 #' @param folder text string
 #'
 #' @return data.frame
@@ -14,9 +20,9 @@
 #'
 #' @examples
 #'
-table_costeffectiveness <- function(bcea_obj,
-                                    wtp_threshold = 20000,
-                                    folder = NA) {
+table_costeffectiveness.bcea <- function(bcea_obj,
+                                         wtp_threshold = 20000,
+                                         folder = NA) {
 
   out <-
     if (bcea_obj$n.comparisons == 1) {

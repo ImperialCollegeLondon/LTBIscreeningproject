@@ -1,8 +1,8 @@
-# LTBIscreeningproject
+## LTBIscreeningproject
 
-The goal of LTBIscreeningproject is to ...
+The goal of LTBIscreeningproject is to do a cost-effectiveness analysis for LTBI screening of recent immigrants to EWNI.
 
-## Installation
+### Installation
 
 You can install LTBIscreeningproject from github with:
 
@@ -12,10 +12,4 @@ You can install LTBIscreeningproject from github with:
 devtools::install_github("n8thangreen/LTBIscreeningproject")
 ```
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-## basic example code
-```
+See Vignettes for basic use.

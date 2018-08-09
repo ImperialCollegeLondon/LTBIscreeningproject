@@ -42,13 +42,17 @@ library(rstanarm)
 ###############
 
 ## centre at high prob
+centre <- 90
 nmb_formula <- as.formula(NMB ~
-                            policy * (I(Agree - 90)*I(Start - 90) +
-                                        I(Agree - 90) * I(Complete - 90) +
-                                        I(Agree - 90) * I(Effective - 90) +
-                                        I(Start - 90) * I(Complete - 90) +
-                                        I(Start - 90) * I(Effective - 90) +
-                                        I(Complete - 90) * I(Effective - 90)))
+                            policy * (paste0("I(Agree - ", centre, ") * I(Start - ", centre,
+                                             ") + I(Agree - ", centre,
+                                             ") * I(Effective - ", centre,
+                                             ") + I(Start - ", centre,
+                                             ") * I(Complete - ", centre,
+                                             ") + I(Start - ", centre,
+                                             ") * I(Effective - ", centre,
+                                             ") + I(Complete - ", centre,
+                                             ") * I(Effective - ", centre, ")")))
 
 lm_multi_wtp <- lm_multi_wtp(nmb_formula, sim_matrix)
 

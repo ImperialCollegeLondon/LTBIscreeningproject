@@ -1,10 +1,13 @@
 
 #' plots_and_tables_scenarios
 #'
+#' Multiple types of figures.
+#'
 #' @param cohort
 #' @param dectree_res
-#' @param folders
 #' @param total
+#' @param aTB_CE_stats
+#' @param folders
 #'
 #' @return
 #' @export
@@ -19,7 +22,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   screen_bcea <- screen_bcea(total)
 
-  ceplane_plot_and_save(folders, screen_bcea)
+  ceplane_plot_and_save(screen_bcea, folders)
   # ce_plane_with_annotations()
 
   source("scripts/05j-strat_pop_year.R", local = TRUE)
@@ -33,19 +36,24 @@ plots_and_tables_scenarios <- function(cohort,
 
   cbind_all_subsets(folders$output$scenario)
 
-  ceac_plot_and_save(folders, screen_bcea)
+  ceac_plot_and_save(screen_bcea, folders)
 
-  ## this is for agree-start-complete-effective probs:
-  #
+  ## this is for agree-start-complete-effective probs
+  ##TODO: refactor
+  # nmb_matrix(total, design_matrix, aTB_CE_stats)
+  # # fit_net_benefit
   # source("scripts/05-net-benefit.R")
+  # # predict_net_benefit
   # source("scripts/05-netbenefit-threshold-analysis.R")
-  # source("scripts/05-ternary plots.R")
-  # source("scripts/05f-tornado_plots.R")
   # source("scripts/05-bayesglm_predictions.R")
   # source("scripts/05-stan_predictions.R")
+
+
+  # source("scripts/05-ternary plots.R")
+  # source("scripts/05f-tornado_plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")
-  # CE_plane_trajectories(design_matrix)
   # source("scripts/05-upper_triangle_contour_INMB.R")
+  # CE_plane_trajectories(design_matrix)
 
   # plot_QALY_cost_distns_by_scenario(aTB_CE_stats, folders)
   # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")

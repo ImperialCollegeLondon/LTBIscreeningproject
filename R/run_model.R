@@ -3,7 +3,7 @@
 #'
 #' @param sink_out output to file? Default: FALSE
 #'
-#' @return none
+#' @return
 #' @export
 #' @import crayon
 #'

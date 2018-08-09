@@ -1,5 +1,5 @@
 
-#' save_session_info
+#' Save session info
 #'
 #' @param file string
 #'
@@ -8,10 +8,9 @@
 #' @import sessioninfo
 #' @import git2r
 #'
-#' @examples
 save_session_info <- function(file) {
 
-  sink(file)
+  sink(here(file))
   on.exit(sink())
 
   print(sessioninfo::session_info())

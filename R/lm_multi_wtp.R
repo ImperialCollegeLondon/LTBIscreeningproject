@@ -1,4 +1,5 @@
-#' lm_multi_wtp
+
+#' Linear multivariate regression with willingness to pay
 #'
 #' @param nmb_formula
 #' @param sim_matrix
@@ -7,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#'
 lm_multi_wtp <- function(nmb_formula,
                          sim_matrix) {
 

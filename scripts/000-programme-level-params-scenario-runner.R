@@ -1,12 +1,16 @@
-# *******************************************
-# LTBI screening
-# N Green
-#
-# high-level policy runner
-# for a (deterministic) sensitivity analysis
-# of screening programme scenarios
-#
-# *******************************************
+
+#' ---
+#' title: "LTBI screening model:
+#' high-level policy runner
+#' for a (deterministic) sensitivity analysis
+#' of screening programme scenarios"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 rm(list = ls())
@@ -19,9 +23,10 @@ library(crayon)
 library(tibble)
 library(memoise)
 library(QALY)
+library(here)
 
 save_session_info("session_info.txt")
 
-# source("scripts/create_LTBI_input_workspace.R")
+# source("scripts/create_input_workspace.R")
 
 run_model()

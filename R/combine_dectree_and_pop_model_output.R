@@ -31,8 +31,6 @@ combine_dectree_and_pop_outputs <- function(cohort,
   # from_list_to_BCEA(QALYloss_scenario$screened_morb_pp)
   # from_list_to_BCEA(QALYloss_scenario$screened_mort_pp)
 
-  # create BCEA dataframes
-
   tb_cost <- from_list_to_BCEA(aTB_CE_stats$cost_incur_person)
   tb_QALYgain <- from_list_to_BCEA(aTB_CE_stats$QALYgain_person)
   LTBI_cost <- from_list_to_BCEA(purrr::map(dectree_res, "mc_cost"), screen_discount)
@@ -49,11 +47,12 @@ combine_dectree_and_pop_outputs <- function(cohort,
 }
 
 
-#' nmb_matrix
+#' Net monetary benefit matrix
 #'
-#' @param dectree_res
-#' @param cohort
-#' @param interv
+#' This is _not_ incremental.
+#'
+#' @param total
+#' @param design_matrix
 #' @param aTB_CE_stats
 #'
 #' @return
@@ -61,36 +60,19 @@ combine_dectree_and_pop_outputs <- function(cohort,
 #'
 #' @examples
 #'
-nmb_matrix <- function(dectree_res,
-                       cohort,
-                       interv,
+nmb_matrix <- function(total,
+                       design_matrix,
                        aTB_CE_stats) {
 
-  screen_discount <- screen_discount(cohort,
-                                     discount_rate = interv$discount_rate)
-
-  # discounting due to delay to screening
-  dectree_res_mc_health <-
-    lapply(purrr::map(dectree_res, "mc_health"), `*`, screen_discount)
-
-  dectree_res_mc_cost <-
-    lapply(purrr::map(dectree_res, "mc_cost"), `*`, screen_discount)
-
-  # combine decision tree and pop model output
-  e_screened <- purrr::map2(aTB_CE_stats$QALY.screened_person,
-                            dectree_res_mc_health, `-`)
-
-  c_screened <- purrr::map2(aTB_CE_stats$cost.screened_person,
-                            dectree_res_mc_cost, `+`)
+  e_screened <- total$e
+  c_screened <- total$c
 
   e_statusquo <- aTB_CE_stats$QALY.statusquo_person
   c_statusquo <- aTB_CE_stats$cost.statusquo_person
 
-  wtp_seq <- seq(10000, 30000, by = 500)
-
   # net monetary benefit by wtp
   nmb_long <-
-    lapply(wtp_seq,
+    lapply(seq(10000, 30000, by = 500),
            FUN = function(wtp) nmb(e_statusquo, c_statusquo,
                                    e_screened, c_screened,
                                    wtp)) %>%
@@ -104,7 +86,7 @@ nmb_matrix <- function(dectree_res,
     mutate(policy = factor(policy,
                            levels = c("statusquo", "screened")))
 
-  save(sim_matrix, file = "data/sim_matrix.RData")
+  save(sim_matrix, file = here("data", "sim_matrix.RData"))
 
-  return()
+  return(sim_matrix)
 }

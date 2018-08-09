@@ -1,7 +1,7 @@
 
-#' setup_folders
+#' Setup folders
 #'
-#' @param policy_name
+#' @param policy_name String
 #' @param interv List of model run constants
 #'
 #' @return
@@ -26,7 +26,7 @@ setup_folders <- function(policy_name,
   folders$plots$scenario <- sprintf("%s/%s", folders$plots$parent, policy_name)
   dir.create(folders$plots$scenario, showWarnings = FALSE)
 
-  cp_in_data_to_out_dir(file_names = c("scenario_parameters_df.csv",
+  cp_in_data_to_out_dir(file_names = c("scenario_params_df.csv",
                                        "policies-inputs.csv"),
                         to_dir = folders$output$scenario)
 

@@ -1,14 +1,14 @@
 
 #' Incremental Net (Monetary) Benefit
 #'
-#' Differences are [intervention] - [status-quo].
+#' Differences are `intervention` - `status-quo`.
 #'
-#' @param e Effectivness i.e. health e.g. QALYs
+#' @param e Effectiveness i.e. health e.g. QALYs
 #' @param c Costs
-#' @param ref Reference column. Defaults to 1
+#' @param ref Reference column. Default: 1
 #' @param wtp Willingness to pay threshold
 #'
-#' @return Value
+#' @return Vector
 #' @export
 #'
 #' @examples
@@ -38,11 +38,11 @@ calc.INMB <- function(e, c, ref = 1, wtp = 20000){
 
 #' Incremental Cost Effectiveness Ratio
 #'
-#' Differences are [intervention] - [status-quo].
+#' Differences are `intervention` - `status-quo`.
 #'
-#' @param e Effectivness i.e. health e.g. QALYs
+#' @param e Effectiveness i.e. health e.g. QALYs
 #' @param c Costs
-#' @param ref Reference column. Defaults to 1
+#' @param ref Reference column. Defaults: 1
 #'
 #' @return
 #' @export

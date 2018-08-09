@@ -9,7 +9,9 @@
 #' @export
 #'
 #' @examples
-net_benefit <- function(e_list, c_list, wtp_threshold) {
+net_benefit <- function(e_list,
+                        c_list,
+                        wtp_threshold) {
 
   mapply(FUN = function(e, c, wtp) (e * wtp) - c,
          e = e_list,
@@ -18,7 +20,10 @@ net_benefit <- function(e_list, c_list, wtp_threshold) {
          SIMPLIFY = FALSE)
 }
 
-#' create long array over multiple wtp
+
+#' Net monetary benefit
+#'
+#' Create long array over multiple wtp.
 #'
 #' @param e_statusquo
 #' @param c_statusquo
@@ -82,7 +87,7 @@ bayeslm_wtp <- function(nmb_formula,
   }
 }
 
-#' Optimal thresholds
+#' Find optimal thresholds
 #'
 #' @param lm_multi
 #' @param covar

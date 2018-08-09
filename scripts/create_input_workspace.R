@@ -1,10 +1,15 @@
-# ********************************************
-# LTBI screening
-# N Green
-# 2017
-#
-# generate a fixed synthetic cohort and
-# set constants; only need to run this once
+
+#' ---
+#' title: "LTBI screening model:
+#' generate a fixed synthetic cohort and
+#' set constants; only need to run this once"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 data("051206 - IMPUTED_sample")

@@ -1,5 +1,5 @@
 
-#' create_and_save_scenarios
+#' Create and save scenarios
 #'
 #' @param file_tag
 #'
@@ -10,27 +10,38 @@
 #'
 create_and_save_scenarios <- function(file_tag) {
 
-  parameter_values_file <- system.file("data", sprintf("scenario-parameter-values%s.xlsx", file_tag),
-                                       package = "LTBIscreeningproject")
+  params_file <- here("data", sprintf("scenario-parameter-values%s.xlsx", file_tag))
 
-  scenario_parameter_cost <- readxl::read_excel(parameter_values_file,
-                                                sheet = "cost", na = c("", NA))#,
+  params_cost <- readxl::read_excel(params_file,
+                                    sheet = "cost", na = c("", NA))#,
   # col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
 
-  scenario_parameter_p <- readxl::read_excel(parameter_values_file,
-                                             sheet = "p", na = c("", NA))#,
+  params_p <- readxl::read_excel(params_file,
+                                 sheet = "p", na = c("", NA))#,
   # col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
 
-  scenario_parameter_cost$val_type <- "cost"
+  params_cost$val_type <- "cost"
 
-  scenario_parameters_df <-
-    combine_cost_and_p_xlsheets(scenario_parameter_p,
-                                scenario_parameter_cost)
+  scenario_params_df <-
+    combine_cost_and_p_xlsheets(params_p,
+                                params_cost)
 
-  # split by scenario to lists
-  scenario_parameters <- split(x = scenario_parameters_df,
-                               f = scenario_parameters_df$scenario)
+  scenario_params_df <- drop_all_na_rows(scenario_params_df)
 
-  write.csv(scenario_parameters_df, file = here::here("data/scenario_parameters_df.csv"))
-  save(scenario_parameters, file = here::here("data/scenario_parameters.RData"))
+  scenario_params <- split(x = scenario_params_df,
+                           f = scenario_params_df$scenario)
+
+  write.csv(scenario_params_df, file = here("data", "scenario_params_df.csv"))
+  save(scenario_params, file = here("data", "scenario_params.RData"))
+}
+
+
+#
+drop_all_na_rows <- function(df) {
+
+  value_cols <-
+    df %>% select(-node, -val_type, -scenario)
+
+  keep_rows <- apply(value_cols, 1, function(x) !all(is.na(x)))
+  df[keep_rows, ]
 }

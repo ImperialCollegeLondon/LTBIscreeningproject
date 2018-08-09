@@ -11,7 +11,7 @@
 #' ---
 #
 # for more details and alternative references see:
-# see C:\Users\ngreen1\Google Drive\LTBI-screening-cost-effectiveness\parameter-table_all_refs.xlsx
+# see https://docs.google.com/spreadsheets/d/16bDqcx8oUBeOo-Z4Mo7q-cA64XCYwo9ddUwsM--pDCg/edit?usp=sharing
 
 # assumptions --------------------------------------------------------------
 #
@@ -183,8 +183,8 @@ xray <- list(distn = "pert",
 
 smear <- QALY::inflation_adjust_cost(from_year = 2015,
                                      to_year = TO_YEAR,
-                                     from_cost = 8.23,
-                                     reference = "(2015) Jit M, Stagg HR, Aldridge RW, et al. Dedicated outreach service for hard to reach patients with tuberculosis")
+                                     from_cost = 1.56,
+                                     reference = "(2015) Drobniewski")
 smear <- list(distn = "gamma",
               params = c(shape = 106,
                          scale = smear/106))
@@ -280,6 +280,8 @@ means <- list(cost.aTB_TxDx =
 
 # probabilities
 
+# Zenner (2017)
+# transformed to RR from OR
 effectiveness <-
   list(
     LTBI_Tx_3mISORIF = branch_unif_params(pmin = 0.33,
@@ -293,6 +295,7 @@ effectiveness <-
 
 test_performance <-
   list(
+    # Diel (2010)
     QFT_GIT =
       test(
         sens = branch_unif_params(pmin = 0.81,
@@ -302,6 +305,7 @@ test_performance <-
                                   pmax = 1.0,
                                   name = "Specificity")
       ),
+    # ref?
     QFT_plus =
       test(
         sens = branch_unif_params(pmin = 0.88,
@@ -311,6 +315,7 @@ test_performance <-
                                   pmax = 0.9717,
                                   name = "Specificity")
       ),
+    # ref?
     TSPOT =
       test(
         sens = branch_unif_params(pmin = 0.85,
@@ -334,7 +339,7 @@ treatment_delay <-
 
 p_contact_tracing <-
   c(contact = 1,
-    aTB_Tx = 0.018, # Cavany (2017)
+    aTB_Tx = 0.018, # Cavany (2017) 0.016-0.02
     # LTBI_DxTx = 0.1) ## Cavany (2017); for children but only available
     LTBI_DxTx = 0.281) # Fox (2013)
 
@@ -354,8 +359,8 @@ utility <- list()
 utility$disease_free <- 1.0 #assume perfect health. only interested in relative changes
 
 # relative to disease-free = 1
-utility$activeTB <- 0.912 #Mears; 0.88 - 0.88*0.9
-utility$TB_Tx <- 0.933  #Mears; 0.88 – 0.813 = 0.067
+utility$activeTB <- 0.912 #Mears (2016); 0.88 - 0.88*0.9
+utility$TB_Tx <- 0.933  #Mears (2016); 0.88 – 0.813 = 0.067
 utility$postTx <- 1 #perfectly recovered
 
 
