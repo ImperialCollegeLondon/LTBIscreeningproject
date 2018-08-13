@@ -4,7 +4,7 @@
 #' @param dectree_res
 #' @param interv
 #' @param cohort
-#' @param folders
+#' @param folders list of strings
 #'
 #' @return
 #' @export
@@ -14,7 +14,7 @@
 activetb_qaly_cost <- function(dectree_res,
                                interv,
                                cohort,
-                               folders) {
+                               folders = NA) {
 
   scenario_res <-
     dectree_res %>%
@@ -71,21 +71,15 @@ activetb_qaly_cost <- function(dectree_res,
 
     message(sprintf("[ population model ] scenario: %s", green(ss)))
 
-    for (i in seq_len(interv$N.mc)) {
+    p_cured_scenario <- scenario_res$subset_pop[[ss]][, 'p_LTBI_to_cured']
 
-      # set.seed(12345)
+    interv_cost <- map(p_cured_scenario, interv_scenario_cost)
 
-      p_LTBI_to_cured <- scenario_res$subset_pop[[ss]][i, 'p_LTBI_to_cured']
+    interv_QALY <- map(p_cured_scenario, interv_scenario_QALY)
 
-      interv_cost[[i]] <- interv_scenario_cost(prop_avoided = p_LTBI_to_cured)
-      interv_QALY[[i]] <- interv_scenario_QALY(prop_avoided = p_LTBI_to_cured)
-
-      ##TODO: rewrite; this is a hack to get some numbers for code checking
-      interv_QALYloss[[i]] <-
-        scenario_QALYloss(prop_avoided = p_LTBI_to_cured,
-                          endpoint = interv$ENDPOINT_QALY,
-                          costeff_cohort = costeff_cohort)
-    }
+    interv_QALYloss <- map(p_cured_scenario, scenario_QALYloss,
+                           endpoint = interv$ENDPOINT_QALY,
+                           costeff_cohort = costeff_cohort)
 
     stats_scenario[[ss]] <-
       costeff_stats(scenario_dat = dectree_res[[ss]],
@@ -107,8 +101,11 @@ activetb_qaly_cost <- function(dectree_res,
     QALYloss_scenario %>%
     purrr::transpose()
 
-  save(aTB_CE_stats,
-       file = pastef(folders$output$scenario, "aTB_CE_stats.RData"))
+  if (!is.na(folders)) {
+
+    save(aTB_CE_stats,
+         file = pastef(folders$output$scenario, "aTB_CE_stats.RData"))
+  }
 
   invisible(aTB_CE_stats)
 }

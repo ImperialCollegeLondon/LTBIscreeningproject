@@ -48,7 +48,6 @@ plots_and_tables_scenarios <- function(cohort,
   # source("scripts/05-bayesglm_predictions.R")
   # source("scripts/05-stan_predictions.R")
 
-
   # source("scripts/05-ternary plots.R")
   # source("scripts/05f-tornado_plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")
@@ -65,9 +64,6 @@ plots_and_tables_scenarios <- function(cohort,
   # source("scripts/05l-output-plots_twoway-sensitivity-analysis.R")
   # source("scripts/05-pop_count_histograms.R")
   # source("scripts/05-plot-pop_QALYloss_over_time.R")
-
-  ##TODO: where should this ideally go?
-  nmb_matrix(dectree_res, cohort, interv, aTB_CE_stats)
 
   return()
 }
