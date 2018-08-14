@@ -44,6 +44,7 @@ plots_and_tables_scenarios <- function(cohort,
               c = do.call(cbind, aTB_CE_stats$cost.statusquo_person))
 
   nmb_mat <- nmb_matrix(ce1, ce0)#, folders)
+
   lm_multi_wtp <- nmb_multi_regn(nmb_mat)#, folders)
 
   pred_INMB <- predict_nmb_wtp(lm_multi_wtp)

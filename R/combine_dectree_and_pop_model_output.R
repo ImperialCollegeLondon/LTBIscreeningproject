@@ -80,8 +80,10 @@ nmb_matrix <- function(ce1,
       design_matrix()
   }
 
+  wtp_seq <- seq(wtp_min, wtp_max, by = 10000)
+
   nmb_wtp <-
-    lapply(seq(wtp_min, wtp_max, by = 10000),
+    lapply(wtp_seq,
            FUN = function(wtp) nmb_scenarios(ce0$e, ce0$c,
                                              ce1$e, ce1$c,
                                              wtp)) %>%

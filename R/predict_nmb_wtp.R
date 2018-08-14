@@ -15,9 +15,14 @@ predict_nmb_wtp <- function(lm_multi_wtp,
     newdata <- read.csv(here::here("data", "predict_newdata.csv"))
   }
 
-  pred_wtp <- map(lm_multi_wtp, predict, newdata = newdata, type = "response")
+  pred_wtp <- map(lm_multi_wtp,
+                  predict,
+                  newdata = newdata,
+                  type = "response")
 
-  pred_INMB <- map(pred_wtp, wide_INMB, newdata = newdata)
+  pred_INMB <- map(pred_wtp,
+                   wide_INMB,
+                   newdata = newdata)
 
   return(pred_INMB)
 }
@@ -25,39 +30,43 @@ predict_nmb_wtp <- function(lm_multi_wtp,
 
 #' Wide INMB from predictions
 #'
-#' @param pred_wtp
+#' @param pred
 #'
 #' @return
 #' @export
 #'
 #' @examples
-wide_INMB <- function(pred_wtp,
+wide_INMB <- function(pred,
                       newdata) {
 
   newdata %>%
-    cbind(pred = pred_wtp[[1]]) %>%
+    cbind(pred = pred) %>%
     tidyr::spread(type, pred) %>%
     mutate(INMB = screened - statusquo,
            CE = INMB > 0)
 }
 
 
-##TODO:...
+#' create_pred_newdata
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' create_pred_newdata()
+#'
 create_pred_newdata <- function() {
 
-  # pred_grid_values <- seq(50, 100, 10)
-  # plot_grid_values <- seq(50, 100, 10)
+  grid_vals <- seq(5, 100, 5)
 
-  pred_grid_values <- seq(5, 100, 5) #for regression
-  plot_grid_values <- c(50, 100)      #for grid of plots
-
-  ## full-factorial grid
   newdata <-
-    expand.grid("Agree" = pred_grid_values,
-                "Start" = pred_grid_values,
-                "Complete" = pred_grid_values,
-                "Effective" = pred_grid_values,
-                "policy" = c("screened", "statusquo"))
+    expand.grid("Agree_to_Screen_p" = grid_vals,
+                "Start_Treatment_p" = grid_vals,
+                "Start_Treatment_p" = grid_vals,
+                "Effective_p" = grid_vals,
+                "type" = c("screened", "statusquo"))
 
   write.csv(newdata, here::here("data", "predict_newdata.csv"))
+
+  return()
 }
