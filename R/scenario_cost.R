@@ -4,7 +4,7 @@
 #' @param endpoint 'death' or 'exit uk'
 #' @param unit_cost diagnosis and treatment cost distributions
 #' @param probs_contact Proportions of individuals in subsets
-#' @param costeff_cohort nrow total number of tb cases in EWNI and after exit
+#' @param cohort nrow total number of tb cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured
 #'
 #' @return list 'statusquo' and 'screened'
@@ -14,7 +14,7 @@
 scenario_cost <- function(endpoint,
                           unit_cost,
                           probs_contact,
-                          costeff_cohort,
+                          cohort,
                           prop_avoided) {
 
   assert_that(endpoint %in% c("death", "exit uk"))
@@ -23,12 +23,12 @@ scenario_cost <- function(endpoint,
 
   keep_tb <-
     switch(endpoint,
-           "death" = costeff_cohort$all_tb,
-           "exit uk" = costeff_cohort$uk_tb)
+           "death" = cohort$all_tb,
+           "exit uk" = cohort$uk_tb)
 
-  num_contacts <- costeff_cohort$num_contacts[keep_tb]
-  discounts <- costeff_cohort$all_notif_discounts[keep_tb]
-  id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
+  num_contacts <- cohort$num_contacts[keep_tb]
+  discounts <- cohort$all_notif_discounts[keep_tb]
+  id_avoided_tb <- cohort$id_avoided_tb[keep_tb]
 
   notif_statusquo <-
     notif_cost(rcost,

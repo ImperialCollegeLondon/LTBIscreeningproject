@@ -1,5 +1,5 @@
 
-#' Net benefit
+#' Net benefit on c and e lists
 #'
 #' @param e_list
 #' @param c_list
@@ -9,11 +9,11 @@
 #' @export
 #'
 #' @examples
-net_benefit <- function(e_list,
-                        c_list,
-                        wtp_threshold) {
+net_benefit_list <- function(e_list,
+                             c_list,
+                             wtp_threshold) {
 
-  mapply(FUN = function(e, c, wtp) (e * wtp) - c,
+  mapply(FUN = netbenefit(e, c, wtp),
          e = e_list,
          c = c_list,
          MoreArgs = list(wtp = wtp_threshold),
@@ -21,71 +21,83 @@ net_benefit <- function(e_list,
 }
 
 
-#' Net monetary benefit
+netbenefit <- function(e, c, wtp) {
+  (e * wtp) - c
+}
+
+
+#' Net monetary benefit over scenarios
 #'
 #' Create long array over multiple wtp.
 #'
-#' @param e_statusquo
-#' @param c_statusquo
-#' @param e_screened
-#' @param c_screened
-#' @param wtp_threshold
+#' @param e0
+#' @param c0
+#' @param e1
+#' @param c1
+#' @param wtp
 #'
 #' @return
 #' @export
 #'
-#' @examples
-nmb <- function(e_statusquo, c_statusquo,
-                e_screened, c_screened,
-                wtp_threshold) {
+nmb_scenarios <- function(e0, c0,
+                          e1, c1,
+                          wtp) {
 
-  list(statusquo = net_benefit(e_list = e_statusquo,
-                               c_list = c_statusquo,
-                               wtp_threshold),
-       screened = net_benefit(e_list = e_screened,
-                              c_list = c_screened,
-                              wtp_threshold)) %>%
-    reshape2::melt() %>%
-    set_names(c("NMB", "scenario", "policy")) %>%
-    mutate(wtp = wtp_threshold)
+  seq_runs <- seq.int(nrow(e0))
+
+  nb0 <-
+    netbenefit(e0, c0, wtp) %>%
+    cbind(runs = seq_runs, .)
+
+  nb1 <-
+    netbenefit(e1, c1, wtp) %>%
+    cbind(runs = seq_runs, .)
+
+  list(statusquo = nb0,
+       screened  = nb1) %>%
+    reshape2::melt(id.var = "runs") %>%
+    dplyr::rename(scenario = variable,
+                  NMB = value,
+                  type = L1) %>%
+        mutate(wtp = wtp)
 }
 
 #' Partial linear regression function
 #'
-#' @param nmb_formula Regression formula
-#' @param design_matrix Input data
+#' @param formula Regression formula
 #' @param ...
 #'
 #' @return
 #' @export
 #'
 #' @examples
-lm_wtp <- function(nmb_formula,
-                   design_matrix, ...) {
-  function(threshold){
+lm_wtp <- function(formula, ...) {
 
-    lm(nmb_formula,
-       data = subset(design_matrix, wtp == threshold))
+  function(nmb_mat){
+    lm(formula,
+       data = nmb_mat)
   }
 }
 
 #' Partial Bayesian linear regression function
 #'
-#' @param nmb_formula
-#' @param design_matrix
+#' @param nmb_form
 #' @param ...
 #'
 #' @return
 #' @export
-bayeslm_wtp <- function(nmb_formula,
-                        design_matrix, ...) {
-  function(threshold){
-    arm::bayesglm(formula = nmb_formula,
+bayeslm_wtp <- function(nmb_form, ...) {
+
+  function(nmb_mat){
+    arm::bayesglm(formula = nmb_form,
                   family = gaussian,
-                  data = subset(design_matrix, wtp == threshold),
-                  prior.mean = 0, prior.scale = Inf, prior.df = Inf)
+                  data = nmb_mat,
+                  prior.mean = 0,
+                  prior.scale = Inf,
+                  prior.df = Inf)
   }
 }
+
 
 #' Find optimal thresholds
 #'

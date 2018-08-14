@@ -52,6 +52,7 @@ activetb_qaly_cost <- function(dectree_res,
     costeff_cohort %>%
     expected_cost_QALY(means)
 
+  n_cohort <- nrow(cohort)
 
   ########
   # main #
@@ -61,11 +62,15 @@ activetb_qaly_cost <- function(dectree_res,
                                   endpoint = interv$ENDPOINT_cost,
                                   unit_cost = unit_cost,
                                   probs = p_contact_tracing,
-                                  costeff_cohort = costeff_cohort)
+                                  cohort = costeff_cohort)
 
   interv_scenario_QALY <- partial(scenario_QALY,
                                   endpoint = interv$ENDPOINT_QALY,
-                                  costeff_cohort = costeff_cohort)
+                                  cohort = costeff_cohort)
+
+  interv_QALYloss <- partial(scenario_QALYloss,
+                             endpoint = interv$ENDPOINT_QALY,
+                             cohort = costeff_cohort)
 
   for (ss in seq_len(n.scenarios)) {
 
@@ -77,15 +82,13 @@ activetb_qaly_cost <- function(dectree_res,
 
     interv_QALY <- map(p_cured_scenario, interv_scenario_QALY)
 
-    interv_QALYloss <- map(p_cured_scenario, scenario_QALYloss,
-                           endpoint = interv$ENDPOINT_QALY,
-                           costeff_cohort = costeff_cohort)
+    interv_QALYloss <- map(p_cured_scenario, interv_QALYloss)
 
     stats_scenario[[ss]] <-
       costeff_stats(scenario_dat = dectree_res[[ss]],
                     interv_QALY = interv_QALY,
                     interv_cost = interv_cost,
-                    pop_year = nrow(cohort))
+                    pop_year = n_cohort)
 
     QALYloss_scenario[[ss]] <-
       interv_QALYloss %>%

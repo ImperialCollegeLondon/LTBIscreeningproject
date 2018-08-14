@@ -1,11 +1,11 @@
 #' scenario_QALYloss
 #'
-#' splits output also into due to
+#' Splits output also into due to
 #' morbidity and mortality.
 #'
 #' @param prop_avoided
 #' @param endpoint
-#' @param costeff_cohort
+#' @param cohort
 #'
 #' @return
 #' @export
@@ -14,19 +14,19 @@
 #'
 scenario_QALYloss <- function(prop_avoided,
                               endpoint,
-                              costeff_cohort) {
+                              cohort) {
 
   assert_that(endpoint %in% c("death", "exit uk"))
 
   keep_tb <-
     switch(endpoint,
-           "death" = costeff_cohort$all_tb,
-           "exit uk" = costeff_cohort$uk_tb)
+           "death" = cohort$all_tb,
+           "exit uk" = cohort$uk_tb)
 
-  fatality <- costeff_cohort$tb_fatality[keep_tb]
-  QALY_statusquo <- costeff_cohort$QALY_statusquo[keep_tb]
-  QALY_diseasefree <- costeff_cohort$QALY_diseasefree[keep_tb]
-  id_avoided_tb <- costeff_cohort$id_avoided_tb[keep_tb]
+  fatality <- cohort$tb_fatality[keep_tb]
+  QALY_statusquo <- cohort$QALY_statusquo[keep_tb]
+  QALY_diseasefree <- cohort$QALY_diseasefree[keep_tb]
+  id_avoided_tb <- cohort$id_avoided_tb[keep_tb]
 
   QALY_screened <- QALY_statusquo
 

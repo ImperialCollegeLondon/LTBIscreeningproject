@@ -1,9 +1,15 @@
-# ********************************************
-# LTBI screening
-# N Green
-# Sept 2017
-#
-# net benefit regression (not incremental)
+
+#' ---
+#' title: "LTBI screening model:
+#' net benefit regression (not incremental)"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
+
 # note: covariates are bounded [0,100]
 #   is this a problem?
 
@@ -45,16 +51,12 @@ library(rstanarm)
 centre <- 90
 nmb_formula <- as.formula(NMB ~
                             policy * (paste0("I(Agree - ", centre, ") * I(Start - ", centre,
-                                             ") + I(Agree - ", centre,
-                                             ") * I(Effective - ", centre,
-                                             ") + I(Start - ", centre,
-                                             ") * I(Complete - ", centre,
-                                             ") + I(Start - ", centre,
-                                             ") * I(Effective - ", centre,
-                                             ") + I(Complete - ", centre,
-                                             ") * I(Effective - ", centre, ")")))
+                                             ") + I(Agree - ", centre, ") * I(Effective - ", centre,
+                                             ") + I(Start - ", centre, ") * I(Complete - ", centre,
+                                             ") + I(Start - ", centre, ") * I(Effective - ", centre,
+                                             ") + I(Complete - ", centre, ") * I(Effective - ", centre, ")")))
 
-lm_multi_wtp <- lm_multi_wtp(nmb_formula, sim_matrix)
+lm_multi_wtp <- lm_multi_wtp(nmb_formula, sim_matrix, f_lm = bayeslm_wtp)
 
 
 # save ------------

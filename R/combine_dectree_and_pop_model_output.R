@@ -16,7 +16,7 @@ combine_dectree_and_pop_outputs <- function(cohort,
                                             interv,
                                             aTB_CE_stats,
                                             dectree_res,
-                                            folders) {
+                                            folders = NA) {
 
   screen_discount <- screen_discount(cohort,
                                      discount_rate = interv$discount_rate)
@@ -39,8 +39,10 @@ combine_dectree_and_pop_outputs <- function(cohort,
   c.total <- as.matrix(LTBI_cost + tb_cost)
   e.total <- as.matrix(LTBI_QALYgain + tb_QALYgain)
 
-  save(e.total, c.total,
-       file = pastef(folders$output$scenario, "e_and_c_totals.RData"))
+  if (!is.na(folders)) {
+    save(e.total, c.total,
+         file = pastef(folders$output$scenario, "e_and_c_totals.RData"))
+  }
 
   return(list(e = e.total,
               c = c.total))
@@ -51,42 +53,56 @@ combine_dectree_and_pop_outputs <- function(cohort,
 #'
 #' This is _not_ incremental.
 #'
-#' @param total
+#' @param ce1
+#' @param ce0
+#' @param folders
 #' @param design_matrix
-#' @param aTB_CE_stats
+#' @param wtp_min
+#' @param wtp_max
 #'
-#' @return
+#' @return list by wtp
 #' @export
 #'
 #' @examples
 #'
-nmb_matrix <- function(total,
-                       design_matrix,
-                       aTB_CE_stats) {
+nmb_matrix <- function(ce1,
+                       ce0,
+                       folders = NA,
+                       design_matrix = NA,
+                       wtp_min = 10000,
+                       wtp_max = 30000) {
 
-  e_screened <- total$e
-  c_screened <- total$c
+  if (!is.na(folders)) {
+    design_matrix <-
+      pastef(folders$output$scenario,
+             "scenario_params_df.csv") %>%
+      read.csv() %>%
+      design_matrix()
+  }
 
-  e_statusquo <- aTB_CE_stats$QALY.statusquo_person
-  c_statusquo <- aTB_CE_stats$cost.statusquo_person
-
-  # net monetary benefit by wtp
-  nmb_long <-
-    lapply(seq(10000, 30000, by = 500),
-           FUN = function(wtp) nmb(e_statusquo, c_statusquo,
-                                   e_screened, c_screened,
-                                   wtp)) %>%
+  nmb_wtp <-
+    lapply(seq(wtp_min, wtp_max, by = 10000),
+           FUN = function(wtp) nmb_scenarios(ce0$e, ce0$c,
+                                             ce1$e, ce1$c,
+                                             wtp)) %>%
     do.call(what = rbind, args = .)
 
   # join inputs and outputs
-  sim_matrix <-
+  nmb_mat <-
     merge(x = design_matrix,
-          y = nmb_long,
+          y = nmb_wtp,
           by = "scenario") %>%
-    mutate(policy = factor(policy,
-                           levels = c("statusquo", "screened")))
+    mutate(type = factor(type,
+                         levels = c("statusquo", "screened"))) %>%
+    arrange(scenario, wtp, type)
 
-  save(sim_matrix, file = here("data", "sim_matrix.RData"))
+  if (!is.na(folders)) {
+    save(nmb_mat,
+         file = pastef(folders$output$scenario, "sim_matrix.RData"))
+  }
 
-  return(sim_matrix)
+  # return as list
+  nmb_mat <- split(nmb_mat, nmb_mat$wtp)
+
+  return(nmb_mat)
 }

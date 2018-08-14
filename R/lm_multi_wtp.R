@@ -1,8 +1,11 @@
 
-#' Linear multivariate regression with willingness to pay
+#' Linear multivariate regression varying willingness to pay
 #'
 #' @param nmb_formula
-#' @param sim_matrix
+#' @param nmb_mat list by wtp
+#' @param f_lm function type of regression; bayeslm_wtp, lm_wtp
+#' @param wtp_seq
+#' @param folders
 #'
 #' @return
 #' @export
@@ -10,30 +13,48 @@
 #' @examples
 #'
 lm_multi_wtp <- function(nmb_formula,
-                         sim_matrix) {
+                         nmb_mat,
+                         # f_lm = c(bayeslm_wtp, lm_wtp),
+                         f_lm = c(bayesglm, lm),
+                         wtp_seq = seq(10000, 30000, by = 10000),
+                         folders = NA) {
 
-  # expanded formula
-  # terms = attr(terms.formula(nmb_formula), "term.labels")
-  # f = as.formula(sprintf("y ~ %s", paste(terms, collapse="+")))
+  ##TODO: closure error?
+  lm_multi_fit <- map(nmb_mat, lm, formula = nmb_formula)
+  # lm_multi_fit <- map(nmb_mat, f_lm, formula = nmb_formula)
 
-  # fit model
+  if (!is.na(folders)) {
 
-  # lm_multi_wtp <- lm_wtp(nmb_formula, sim_matrix)
-  lm_multi_wtp <- bayeslm_wtp(nmb_formula, sim_matrix)
+    lm_multi_all <- lm_list_to_df(lm_multi_fit)
 
-  lm_multi <-
-    lapply(wtp_seq, lm_multi_wtp) %>%
-    purrr::set_names(wtp_seq)
+    # format values
+    lm_multi_all[ ,-1] <- round(sapply(lm_multi_all[ ,-1], as.numeric), 4)
 
-  # create wide output table
-  lm_multi_all <-
-    lapply(lm_multi,
-           function(x) dplyr::select(tidy(x), -statistic)) %>%
-    plyr::join_all(by = "term") %>%
-    rbind(c("wtp", rep(wtp_seq, each = 3)))
+    # names_keep <- lm_multi_all[lm_multi_all$term == "wtp", ] %in% c("wtp", 10000, 20000, 30000)
+    # lm_multi_save <- lm_multi_all[ ,names_keep]
 
-  # format values
-  lm_multi_all[ ,-1] <- round(sapply(lm_multi_all[ ,-1], as.numeric), 4)
+    write.csv(lm_multi_all,
+              file = pastef(folders$output$scenario, "lm_multi_all_table.csv"))
+  }
 
-  return(lm_multi_all)
+  return(lm_multi_fit)
+}
+
+
+#' lm_list_to_df
+#'
+#' Create wide output table using broom.
+#'
+#' @param fit
+#'
+#' @return
+#' @export
+#'
+#' @examples
+lm_list_to_df <- function(fit) {
+
+  lapply(fit,
+         function(x) dplyr::select(tidy(x), -statistic)) %>%
+  plyr::join_all(by = "term") %>%
+  rbind(c("wtp", rep(names(fit), each = 3)))
 }

@@ -5,7 +5,7 @@
 #'
 #' @param cohort
 #' @param dectree_res
-#' @param total
+#' @param ce1
 #' @param aTB_CE_stats
 #' @param folders
 #'
@@ -16,11 +16,11 @@
 #'
 plots_and_tables_scenarios <- function(cohort,
                                        dectree_res,
-                                       total,
+                                       ce1,
                                        aTB_CE_stats,
                                        folders) {
 
-  screen_bcea <- screen_bcea(total)
+  screen_bcea <- screen_bcea(ce1)
 
   ceplane_plot_and_save(screen_bcea, folders)
   # ce_plane_with_annotations()
@@ -38,13 +38,21 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(screen_bcea, folders)
 
-  ## this is for agree-start-complete-effective probs
-  ##TODO: refactor
-  # nmb_matrix(total, design_matrix, aTB_CE_stats)
-  # # fit_net_benefit
-  # source("scripts/05-net-benefit.R")
-  # # predict_net_benefit
-  # source("scripts/05-netbenefit-threshold-analysis.R")
+  ## this is for agree-start-complete-effective
+
+  ce0 <- list(e = do.call(cbind, aTB_CE_stats$QALY.statusquo_person),
+              c = do.call(cbind, aTB_CE_stats$cost.statusquo_person))
+
+  nmb_mat <- nmb_matrix(ce1, ce0)#, folders)
+  lm_multi_wtp <- nmb_multi_regn(nmb_mat)#, folders)
+
+  pred_INMB <- predict_nmb_wtp(lm_multi_wtp)
+
+  ##TODO:...
+  # plot_CE_contours(pred_INMB)
+
+
+  ##TODO:...
   # source("scripts/05-bayesglm_predictions.R")
   # source("scripts/05-stan_predictions.R")
 
