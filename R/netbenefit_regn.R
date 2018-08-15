@@ -47,11 +47,11 @@ nmb_scenarios <- function(e0, c0,
 
   nb0 <-
     netbenefit(e0, c0, wtp) %>%
-    cbind(runs = seq_runs, .)
+    cbind.data.frame(runs = seq_runs, .)
 
   nb1 <-
     netbenefit(e1, c1, wtp) %>%
-    cbind(runs = seq_runs, .)
+    cbind.data.frame(runs = seq_runs, .)
 
   list(statusquo = nb0,
        screened  = nb1) %>%
@@ -59,25 +59,9 @@ nmb_scenarios <- function(e0, c0,
     dplyr::rename(scenario = variable,
                   NMB = value,
                   type = L1) %>%
-        mutate(wtp = wtp)
+    mutate(wtp = wtp)
 }
 
-#' Partial linear regression function
-#'
-#' @param formula Regression formula
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-lm_wtp <- function(formula, ...) {
-
-  function(nmb_mat){
-    lm(formula,
-       data = nmb_mat)
-  }
-}
 
 #' Partial Bayesian linear regression function
 #'
@@ -86,16 +70,15 @@ lm_wtp <- function(formula, ...) {
 #'
 #' @return
 #' @export
-bayeslm_wtp <- function(nmb_form, ...) {
+bayeslm_wtp <- function(nmb_form,
+                        nmb_mat){
 
-  function(nmb_mat){
-    arm::bayesglm(formula = nmb_form,
-                  family = gaussian,
-                  data = nmb_mat,
-                  prior.mean = 0,
-                  prior.scale = Inf,
-                  prior.df = Inf)
-  }
+  arm::bayesglm(formula = nmb_form,
+                family = gaussian,
+                data = nmb_mat,
+                prior.mean = 0,
+                prior.scale = Inf,
+                prior.df = Inf)
 }
 
 

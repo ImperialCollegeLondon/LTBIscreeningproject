@@ -38,14 +38,11 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(screen_bcea, folders)
 
-  ## this is for agree-start-complete-effective
+  # prediction
 
-  ce0 <- list(e = do.call(cbind, aTB_CE_stats$QALY.statusquo_person),
-              c = do.call(cbind, aTB_CE_stats$cost.statusquo_person))
+  nmb_mat <- nmb_matrix_tb(aTB_CE_stats, folders)
 
-  nmb_mat <- nmb_matrix(ce1, ce0)#, folders)
-
-  lm_multi_wtp <- nmb_multi_regn(nmb_mat)#, folders)
+  lm_multi_wtp <- nmb_multi_regn(nmb_mat, folders)
 
   pred_INMB <- predict_nmb_wtp(lm_multi_wtp)
 

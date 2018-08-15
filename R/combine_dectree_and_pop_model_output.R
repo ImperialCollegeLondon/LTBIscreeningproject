@@ -56,7 +56,7 @@ combine_dectree_and_pop_outputs <- function(cohort,
 #' @param ce1
 #' @param ce0
 #' @param folders
-#' @param design_matrix
+#' @param design_mat
 #' @param wtp_min
 #' @param wtp_max
 #'
@@ -68,12 +68,12 @@ combine_dectree_and_pop_outputs <- function(cohort,
 nmb_matrix <- function(ce1,
                        ce0,
                        folders = NA,
-                       design_matrix = NA,
+                       design_mat = NA,
                        wtp_min = 10000,
                        wtp_max = 30000) {
 
   if (!is.na(folders)) {
-    design_matrix <-
+    design_mat <-
       pastef(folders$output$scenario,
              "scenario_params_df.csv") %>%
       read.csv() %>%
@@ -91,7 +91,7 @@ nmb_matrix <- function(ce1,
 
   # join inputs and outputs
   nmb_mat <-
-    merge(x = design_matrix,
+    merge(x = design_mat,
           y = nmb_wtp,
           by = "scenario") %>%
     mutate(type = factor(type,
@@ -107,4 +107,22 @@ nmb_matrix <- function(ce1,
   nmb_mat <- split(nmb_mat, nmb_mat$wtp)
 
   return(nmb_mat)
+}
+
+
+#' nmb_matrix_tb
+#'
+#' @param aTB_CE_stats
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+nmb_matrix_tb <- function(aTB_CE_stats,
+                          ...) {
+
+  ce0 <- make_ce0(aTB_CE_stats)
+  ce1 <- make_ce1(aTB_CE_stats)
+
+  nmb_matrix(ce1, ce0, ...)
 }
