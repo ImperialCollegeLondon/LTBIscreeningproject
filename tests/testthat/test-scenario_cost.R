@@ -36,7 +36,7 @@ test_that("struct", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0.5
     )
 
@@ -70,7 +70,7 @@ test_that("edge cases", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0
     )
 
@@ -96,7 +96,7 @@ test_that("edge cases", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0
     )
 
@@ -131,7 +131,7 @@ test_that("uk vs all cases", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0.5
     )
 
@@ -157,7 +157,7 @@ test_that("uk vs all cases", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0.5
     )
 
@@ -191,7 +191,7 @@ test_that("prop_avoided", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 0.5
     )
 
@@ -217,7 +217,7 @@ test_that("prop_avoided", {
                         aTB_Dx = 0.1 + 0.018,
                         aTB_Tx = 0.018,
                         LTBI_DxTx = 0.1),
-      costeff_cohort = costeff_cohort,
+      cohort = costeff_cohort,
       prop_avoided = 1
     )
 
@@ -235,7 +235,7 @@ test_that("errors and warnings", {
   #     endpoint = "death",
   #     unit_cost = 1,
   #     prop_avoided = 0,
-  #     costeff_cohort = costeff_cohort),
+  #     cohort = costeff_cohort),
   #   regexp = "Distributions not specified in a list."
   # )
 

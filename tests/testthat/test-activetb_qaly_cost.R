@@ -1,6 +1,11 @@
 context("test-activetb_qaly_cost.R")
 
 
+library(dplyr)
+library(purrr)
+library(assertthat)
+library(LTBIscreeningproject)
+
 
 dectree_res <-
   list(

@@ -5,12 +5,12 @@ library(treeSimR)
 library(data.tree)
 library(purrr)
 
-data("scenario_parameters")
+data("scenario_params")
 
 test_that("basic structure", {
 
   res <-
-    decision_tree_cluster(params = scenario_parameters[[1]],
+    decision_tree_cluster(params = scenario_params[[1]],
                           N.mc = 2,
                           cost_dectree = "osNode_cost_2009.Rds",
                           health_dectree = "osNode_cost_2009.Rds")

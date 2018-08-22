@@ -37,7 +37,6 @@ treeSimR::assign_branch_values(osNode,
 osNode$Set(path_probs = treeSimR::calc_pathway_probs(osNode))
 
 subset_pop <- subset_pop_dectree(osNode)
-subset_pop2 <- subset_pop_dectree2(osNode)
 
 
 test_that("order of subgroup sizes", {
