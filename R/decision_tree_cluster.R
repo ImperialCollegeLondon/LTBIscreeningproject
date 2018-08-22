@@ -48,6 +48,7 @@ decision_tree_cluster <- function(params,
                     osNode.cost$Get('path_probs') * osNode.cost$Get('sampled'))
   osNode.health$Set(weighted_sampled =
                       osNode.health$Get('path_probs') * osNode.health$Get('sampled'))
+  ##TODO: use Get(osNode, 'path_probs'*'sampled') and separate function defn
 
   if (!out_datatree) {
     osNode.cost <- NULL

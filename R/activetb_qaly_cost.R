@@ -68,7 +68,7 @@ activetb_qaly_cost <- function(dectree_res,
                                   endpoint = interv$ENDPOINT_QALY,
                                   cohort = costeff_cohort)
 
-  interv_QALYloss <- partial(scenario_QALYloss,
+  interv_scenario_QALYloss <- partial(scenario_QALYloss,
                              endpoint = interv$ENDPOINT_QALY,
                              cohort = costeff_cohort)
 
@@ -80,9 +80,9 @@ activetb_qaly_cost <- function(dectree_res,
 
     interv_cost <- map(p_cured_scenario, interv_scenario_cost)
 
-    interv_QALY <- map(p_cured_scenario, interv_scenario_QALY)
+    interv_QALY <- map(p_cured_scenario, interv_scenario_QALY, ordered = FALSE)
 
-    interv_QALYloss <- map(p_cured_scenario, interv_QALYloss)
+    interv_QALYloss <- map(p_cured_scenario, interv_scenario_QALYloss)
 
     stats_scenario[[ss]] <-
       costeff_stats(scenario_dat = dectree_res[[ss]],
@@ -104,7 +104,7 @@ activetb_qaly_cost <- function(dectree_res,
     QALYloss_scenario %>%
     purrr::transpose()
 
-  if (!is.na(folders)) {
+  if (!all(is.na(folders))) {
 
     save(aTB_CE_stats,
          file = pastef(folders$output$scenario, "aTB_CE_stats.RData"))

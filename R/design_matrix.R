@@ -1,6 +1,8 @@
 
 #' design_matrix
 #'
+#' create
+#'
 #' @param params
 #'
 #' @return

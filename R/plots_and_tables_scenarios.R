@@ -38,13 +38,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(screen_bcea, folders)
 
-  # prediction
-
-  nmb_mat <- nmb_matrix_tb(aTB_CE_stats, folders)
-
-  lm_multi_wtp <- nmb_multi_regn(nmb_mat, folders)
-
-  pred_INMB <- predict_nmb_wtp(lm_multi_wtp)
+  pred_INMB <- nmb_predictions(aTB_CE_stats, folders)
 
   ##TODO:...
   # plot_CE_contours(pred_INMB)

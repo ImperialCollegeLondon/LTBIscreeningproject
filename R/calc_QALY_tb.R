@@ -58,7 +58,7 @@ calc_QALY_tb <- function(intervals = NA,
               cured = cured))
 }
 
-
+#
 make_intervals_pop_list <- function(intervals) {
 
   list(
@@ -67,6 +67,7 @@ make_intervals_pop_list <- function(intervals) {
     fatality = fatality_intervals(intervals))
 }
 
+#
 diseasefree_intervals <- function(x) {
   rowSums(x) %>%
     t() %>%
@@ -74,12 +75,14 @@ diseasefree_intervals <- function(x) {
     as.list()
 }
 
+#
 fatality_intervals <- function(x) {
   cbind(x$symptoms_to_Tx,
         x$Tx_to_cured/2) %>%
     split(., seq(nrow(.)))
 }
 
+#
 cured_intervals <- function(x) {
 
   x$cured_to_death <- pmax(0, x$cured_to_death)
@@ -89,6 +92,7 @@ cured_intervals <- function(x) {
 }
 
 
+#
 make_utilities_pop_list <- function(utility,
                                     n_pop) {
 

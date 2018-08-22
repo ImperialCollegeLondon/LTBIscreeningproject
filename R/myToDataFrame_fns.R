@@ -50,14 +50,18 @@ my_ToDataFrameTypeCol <- function(x,
                                   prefix = type,
                                   pruneFun = NULL){
 
-  cols <- unique(c(x$Get(type, filterFun = isNotLeaf),
-                   x$Get(type)))
+  cols <-
+    c(x$Get(type, filterFun = isNotLeaf),
+      x$Get(type)) %>%
+    unique() %>%
+    as.character()
+
+  if (!is.null(prefix))
+    cols <- paste0(prefix, "_", cols)
 
   pathArgs <- data.tree:::GetPathArgV(cols, type)
 
-  if (is.null(prefix))
-    names(pathArgs) <- as.character(cols)
-  else names(pathArgs) <- paste0(prefix, "_", cols)
+  names(pathArgs) <- cols
 
   do.call(my_ToDataFrameTable, c(x, pathArgs, ...))
 }

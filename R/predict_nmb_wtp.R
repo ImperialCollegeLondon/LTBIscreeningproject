@@ -1,26 +1,25 @@
 
-#' predict_nmb_wtp
+#' Predict from a list of fitted regressions
 #'
-#' @param lm_multi_wtp
+#' @param fits_list
 #' @param newdata
 #'
 #' @return
 #' @export
 #'
 #' @examples
-predict_nmb_wtp <- function(lm_multi_wtp,
+#'
+predict_nmb_wtp <- function(fits_list,
                             newdata = NA) {
 
   if (is.na(newdata)) {
-    newdata <- read.csv(here::here("data", "predict_newdata.csv"), stringsAsFactors = TRUE)
+    newdata <- read.csv(here::here("data", "predict_newdata.csv"),
+                        stringsAsFactors = TRUE)
   }
 
-  # remove redundant covariates
-  lm_names <- dimnames(attr(lm_multi_wtp[[1]]$terms, "factors"))[[1]]
-  newdata <- newdata[names(newdata) %in% lm_names]
-  newdata <- newdata[!duplicated(newdata), ]
+  newdata <- rm_redundant_covariates(fits_list, newdata)
 
-  pred_wtp <- map(lm_multi_wtp,
+  pred_wtp <- map(fits_list,
                   predict,
                   newdata = newdata,
                   type = "response")
@@ -33,7 +32,19 @@ predict_nmb_wtp <- function(lm_multi_wtp,
 }
 
 
+#
+rm_redundant_covariates <- function(fits_list,
+                                    newdata) {
+
+  lm_names <- dimnames(attr(fits_list[[1]]$terms, "factors"))[[1]]
+  newdata <- newdata[names(newdata) %in% lm_names]
+  newdata[!duplicated(newdata), ]
+}
+
+
 #' Wide INMB array from predictions
+#'
+#' reshape
 #'
 #' @param pred
 #'
@@ -41,6 +52,7 @@ predict_nmb_wtp <- function(lm_multi_wtp,
 #' @export
 #'
 #' @examples
+#'
 wide_INMB <- function(pred,
                       newdata) {
 
@@ -82,3 +94,27 @@ create_pred_newdata <- function() {
 
   return()
 }
+
+
+#' Net monetary benefit regression predictions
+#'
+#' High-level
+#'
+#' @param aTB_CE_stats
+#' @param folders
+#'
+#' @return
+#' @export
+#'
+nmb_predictions <- function(aTB_CE_stats,
+                            folders) {
+
+  nmb_mat <- nmb_matrix_tb(aTB_CE_stats, folders)
+
+  fits_list <- nmb_multi_regn(nmb_mat, folders)
+
+  pred_INMB <- predict_nmb_wtp(fits_list)
+
+  return(pred_INMB)
+}
+

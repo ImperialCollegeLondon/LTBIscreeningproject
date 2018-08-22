@@ -39,7 +39,8 @@ Imports:
     withr,
     assertr,
     devtools,
-    lattice
+    lattice,
+    here
 RoxygenNote: 6.0.1
 Suggests:
     knitr,

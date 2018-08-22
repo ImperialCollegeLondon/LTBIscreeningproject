@@ -7,7 +7,7 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-08-13                  
+ date     2018-08-21                  
 
 - Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
@@ -108,15 +108,13 @@
  tidyr                 * 0.8.0       2018-01-29 CRAN (R 3.4.3)                         
  tidyselect              0.2.4       2018-02-26 CRAN (R 3.4.3)                         
  treeSimR              * 0.1.0       2018-07-24 local                                  
- usethis                 1.3.0.9000  2018-03-26 Github (r-lib/usethis@59b0837)         
  viridis                 0.5.0       2018-02-02 CRAN (R 3.4.3)                         
  viridisLite             0.3.0       2018-02-01 CRAN (R 3.4.3)                         
  visNetwork              2.0.3       2018-01-09 CRAN (R 3.4.3)                         
- whisker                 0.3-2       2013-04-28 CRAN (R 3.4.2)                         
  withr                   2.1.2       2018-03-15 CRAN (R 3.4.1)                         
  XML                     3.98-1.10   2018-02-19 CRAN (R 3.4.3)                         
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
  yaml                    2.1.18      2018-03-08 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [4bca4c2] 2018-08-13: simplify activetb_qaly_cost.R
+Head:     [ac3dfac] 2018-08-15: finish prediction refactoring. Looks ok but need unit tests

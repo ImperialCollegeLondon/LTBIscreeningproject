@@ -1,6 +1,8 @@
 
 #' nmb_multi_regn
 #'
+#' Fit regression
+#'
 #' @param nmb_mat list by wtp
 #' @param folders
 #' @param f_lm lm or bayeslm_wtp; default: lm
@@ -18,17 +20,15 @@ nmb_multi_regn <- function(nmb_mat,
                            interactions = NA,
                            centre_p = 90) {
 
-  if (!is.na(folders)) {
+  if (!all(is.na(folders))) {
 
     design_mat <-
-      pastef(folders$output$scenario,
+      pastef(folders$output$parent,
              "scenario_params_df.csv") %>%
       read.csv() %>%
       design_matrix()
 
-    vars <-
-      names(design_mat)[names(design_mat) != "scenario"] %>%
-      paste(collapse = " + ")
+    vars <- string_sum_covariates(design_mat)
   }
 
   if (is.na(interactions)) {
@@ -47,7 +47,14 @@ nmb_multi_regn <- function(nmb_mat,
 
   nmb_formula <- as.formula(paste("NMB ~ type *", interactions))
 
-  lm_multi_wtp <- lm_multi_wtp(nmb_formula, nmb_mat, f_lm)
+  fit_multi_wtp <- lm_multi_wtp(nmb_formula, nmb_mat, f_lm)
 
-  return(lm_multi_wtp)
+  return(fit_multi_wtp)
+}
+
+#
+string_sum_covariates <- function(design_mat) {
+
+  names(design_mat)[names(design_mat) != "scenario"] %>%
+    paste(collapse = " + ")
 }

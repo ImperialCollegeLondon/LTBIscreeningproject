@@ -20,6 +20,9 @@ setup_folders <- function(policy_name,
 
   dir.create(folders$output$scenario, showWarnings = FALSE, recursive = TRUE)
 
+  folders$output$parent <- system.file("ext-data", "18_to_35_in_2009",
+                                      package = "LTBIscreeningproject")
+
   folders$plots$parent <- system.file("output", "plots",
                                       package = "LTBIscreeningproject")
 
