@@ -64,17 +64,25 @@ nmb_matrix <- function(ce1,
 
 #' nmb_matrix_tb
 #'
-#' @param aTB_CE_stats
+#' @param dectree_res
+#' @param popmod_res
 #' @param ...
 #'
 #' @return
 #' @export
 #'
-nmb_matrix_tb <- function(aTB_CE_stats,
-                          ...) {
+nmb_matrix_tb <- function(dectree_res,
+                          popmod_res,
+                          folders,
+                          cohort,
+                          interv, ...) {
 
-  ce0 <- make_ce0(aTB_CE_stats)
-  ce1 <- make_ce1(aTB_CE_stats)
+  ce0 <- make_ce0(popmod_res)
+
+  ce1 <- make_ce1(dectree_res,
+                  popmod_res,
+                  cohort,
+                  interv)
 
   nmb_matrix(ce1, ce0, ...)
 }

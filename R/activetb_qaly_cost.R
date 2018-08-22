@@ -96,7 +96,7 @@ activetb_qaly_cost <- function(dectree_res,
       simplify_all()
   }
 
-  aTB_CE_stats <-
+  popmod_res <-
     stats_scenario %>%
     purrr::transpose()
 
@@ -106,9 +106,9 @@ activetb_qaly_cost <- function(dectree_res,
 
   if (!all(is.na(folders))) {
 
-    save(aTB_CE_stats,
-         file = pastef(folders$output$scenario, "aTB_CE_stats.RData"))
+    save(popmod_res,
+         file = pastef(folders$output$scenario, "popmod_res.RData"))
   }
 
-  invisible(aTB_CE_stats)
+  invisible(popmod_res)
 }

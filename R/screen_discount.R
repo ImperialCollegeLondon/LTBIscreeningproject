@@ -20,17 +20,17 @@ screen_discount <- function(cohort,
     #   assert(not_na, screen_year) %>%
     #   assert(screen_year >= 0)
 
-  prop_screen_year <-
+  prop_year <-
     cohort$screen_year %>%
     ceiling() %>%
     prop_table() %>%
     matrix()
 
-  t_limit_screen <- length(prop_screen_year)
-  discounts_year <- QALY::discount(t_limit = t_limit_screen,
+  t_lim_screen <- length(prop_year)
+  discounts_year <- QALY::discount(t_limit = t_lim_screen,
                                    discount_rate = discount_rate)
 
-  res <- discounts_year %*% prop_screen_year
+  res <- discounts_year %*% prop_year
 
   return(as.numeric(res))
 }

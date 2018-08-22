@@ -5,8 +5,8 @@
 #'
 #' @param cohort
 #' @param dectree_res
-#' @param ce1
-#' @param aTB_CE_stats
+#' @param popmod_res
+#' @param incr_ce
 #' @param folders
 #'
 #' @return
@@ -16,11 +16,12 @@
 #'
 plots_and_tables_scenarios <- function(cohort,
                                        dectree_res,
-                                       ce1,
-                                       aTB_CE_stats,
-                                       folders) {
+                                       popmod_res,
+                                       incr_ce,
+                                       folders,
+                                       interv) {
 
-  screen_bcea <- screen_bcea(ce1)
+  screen_bcea <- screen_bcea(incr_ce)
 
   ceplane_plot_and_save(screen_bcea, folders)
   # ce_plane_with_annotations()
@@ -38,7 +39,12 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(screen_bcea, folders)
 
-  pred_INMB <- nmb_predictions(aTB_CE_stats, folders)
+  ##TODO:
+  pred_INMB <- nmb_predictions(dectree_res,
+                               popmod_res,
+                               folders,
+                               cohort,
+                               interv)
 
   ##TODO:...
   # plot_CE_contours(pred_INMB)
@@ -54,7 +60,7 @@ plots_and_tables_scenarios <- function(cohort,
   # source("scripts/05-upper_triangle_contour_INMB.R")
   # CE_plane_trajectories(design_matrix)
 
-  # plot_QALY_cost_distns_by_scenario(aTB_CE_stats, folders)
+  # plot_QALY_cost_distns_by_scenario(popmod_res, folders)
   # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")
   # source("scripts/05g-INMB_ICER_histograms.R")
   #

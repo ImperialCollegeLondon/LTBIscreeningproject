@@ -32,11 +32,11 @@ policy_run <- function() {
   # modelling ------------------------------------------------------------
 
   dectree_res <- parallel_decision_tree(scenario_params, interv, folders)
-  aTB_CE_stats <- activetb_qaly_cost(dectree_res, interv, cohort, folders)
+  popmod_res <- activetb_qaly_cost(dectree_res, interv, cohort, folders)
 
-  ce1 <- combine_dectree_and_pop_outputs(cohort, interv, aTB_CE_stats, dectree_res, folders)
+  incr_ce <- total_incremental_ce(cohort, interv, popmod_res, dectree_res, folders)
 
-  plots_and_tables_scenarios(cohort, dectree_res, ce1, aTB_CE_stats, folders)
+  plots_and_tables_scenarios(cohort, dectree_res, popmod_res, incr_ce, folders, interv)
 
   return()
 }
