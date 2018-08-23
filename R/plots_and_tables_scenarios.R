@@ -42,7 +42,7 @@ plots_and_tables_scenarios <- function(cohort,
   pred_INMB <- nmb_predictions(ce_res)
 
   ##TODO:...
-  # plot_CE_contours(pred_INMB)
+  # plot_CE_contours(pred_INMB$'20000')
 
 
   ##TODO:...
