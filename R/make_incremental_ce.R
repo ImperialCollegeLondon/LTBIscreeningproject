@@ -16,16 +16,6 @@ make_incremental_ce <- function(popmod_res,
                                 sdiscount,
                                 folders = NA) {
 
-  # model checking subsets
-  # list_to_BCEA_incr(QALYloss_scenario$statusquo_morbidity)
-  # list_to_BCEA_incr(QALYloss_scenario$statusquo_mortality)
-  # list_to_BCEA_incr(QALYloss_scenario$screened_morbidity)
-  # list_to_BCEA_incr(QALYloss_scenario$screened_mortality)
-  # list_to_BCEA_incr(QALYloss_scenario$statusquo_morb_pp)
-  # list_to_BCEA_incr(QALYloss_scenario$statusquo_mort_pp)
-  # list_to_BCEA_incr(QALYloss_scenario$screened_morb_pp)
-  # list_to_BCEA_incr(QALYloss_scenario$screened_mort_pp)
-
   tb_cost <- list_to_BCEA_incr(popmod_res$cost_incur_person)
   tb_QALYgain <- list_to_BCEA_incr(popmod_res$QALYgain_person)
 
