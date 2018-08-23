@@ -6,7 +6,7 @@
 #' @param cohort
 #' @param dectree_res
 #' @param popmod_res
-#' @param incr_ce
+#' @param ce_res
 #' @param folders
 #'
 #' @return
@@ -17,11 +17,10 @@
 plots_and_tables_scenarios <- function(cohort,
                                        dectree_res,
                                        popmod_res,
-                                       incr_ce,
-                                       folders,
-                                       interv) {
+                                       ce_res,
+                                       folders) {
 
-  screen_bcea <- screen_bcea(incr_ce)
+  screen_bcea <- screen_bcea(ce_res$ce_incr)
 
   ceplane_plot_and_save(screen_bcea, folders)
   # ce_plane_with_annotations()
@@ -40,11 +39,7 @@ plots_and_tables_scenarios <- function(cohort,
   ceac_plot_and_save(screen_bcea, folders)
 
   ##TODO:
-  pred_INMB <- nmb_predictions(dectree_res,
-                               popmod_res,
-                               folders,
-                               cohort,
-                               interv)
+  pred_INMB <- nmb_predictions(ce_res)
 
   ##TODO:...
   # plot_CE_contours(pred_INMB)

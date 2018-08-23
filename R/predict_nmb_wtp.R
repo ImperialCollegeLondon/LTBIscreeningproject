@@ -100,20 +100,16 @@ create_pred_newdata <- function() {
 #'
 #' High-level
 #'
-#' @param dectree_res
-#' @param popmod_res
+#' @param ce_res
 #' @param folders
 #'
 #' @return
 #' @export
 #'
-nmb_predictions <- function(dectree_res,
-                            popmod_res,
-                            folders,
-                            cohort,
-                            interv) {
+nmb_predictions <- function(ce_res,
+                            folders) {
 
-  nmb_mat <- nmb_matrix_tb(dectree_res, popmod_res, folders, cohort, interv)
+  nmb_mat <- nmb_matrix(ce_res$ce1, ce_res$ce0, folders)
 
   fits_list <- nmb_multi_regn(nmb_mat, folders)
 
