@@ -21,7 +21,7 @@ make_ce0 <- function(popmod_res) {
 #' make_ce1
 #'
 #' @param popmod_res
-#' @param dectree_res
+#' @param t_dectree
 #' @param sdiscount
 #'
 #' @return
@@ -30,14 +30,11 @@ make_ce0 <- function(popmod_res) {
 #' @examples
 #'
 make_ce1 <- function(popmod_res,
-                     dectree_res,
+                     t_dectree,
                      sdiscount) {
 
-  LTBI_qaly <- map(dectree_res, "mc_health")
-  LTBI_cost <- map(dectree_res, "mc_cost")
-
-  LTBI_qaly <- list_to_BCEA(LTBI_qaly, -sdiscount)
-  LTBI_cost <- list_to_BCEA(LTBI_cost, sdiscount)
+  LTBI_qaly <- list_to_BCEA(t_dectree$QALY_person, -sdiscount)
+  LTBI_cost <- list_to_BCEA(t_dectree$cost_person, sdiscount)
 
   popmod_qaly <- list_to_BCEA(popmod_res$QALY.screened_person)
   popmod_cost <- list_to_BCEA(popmod_res$cost.screened_person)

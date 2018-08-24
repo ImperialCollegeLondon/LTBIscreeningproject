@@ -18,18 +18,21 @@ combine_popmod_dectree_res <- function(cohort,
                                        dectree_res,
                                        folders) {
 
+  t_dectree <- list(cost_person = purrr::map(dectree_res, "mc_cost"),
+                    QALY_person = purrr::map(dectree_res, "mc_health"))
+
   screen_discount <- screen_discount(cohort,
                                      interv$discount_rate)
 
   ce_incr <- make_incremental_ce(popmod_res,
-                                 dectree_res,
+                                 t_dectree,
                                  screen_discount,
                                  folders)
 
   ce0 <- make_ce0(popmod_res)
 
   ce1 <- make_ce1(popmod_res,
-                  dectree_res,
+                  t_dectree,
                   screen_discount)
 
   list(ce0 = ce0,

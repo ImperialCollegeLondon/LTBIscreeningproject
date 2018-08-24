@@ -2,7 +2,7 @@
 #' make_incremental_ce
 #'
 #' @param popmod_res
-#' @param dectree_res
+#' @param t_dectree
 #' @param sdiscount
 #' @param folders
 #'
@@ -12,18 +12,15 @@
 #' @examples
 #'
 make_incremental_ce <- function(popmod_res,
-                                dectree_res,
+                                t_dectree,
                                 sdiscount,
                                 folders = NA) {
-
-  mc_cost <- purrr::map(dectree_res, "mc_cost")
-  mc_health <- purrr::map(dectree_res, "mc_health")
 
   tb_cost <- list_to_BCEA_incr(popmod_res$cost_incur_person)
   tb_QALYgain <- list_to_BCEA_incr(popmod_res$QALYgain_person)
 
-  LTBI_cost <- list_to_BCEA_incr(mc_cost, sdiscount)
-  LTBI_QALYgain <- list_to_BCEA_incr(mc_health, -sdiscount)
+  LTBI_cost <- list_to_BCEA_incr(t_dectree$cost_person, sdiscount)
+  LTBI_QALYgain <- list_to_BCEA_incr(t_dectree$QALY_person, -sdiscount)
 
   incr_e <- LTBI_QALYgain + tb_QALYgain
   incr_c <- LTBI_cost + tb_cost

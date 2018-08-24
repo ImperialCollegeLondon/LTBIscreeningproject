@@ -36,6 +36,8 @@ plot_care_cascade <- function(data_folder,
                               prob_or_num,
                               file_name) {
 
+  ##TODO: extract function for each of 'all' and 'LTBI'- duplication
+
   policies_ls <-
     list.files(data_folder, pattern = 'policy_[0-9]*$')
 
@@ -111,7 +113,7 @@ gg_care_cascade <- function(dat,
                      replacement = "",
                      names(dat))
 
-  p <- cc_plot_kernel(box_plot)
+  p <- cc_plot_kernel(box_plot, dat)
 
   p <-
     p +

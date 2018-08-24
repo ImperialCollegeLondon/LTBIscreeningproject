@@ -20,23 +20,23 @@ nmb_contour_plot <- function(plot_data,
     scale_fill_gradient(limits = range(plot_data$INMB),
                         high = 'white',
                         low = 'red') +
-    geom_contour(aes(colour = ..level..), size = 1.2) #+
+    geom_contour(aes(colour = ..level..), size = 1.2) +
 
-  # stat_contour(geom = "polygon", aes(fill = ..level..)) +
-  # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
-  #                 ylim = c(min(plot_data$Effective), max(plot_data$Effective))) +
-  # scale_colour_gradient(guide = 'none') +
-  # scale_x_continuous(expand = c(0,0)) +
-  # scale_y_continuous(expand = c(0,0)) +
-  theme(legend.position = "none")
+    # stat_contour(geom = "polygon", aes(fill = ..level..)) +
+    # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
+    #                 ylim = c(min(plot_data$Effective), max(plot_data$Effective))) +
+    # scale_colour_gradient(guide = 'none') +
+    # scale_x_continuous(expand = c(0,0)) +
+    # scale_y_continuous(expand = c(0,0)) +
+    theme(legend.position = "none")
   # stat_contour(breaks = 0)
 
   print(
-    direct.label(p, list("bottom.pieces", colour = 'black'))
+    p <- direct.label(p, list("bottom.pieces", colour = 'black'))
   )
 
   filename <- paste(folders$plots$scenario, "NMB_contours_grid.png", sep = "/")
-  ggsave(file = filename, width = 30, height = 20, units = "cm")
+  ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
 
   p
 }
@@ -70,7 +70,7 @@ ce_boundary_plot <- function(plot_data,
 }
 
 
-#' base_filled_contour_plot
+#' base_filled_contour_grid
 #'
 #' @param plot_data
 #' @param folders
@@ -79,52 +79,58 @@ ce_boundary_plot <- function(plot_data,
 #' @export
 #'
 #' @examples
-base_filled_contour_plot <- function(plot_data,
+base_filled_contour_grid <- function(plot_data,
                                      folders) {
 
-  levels_range <- seq(0, 100, 5)
 
-  COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
+  filename <- paste(folders$plots$scenario,
+                    "filled_contour_grid.png", sep = "/")
 
-  s1 <-
-    lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 0.5 & Complete_Treatment_p == 0.5),
-                       # plot_data,
-                       xlab = "Agree (%)", ylab = "Effective (%)",
-                       at = levels_range,
-                       main = "Start = 50 & Complete = 50",
-                       col.regions = COL_REG)#topo.colors(100))
-  s2 <-
-    lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 0.5 & Complete_Treatment_p == 1),
-                       xlab = "Agree (%)", ylab = "Effective (%)",
-                       at = levels_range,
-                       main = "Start = 50 & Complete = 100",
-                       col.regions = COL_REG)#topo.colors(100))
-  s3 <-
-    lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 1 & Complete_Treatment_p == 0.5),
-                       xlab = "Agree (%)", ylab = "Effective (%)",
-                       at = levels_range,
-                       main = "Start = 100 & Complete = 50",
-                       col.regions = COL_REG)#topo.colors(100))
-  s4 <-
-    lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 1 & Complete_Treatment_p == 1),
-                       xlab = "Agree (%)", ylab = "Effective (%)",
-                       at = levels_range,
-                       main = "Start = 100 & Complete = 100",
-                       col.regions = COL_REG)#topo.colors(100))
+  s1 <- inmb_levelplot(plot_data, 0.5, 0.5)
+  s2 <- inmb_levelplot(plot_data, 0.5, 1)
+  s3 <- inmb_levelplot(plot_data, 1, 0.5)
+  s4 <- inmb_levelplot(plot_data, 1, 1)
+
+  png(filename)
+
   print(
-    grid.arrange(arrangeGrob(s1, s2),
-                 arrangeGrob(s3, s4),
-                 ncol = 2)
+    gridExtra::grid.arrange(arrangeGrob(s1, s2),
+                            arrangeGrob(s3, s4),
+                            ncol = 2)
   )
 
-  p <- arrangeGrob(s1, s2, s3, s4, nrow = 2)
+  dev.off()
 
-  filename <- paste(folders$plots$scenario, "filled_contour_grid.png", sep = "/")
-  ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
+  # p <- arrangeGrob(s1, s2, s3, s4, nrow = 2)
+  # ggsave(file = filename, plot = p,
+  #        width = 30, height = 20, units = "cm")
 
   p
 }
+
+
+#' inmb_levelplot
+#'
+#' @param start
+#' @param complete
+#'
+#' @return
+#' @export
+#'
+inmb_levelplot <- function(plot_data,
+                           start,
+                           complete) {
+
+  levels_range <- seq(0, 400, 5)
+  COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
+
+  lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
+                     subset(plot_data,
+                            Start_Treatment_p == start & Complete_Treatment_p == complete),
+                     xlab = "Agree (%)", ylab = "Effective (%)",
+                     at = levels_range,
+                     main = paste("Start =", start, "& Complete =", complete),
+                     col.regions = COL_REG)#topo.colors(100))
+}
+
+
