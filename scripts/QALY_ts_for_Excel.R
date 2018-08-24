@@ -15,9 +15,9 @@ cohort <- cohort[1:200, ]
 
 cohort <-
   cohort %>%
-  dplyr::mutate(tb_fatality = ifelse(test = is.na(cfr),
-                                     yes = NA,
-                                     no = runif(n = n()) < cfr))
+  dplyr::mutate(tb_fatality = if_else(test = is.na(cfr),
+                                      yes = NA,
+                                      no = runif(n = n()) < cfr))
 
 
 # main --------------------------------------------------------------------
@@ -69,18 +69,18 @@ QALY_all_tb <- calc_QALY_tb(
 
 cohort <-
   cohort %>%
-  dplyr::mutate(QALY_fatality = ifelse(test = all_tb,
-                                       yes = QALY_all_tb$fatality,
-                                       no = NA),
-                QALY_diseasefree = ifelse(test = all_tb,
-                                          yes = QALY_all_tb$diseasefree,
-                                          no = NA),
-                QALY_cured = ifelse(test = all_tb,
-                                    yes = QALY_all_tb$cured,
-                                    no = NA),
-                QALY_statusquo = ifelse(test = tb_fatality,
-                                        yes = QALY_fatality,
-                                        no = QALY_cured))
+  dplyr::mutate(QALY_fatality = if_else(test = all_tb,
+                                        yes = QALY_all_tb$fatality,
+                                        no = NA),
+                QALY_diseasefree = if_else(test = all_tb,
+                                           yes = QALY_all_tb$diseasefree,
+                                           no = NA),
+                QALY_cured = if_else(test = all_tb,
+                                     yes = QALY_all_tb$cured,
+                                     no = NA),
+                QALY_statusquo = if_else(test = tb_fatality,
+                                         yes = QALY_fatality,
+                                         no = QALY_cured))
 
 
 # wide format; equal lengths
@@ -94,8 +94,8 @@ res_cure <- as.data.frame(do.call(rbind,
                                          max(indx))))
 indx <- sapply(fatality, length)
 res_fat <- as.data.frame(do.call(rbind,
-                                  lapply(fatality, `length<-`,
-                                         max(indx))))
+                                 lapply(fatality, `length<-`,
+                                        max(indx))))
 
 res_sq <- res_cure
 res_sq[cohort$tb_fatality, ] <- NA #clear contents
@@ -136,12 +136,6 @@ cohort$id_avoided_tb <- 1:nrow(cohort)
 
 
 
-
-
-
-
-
-
 ###################
 # spaghetti plots #
 ###################
@@ -163,7 +157,7 @@ rsample <- runif(n = length(unique(yy$variable)))
 yy <-
   yy %>%
   group_by(year) %>%
-  dplyr::mutate(alpha = ifelse(rsample > 0.99, 1, 0.01))
+  dplyr::mutate(alpha = if_else(rsample > 0.99, 1, 0.01))
 
 tspag <- ggplot(yy, aes(x = year, y = value)) +
   geom_line() +

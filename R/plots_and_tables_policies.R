@@ -23,8 +23,8 @@ plots_and_tables_policies <- function() {
 
   # try(source("scripts/CE_plane_by_scenario.R", local = TRUE))
 
-  plot_care_cascade(data_folder, plots_folder, prob_or_num = "num")
-  plot_care_cascade(data_folder, plots_folder, prob_or_num = "prob")
+  care_cascade_num(data_folder, plots_folder)
+  care_cascade_prob(data_folder, plots_folder)
 
   return()
 }

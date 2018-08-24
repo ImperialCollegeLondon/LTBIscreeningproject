@@ -24,8 +24,8 @@ IMPUTED_sample <-
   dplyr::mutate(
     tb_years = sim_tb_times(data = .,
                             prob = p_tb_given_LTBI_year),
-    exituk_tb.years = ifelse(exit_uk1, tb_years, NA),
-    notif_issdt.years = ifelse(exit_uk1, NA, tb_years),
+    exituk_tb.years = if_else(exit_uk1, tb_years, NA),
+    notif_issdt.years = if_else(exit_uk1, NA, tb_years),
     exituk_tb = !is.na(exituk_tb.years) & !is.infinite(exituk_tb.years),
     uk_tb = !is.na(notif_issdt.years) & !is.infinite(notif_issdt.years))
 
@@ -37,7 +37,7 @@ IMPUTED_sample <-
     screened_before_exit = date_exit_uk1_issdt.years >= screen_year,
     screened_before_tb = (notif_issdt.years >= screen_year) | is.na(notif_issdt.years),
     screened_before_death = date_death1_issdt.years >= screen_year,
-    screen = ifelse(screened_before_death &
+    screen = if_else(screened_before_death &
                       screened_before_exit &
                       screened_before_tb,
                     yes = 1, no = 0))
@@ -49,23 +49,23 @@ IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(
     all_tb = uk_tb | exituk_tb,
-    all_tb_issdt = ifelse(uk_tb,
-                          ceiling(notif_issdt.years),
-                          ceiling(exituk_tb.years)),
+    all_tb_issdt = if_else(uk_tb,
+                           ceiling(notif_issdt.years),
+                           ceiling(exituk_tb.years)),
 
     # progression to death times
-    uk_death_notif = date_death1_issdt.years - ifelse(test = is.infinite(notif_issdt.years),
-                                                      yes = NA,
-                                                      no = notif_issdt.years),
+    uk_death_notif = date_death1_issdt.years - if_else(test = is.infinite(notif_issdt.years),
+                                                       yes = NA,
+                                                       no = notif_issdt.years),
     all_death_notif = ceiling(date_death1_issdt.years - all_tb_issdt),
-    all_death_notif = ifelse(all_death_notif < 0, NA, all_death_notif),
+    all_death_notif = if_else(all_death_notif < 0, NA, all_death_notif),
 
     # progression ages
     age_uk_notification = floor(age_at_entry + notif_issdt.years),
     age_exituk_notification = floor(age_at_entry + exituk_tb.years),
-    age_all_notification = ifelse(uk_tb,
-                                  age_uk_notification,
-                                  age_exituk_notification),
+    age_all_notification = if_else(uk_tb,
+                                   age_uk_notification,
+                                   age_exituk_notification),
     # progression age groups
     agegroup_uk_notif = cut(age_uk_notification,
                             breaks = cfr_age_breaks,
@@ -92,9 +92,9 @@ symptoms_to_Tx <-
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(
-    symptoms_to_Tx = ifelse(all_tb,
-                            yes = symptoms_to_Tx,
-                            no = NA))
+    symptoms_to_Tx = if_else(all_tb,
+                             yes = symptoms_to_Tx,
+                             no = NA))
 
 IMPUTED_sample <- time_intervals(IMPUTED_sample)
 
@@ -119,21 +119,21 @@ QALY_all_tb <-
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(
-    tb_fatality = ifelse(test = is.na(cfr),
-                         yes = NA,
-                         no = runif(n = n()) < cfr),
-    QALY_fatality = ifelse(test = all_tb,
-                           yes = QALY_all_tb$fatality,
-                           no = NA),
-    QALY_diseasefree = ifelse(test = all_tb,
-                              yes = QALY_all_tb$diseasefree,
-                              no = NA),
-    QALY_cured = ifelse(test = all_tb,
-                        yes = QALY_all_tb$cured,
-                        no = NA),
-    QALY_statusquo = ifelse(test = tb_fatality,
-                            yes = QALY_fatality,
-                            no = QALY_cured))
+    tb_fatality = if_else(test = is.na(cfr),
+                          yes = NA,
+                          no = runif(n = n()) < cfr),
+    QALY_fatality = if_else(test = all_tb,
+                            yes = QALY_all_tb$fatality,
+                            no = NA),
+    QALY_diseasefree = if_else(test = all_tb,
+                               yes = QALY_all_tb$diseasefree,
+                               no = NA),
+    QALY_cured = if_else(test = all_tb,
+                         yes = QALY_all_tb$cured,
+                         no = NA),
+    QALY_statusquo = if_else(test = tb_fatality,
+                             yes = QALY_fatality,
+                             no = QALY_cured))
 
 
 # future discounts for costs of active TB cases
@@ -167,7 +167,7 @@ IMPUTED_sample <-
   IMPUTED_sample %>%
   mutate(
     num_2nd_inf =
-      ifelse(all_tb,
+      if_else(all_tb,
              yes = num_2nd_inf,
              no = NA_real_))
 

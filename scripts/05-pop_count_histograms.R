@@ -31,7 +31,7 @@ for (i in 1:1000) {
   IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*5
 
   IMPUTED_sample %<>%
-    dplyr::mutate(screen = ifelse(date_death1_issdt.years >= screen_year &
+    dplyr::mutate(screen = if_else(date_death1_issdt.years >= screen_year &
                                     date_exit_uk1_issdt.years >= screen_year &
                                     (notif_issdt.years >= screen_year | is.na(notif_issdt.years)), 1, 0))
 

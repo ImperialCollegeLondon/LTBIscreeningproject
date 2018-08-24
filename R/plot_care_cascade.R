@@ -1,10 +1,27 @@
 
+#' @rdname plot_care_cascade
+#'
+care_cascade_prob <- function(...) {
+
+  plot_care_cascade(file_name = "combined_prob_subset_dectree.csv",
+                    prob_or_num = "prob", ...)
+}
+
+#' @rdname plot_care_cascade
+#'
+care_cascade_num <- function(...) {
+
+  plot_care_cascade(file_name = "combined_all_subsets.csv",
+                    prob_or_num = "num", ...)
+}
+
+
 #' Plot care cascade
 #'
 #' @param data_folder string
 #' @param plots_folder string
 #' @param prob_or_num Probabilities or absolute numbers
-#' @param box_plot default: FALSE
+#' @param file_name
 #'
 #' @return
 #' @export
@@ -17,14 +34,7 @@
 plot_care_cascade <- function(data_folder,
                               plots_folder,
                               prob_or_num,
-                              box_plot = FALSE) {
-
-  file_name <-
-    if (prob_or_num == "prob") {
-      "combined_prob_subset_dectree.csv"
-    } else {
-      "combined_all_subsets.csv"
-    }
+                              file_name) {
 
   policies_ls <-
     list.files(data_folder, pattern = 'policy_[0-9]*$')
@@ -40,20 +50,23 @@ plot_care_cascade <- function(data_folder,
 
   # select columns to plot
 
+  LTBI_states <- c("LTBI_tests","LTBI_positive","LTBI_startTx","LTBI_completeTx","p_LTBI_to_cured")
+  all_states <- c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post")
+
   cascade_LTBI <-
     cascade_data %>%
-    subset(variable %in% c("LTBI_completeTx","LTBI_positive","LTBI_startTx","LTBI_tests","p_LTBI_to_cured"))
+    subset(variable %in% LTBI_states)
 
   cascade_all <-
     cascade_data %>%
-    subset(variable %in% c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post"))
+    subset(variable %in% all_states)
 
   # reorder
-  cascade_all$variable <- factor(cascade_all$variable,
-                           levels = c("LTBI_pre","tests","positive","startTx","completeTx","cured","LTBI_post"))
-
   cascade_LTBI$variable <- factor(cascade_LTBI$variable,
-                            levels = c("LTBI_tests","LTBI_positive","LTBI_startTx","LTBI_completeTx","p_LTBI_to_cured"))
+                                  levels = LTBI_states)
+
+  cascade_all$variable <- factor(cascade_all$variable,
+                                 levels = all_states)
 
   const_cols <- grepl(x = names(cascade_LTBI), pattern = "X1|scenario|variable")
 
@@ -98,27 +111,13 @@ gg_care_cascade <- function(dat,
                      replacement = "",
                      names(dat))
 
-  p <-
-    if (box_plot) {
-
-      ggplot(dat, aes(x = factor(variable), fill = scenario, col = scenario)) +
-        geom_boxplot(aes(lower = mean, middle = mean, upper = mean,
-                         ymin = L95, ymax = U95),
-                     stat = "identity")
-    } else {
-
-      ggplot(dat, aes(x = variable, y = mean, fill = scenario)) +
-        geom_bar(stat = "identity", color = "white",
-                 position = position_dodge()) +
-        geom_errorbar(aes(ymin = L95, ymax = U95), width = 0.2,
-                      position = position_dodge(0.9))
-    }
+  p <- cc_plot_kernel(box_plot)
 
   p <-
     p +
     # ggplot2::ylim(0, 1) +
     theme_bw() +
-    ylab('Number in cohort intended for screening') +
+    ylab('Cohort intended for screening') +
     xlab('')
 
   if (is.na(plots_folder)) return(p)
@@ -129,3 +128,30 @@ gg_care_cascade <- function(dat,
                   width = 30, height = 20, units = "cm")
 }
 
+
+
+#' cc_lot_kernel
+#'
+#' @param boxplot
+#' @param dat
+#'
+#' @return
+#' @export
+cc_lot_kernel <- function(boxplot,
+                          dat) {
+
+  if (box_plot) {
+
+    ggplot(dat, aes(x = factor(variable), fill = scenario, col = scenario)) +
+      geom_boxplot(aes(lower = mean, middle = mean, upper = mean,
+                       ymin = L95, ymax = U95),
+                   stat = "identity")
+  } else {
+
+    ggplot(dat, aes(x = variable, y = mean, fill = scenario)) +
+      geom_bar(stat = "identity", color = "white",
+               position = position_dodge()) +
+      geom_errorbar(aes(ymin = L95, ymax = U95), width = 0.2,
+                    position = position_dodge(0.9))
+  }
+}

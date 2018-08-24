@@ -43,7 +43,7 @@ pLatentTB.who <-
   pLatentTB.who %>%
   right_join(data.frame(who_inc_Pareek2011 = who_levels),
             by = "who_inc_Pareek2011") %>%
-  mutate(LTBI = ifelse(is.na(LTBI), 0, LTBI))
+  mutate(LTBI = if_else(is.na(LTBI), 0, LTBI))
 
 # should be close to
 # data.frame(who_inc_Pareek2011 = who_levels, LTBI = c(0.03, 0.13, 0.2, 0.3, 0.27))

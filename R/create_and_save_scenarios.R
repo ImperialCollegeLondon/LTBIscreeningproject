@@ -40,7 +40,7 @@ create_and_save_scenarios <- function(file_tag) {
 drop_all_na_rows <- function(df) {
 
   value_cols <-
-    df %>% select(-node, -val_type, -scenario)
+    df %>% dplyr::select(-node, -val_type, -scenario)
 
   keep_rows <- apply(value_cols, 1, function(x) !all(is.na(x)))
   df[keep_rows, ]

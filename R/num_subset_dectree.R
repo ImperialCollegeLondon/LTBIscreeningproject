@@ -58,10 +58,10 @@ prob_subset_dectree <- function(cohort,
   subset_pop_tot <-
     lapply(subset_pop_tot,
            function(x) cbind(x,
-                             startTx_to_curedTB = ifelse(is.nan(startTx_to_curedTB(x)),
+                             startTx_to_curedTB = if_else(is.nan(startTx_to_curedTB(x)),
                                                          0,
                                                          startTx_to_curedTB(x)),
-                             test_to_curedTB = ifelse(is.nan(test_to_curedTB(x)),
+                             test_to_curedTB = if_else(is.nan(test_to_curedTB(x)),
                                                       0,
                                                       test_to_curedTB(x))
            ))

@@ -82,34 +82,35 @@ ce_boundary_plot <- function(plot_data,
 base_filled_contour_plot <- function(plot_data,
                                      folders) {
 
-  levels_range <- seq(0, 250, 5)
+  levels_range <- seq(0, 100, 5)
 
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
 
   s1 <-
     lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 50 & Complete_Treatment_p == 50),
+                       subset(plot_data, Start_Treatment_p == 0.5 & Complete_Treatment_p == 0.5),
+                       # plot_data,
                        xlab = "Agree (%)", ylab = "Effective (%)",
                        at = levels_range,
                        main = "Start = 50 & Complete = 50",
                        col.regions = COL_REG)#topo.colors(100))
   s2 <-
     lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 50 & Complete_Treatment_p == 100),
+                       subset(plot_data, Start_Treatment_p == 0.5 & Complete_Treatment_p == 1),
                        xlab = "Agree (%)", ylab = "Effective (%)",
                        at = levels_range,
                        main = "Start = 50 & Complete = 100",
                        col.regions = COL_REG)#topo.colors(100))
   s3 <-
     lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 100 & Complete_Treatment_p == 50),
+                       subset(plot_data, Start_Treatment_p == 1 & Complete_Treatment_p == 0.5),
                        xlab = "Agree (%)", ylab = "Effective (%)",
                        at = levels_range,
                        main = "Start = 100 & Complete = 50",
                        col.regions = COL_REG)#topo.colors(100))
   s4 <-
     lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                       subset(plot_data, Start_Treatment_p == 100 & Complete_Treatment_p == 100),
+                       subset(plot_data, Start_Treatment_p == 1 & Complete_Treatment_p == 1),
                        xlab = "Agree (%)", ylab = "Effective (%)",
                        at = levels_range,
                        main = "Start = 100 & Complete = 100",

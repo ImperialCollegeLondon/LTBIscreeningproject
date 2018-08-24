@@ -161,10 +161,10 @@ IMPUTED_sample <-
          date_exit_uk1_issdt = date_exit_uk1 - issdt,
          date_death1_issdt.years = as.numeric(date_death1_issdt)/365.25,
          date_exit_uk1_issdt.years = as.numeric(date_exit_uk1_issdt)/365.25,
-         date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100,
+         date_exit_uk1_issdt = if_else(date_exit_uk1_issdt.years == 100,
                                       yes = Inf,
                                       no = date_exit_uk1_issdt),
-         date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100,
+         date_exit_uk1_issdt.years = if_else(date_exit_uk1_issdt.years == 100,
                                             yes = Inf,
                                             no = date_exit_uk1_issdt.years))
 
@@ -197,10 +197,10 @@ IMPUTED_sample <-
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(rNotificationDate_issdt = rNotificationDate - issdt,
-                rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0,
+                rNotificationDate_issdt = if_else(rNotificationDate_issdt < 0,
                                                  yes = NA,
                                                  no = rNotificationDate_issdt),
-                uk_tb = ifelse(is.na(rNotificationDate_issdt),
+                uk_tb = if_else(is.na(rNotificationDate_issdt),
                                yes = 0,
                                no = 1),
                 notif_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)

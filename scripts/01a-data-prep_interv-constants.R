@@ -63,7 +63,7 @@ interv <-
        N.mc = N.mc,
        cluster = cluster,
        no_students = no_students,
-       discount_rate = ifelse(use_discount, 0.035, 0))
+       discount_rate = if_else(use_discount, 0.035, 0))
 
 save(interv,
      file = "data/intervention_constants.RData")

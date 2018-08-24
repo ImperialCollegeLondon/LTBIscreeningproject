@@ -39,7 +39,7 @@ library(rstanarm)
 # pvalue <- sapply(lm_basic,
 #                  function(x) summary(x)$coefficients["policyscreened", "Pr(>|t|)"])  #2-sided
 #
-# ceac <- ifelse(beta_pos, 1 - pvalue/2, pvalue/2)  #https://bmchealthservres.biomedcentral.com/articles/10.1186/1472-6963-6-68
+# ceac <- if_else(beta_pos, 1 - pvalue/2, pvalue/2)  #https://bmchealthservres.biomedcentral.com/articles/10.1186/1472-6963-6-68
 # plot(y = ceac, x = wtp_seq, type = "o")
 
 
@@ -125,7 +125,7 @@ try(
 # pvalue <- sapply(lm_basic,
 #                  function(x) summary(x)$coefficients["policyscreened", "Pr(>|t|)"])  #2-sided
 #
-# ceac <- ifelse(beta_pos, 1 - pvalue/2, pvalue/2)  #https://bmchealthservres.biomedcentral.com/articles/10.1186/1472-6963-6-68
+# ceac <- if_else(beta_pos, 1 - pvalue/2, pvalue/2)  #https://bmchealthservres.biomedcentral.com/articles/10.1186/1472-6963-6-68
 # plot(y = ceac, x = wtp_seq, type = "o")
 
 

@@ -65,15 +65,15 @@ nmb_scenarios <- function(e0, c0,
 
 #' Partial Bayesian linear regression function
 #'
-#' @param nmb_form
+#' @param formula
 #' @param ...
 #'
 #' @return
 #' @export
-bayeslm_wtp <- function(nmb_form,
-                        nmb_mat){
+bayeslm_wtp <- function(nmb_mat,
+                        formula){
 
-  arm::bayesglm(formula = nmb_form,
+  arm::bayesglm(formula = formula,
                 family = gaussian,
                 data = nmb_mat,
                 prior.mean = 0,
@@ -104,7 +104,7 @@ optimal_thresholds <- function(lm_multi,
   opt <-
     opt %>%
     set_names(wtp_seq) %>%
-    ifelse(test = . < 100 & . > 0,
+    if_else(test = . < 100 & . > 0,
            yes =  .,
            no =  NA)
 

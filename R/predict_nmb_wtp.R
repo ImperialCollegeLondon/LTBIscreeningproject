@@ -69,25 +69,41 @@ wide_INMB <- function(pred,
 #' This can be a super set of values because the prediction
 #' function just picks the ones that are in the fitted model.
 #'
-#' @param folders
+#' @param grid_min,grid_max
+#' @param step_size
+#' @param agree,start,complete,effective,cost
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' create_pred_newdata()
+#' create_pred_newdata(sens = 0.9,
+#'                   spec = 0.85,
+#'                   #start = c(0.5, 1),
+#'                   #complete = c(0.5, 1),
+#'                   cost = 50)
 #'
-create_pred_newdata <- function() {
+create_pred_newdata <- function(grid_min = 0.5,
+                                grid_max = 1,
+                                step_size = 0.01,
+                                agree = NA,
+                                sens = NA,
+                                spec = NA,
+                                start = NA,
+                                complete = NA,
+                                effective = NA,
+                                cost = NA) {
 
-  # p_grid_vals <- seq(0.05, 1, by = 0.05)
-  p_grid_vals <- seq(0.5, 1, by = 0.5)
+  p_grid_vals <- seq(grid_min, grid_max, by = step_size)
 
   newdata <-
-    expand.grid("Agree_to_Screen_p" = p_grid_vals,
-                "Start_Treatment_p" = p_grid_vals,
-                "Complete_Treatment_p" = p_grid_vals,
-                "Effective_p" = p_grid_vals,
-                "Agree_to_Screen_cost" = seq(50, 100, by = 50),
+    expand.grid("Agree_to_Screen_p" = if (is.na(agree)) p_grid_vals else agree,
+                "Sensitivity_p" = if (is.na(sens)) p_grid_vals else sens,
+                "Specificity_p" = if (is.na(spec)) p_grid_vals else spec,
+                "Start_Treatment_p" = if (is.na(start)) p_grid_vals else start,
+                "Complete_Treatment_p" = if (is.na(complete)) p_grid_vals else complete,
+                "Effective_p" = if (is.na(effective)) p_grid_vals else effective,
+                "Agree_to_Screen_cost" = if (is.na(cost)) 50 else cost,
                 "type" = c("screened", "statusquo"))
 
   write.csv(newdata, here::here("data", "predict_newdata.csv"))
