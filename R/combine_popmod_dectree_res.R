@@ -16,7 +16,7 @@ combine_popmod_dectree_res <- function(cohort,
                                        interv,
                                        popmod_res,
                                        dectree_res,
-                                       folders) {
+                                       folders = NA) {
 
   t_dectree <- list(cost_person = purrr::map(dectree_res, "mc_cost"),
                     QALY_person = purrr::map(dectree_res, "mc_health"))

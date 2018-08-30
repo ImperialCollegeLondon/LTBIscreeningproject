@@ -38,9 +38,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(screen_bcea, folders)
 
-  ##TODO:
   pred_INMB <- nmb_predictions(ce_res, folders)
-
   plot_CE_contours(pred_INMB, folders)
 
 

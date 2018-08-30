@@ -1,13 +1,13 @@
 
 #' Calculate total cost of a scenario
 #'
-#' @param endpoint 'death' or 'exit uk'
-#' @param unit_cost diagnosis and treatment cost distributions
+#' @param endpoint \code{death} or \code{exit uk}
+#' @param unit_cost Diagnosis and treatment cost distributions
 #' @param probs_contact Proportions of individuals in subsets
 #' @param cohort nrow total number of tb cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured
 #'
-#' @return list 'statusquo' and 'screened'
+#' @return list \code{statusquo}' and \code{screened}
 #' @export
 #'
 #' @examples
