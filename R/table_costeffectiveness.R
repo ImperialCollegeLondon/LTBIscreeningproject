@@ -4,8 +4,8 @@
 #' Take \code{BCEA} package object as input and
 #' creates a policy summary table over scenarios.
 #'
-#' @param bcea_obj Pre-calculated output from BCEA package (class(bcea))
-#' @param wtp_threshold Willingness to pay; Default: \pound 20000
+#' @param bcea_out Pre-calculated output from BCEA package
+#' @param wtp_threshold Willingness to pay; Default: £20,000
 #' @param folder text string save location
 #'
 #' @return data.frame with columns:
@@ -37,12 +37,12 @@ table_costeffectiveness <- function(bcea, ...) {
 
 #' @rdname table_costeffectiveness
 #'
-table_costeffectiveness.bcea <- function(bcea_obj,
+table_costeffectiveness.bcea <- function(bcea_out,
                                          wtp_threshold = 20000,
                                          folder = NA) {
 
   mean_vals <-
-    with(bcea_obj,
+    with(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparisons),
@@ -58,7 +58,7 @@ table_costeffectiveness.bcea <- function(bcea_obj,
                    "ceac_WTP30k" = round(ceac[k == 30000, ], 2))))
 
   L95 <-
-    with(bcea_obj,
+    with(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparisons),
@@ -75,7 +75,7 @@ table_costeffectiveness.bcea <- function(bcea_obj,
                  )))
 
   U95 <-
-    with(bcea_obj,
+    with(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparisons),

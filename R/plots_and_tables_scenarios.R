@@ -1,13 +1,13 @@
 
 #' plots_and_tables_scenarios
 #'
-#' Multiple types of figures.
+#' Multiple types of figures and tables.
 #'
 #' @param cohort
 #' @param dectree_res
 #' @param popmod_res
 #' @param ce_res
-#' @param folders
+#' @param folders list of input/output folders
 #'
 #' @return
 #' @export
@@ -20,14 +20,17 @@ plots_and_tables_scenarios <- function(cohort,
                                        ce_res,
                                        folders) {
 
-  screen_bcea <- screen_bcea(ce_res$ce_incr)
+  bcea_incr <- bcea_incremental(ce_res$ce_incr)
+  bcea_default <- bcea(e = -ce_res$ce_default$e,
+                       c = -ce_res$ce_default$c,
+                       ref = 1)
 
-  ceplane_plot_and_save(screen_bcea, folders)
+  ceplane_plot_and_save(bcea_incr, folders)
   # ce_plane_with_annotations()
 
   source("scripts/05j-strat_pop_year.R", local = TRUE)
 
-  table_costeffectiveness(screen_bcea, wtp_threshold, folders$output$scenario)
+  table_costeffectiveness(bcea_default, wtp_threshold)#, folders$output$scenario)
 
   num_subset_dectree(cohort, dectree_res, folders$output$scenario)
   prob_subset_dectree(cohort, dectree_res, folders$output$scenario)
@@ -36,7 +39,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   cbind_all_subsets(folders$output$scenario)
 
-  ceac_plot_and_save(screen_bcea, folders)
+  ceac_plot_and_save(bcea_incr, folders)
 
   pred_INMB <- nmb_predictions(ce_res, folders)
   plot_CE_contours(pred_INMB, folders)

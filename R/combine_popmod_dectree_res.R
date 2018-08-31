@@ -35,7 +35,12 @@ combine_popmod_dectree_res <- function(cohort,
                   t_dectree,
                   screen_discount)
 
+  ce_default <- ce_default(ce0, ce1)
+
   list(ce0 = ce0,
        ce1 = ce1,
+       ce_default = ce_default,
        ce_incr = ce_incr)
 }
+
+
