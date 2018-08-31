@@ -16,9 +16,9 @@
 #'   \item Incremental_QALY
 #'   \item ICER
 #'   \item INB
-#'   \item ceac_WTP20000
-#'   \item ceac_WTP25000
-#'   \item ceac_WTP30000
+#'   \item ceac_WTP20k
+#'   \item ceac_WTP25k
+#'   \item ceac_WTP30k
 #' }
 #'
 #' @export
@@ -45,54 +45,54 @@ table_costeffectiveness.bcea <- function(bcea_out,
     with(bcea_out,
          do.call(data.frame,
                  list(
-                   "Scenario" = seq_len(n.comparisons),
-                   "Cost" = round(colMeans(c)[-1], 2),
-                   "QALY" = round(colMeans(e)[-1], 5),
-                   "Incremental_cost" = round(colMeans(delta.c), 2),
-                   "Incremental_QALY" = round(colMeans(delta.e), 5),
-                   "ICER" = round(ICER, 2),
-                   "INB" = round(eib[k == wtp_threshold], 2),
-                   "ceac_WTP15k" = round(ceac[k == 15000, ], 2),
-                   "ceac_WTP20k" = round(ceac[k == 20000, ], 2),
-                   "ceac_WTP25k" = round(ceac[k == 25000, ], 2),
-                   "ceac_WTP30k" = round(ceac[k == 30000, ], 2))))
+                   "Scenario" = seq_len(n.comparators) - 1,
+                   "Cost" = round(colMeans(c), 2),
+                   "QALY" = round(colMeans(e), 5),
+                   "Incremental_cost" = c("", round(colMeans(delta.c), 2)),
+                   "Incremental_QALY" = c("", round(colMeans(delta.e), 5)),
+                   "ICER" = c("", round(ICER, 2)),
+                   "INB" = c("", round(eib[k == wtp_threshold], 2)),
+                   "ceac_WTP15k" = c("", round(ceac[k == 15000, ], 2)),
+                   "ceac_WTP20k" = c("", round(ceac[k == 20000, ], 2)),
+                   "ceac_WTP25k" = c("", round(ceac[k == 25000, ], 2)),
+                   "ceac_WTP30k" = c("", round(ceac[k == 30000, ], 2)))))
 
   L95 <-
     with(bcea_out,
          do.call(data.frame,
                  list(
-                   "Scenario" = seq_len(n.comparisons),
-                   "Cost" = round(apply(c, 2, quantile, probs = 0.025)[-1], 2),
-                   "QALY" = round(apply(e, 2, quantile, probs = 0.025)[-1], 5),
-                   "Incremental_cost" = round(apply(delta.c, 2, quantile, probs = 0.025), 2),
-                   "Incremental_QALY" = round(apply(delta.e, 2, quantile, probs = 0.025), 5),
-                   "ICER" = rep("", length(n.comparisons)), # how to get this??
-                   "INB" = round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.025), 2),
-                   "ceac_WTP15k" = rep("", length(n.comparisons)),
-                   "ceac_WTP20k" = rep("", length(n.comparisons)),
-                   "ceac_WTP25k" = rep("", length(n.comparisons)),
-                   "ceac_WTP30k" = rep("", length(n.comparisons))
+                   "Scenario" = seq_len(n.comparators) - 1,
+                   "Cost" = round(apply(c, 2, quantile, probs = 0.025), 2),
+                   "QALY" = round(apply(e, 2, quantile, probs = 0.025), 5),
+                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.025), 2)),
+                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.025), 5)),
+                   "ICER" = rep("", length(n.comparators)), # how to get this??
+                   "INB" = c("", round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.025), 2)),
+                   "ceac_WTP15k" = rep("", length(n.comparators)),
+                   "ceac_WTP20k" = rep("", length(n.comparators)),
+                   "ceac_WTP25k" = rep("", length(n.comparators)),
+                   "ceac_WTP30k" = rep("", length(n.comparators))
                  )))
 
   U95 <-
     with(bcea_out,
          do.call(data.frame,
                  list(
-                   "Scenario" = seq_len(n.comparisons),
-                   "Cost" = round(apply(c, 2, quantile, probs = 0.975)[-1], 2),
-                   "QALY" = round(apply(e, 2, quantile, probs = 0.975)[-1], 5),
-                   "Incremental_cost" = round(apply(delta.c, 2, quantile, probs = 0.975), 2),
-                   "Incremental_QALY" = round(apply(delta.e, 2, quantile, probs = 0.975), 5),
+                   "Scenario" = seq_len(n.comparators) - 1,
+                   "Cost" = round(apply(c, 2, quantile, probs = 0.975), 2),
+                   "QALY" = round(apply(e, 2, quantile, probs = 0.975), 5),
+                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.975), 2)),
+                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.975), 5)),
                    "ICER" = rep("", length(n.comparisons)), # how to get this??
-                   "INB" = round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.975), 2),
-                   "ceac_WTP15k" = rep("", length(n.comparisons)),
-                   "ceac_WTP20k" = rep("", length(n.comparisons)),
-                   "ceac_WTP25k" = rep("", length(n.comparisons)),
-                   "ceac_WTP30k" = rep("", length(n.comparisons))
+                   "INB" = c("", round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.975), 2)),
+                   "ceac_WTP15k" = rep("", length(n.comparators)),
+                   "ceac_WTP20k" = rep("", length(n.comparators)),
+                   "ceac_WTP25k" = rep("", length(n.comparators)),
+                   "ceac_WTP30k" = rep("", length(n.comparators))
                  )))
 
   # make 95% CI "(., .)"
-  res <-
+  LU95 <-
     rbind(L95,
           U95) %>%
     group_by(Scenario) %>%
@@ -111,7 +111,7 @@ table_costeffectiveness.bcea <- function(bcea_out,
   # combine all ". (., .)"
   res <-
     rbind(mean_vals,
-          res) %>%
+          LU95) %>%
     group_by(Scenario) %>%
     summarise(Cost = paste(Cost, collapse = " "),
               QALY = paste(QALY, collapse = " "),
@@ -126,9 +126,9 @@ table_costeffectiveness.bcea <- function(bcea_out,
 
 
   if (!is.na(folder)) {
-    write.csv(x = out,
+    write.csv(x = res,
               file = paste(folder, "ce_table.csv", sep = "/"))
   }
 
-  invisible(out)
+  invisible(res)
 }
