@@ -1,7 +1,7 @@
 Package: LTBIscreeningproject
 Type: Package
 Title: LTBI screening cost-effectiveness analysis
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
     person("Nathan", "Green", , "nathan.green@imperial.ac.uk", role = c("aut", "cre"), 
       comment = c(ORCID = "0000-0003-4757-117X")
