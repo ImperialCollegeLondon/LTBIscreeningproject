@@ -5,7 +5,7 @@
 #' creates a policy summary table over scenarios.
 #'
 #' @param bcea_out Pre-calculated output from BCEA package
-#' @param wtp_threshold Willingness to pay; Default: £20,000
+#' @param wtp_threshold Willingness to pay; Default: &20,000
 #' @param folder text string save location
 #'
 #' @return data.frame with columns:
@@ -123,7 +123,6 @@ table_costeffectiveness.bcea <- function(bcea_out,
               ceac_WTP20k = paste(ceac_WTP20k, collapse = ""),
               ceac_WTP25k = paste(ceac_WTP25k, collapse = ""),
               ceac_WTP30k = paste(ceac_WTP30k, collapse = ""))
-
 
   if (!is.na(folder)) {
     write.csv(x = res,

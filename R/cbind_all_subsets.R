@@ -20,7 +20,7 @@ cbind_all_subsets <- function(read_folder,
     dplyr::bind_rows(tb_avoid,
                      num_subset_dectree) %>%
     arrange(scenario) %>%
-    select(-X)
+    dplyr::select(-X)
 
   write.csv(all_subset, file = paste(write_folder, "all_subsets.csv", sep = "/"))
 

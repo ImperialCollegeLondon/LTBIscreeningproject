@@ -10,7 +10,7 @@ Authors@R: c(
     )
 Maintainer: Nathan Green <nathan.green@imperial.ac.uk>
 Description: Decision tree and competing risks individual level model.
-License: MIT
+License: MIT + file LICENSE
 LazyData: TRUE
 Imports:
     QALY,
@@ -42,7 +42,7 @@ Imports:
     lattice,
     here
 RoxygenNote: 6.0.1
-Suggests:
+Suggests: 
     knitr,
     rmarkdown,
     testthat,
@@ -52,5 +52,6 @@ Suggests:
     memoise,
     directlabels,
     cowplot,
-    gridExtra
+    gridExtra,
+    covr
 VignetteBuilder: knitr

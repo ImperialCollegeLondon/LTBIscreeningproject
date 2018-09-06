@@ -32,12 +32,12 @@ suth4 <- c(suth4, rep(tail(suth4,1), length(suth) - length(suth4) + 1))
 
 p_incid_year  <- c(Lancet_prob,
                    p_incid_sutherland[max_years_obs:(interv$FUP_MAX_YEAR - max_years_obs)])
-p_incid_year2 <- c(Lancet_prob,
-                   suth2)
-p_incid_year4 <- c(Lancet_prob,
-                   suth4)
-p_incid_year_ald <- c(Lancet_prob,
-                   rep(0, interv$FUP_MAX_YEAR - max_years_obs)) # zeros after Aldridge
+# p_incid_year2 <- c(Lancet_prob,
+#                    suth2)
+# p_incid_year4 <- c(Lancet_prob,
+#                    suth4)
+# p_incid_year_ald <- c(Lancet_prob,
+#                    rep(0, interv$FUP_MAX_YEAR - max_years_obs)) # zeros after Aldridge
 
 
 ## comment out appropriately

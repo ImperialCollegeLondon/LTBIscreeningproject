@@ -1,4 +1,4 @@
-- Session info -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Session info --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  setting  value                       
  version  R version 3.4.4 (2018-03-15)
  os       Windows 7 x64 SP 1          
@@ -7,19 +7,19 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-08-24                  
+ date     2018-09-04                  
 
-- Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Packages ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
  abind                   1.4-5       2016-07-21 CRAN (R 3.4.1)                         
- arm                     1.9-3       2016-11-27 CRAN (R 3.4.1)                         
+ arm                   * 1.9-3       2016-11-27 CRAN (R 3.4.1)                         
  assertr                 2.5         2018-02-23 CRAN (R 3.4.3)                         
  assertthat            * 0.2.0       2017-04-11 CRAN (R 3.4.1)                         
  backports               1.1.2       2017-12-13 CRAN (R 3.4.3)                         
  bayesm                  3.1-0.1     2017-07-21 CRAN (R 3.4.3)                         
  BCEA                  * 2.2-5       2016-11-18 CRAN (R 3.4.1)                         
  bindr                   0.1.1       2018-03-13 CRAN (R 3.4.4)                         
- bindrcpp                0.2.2       2018-03-29 CRAN (R 3.4.4)                         
+ bindrcpp              * 0.2.2       2018-03-29 CRAN (R 3.4.4)                         
  boot                    1.3-20      2017-08-06 CRAN (R 3.4.4)                         
  brew                    1.0-6       2011-04-13 CRAN (R 3.4.1)                         
  cellranger              1.1.0       2016-07-27 CRAN (R 3.4.1)                         
@@ -37,17 +37,17 @@
  deSolve                 1.20        2017-07-14 CRAN (R 3.4.1)                         
  devtools                1.13.5      2018-02-18 CRAN (R 3.4.3)                         
  DiagrammeR              1.0.0       2018-03-01 CRAN (R 3.4.3)                         
- digest                  0.6.15      2018-01-28 CRAN (R 3.4.3)                         
+ digest                  0.6.16      2018-08-22 CRAN (R 3.4.4)                         
  downloader              0.4         2015-07-09 CRAN (R 3.4.1)                         
- dplyr                 * 0.7.99.9000 2018-07-31 Github (tidyverse/dplyr@692aed6)       
+ dplyr                 * 0.7.99.9000 2018-08-30 Github (tidyverse/dplyr@dbbb918)       
  energy                  1.7-2       2017-09-14 CRAN (R 3.4.3)                         
  flexsurv              * 1.1         2017-03-27 CRAN (R 3.4.3)                         
  GGally                  1.3.2       2017-08-02 CRAN (R 3.4.1)                         
- ggplot2               * 2.2.1       2016-12-30 CRAN (R 3.4.1)                         
+ ggplot2               * 3.0.0       2018-07-03 CRAN (R 3.4.4)                         
  ggtern                  2.2.1       2017-07-17 CRAN (R 3.4.3)                         
  git2r                   0.21.0      2018-01-04 CRAN (R 3.4.3)                         
  glue                    1.3.0       2018-07-17 CRAN (R 3.4.4)                         
- gridExtra               2.3         2017-09-09 CRAN (R 3.4.1)                         
+ gridExtra             * 2.3         2017-09-09 CRAN (R 3.4.1)                         
  gtable                  0.2.0       2016-02-26 CRAN (R 3.4.1)                         
  here                  * 0.1         2017-05-28 CRAN (R 3.4.1)                         
  hms                     0.4.2       2018-03-10 CRAN (R 3.4.3)                         
@@ -56,31 +56,37 @@
  igraph                  1.2.1       2018-03-10 CRAN (R 3.4.3)                         
  influenceR              0.1.0       2015-09-03 CRAN (R 3.4.1)                         
  jsonlite                1.5         2017-06-01 CRAN (R 3.4.1)                         
+ KernSmooth              2.23-15     2015-06-29 CRAN (R 3.4.4)                         
+ ks                      1.11.0      2018-01-16 CRAN (R 3.4.3)                         
+ labeling                0.3         2014-08-23 CRAN (R 3.4.1)                         
  latex2exp               0.4.0       2015-11-30 CRAN (R 3.4.3)                         
  lattice                 0.20-35     2017-03-25 CRAN (R 3.4.4)                         
  lazyeval                0.2.1       2017-10-29 CRAN (R 3.4.2)                         
- lme4                    1.1-15      2017-12-21 CRAN (R 3.4.3)                         
+ lme4                  * 1.1-15      2017-12-21 CRAN (R 3.4.3)                         
  logging                 0.7-103     2013-04-12 CRAN (R 3.4.1)                         
  LTBIscreeningproject  * 0.1.0       <NA>       local                                  
  magrittr              * 1.5         2014-11-22 CRAN (R 3.4.1)                         
- MASS                    7.3-49      2018-02-23 CRAN (R 3.4.4)                         
- Matrix                  1.2-12      2017-11-30 CRAN (R 3.4.4)                         
- memoise               * 1.1.0       2018-04-10 Github (r-lib/memoise@06d16ec)         
+ MASS                  * 7.3-49      2018-02-23 CRAN (R 3.4.4)                         
+ Matrix                * 1.2-12      2017-11-30 CRAN (R 3.4.4)                         
+ mclust                  5.4         2017-11-22 CRAN (R 3.4.3)                         
+ memoise               * 1.1.0       2017-04-21 CRAN (R 3.4.4)                         
  minqa                   1.2.4       2014-10-09 CRAN (R 3.4.1)                         
  miscUtilities         * 0.1.0       2018-04-18 local                                  
  mstate                * 0.2.10      2016-12-04 CRAN (R 3.4.1)                         
  muhaz                   1.2.6       2014-08-09 CRAN (R 3.4.1)                         
- munsell                 0.4.3       2016-02-13 CRAN (R 3.4.1)                         
+ munsell                 0.5.0       2018-06-12 CRAN (R 3.4.4)                         
  mvtnorm                 1.0-7       2018-01-26 CRAN (R 3.4.3)                         
  nlme                    3.1-131.1   2018-02-16 CRAN (R 3.4.4)                         
  nloptr                  1.0.4       2014-08-04 CRAN (R 3.4.1)                         
+ packrat                 0.4.9-1     2018-03-12 CRAN (R 3.4.4)                         
  pillar                  1.2.1       2018-02-27 CRAN (R 3.4.3)                         
- pkgconfig               2.0.1       2017-03-21 CRAN (R 3.4.1)                         
+ pkgconfig               2.0.2       2018-08-16 CRAN (R 3.4.4)                         
  plotCostEffectiveness * 0.1.0       2018-08-08 local                                  
+ plotrix                 3.7         2017-12-07 CRAN (R 3.4.3)                         
  plyr                    1.8.4       2016-06-08 CRAN (R 3.4.1)                         
  proto                   1.0.0       2016-10-29 CRAN (R 3.4.3)                         
  purrr                 * 0.2.4       2017-10-18 CRAN (R 3.4.2)                         
- QALY                  * 0.1.0       2018-07-16 local                                  
+ QALY                  * 0.1.0       2018-08-28 local                                  
  quadprog                1.5-5       2013-04-17 CRAN (R 3.4.1)                         
  R6                      2.2.2       2017-06-17 CRAN (R 3.4.1)                         
  RColorBrewer            1.1-2       2014-12-07 CRAN (R 3.4.1)                         
@@ -90,13 +96,14 @@
  reshape               * 0.8.7       2017-08-06 CRAN (R 3.4.1)                         
  reshape2                1.4.3       2017-12-11 CRAN (R 3.4.3)                         
  rgexf                   0.15.3      2015-03-24 CRAN (R 3.4.1)                         
- rlang                   0.2.1.9000  2018-07-31 Github (tidyverse/rlang@d97e73d)       
+ rjags                   4-6         2016-02-19 CRAN (R 3.4.1)                         
+ rlang                   0.2.2.9000  2018-08-30 Github (r-lib/rlang@58819d6)           
  robustbase              0.92-8      2017-11-01 CRAN (R 3.4.3)                         
  Rook                    1.1-1       2014-10-20 CRAN (R 3.4.1)                         
  roxygen2                6.0.1       2017-02-06 CRAN (R 3.4.3)                         
  rprojroot               1.3-2       2018-01-03 CRAN (R 3.4.3)                         
  rstudioapi              0.7         2017-09-07 CRAN (R 3.4.1)                         
- scales                  0.5.0       2017-08-24 CRAN (R 3.4.1)                         
+ scales                  1.0.0       2018-08-09 CRAN (R 3.4.4)                         
  sessioninfo             1.0.1.9000  2018-04-18 Github (r-lib/sessioninfo@c871d01)     
  stringi                 1.1.7       2018-03-12 CRAN (R 3.4.1)                         
  stringr                 1.3.1       2018-05-10 CRAN (R 3.4.4)                         
@@ -116,4 +123,4 @@
  yaml                    2.1.18      2018-03-08 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [8ae0b00] 2018-08-24: batch run contour plot scripts across WTP
+Head:     [25b8cfa] 2018-08-31: inlcude status-quo in costeffectiveness_table()

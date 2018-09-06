@@ -14,10 +14,12 @@
 #'
 design_matrix <- function(params) {
 
+  if (!"p" %in% names(params)) params$p <- NA_integer_
+
   params %>%
     transmute(scenario,
               name = paste(node, val_type, sep = "_"),
-              val = if_else(val_type == "cost", min, p)) %>%
+              val = ifelse(val_type == "cost", min, p)) %>%
     cast(scenario ~ name, value = 'val') %>%
     setNames(map_chr(names(.),
                      function(x) gsub(x = x, pattern = " ", replacement = "_")))

@@ -70,7 +70,7 @@ num_subset_tb  <- function(cohort,
     dectree_res %>%
     map("subset_pop") %>%
     map(as.data.frame) %>%
-    map(~select(.x, "p_LTBI_to_cured")) %>%
+    map(~dplyr::select(.x, "p_LTBI_to_cured")) %>%
     map(reshape2::melt, id.vars = NULL) %>%
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
@@ -93,7 +93,7 @@ num_subset_tb  <- function(cohort,
     dectree_res %>%
     map("subset_pop") %>%
     map(as.data.frame) %>%
-    map(~select(.x, "p_LTBI_to_cured")) %>%
+    map(~dplyr::select(.x, "p_LTBI_to_cured")) %>%
     map(reshape2::melt, id.vars = NULL) %>%
     plyr::ldply(data.frame,
                 .id = "scenario") %>%
@@ -118,7 +118,7 @@ num_subset_tb  <- function(cohort,
           tb_avoid_all,
           tb_uk,
           tb_all) %>%
-    select(scenario, X2, everything()) %>%
+    dplyr::select(scenario, X2, everything()) %>%
     dplyr::rename(variable = X2)
 
   if (!is.na(folder)) {

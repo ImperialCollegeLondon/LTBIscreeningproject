@@ -30,7 +30,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   source("scripts/05j-strat_pop_year.R", local = TRUE)
 
-  table_costeffectiveness(bcea_default, wtp_threshold)#, folders$output$scenario)
+  table_costeffectiveness(bcea_default, wtp_threshold, folders$output$scenario)
 
   num_subset_dectree(cohort, dectree_res, folders$output$scenario)
   prob_subset_dectree(cohort, dectree_res, folders$output$scenario)
@@ -41,8 +41,10 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(bcea_incr, folders)
 
-  pred_INMB <- nmb_predictions(ce_res, folders)
-  plot_CE_contours(pred_INMB, folders)
+  boxplot_INMB(bcea_incr, folders)
+
+  # pred_INMB <- nmb_predictions(ce_res, folders)
+  # plot_CE_contours(pred_INMB, folders)
 
 
   ##TODO:...

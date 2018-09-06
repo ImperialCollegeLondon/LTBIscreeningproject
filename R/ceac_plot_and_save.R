@@ -33,9 +33,7 @@ ceac_plot_and_save.bcea <- function(bcea,
 
     # filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
     filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
-
     png(filename, width = 400, height = 350, res = 45)
-
     on.exit(dev.off())
   }
 
