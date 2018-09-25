@@ -16,14 +16,15 @@
 rm(list = ls())
 devtools::load_all(".")
 
-library(parallel)
-library(assertthat)
-library(miscUtilities)
-library(crayon)
-library(tibble)
-library(memoise)
-library(QALY)
-library(here)
+pkgs = c("parallel",
+         "assertthat",
+         "miscUtilities",
+         "crayon",
+         "tibble",
+         "memoise",
+         "QALY",
+         "here")
+inst = lapply(pkgs, library, character.only = TRUE)
 
 save_session_info("session_info.txt")
 

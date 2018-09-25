@@ -1,7 +1,7 @@
 
 #' plot_CE_contours
 #'
-#' @param pred_INMB
+#' @param dat_INMB
 #' @param folders
 #'
 #' @return
@@ -9,20 +9,24 @@
 #'
 #' @examples
 #'
-plot_CE_contours <- function(pred_INMB,
+plot_CE_contours <- function(dat_INMB,
                              folders) {
 
   fldr <- folders$plots$scenario
 
-  for (i in names(pred_INMB)) {
+  for (i in names(dat_INMB)) {
+
+    plot_data <- dat_INMB[[i]]
 
     folders$plots$scenario <- paste(fldr, i, sep = "/")
     dir.create(folders$plots$scenario, showWarnings = FALSE)
 
-    nmb_contour_plot(plot_data = pred_INMB[[i]], folders)
+    nmb_contour_plot(plot_data, folders)
 
-    # ce_boundary_plot(plot_data[[i]], folders)
+    #TODO: fix and tidy
+    # ce_boundary_plot(plot_data, folders)
+    # base_filled_contour_grid(plot_data, folders)
 
-    base_filled_contour_grid(plot_data = pred_INMB[[i]], folders)
+    inmb_levelplot(plot_data)
   }
 }

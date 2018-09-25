@@ -97,13 +97,13 @@ create_pred_newdata <- function(grid_min = 0.5,
   p_grid_vals <- seq(grid_min, grid_max, by = step_size)
 
   newdata <-
-    expand.grid("Agree_to_Screen_p" = if (is.na(agree)) p_grid_vals else agree,
-                "Sensitivity_p" = if (is.na(sens)) p_grid_vals else sens,
-                "Specificity_p" = if (is.na(spec)) p_grid_vals else spec,
-                "Start_Treatment_p" = if (is.na(start)) p_grid_vals else start,
-                "Complete_Treatment_p" = if (is.na(complete)) p_grid_vals else complete,
-                "Effective_p" = if (is.na(effective)) p_grid_vals else effective,
-                "Agree_to_Screen_cost" = if (is.na(cost)) 50 else cost,
+    expand.grid("Agree_to_Screen_p" = if (any(is.na(agree))) p_grid_vals else agree,
+                "Sensitivity_p" = if (any(is.na(sens))) p_grid_vals else sens,
+                "Specificity_p" = if (any(is.na(spec))) p_grid_vals else spec,
+                "Start_Treatment_p" = if (any(is.na(start))) p_grid_vals else start,
+                "Complete_Treatment_p" = if (any(is.na(complete))) p_grid_vals else complete,
+                "Effective_p" = if (any(is.na(effective))) p_grid_vals else effective,
+                "Agree_to_Screen_cost" = if (any(is.na(cost))) 50 else cost,
                 "type" = c("screened", "statusquo"))
 
   write.csv(newdata, here::here("data", "predict_newdata.csv"))
@@ -116,7 +116,7 @@ create_pred_newdata <- function(grid_min = 0.5,
 #'
 #' High-level
 #'
-#' @param ce_res
+#' @param ce_res from \code{combine_popmod_dectree_res()}
 #' @param folders
 #'
 #' @return

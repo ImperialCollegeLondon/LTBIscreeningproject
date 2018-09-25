@@ -32,3 +32,5 @@ utils::memory.size(max = 8000)
 options("max.print" = 3000)
 
 # utils::file.edit("scripts/00-main.R", editor = "C:/Program Files/RStudio/bin/rstudio.exe")
+
+options(continue = " ")

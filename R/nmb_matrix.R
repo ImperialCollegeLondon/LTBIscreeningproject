@@ -12,7 +12,7 @@
 #' @param wtp_min numeric
 #' @param wtp_max numeric
 #'
-#' @return list by wtp
+#' @return list of data.framesby wtp
 #' @export
 #'
 #' @examples
@@ -52,7 +52,7 @@ nmb_matrix <- function(ce1,
 
   if (!all(is.na(folders))) {
     save(nmb_mat,
-         file = pastef(folders$output$scenario, "sim_matrix.RData"))
+         file = pastef(folders$output$scenario, "nmb_mat.RData"))
   }
 
   # return as list

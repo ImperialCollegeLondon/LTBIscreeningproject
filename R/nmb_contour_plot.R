@@ -9,18 +9,22 @@
 #'
 #' @examples
 nmb_contour_plot <- function(plot_data,
-                             folders) {
+                             folders,
+                             x_var = "Start_Treatment_p",
+                             y_var = "Complete_Treatment_p",
+                             facet_vars = c("Agree_to_Screen_p", "Effective_p")) {
 
   p <-
-    ggplot(plot_data, aes(x = Agree_to_Screen_p,
-                          y = Effective_p,
-                          z = INMB)) +
-    facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
-               labeller = label_both) +
+    ggplot(plot_data, aes_string(x = x_var,
+                                 y = y_var,
+                                 z = "INMB")) +
+    # facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
+    # facet_wrap(facet_vars,
+    #            labeller = label_both) +
     scale_fill_gradient(limits = range(plot_data$INMB),
                         high = 'white',
                         low = 'red') +
-    geom_contour(aes(colour = ..level..), size = 1.2) +
+    geom_contour(aes(colour = ..level..), size = 1.2) #+
 
     # stat_contour(geom = "polygon", aes(fill = ..level..)) +
     # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
@@ -28,12 +32,13 @@ nmb_contour_plot <- function(plot_data,
     # scale_colour_gradient(guide = 'none') +
     # scale_x_continuous(expand = c(0,0)) +
     # scale_y_continuous(expand = c(0,0)) +
-    theme(legend.position = "none")
+    # theme(legend.position = "none")
   # stat_contour(breaks = 0)
 
-  print(
-    p <- direct.label(p, list("bottom.pieces", colour = 'black'))
-  )
+    ##TODO: new error??
+  # print(
+  #   p <- direct.label(p, list("bottom.pieces", colour = 'black'))
+  # )
 
   filename <- paste(folders$plots$scenario, "NMB_contours_grid.png", sep = "/")
   ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
@@ -83,6 +88,8 @@ base_filled_contour_grid <- function(plot_data,
                                      folders) {
 
 
+  ##TODO: update
+
   filename <- paste(folders$plots$scenario,
                     "filled_contour_grid.png", sep = "/")
 
@@ -118,18 +125,25 @@ base_filled_contour_grid <- function(plot_data,
 #' @export
 #'
 inmb_levelplot <- function(plot_data,
-                           start,
-                           complete) {
+                           formula = as.formula(INMB ~ Start_Treatment_p*Complete_Treatment_p),
+                           start = NA,
+                           complete = NA,
+                           levels_range = NA) {
 
-  levels_range <- seq(0, 400, 5)
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
 
-  lattice::levelplot(INMB ~ Agree_to_Screen_p*Effective_p,
-                     subset(plot_data,
-                            Start_Treatment_p == start & Complete_Treatment_p == complete),
-                     xlab = "Agree (%)", ylab = "Effective (%)",
+  if (any(is.na(levels_range))) {
+    max_min <- range(plot_data$INMB)
+    levels_range <- seq(max_min[1] - 1, max_min[2] + 1, 1)
+  }
+
+  lattice::levelplot(formula,
+                     plot_data,
+                     # subset(plot_data,
+                     #        Start_Treatment_p == start & Complete_Treatment_p == complete),
+                     xlab = "Start (%)", ylab = "Complete (%)",
                      at = levels_range,
-                     main = paste("Start =", start, "& Complete =", complete),
+                     # main = paste("Start =", start, "& Complete =", complete),
                      col.regions = COL_REG)#topo.colors(100))
 }
 

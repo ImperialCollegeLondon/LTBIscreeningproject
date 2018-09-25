@@ -43,8 +43,11 @@ plots_and_tables_scenarios <- function(cohort,
 
   boxplot_INMB(bcea_incr, folders)
 
-  # pred_INMB <- nmb_predictions(ce_res, folders)
-  # plot_CE_contours(pred_INMB, folders)
+  pred_INMB <- nmb_predictions(ce_res, folders)
+  plot_CE_contours(pred_INMB, folders)
+
+  # out_INMB <- inmb_from_bcea(bcea_default, folders)
+  # plot_CE_contours(out_INMB, folders)
 
 
   ##TODO:...
