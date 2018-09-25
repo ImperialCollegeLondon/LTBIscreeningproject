@@ -31,7 +31,7 @@ run_model <- function(sink_out = FALSE) {
 
     try_out <-
       try(
-        policy_run()
+        run_policy()
       )
 
     handle_try_error(try_out)

@@ -9,7 +9,7 @@
 #' @param ce_res
 #' @param folders list of input/output folders
 #'
-#' @return
+#' @return Side effects only
 #' @export
 #'
 #' @examples

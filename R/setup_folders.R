@@ -4,7 +4,7 @@
 #' @param policy_name String
 #' @param interv List of model run constants
 #'
-#' @return
+#' @return List of folder locations
 #' @export
 #'
 #' @examples
@@ -37,7 +37,13 @@ setup_folders <- function(policy_name,
 }
 
 
-#
+#' Copy input data to output folder
+#'
+#' @param file_names
+#' @param to_dir
+#'
+#' @return
+#' @export
 cp_in_data_to_out_dir <- function(file_names,
                                   to_dir) {
 

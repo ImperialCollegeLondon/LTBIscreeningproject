@@ -8,6 +8,12 @@
 #' @param folders
 #'
 #' @return
+#' \itemize{
+#'   \item ce0: marginal status-quo
+#'   \item ce1: marginal intervention
+#'   \item ce_default: non_incremental cost-effectiveness
+#'   \item ce_incr: incremental cost-effectivness
+#'   }
 #' @export
 #'
 #' @examples

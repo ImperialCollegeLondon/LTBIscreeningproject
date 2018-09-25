@@ -7,6 +7,26 @@
 #' @param folders list of strings
 #'
 #' @return
+#' \itemize{
+#'   \item QALY.statusquo
+#'   \item QALY.screened
+#'   \item E_cost_screened
+#'   \item cost.screened_person
+#'   \item cost.statusquo_person
+#'   \item cost_incur
+#'   \item cost.statusquo
+#'   \item cost.screened
+#'   \item E_QALY_screened
+#'   \item QALY.screened_person
+#'   \item QALY.statusquo_person
+#'   \item QALYgain
+#'   \item cost_incur_person
+#'   \item E_cost_incur
+#'   \item E_cost_incur_person
+#'   \item QALYgain_person
+#'   \item E_QALYgain
+#'   \item E_QALYgain_person
+#' }
 #' @export
 #'
 #' @examples

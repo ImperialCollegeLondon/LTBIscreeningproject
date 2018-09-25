@@ -1,5 +1,5 @@
 
-#' policy_run
+#' run_policy
 #'
 #' A single policy simulation
 #'
@@ -8,7 +8,7 @@
 #'
 #' @examples
 #'
-policy_run <- function() {
+run_policy <- function() {
 
   data("policies"); data("policies_ls")
   data("intervention_constants")

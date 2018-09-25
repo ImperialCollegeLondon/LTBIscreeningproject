@@ -1,5 +1,10 @@
 
-#
+#' run_final_message
+#'
+#' @param run
+#'
+#' @return
+#' @export
 run_final_message <- function(run) {
 
   elapsed <- proc.time() - run$start_runtime

@@ -1,13 +1,17 @@
-# **************************************
-# project: LTBI screening
-# N Green
-# Oct 2016
-# data-prep_constants-policy.R
-#
-# simulation specific constants
+
+#' ---
+#' title: "LTBI screening model:
+#' simulation specific constants"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
-# policy-level sensitivity parameters -------------------------------------------
+# policy-level sensitivity parameters ----------------------------------
 
 policy_name <- policies_ls[policy]
 

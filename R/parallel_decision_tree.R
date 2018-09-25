@@ -12,7 +12,7 @@
 #' @param folders list
 #' @param out_datatree default:FALSE
 #'
-#' @return
+#' @return List of decision_tree_cluster outputs for each scenario
 #' @export
 #'
 #' @examples
