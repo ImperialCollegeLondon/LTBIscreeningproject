@@ -60,7 +60,7 @@ IMPUTED_sample <- dplyr::filter(IMPUTED_sample,
                                 date_death1 >= issdt)
 
 if (interv$force_everyone_stays) {
-    IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
+  IMPUTED_sample$date_exit_uk1 <- max(IMPUTED_sample$date_death1, na.rm = TRUE) + 100
 }
 
 
@@ -81,53 +81,9 @@ IMPUTED_sample$issdt_year <- format(IMPUTED_sample$issdt, '%Y')
 ##TODO: why are these are different to $year??
 
 
-# LTBI probs by WHO active TB group ---------------------------------
+IMPUTED_sample <- assign_LTBI_status(IMPUTED_sample,
+                                     pLatentTB.who)
 
-who_levels <- c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]")
-who_level_breaks <- c(0, 50, 150, 250, 350, 100000)
-
-# match active TB prevalence groups in dataset to Pareek (2011)
-IMPUTED_sample$who_prev_cat_Pareek2011 <- cut(IMPUTED_sample$who_prevalence,
-                                              breaks = who_level_breaks)
-
-IMPUTED_sample$who_prev_cat_Aldridge2016 <- cut(IMPUTED_sample$who_prevalence,
-                                                breaks = c(0, 39, 149, 349, 100000))
-
-data("TB_burden_countries")
-
-IMPUTED_sample <-
-  merge(x = IMPUTED_sample,
-        y = TB_burden_countries,
-        by.x = c('iso_a3_country', 'year'),#issdt_year'),
-        by.y = c('iso3', 'year'))
-
-
-IMPUTED_sample$who_inc_Pareek2011 <- cut(IMPUTED_sample$e_inc_100k,
-                                         breaks = who_level_breaks)
-
-### assume >35 == 35 year olds ###
-# i.e. age independent
-##TODO: can be age-dependent
-
-pLatentTB.who_age <-
-  matrix(data = pLatentTB.who,
-         ncol = length(interv$screen_age_range),
-         nrow = length(pLatentTB.who)) %>%
-  data.frame(who_levels, .) %>%
-  purrr::set_names("who_inc_Pareek2011",
-                   as.character(interv$screen_age_range))
-
-# join with main data set
-pLatentTB.who_age.long <-
-  pLatentTB.who_age %>%
-  reshape2:::melt.data.frame(id.vars = "who_inc_Pareek2011",
-                             value.name = "pLTBI",
-                             variable.name = "age_at_screen")
-
-IMPUTED_sample <- merge(x = IMPUTED_sample,
-                        y = pLatentTB.who_age.long,
-                        by = c("age_at_screen",
-                               "who_inc_Pareek2011"))
 
 ##TODO:
 ## why are there multiple prevalence values for each country/year group??
@@ -161,10 +117,10 @@ IMPUTED_sample <-
          date_exit_uk1_issdt = date_exit_uk1 - issdt,
          date_death1_issdt.years = as.numeric(date_death1_issdt)/365.25,
          date_exit_uk1_issdt.years = as.numeric(date_exit_uk1_issdt)/365.25,
-         date_exit_uk1_issdt = if_else(date_exit_uk1_issdt.years == 100,
+         date_exit_uk1_issdt = ifelse(date_exit_uk1_issdt.years == 100,
                                       yes = Inf,
                                       no = date_exit_uk1_issdt),
-         date_exit_uk1_issdt.years = if_else(date_exit_uk1_issdt.years == 100,
+         date_exit_uk1_issdt.years = ifelse(date_exit_uk1_issdt.years == 100,
                                             yes = Inf,
                                             no = date_exit_uk1_issdt.years))
 
@@ -197,12 +153,12 @@ IMPUTED_sample <-
 IMPUTED_sample <-
   IMPUTED_sample %>%
   dplyr::mutate(rNotificationDate_issdt = rNotificationDate - issdt,
-                rNotificationDate_issdt = if_else(rNotificationDate_issdt < 0,
-                                                 yes = NA,
-                                                 no = rNotificationDate_issdt),
-                uk_tb = if_else(is.na(rNotificationDate_issdt),
-                               yes = 0,
-                               no = 1),
+                rNotificationDate_issdt = ifelse(rNotificationDate_issdt < 0,
+                                                  yes = NA,
+                                                  no = rNotificationDate_issdt),
+                uk_tb = ifelse(is.na(rNotificationDate_issdt),
+                                yes = 0,
+                                no = 1),
                 notif_issdt.years = as.numeric(rNotificationDate_issdt)/365.25)
 
 

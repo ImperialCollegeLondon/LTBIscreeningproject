@@ -1,10 +1,16 @@
-# *****************************************************
-# LTBI screening
-# N Green
-# 2018
-#
-# gridded plots of the subpopulation sizes over time
-# can do this on the raw, fitted, extrapolated or subsample data
+
+#' ---
+#' title: "LTBI screening model:
+#' gridded plots of the subpopulation sizes over time
+#' can do this on the raw, fitted, extrapolated or subsample data"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
+
 
 # tb is for cases in EWNI only
 

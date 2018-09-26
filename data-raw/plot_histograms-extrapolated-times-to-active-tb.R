@@ -1,9 +1,14 @@
-#
-# project: LTBI screening
-# N Green
-# April 2017
-#
-# plots of number of active tb cases over time
+
+#' ---
+#' title: "LTBI screening model:
+#' plots histograms of number of active tb cases over time"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 # histograms --------------------------------------------------------------

@@ -3,7 +3,7 @@
 #'
 #' @param file_tag
 #'
-#' @return
+#' @return none
 #' @export
 #'
 #' @examples

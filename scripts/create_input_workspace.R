@@ -25,6 +25,7 @@ source("scripts/01-data-prep_scenario.R", echo = TRUE)
 
 source("scripts/01c-data-prep_modelling.R", echo = TRUE)
 
-source("scripts/04a_1-active-TB-extrapolation.R", echo = TRUE)
-
 source("scripts/04a_3-include-new-tb-events.R", echo = TRUE)
+
+
+# source("data-raw/active-TB-extrapolation.R", echo = TRUE)
