@@ -50,9 +50,12 @@ plots_and_tables_scenarios <- function(cohort,
   # plot_CE_contours(out_INMB, folders)
 
 
-  ##TODO:...
+  ##TODO: update this and extract to function & test
   # source("scripts/05-bayesglm_predictions.R")
   # source("scripts/05-stan_predictions.R")
+
+
+
 
   # source("scripts/05-ternary plots.R")
   # source("scripts/05f-tornado_plots.R")

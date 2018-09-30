@@ -369,5 +369,5 @@ utility$postTx <- 1 #perfectly recovered
 save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold, p_contact_tracing, treatment_delay,
      file = "data/cost_effectiveness_params.RData")
 
-save(cfr_age_lookup, NUM_SECONDARY_INF, NUM_CONTACTS,
+save(cfr_age_lookup, cfr_age_breaks, NUM_SECONDARY_INF, NUM_CONTACTS,
      file = "data/synthetic_cohort_params.RData")

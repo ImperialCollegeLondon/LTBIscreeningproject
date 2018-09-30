@@ -11,6 +11,13 @@
 #'
 sim_tb_times <- function(data,
                          prob) {
+
+  stopifnot(all(data$date_death1_issdt.years >= 0 |
+                  is.infinite(data$date_death1_issdt.years)))
+  stopifnot(all(data$date_exit_uk1_issdt.years >= 0 |
+                  is.infinite(data$date_exit_uk1_issdt.years)))
+  stopifnot(is_prob(prob))
+
   pop <- nrow(data)
 
   tb_year <- vector(length = pop,
@@ -35,7 +42,9 @@ sim_tb_times <- function(data,
 
         t_left_trunc <-
           if (mati['exit_uk']) {
+
             mati['exit_issdt']
+
           }else 0 #over-write observed times
 
         sample_tb_year(

@@ -41,8 +41,9 @@ for (i in seq_len(n.scenarios)) {
 
   event_times$tb = cohort_screen$notif_issdt.years
 
-  ##TODO: do this as a queue type
   strat_pop_year <- count_comprsk_events(event_times)
+  ##TODO: replace with this function
+  # strat_pop_year <- count_events2(event_times)
 
   strat_pop_year <- cbind(t(strat_pop_year), screen)
 

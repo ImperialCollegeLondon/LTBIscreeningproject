@@ -1,6 +1,15 @@
 
-time_intervals <- function(cohort,
-                           Tx_interval = 0.5) {
+#' split_time_intervals
+#'
+#' @param cohort
+#' @param Tx_interval
+#'
+#' @return
+#' @export
+#'
+#' @examples
+split_time_intervals <- function(cohort,
+                                 Tx_interval = 0.5) {
 
   cohort <-
     cohort %>%

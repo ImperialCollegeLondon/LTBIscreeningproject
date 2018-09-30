@@ -1,148 +1,48 @@
 
-#' Count Competing Risks Events Over Time
+#' count_comprsk_events
 #'
-#' Provide vectors or event times, where an individual
-#' can have multiple latent event times.
-#' The earliest of these is used at the actual time.
+#' This replaces a previous version.
 #'
-#' In cases where two events happen in the same time interval
-#' the first event in the list argument is used.
+#' @param event_times List
 #'
-#' If this weren't the case then it would be easier to calculate.
-#'
-#' @param event_times List of individual-level time series
-#' @param fup_max_year Time horizon
-#' @param fill Append counts up to time horixon after risk-set empty
-#'
-#' @return Event counts by year (wide matrix). Note that the risk-set is for the following year (remaining)
-#'         i.e. column year 1 is the risk set for year 2.
-#' \itemize{
-#'   \item year
-#'   \item tb
-#'   \item exit_uk
-#'   \item death
-#'   \item at-risk
-#' }
-#'
+#' @return
 #' @export
 #'
 #' @examples
 #'
-#' attach(cohort)
-#'
-#' event_times <- list(tb = notif_issdt.years,
-#'                          exit_uk = date_exit_uk1_issdt.years,
-#'                          death = date_death1_issdt.years)
-#'
-#' strat_pop_year <- count_comprsk_events(event_times) %>% t()
-#'
-#' detach(cohort)
-#'
-count_comprsk_events <- function(event_times,
-                                 fup_max_year = 100,
-                                 fill = TRUE){
+count_comprsk_events <- function(event_times) {
 
-  if (missing(event_times)) {
-    stop("Require event times")
-  }
+  times_dat <-
+    lapply(event_times, ceiling) %>%
+    data.frame()
 
-  n_events <- lapply(event_times, length) %>%
-    unlist()
+  times_dat$id <- seq_len(nrow(times_dat))
 
-  if (!assert_all_equal(n_events)) {
-    stop("Require number of time points to be the same for all events")
-  }
+  # find first event for each id
+  first_times <-
+    melt(times_dat, id.vars = "id") %>%
+    group_by(id) %>%
+    slice(which.min(value))
 
-  if (!is.list(event_times)) {
-    stop("Require list for event_times")
-  }
+  # count number of events at each time
+  count_times <-
+    first_times %>%
+    group_by(variable, value) %>%
+    summarise(count = length(id))
 
-  # replace missing event with after time horizon
-  event_times <- lapply(event_times,
-                        function(x) replace(x, is.na(x), 1001))
+  # rearrange to events as columns
+  res <- reshape2::dcast(count_times, value ~ variable,
+                         value.var = "count")
 
-  N_pop <- n_events[1]
+  res[is.na(res)] <- 0
 
-  event_counts <- NULL
-
-  for (yeari in seq_len(fup_max_year)) {
-
-    # FALSE means removed from the population
-    risk_set <- rep(TRUE, N_pop)
-    num_event_year <- NULL
-
-    for (j in seq_along(event_times)) {
-
-      # at-risk pop who experiences eventi before yeari
-      event_true <- event_times[[j]][risk_set] < yeari
-
-      risk_set <- remove_from_riskset(risk_set, event_true)
-
-      num_new_events <- sum(event_true)
-      num_event_year <- c(num_event_year,
-                          num_new_events)
-    }
-
-    event_counts <- cbind(event_counts,
-                          c(yeari,
-                            num_event_year,
-                            N_pop - sum(num_event_year)))
-
-    # risk-set = 0
-    if (N_pop - sum(num_event_year) <= 0) break
-  }
-
-  event_counts <- fill_to_fup_max_year(event_counts,
-                                       fup_max_year)
-
-  rownames(event_counts) <- c("year",
-                              names(event_times),
-                              "at-risk")
-
-  event_counts['year', ] <- seq_len(fup_max_year)
-
-  return(event_counts)
-}
-
-
-# fill by last value carried forward
-#'
-#' @param event_counts vector or TRUE FALSE
-#' @param fup_max_year time horizon
-#'
-#' @return
-#' @export
-fill_to_fup_max_year <- function(event_counts,
-                                 fup_max_year) {
-
-  num_years_events <- ncol(event_counts)
-
-  missing_years <- matrix(event_counts[, num_years_events, drop = FALSE],
-                          byrow = FALSE,
-                          nrow = nrow(event_counts),
-                          ncol = fup_max_year - num_years_events)
-
-  cbind(event_counts, missing_years)
-}
-
-
-#' remove_from_riskset
-#'
-#' @param risk_set vector or TRUE FALSE
-#' @param event_true vector or TRUE FALSE
-#'
-#' @return
-#' @export
-remove_from_riskset <- function(risk_set,
-                                event_true) {
-
-  risk_set[risk_set][event_true] <- FALSE
-  risk_set
-}
-
-
-#
-assert_all_equal <- function(x) {
-
-  abs(max(x) - min(x)) == 0
+  mutate(res,
+         total_tb = cumsum(tb),
+         total_exit_uk = cumsum(exit_uk),
+         total_death = cumsum(death),
+         atrisk_end = nrow(times_dat) - (total_tb + total_exit_uk + total_death),
+         atrisk_start = dplyr::lag(atrisk_end),
+         atrisk_start = ifelse(is.na(atrisk_start), nrow(times_dat), atrisk_start),
+         mean_atrisk = atrisk_end + (atrisk_start - atrisk_end)/2,
+         incid_rate = tb/mean_atrisk*100000)
 }
