@@ -14,6 +14,25 @@
 
 # tb is for cases in EWNI only
 
+append_scenario_num <- function(strat_pop_year, i) {
+
+  scenario_cols <- !names(strat_pop_year) %in% c("year", "discount")
+
+  names(strat_pop_year)[scenario_cols] <-
+    paste0(names(strat_pop_year)[scenario_cols], i)
+
+  strat_pop_year
+}
+
+
+
+##TODO:
+# strat_pop_year <- function(cohort,
+#                            dectree_res,
+#                            folders) {
+#
+# }
+
 event_times <- list(tb = cohort$notif_issdt.years,
                     exit_uk = cohort$date_exit_uk1_issdt.years,
                     death = cohort$date_death1_issdt.years)
@@ -42,28 +61,26 @@ for (i in seq_len(n.scenarios)) {
   event_times$tb = cohort_screen$notif_issdt.years
 
   strat_pop_year <- count_comprsk_events(event_times)
-  ##TODO: replace with this function
-  # strat_pop_year <- count_events2(event_times)
 
-  strat_pop_year <- cbind(t(strat_pop_year), screen)
+  strat_pop_year <- cbind.data.frame(strat_pop_year,
+                                     screen = screen[1:nrow(strat_pop_year)])
 
   # append average costs and discounted costs
 
   strat_pop_year <-
     data.frame(strat_pop_year, row.names = NULL) %>%
-    mutate(tb_diff = c(0, diff(tb)),
-           discount = discount(t_limit = n()),
+    mutate(discount = discount(t_limit = n()),
            c_tb = round(means$cost.aTB_TxDx + (means$num_sec_inf * means$cost.aTB_TxDx)/1.035, 2),
            c_screen = round(mean(dectree_res[[i]]$mc_cost), 2),
-           t_screen = screen * c_screen,
-           t_tb = tb_diff * c_tb,
-           dis_tb = as.integer(discount * t_tb),
-           dis_screen = as.integer(discount * t_screen))
+           totc_screen = screen * c_screen,
+           totc_tb = tb * c_tb,
+           dis_totc_tb = as.integer(discount * totc_tb),
+           dis_totc_screen = as.integer(discount * totc_screen))
 
-  names(strat_pop_year)[!names(strat_pop_year) %in% c("year", "discount")] <-
-    paste0(names(strat_pop_year)[!names(strat_pop_year) %in% c("year", "discount")], i)
+  strat_pop_year <- append_scenario_num(strat_pop_year, i)
 
-  res <- dplyr::full_join(res, strat_pop_year, by = c("year", "discount"))
+  res <- dplyr::full_join(res, strat_pop_year,
+                          by = c("year", "discount"))
 }
 
 write.csv(res,

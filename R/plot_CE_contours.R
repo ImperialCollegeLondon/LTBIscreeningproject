@@ -1,8 +1,8 @@
 
 #' plot_CE_contours
 #'
-#' @param dat_INMB
-#' @param folders
+#' @param dat_INMB from nmb_predictions()
+#' @param folders list
 #'
 #' @return
 #' @export
@@ -27,6 +27,6 @@ plot_CE_contours <- function(dat_INMB,
     # ce_boundary_plot(plot_data, folders)
     # base_filled_contour_grid(plot_data, folders)
 
-    inmb_levelplot(plot_data)
+    inmb_levelplot(plot_data, folders = folders)
   }
 }

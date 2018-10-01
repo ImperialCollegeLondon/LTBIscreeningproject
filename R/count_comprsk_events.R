@@ -31,8 +31,10 @@ count_comprsk_events <- function(event_times) {
     summarise(count = length(id))
 
   # rearrange to events as columns
-  res <- reshape2::dcast(count_times, value ~ variable,
-                         value.var = "count")
+  res <-
+    reshape2::dcast(count_times, value ~ variable,
+                         value.var = "count") %>%
+    dplyr::rename(year = value)
 
   res[is.na(res)] <- 0
 

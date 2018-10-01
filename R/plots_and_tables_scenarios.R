@@ -21,6 +21,7 @@ plots_and_tables_scenarios <- function(cohort,
                                        folders) {
 
   bcea_incr <- bcea_incremental(ce_res$ce_incr)
+
   bcea_default <- bcea(e = -ce_res$ce_default$e,
                        c = -ce_res$ce_default$c,
                        ref = 1)
@@ -51,8 +52,8 @@ plots_and_tables_scenarios <- function(cohort,
 
 
   ##TODO: update this and extract to function & test
-  # source("scripts/05-bayesglm_predictions.R")
-  # source("scripts/05-stan_predictions.R")
+  # source("scripts/05-bayesglm_predictions.R") ##TODO:
+  # source("scripts/05-stan_predictions.R") ##TODO:
 
 
 

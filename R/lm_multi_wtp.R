@@ -22,10 +22,12 @@ lm_multi_wtp <- function(nmb_formula,
                 prior.mean = 0, prior.df = 1000) #, prior.scale = 1000
   # lm_fit <- map(nmb_mat, f_lm, formula = nmb_formula)
 
-  if (!is.na(folders)) {
+  if (!any(is.na(folders))) {
 
-      write.csv(lm_list_to_df(lm_fit),
-                file = pastef(folders$output$scenario, "lm_multi_all_table.csv"))
+    write.csv(lm_list_to_df(lm_fit),
+              file = pastef(folders$output$scenario, "lm_multi_all_table.csv"))
+
+    save(lm_fit, file = pastef(folders$output$scenario, "lm_multi_all.RData"))
   }
 
   return(lm_fit)
@@ -46,9 +48,9 @@ lm_list_to_df <- function(fit) {
 
   out <-
     lapply(fit,
-         function(x) dplyr::select(tidy(x), -statistic)) %>%
-  plyr::join_all(by = "term") %>%
-  rbind(c("wtp", rep(names(fit), each = 3)))
+           function(x) dplyr::select(broom::tidy(x), -statistic)) %>%
+    plyr::join_all(by = "term") %>%
+    rbind(c("wtp", rep(names(fit), each = 3)))
 
   # format values
   out[ ,-1] <- round(sapply(out[ ,-1], as.numeric), 4)

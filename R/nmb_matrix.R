@@ -9,10 +9,9 @@
 #' @param ce0 status-quo
 #' @param folders list of strings
 #' @param design_mat
-#' @param wtp_min numeric
-#' @param wtp_max numeric
+#' @param wtp_min,wtp_max Willingness-to-pay limits; numeric
 #'
-#' @return list of data.framesby wtp
+#' @return list of data.frames by wtp
 #' @export
 #'
 #' @examples

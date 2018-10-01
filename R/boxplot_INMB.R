@@ -19,7 +19,8 @@ boxplot_INMB <- function(bcea, ...) {
 #'
 boxplot_INMB.bcea <- function(bcea,
                               folders = NA,
-                              wtp_threshold = 20000) {
+                              wtp_threshold = 20000,
+                              oneway = FALSE) {
 
   ##TODO: oneway/twoway conditions
 
@@ -47,19 +48,21 @@ boxplot_INMB.bcea <- function(bcea,
       ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
         geom_boxplot())
 
-  }else if (twoway) {
+  }else if (!oneway) {
 
-    other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost")]
+    # other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost")]
+    other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost", "Start_Treatment_p")]
 
     dat2 <-
       t(bcea$ib[bcea$k == wtp_threshold, , ]) %>%
       cbind.data.frame(design_mat, .) %>%
       melt.data.frame(id.vars = names(design_mat)) %>%
       dplyr::rename(INB = value) %>%
-      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
+      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost)) %>%
+      dplyr::mutate(Start_Treatment_p = factor(Start_Treatment_p))
 
     print(
-      ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Agree_to_Screen_cost")) +
+      ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Start_Treatment_p")) +
         geom_boxplot())
   }
 }

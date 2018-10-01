@@ -1,82 +1,58 @@
-#*******************************************************
-# project: LTBI screening
-# N Green
-# Oct 2017
-#
-# 05-bayesglm_predictions
+#' ---
+#' title: "LTBI screening model:
+#' 05-bayesglm_predictions"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
-sim_grid <- dplyr::filter(pred_data,
-                          Agree %in% c(50,60,70,80,90,100),
-                          Start %in% c(50,60,70,80,90,100),
-                          Complete %in% c(50,60,70,80,90,100),
-                          Effective %in% c(50,60,70,80,90,100))
 
-# sim_grid <-  plot_data #%>% select(-pred)
+# if (is.na(newdata)) {
+  newdata <- read.csv(here::here("data", "predict_newdata.csv"),
+                      stringsAsFactors = TRUE)
 
-N.sim <-  100#00 #N.mc
+  load(paste0(folders$output$scenario, "/lm_multi_all.RData"))
+# }
 
-# simulate from fitted model
-lm.sim <- arm::sim(lm_multi$`20000`, n = N.sim)
-coef.sim <- coef(lm.sim)
+newdata <- rm_redundant_covariates(lm_fit, newdata)
 
-pred_sim_20000 <- matrix(NA,
-                         ncol = nrow(coef.sim),
-                         nrow = nrow(sim_grid)/2)
+num_scenarios <- nrow(newdata)/2
 
-pred_sim_20000_wide <- sim_grid
+n_sim <-  1000 #N.mc
 
-for (i in seq_len(N.sim)) {
 
-  # replace with posterior sample
-  lm_multi$`20000`$coefficients <- coef.sim[i, ]
+out_sim <- lapply(lm_fit, bayes_predict, newdata, n_sim)
 
-  random_effect <- rnorm(n = nrow(sim_grid),
-                         mean = 0,
-                         sd = lm.sim@sigma[i])
 
-  sim_grid$pred <- predict(lm_multi$`20000`, newdata = sim_grid, type = "response") + random_effect
 
-  pred_sim_20000_wide[ ,paste0("pred", i)] <- sim_grid$pred
 
-  pred_sim_20000[ ,i] <-
-    tidyr::spread(sim_grid, policy, pred) %>%
-    arrange(Effective, Agree, Complete, Start) %>%
-    transmute(screened - statusquo) %>% unlist()
-}
-
-# probability cost-effective
-out_sim_20000 <-
-  data.frame(sim_grid[1:(nrow(sim_grid)/2), ],
-             prob_CE = apply(pred_sim_20000, 1,
-                             function(x) sum(x > 0)/ncol(pred_sim_20000)),
-             pc_5 = apply(pred_sim_20000, 1,
-                         function(x) quantile(x, probs = 0.05)),
-             pc_50 = apply(pred_sim_20000, 1,
-                         function(x) quantile(x, probs = 0.5)),
-             pc_95 = apply(pred_sim_20000, 1,
-                          function(x) quantile(x, probs = 0.95)))
 
 
 # plots -------------------------------------------------------------------
 
 ## probabilty cost-effective £20,000
-s1 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_20000, Start == 50 & Complete == 50),
-                         xlab = "Agree (%)", ylab = "Effective (%)",
+s1 <- lattice::levelplot(prob_CE ~ Start_Treatment_p * Complete_Treatment_p,
+                         out_sim[[1]],
+                         # subset(out_sim_20000, Start == 50 & Complete == 50),
+                         xlab = "Start (%)", ylab = "Complete (%)",
                          at = seq(0, 1, 0.01),
-                         main = "Start = 50 & Complete = 50",
+                         # main = "Start = 50 & Complete = 50",
                          col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s2 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_20000, Start == 50 & Complete == 100),
+s2 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim$20000, Start == 50 & Complete == 100),
                          xlab = "Agree (%)", ylab = "Effective (%)",
                          at = seq(0, 1, 0.01),
                          main = "Start = 50 & Complete = 100",
                          col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s3 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_20000, Start == 100 & Complete == 50),
+s3 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim$20000, Start == 100 & Complete == 50),
                          xlab = "Agree (%)", ylab = "Effective (%)",
                          at = seq(0, 1, 0.01),
                          main = "Start = 100 & Complete = 50",
                          col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s4 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_20000, Start == 100 & Complete == 100),
+s4 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim$20000, Start == 100 & Complete == 100),
                          xlab = "Agree (%)", ylab = "Effective (%)",
                          at = seq(0, 1, 0.01),
                          main = "Start = 100 & Complete = 100",
@@ -94,79 +70,7 @@ filename <- paste(plots_folder_scenario, "prob_CE_grid_20000.png", sep = "/")
 ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 
 
-# wtp = £30,000 -----------------------------------------------------------
 
-lm.sim <- arm::sim(lm_multi$`30000`, n = N.sim)
-coef.sim <- coef(lm.sim)
-
-pred_sim_30000 <- matrix(NA,
-                         ncol = nrow(coef.sim),
-                         nrow = nrow(sim_grid)/2)
-
-pred_sim_30000_wide <- sim_grid
-
-for (i in 1:nrow(coef.sim)) {
-
-  # replace with posterior sample
-  lm_multi$`30000`$coefficients <- coef.sim[i, ]
-
-  random_effect <- rnorm(n = nrow(sim_grid),
-                         mean = 0,
-                         sd = lm.sim@sigma[i])
-
-  sim_grid$pred <- predict(lm_multi$`30000`, newdata = sim_grid, type = "response") + random_effect
-
-  pred_sim_30000_wide[ ,paste0("pred", i)] <- sim_grid$pred
-
-  pred_sim_30000[ ,i] <-
-    tidyr::spread(sim_grid, policy, pred) %>%
-    arrange(Effective, Agree, Complete, Start) %>%
-    transmute(screened - statusquo) %>% unlist()
-}
-
-out_sim_30000 <-
-  data.frame(sim_grid[1:(nrow(sim_grid)/2), ],
-             prob_CE = apply(pred_sim_30000, 1,
-                             function(x) sum(x > 0)/ncol(pred_sim_30000)),
-             pc_5 = apply(pred_sim_30000, 1,
-                          function(x) quantile(x, probs = 0.05)),
-             pc_50 = apply(pred_sim_30000, 1,
-                           function(x) quantile(x, probs = 0.5)),
-             pc_95 = apply(pred_sim_30000, 1,
-                           function(x) quantile(x, probs = 0.95)))
-
-## probabilty cost-effective
-s1 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_30000, Start == 50 & Complete == 50),
-                         xlab = "Agree (%)", ylab = "Effective (%)",
-                         at = seq(0, 1, 0.01),
-                         main = "Start = 50 & Complete = 50",
-                         col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s2 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_30000, Start == 50 & Complete == 100),
-                         xlab = "Agree (%)", ylab = "Effective (%)",
-                         at = seq(0, 1, 0.01),
-                         main = "Start = 50 & Complete = 100",
-                         col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s3 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_30000, Start == 100 & Complete == 50),
-                         xlab = "Agree (%)", ylab = "Effective (%)",
-                         at = seq(0, 1, 0.01),
-                         main = "Start = 100 & Complete = 50",
-                         col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-s4 <- lattice::levelplot(prob_CE ~ Agree * Effective, subset(out_sim_30000, Start == 100 & Complete == 100),
-                         xlab = "Agree (%)", ylab = "Effective (%)",
-                         at = seq(0, 1, 0.01),
-                         main = "Start = 100 & Complete = 100",
-                         col.regions = rainbow(n = 100, start = 3/6, end = 1/6))#topo.colors(100))
-
-print(
-  grid.arrange(arrangeGrob(s1, s2),
-               arrangeGrob(s3, s4),
-               ncol = 2)
-)
-
-g <- arrangeGrob(s1, s2, s3, s4, nrow = 2)
-
-filename <- paste(plots_folder_scenario, "prob_CE_grid_30000.png", sep = "/")
-ggsave(file = filename, plot = g, width = 30, height = 20, units = "cm")
 
 
 # output array ------------------------------------------------------------

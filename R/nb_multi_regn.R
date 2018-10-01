@@ -47,7 +47,7 @@ nmb_multi_regn <- function(nmb_mat,
 
   nmb_formula <- as.formula(paste("NMB ~ type *", interactions))
 
-  fit_multi_wtp <- lm_multi_wtp(nmb_formula, nmb_mat, f_lm)
+  fit_multi_wtp <- lm_multi_wtp(nmb_formula, nmb_mat, f_lm, folders)
 
   return(fit_multi_wtp)
 }

@@ -120,6 +120,10 @@ base_filled_contour_grid <- function(plot_data,
 #'
 #' @param start
 #' @param complete
+#' @param plot_data
+#' @param formula
+#' @param levels_range
+#' @param folders
 #'
 #' @return
 #' @export
@@ -128,7 +132,8 @@ inmb_levelplot <- function(plot_data,
                            formula = as.formula(INMB ~ Start_Treatment_p*Complete_Treatment_p),
                            start = NA,
                            complete = NA,
-                           levels_range = NA) {
+                           levels_range = NA,
+                           folders = NA) {
 
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
 
@@ -137,12 +142,15 @@ inmb_levelplot <- function(plot_data,
     levels_range <- seq(max_min[1] - 1, max_min[2] + 1, 1)
   }
 
+  # filename <- paste(folders$plots$scenario,
+                    # "inmb_levelplot.png", sep = "/")
+
   lattice::levelplot(formula,
                      plot_data,
                      # subset(plot_data,
                      #        Start_Treatment_p == start & Complete_Treatment_p == complete),
                      xlab = "Start (%)", ylab = "Complete (%)",
-                     at = levels_range,
+                     # at = levels_range,
                      # main = paste("Start =", start, "& Complete =", complete),
                      col.regions = COL_REG)#topo.colors(100))
 }
