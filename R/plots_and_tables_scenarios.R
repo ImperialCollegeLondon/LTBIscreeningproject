@@ -52,7 +52,7 @@ plots_and_tables_scenarios <- function(cohort,
 
 
   ##TODO: update this and extract to function & test
-  # source("scripts/05-bayesglm_predictions.R") ##TODO:
+  # source("scripts/05-bayesglm_predictions.R") ##TODO: this is deprecated by stan code
   # source("scripts/05-stan_predictions.R") ##TODO:
 
 

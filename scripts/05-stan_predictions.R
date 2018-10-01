@@ -9,9 +9,12 @@
 #'     keep_md: TRUE
 #' ---
 
+library(rstanarm)
+
 nmb_mat <- nmb_matrix(ce_res$ce1, ce_res$ce0, folders)
 
-nmb_formula <- as.formula(NMB ~ type * (Complete_Treatment_p + Start_Treatment_p)^2)
+# nmb_formula <- as.formula(NMB ~ type * (Complete_Treatment_p + Start_Treatment_p)^2)
+nmb_formula <- as.formula(NMB ~ type * Agree_to_Screen_cost)
 
 stan_fit <- lapply(nmb_mat,
                    function(x) rstanarm::stan_lm(formula = nmb_formula,
@@ -19,14 +22,28 @@ stan_fit <- lapply(nmb_mat,
                                                  prior = R2(location = 0.2),
                                                  chains = 2))
 
-n_draws <- 1000
+n_draws <- 200
 
-out_sim <- lapply(stan_fit, stan_predict, newdata, n_draws)
+# newdata <- read.csv(here::here("data", "predict_newdata.csv"),
+#                     stringsAsFactors = TRUE)
+#
+# newdata <- rm_redundant_covariates(stan_fit, newdata)
+
+# unit test cost only
+newdata <- data.frame(type = c(rep("statusquo",3),
+                               rep("screened",3)),
+                      Agree_to_Screen_cost = c(25,50,100,
+                                               25,50,100))
+
+out_sim <- lapply(stan_fit,
+                  stan_predict,
+                  newdata = newdata,
+                  n_draws)
 
 
 # coefficient plots -------------------------------------------------------
 
-plot(stan_fit, "areas") + xlim(-1, 2)
+plot(stan_fit[[3]], "areas") + xlim(-1, 2)
 
 
 # probabilty cost-effective plot ------------------------------------------
