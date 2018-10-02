@@ -1,10 +1,15 @@
-# ****************************************
-# project: LTBI screening
-# N Green
-#
-# Fri Jan 13 16:53:18 2017
-#
-# tornado plots for ICER, INMB (tb cases avoided)
+
+#' ---
+#' title: "LTBI screening model:
+#' tornado plots usinf regression predictions
+#' for ICER, INMB (tb cases avoided)"
+#'
+#' author: "N Green"
+#' date: "`r format(Sys.Date())`"
+#' output:
+#'   html_document:
+#'     keep_md: TRUE
+#' ---
 
 
 ##TODO: include costs...
@@ -44,9 +49,9 @@ tornado_pred <- tornado_params
 
 # join predictions
 tornado_pred <- merge(x = tornado_pred,
-                      y = rbind(pred_INMB_10000,
-                                pred_INMB_20000,
-                                pred_INMB_30000),
+                      y = rbind(pred_INMB$'10000',
+                                pred_INMB$'20000',
+                                pred_INMB$'30000'),
                       by = c('Start', 'Complete', 'Agree', 'Effective', 'wtp'),
                       suffixes = c('_sim', '_pred'),
                       all.y = FALSE)

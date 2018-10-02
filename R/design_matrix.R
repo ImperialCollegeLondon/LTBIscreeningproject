@@ -1,11 +1,11 @@
 
 #' design_matrix
 #'
-#' create
+#' Create a flat array from scenario inputs.
 #'
 #' @param params
 #'
-#' @return
+#' @return dataframe
 #' @export
 #'
 #' @examples

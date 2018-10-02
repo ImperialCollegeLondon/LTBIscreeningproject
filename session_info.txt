@@ -7,7 +7,7 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-10-01                  
+ date     2018-10-02                  
 
 - Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
@@ -116,4 +116,4 @@
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [209dc95] 2018-10-01: update plotting scripts and functions, natably bayesian regressions (not finished)
+Head:     [d466028] 2018-10-01: edit stan script

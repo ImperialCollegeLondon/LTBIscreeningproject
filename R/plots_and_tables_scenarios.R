@@ -58,8 +58,12 @@ plots_and_tables_scenarios <- function(cohort,
 
 
 
+  # source("scripts/05f-tornado_preds_plots.R")
+  tornado_plot_ICER(bcea, folders)
+  tornado_plot_INMB(bcea, folders)
+  tornado_sim_plot(folders)
+
   # source("scripts/05-ternary plots.R")
-  # source("scripts/05f-tornado_plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")
   # source("scripts/05-upper_triangle_contour_INMB.R")
   # CE_plane_trajectories(design_matrix)
