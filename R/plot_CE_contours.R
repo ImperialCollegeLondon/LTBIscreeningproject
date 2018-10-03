@@ -18,7 +18,7 @@ plot_CE_contours <- function(dat_INMB,
 
     plot_data <- dat_INMB[[i]]
 
-    folders$plots$scenario <- paste(fldr, i, sep = "/")
+    folders$plots$scenario <- pastef(fldr, i)
     dir.create(folders$plots$scenario, showWarnings = FALSE)
 
     nmb_contour_plot(plot_data, folders)

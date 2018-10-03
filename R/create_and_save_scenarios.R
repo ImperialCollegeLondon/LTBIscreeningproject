@@ -1,9 +1,9 @@
 
 #' Create and save scenarios
 #'
-#' @param file_tag
+#' @param file_tag Trailing part of the Excel file name
 #'
-#' @return none
+#' @return none (save to project data folder)
 #' @export
 #'
 #' @examples

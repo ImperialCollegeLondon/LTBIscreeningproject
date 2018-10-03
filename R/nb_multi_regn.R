@@ -26,7 +26,8 @@ nmb_multi_regn <- function(nmb_mat,
       pastef(folders$output$parent,
              "scenario_params_df.csv") %>%
       read.csv() %>%
-      design_matrix()
+      design_matrix() %>%
+      remove_cols_constant_vars()
 
     vars <- string_sum_covariates(design_mat)
   }

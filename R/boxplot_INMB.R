@@ -32,9 +32,7 @@ boxplot_INMB.bcea <- function(bcea,
       read.csv() %>%
       design_matrix()
 
-    filename <- paste(folders$plots$scenario, "boxplot.png", sep = "/")
-    png(filename, width = 400, height = 350, res = 45)
-    on.exit(dev.off())
+    filename <- pastef(folders$plots$scenario, "boxplot.png")
   }
 
   if (oneway) {
@@ -45,7 +43,8 @@ boxplot_INMB.bcea <- function(bcea,
       mutate(X2 = factor(X2))
 
     print(
-      ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
+      out <-
+        ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
         geom_boxplot())
 
   }else if (!oneway) {
@@ -62,9 +61,14 @@ boxplot_INMB.bcea <- function(bcea,
       dplyr::mutate(Start_Treatment_p = factor(Start_Treatment_p))
 
     print(
-      ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Start_Treatment_p")) +
+      out <-
+        ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Start_Treatment_p")) +
         geom_boxplot())
   }
+
+  ggplot2::ggsave(file = filename,
+                  plot = out,
+                  width = 30, height = 20, units = "cm")
 }
 
 

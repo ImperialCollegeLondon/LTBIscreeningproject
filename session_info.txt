@@ -7,12 +7,12 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-10-02                  
+ date     2018-10-03                  
 
 - Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
  abind                   1.4-5       2016-07-21 CRAN (R 3.4.1)                         
- arm                     1.10-1      2018-04-13 CRAN (R 3.4.4)                         
+ arm                   * 1.10-1      2018-04-13 CRAN (R 3.4.4)                         
  assertr                 2.5         2018-02-23 CRAN (R 3.4.3)                         
  assertthat            * 0.2.0       2017-04-11 CRAN (R 3.4.1)                         
  backports               1.1.2       2017-12-13 CRAN (R 3.4.3)                         
@@ -59,12 +59,12 @@
  latex2exp               0.4.0       2015-11-30 CRAN (R 3.4.3)                         
  lattice                 0.20-35     2017-03-25 CRAN (R 3.4.4)                         
  lazyeval                0.2.1       2017-10-29 CRAN (R 3.4.2)                         
- lme4                    1.1-18-1    2018-08-17 CRAN (R 3.4.4)                         
+ lme4                  * 1.1-18-1    2018-08-17 CRAN (R 3.4.4)                         
  logging                 0.7-103     2013-04-12 CRAN (R 3.4.1)                         
  LTBIscreeningproject  * 0.1.0.9000  <NA>       local                                  
  magrittr              * 1.5         2014-11-22 CRAN (R 3.4.1)                         
- MASS                    7.3-49      2018-02-23 CRAN (R 3.4.4)                         
- Matrix                  1.2-14      2018-04-09 CRAN (R 3.4.4)                         
+ MASS                  * 7.3-49      2018-02-23 CRAN (R 3.4.4)                         
+ Matrix                * 1.2-14      2018-04-09 CRAN (R 3.4.4)                         
  memoise               * 1.1.0       2017-04-21 CRAN (R 3.4.4)                         
  minqa                   1.2.4       2014-10-09 CRAN (R 3.4.1)                         
  miscUtilities         * 0.1.0       2018-04-18 local                                  
@@ -116,4 +116,4 @@
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [d466028] 2018-10-01: edit stan script
+Head:     [4546ccd] 2018-10-02: extract tornado plotting into functions for bcea and sim direct and refactor

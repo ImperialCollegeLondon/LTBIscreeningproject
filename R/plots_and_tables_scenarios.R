@@ -42,7 +42,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(bcea_incr, folders)
 
-  boxplot_INMB(bcea_incr, folders)
+  boxplot_INMB(bcea_incr, folders, oneway = FALSE)
 
   pred_INMB <- nmb_predictions(ce_res, folders)
   plot_CE_contours(pred_INMB, folders)
@@ -53,15 +53,13 @@ plots_and_tables_scenarios <- function(cohort,
 
   ##TODO: update this and extract to function & test
   # source("scripts/05-bayesglm_predictions.R") ##TODO: this is deprecated by stan code
-  # source("scripts/05-stan_predictions.R") ##TODO:
-
-
+  source("scripts/05-stan_predictions.R") ##TODO:
 
 
   # source("scripts/05f-tornado_preds_plots.R")
-  tornado_plot_ICER(bcea, folders)
-  tornado_plot_INMB(bcea, folders)
-  tornado_sim_plot(folders)
+  # tornado_plot_ICER(bcea_incr, folders)
+  # tornado_plot_INMB(bcea_incr, folders)
+  tornado_sim_plot(ce_res, folders)
 
   # source("scripts/05-ternary plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")

@@ -1,6 +1,8 @@
 
 #' policy_interv
 #'
+#' Set the intervention parameter values within an evinonment.
+#'
 #' @param policy_name string
 #' @param interv list
 #'

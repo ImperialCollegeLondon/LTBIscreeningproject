@@ -33,7 +33,7 @@ setup_folders <- function(policy_name,
                                        "policies-inputs.csv"),
                         to_dir = folders$output$scenario)
 
-  save(folders, file = here::here("ext-data", "18_to_35_in_2009", "folders.RData"))
+  save(folders, file = here::here("ext-data", "18_to_35_in_2009", policy_name, "folders.RData"))
 
   return(folders)
 }

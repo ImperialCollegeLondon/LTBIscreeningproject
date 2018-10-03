@@ -1,6 +1,7 @@
 
 #' tornado_sim_plot
 #'
+#' @param ce_res
 #' @param folders List
 #'
 #' @return ggplot object
@@ -8,19 +9,18 @@
 #'
 #' @examples
 #'
-tornado_sim_plot <- function(folders) {
+tornado_sim_plot <- function(ce_res,
+                             folders) {
 
   scenario_params_df <-
     pastef(folders$output$parent,
            "scenario_params_df.csv") %>%
     read.csv()
 
-  pastef(folders$output$scenario,
-         "e_and_c_totals.RData") %>%
-    load()
+  n_scenarios <- max(scenario_params_df$scenario)
 
-  total <- list(e = incr_e,
-                c = incr_c)
+  total <- list(e = ce_res$ce_incr$e,
+                c = ce_res$ce_incr$c)
 
   tornado_dat <-
     scenario_params_df %>%
@@ -32,7 +32,7 @@ tornado_sim_plot <- function(folders) {
         calc.INMB(e = total$e, c = total$c, wtp = 20000),
         calc.INMB(e = total$e, c = total$c, wtp = 30000)),
       wtp = rep(c(10000, 20000, 30000),
-                each = nrow(design_mat)),
+                each = n_scenarios),
       ICER = calc.ICER(e = total$e, c = total$c))
 
   var_names <-
@@ -70,5 +70,8 @@ tornado_sim_plot <- function(folders) {
     theme(legend.position = "none") +
     ggtitle("(b) ICER")
 
-  gridExtra::grid.arrange(p1, p2, nrow = 2)
+  out <- gridExtra::grid.arrange(p1, p2, nrow = 2)
+  ggplot2::ggsave(file = pastef(folders$plots$scenario, "tornado.png"),
+                  plot = out,
+                  width = 30, height = 20, units = "cm")
 }

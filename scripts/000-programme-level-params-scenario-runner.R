@@ -23,7 +23,8 @@ pkgs = c("parallel",
          "tibble",
          "memoise",
          "QALY",
-         "here")
+         "here",
+         "arm")
 inst = lapply(pkgs, library, character.only = TRUE)
 
 save_session_info("session_info.txt")

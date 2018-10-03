@@ -19,29 +19,25 @@ tornado_plot_ICER <- function(bcea, ...) {
 tornado_plot_ICER.bcea <- function(bcea,
                                    folders) {
 
-  design_mat <-
+  design_ICER <-
     pastef(folders$output$parent,
            "scenario_params_df.csv") %>%
     read.csv() %>%
-    design_matrix()
-
-  design_ICER <-
-    cbind(design_mat,
-          ICER = bcea_incr$ICER) %>%
+    design_matrix() %>%
+    cbind(ICER = bcea_incr$ICER) %>%
     dplyr::select(-scenario)
 
   tornado_data <-
     model.frame(formula = ICER ~ .,
-                data = design_ICER) %>%
+                data = design_ICER,
+                na.action = 'na.pass') %>%
     s_analysis_to_tornado_plot_data()
 
   ## save plot ---
 
-  png(pastef(folders$plots$scenario, "tornado_ICER.png"),
-      width = 400, height = 350, res = 45)
-
   print(
-    ggplot_tornado(dat = tornado_data,
+    out <-
+      ggplot_tornado(dat = tornado_data,
                    ORDER = FALSE) +
       ylab("ICER") +
       # ylim(0, 150) +
@@ -50,5 +46,7 @@ tornado_plot_ICER.bcea <- function(bcea,
       theme(legend.position = "none")
   )
 
-  dev.off()
+  ggplot2::ggsave(file = pastef(folders$plots$scenario, "tornado_ICER.png"),
+                  plot = out,
+                  width = 30, height = 20, units = "cm")
 }

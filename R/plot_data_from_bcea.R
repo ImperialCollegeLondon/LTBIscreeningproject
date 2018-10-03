@@ -1,6 +1,8 @@
 
 #' inmb_from_bcea
 #'
+#' Using data from simulation (not regression predictions).
+#'
 #' @param bcea
 #' @param folders
 #' @param wtp_threshold

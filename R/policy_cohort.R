@@ -1,7 +1,7 @@
 
 #' Create policy cohort
 #'
-#' Filter individuals by policy type
+#' Filter individuals by policy definition.
 #'
 #' @param cohort_in total sample
 #' @param policy_name

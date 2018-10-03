@@ -1,7 +1,7 @@
 
 #' count_comprsk_events
 #'
-#' This replaces a previous version.
+#' This replaces a previous rewritten version.
 #'
 #' @param event_times List
 #'
@@ -28,12 +28,14 @@ count_comprsk_events <- function(event_times) {
   count_times <-
     first_times %>%
     group_by(variable, value) %>%
-    summarise(count = length(id))
+    summarise(count = length(id)) %>%
+    data.table()
 
   # rearrange to events as columns
+  ##TODO: test data.table version
   res <-
-    reshape2::dcast(count_times, value ~ variable,
-                         value.var = "count") %>%
+    dcast.data.table(count_times, value ~ variable,
+                     value.var = "count") %>%
     dplyr::rename(year = value)
 
   res[is.na(res)] <- 0

@@ -37,16 +37,15 @@ tornado_plot_INMB.bcea <- function(bcea,
 
   tornado_data <-
     model.frame(formula = INMB ~ .,
-                data = design_INMB) %>%
+                data = design_INMB,
+                na.action = 'na.pass') %>%
     s_analysis_to_tornado_plot_data()
 
   ## save plot ---
 
-  png(pastef(folders$plots$scenario, "tornado_INMB.png"),
-      width = 400, height = 350, res = 45)
-
   print(
-    ggplot_tornado(dat = tornado_data,
+    out <-
+      ggplot_tornado(dat = tornado_data,
                    ORDER = FALSE) +
       ylab("INMB") +
       # ylim(0, 150) +
@@ -55,5 +54,7 @@ tornado_plot_INMB.bcea <- function(bcea,
       theme(legend.position = "none")
   )
 
-  dev.off()
+  ggplot2::ggsave(file = pastef(folders$plots$scenario, "tornado_INMB.png"),
+                  plot = out,
+                  width = 30, height = 20, units = "cm")
 }

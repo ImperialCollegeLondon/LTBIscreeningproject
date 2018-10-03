@@ -28,7 +28,8 @@ nmb_matrix <- function(ce1,
       pastef(folders$output$parent,
              "scenario_params_df.csv") %>%
       read.csv() %>%
-      design_matrix()
+      design_matrix() %>%
+      remove_cols_constant_vars()
   }
 
   wtp_seq <- seq(wtp_min, wtp_max, by = 10000)
@@ -60,3 +61,17 @@ nmb_matrix <- function(ce1,
   return(nmb_mat)
 }
 
+
+#' remove_cols_constant_vars
+#'
+#' @param nmb_mat
+#'
+#' @return
+#' @export
+#'
+remove_cols_constant_vars <- function(nmb_mat) {
+
+  which_keep <- map_lgl(nmb_mat,
+                        function(x) length(unique(x)) > 1)
+  nmb_mat[ ,which_keep]
+}

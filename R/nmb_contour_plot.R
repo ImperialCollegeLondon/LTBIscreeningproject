@@ -26,21 +26,21 @@ nmb_contour_plot <- function(plot_data,
                         low = 'red') +
     geom_contour(aes(colour = ..level..), size = 1.2) #+
 
-    # stat_contour(geom = "polygon", aes(fill = ..level..)) +
-    # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
-    #                 ylim = c(min(plot_data$Effective), max(plot_data$Effective))) +
-    # scale_colour_gradient(guide = 'none') +
-    # scale_x_continuous(expand = c(0,0)) +
-    # scale_y_continuous(expand = c(0,0)) +
-    # theme(legend.position = "none")
+  # stat_contour(geom = "polygon", aes(fill = ..level..)) +
+  # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
+  #                 ylim = c(min(plot_data$Effective), max(plot_data$Effective))) +
+  # scale_colour_gradient(guide = 'none') +
+  # scale_x_continuous(expand = c(0,0)) +
+  # scale_y_continuous(expand = c(0,0)) +
+  # theme(legend.position = "none")
   # stat_contour(breaks = 0)
 
-    ##TODO: new error??
+  ##TODO: new error??
   # print(
   #   p <- direct.label(p, list("bottom.pieces", colour = 'black'))
   # )
 
-  filename <- paste(folders$plots$scenario, "NMB_contours_grid.png", sep = "/")
+  filename <- pastef(folders$plots$scenario, "NMB_contours_grid.png")
   ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
 
   p
@@ -68,8 +68,8 @@ ce_boundary_plot <- function(plot_data,
     theme(legend.position = "none") +
     scale_colour_grey(start = 0.7, end = 0.3)
 
-  filename <- paste(folders$plots$scenario, "CE_boundary_grid.png", sep = "/")
-  ggsave(file = filename, width = 30, height = 20, units = "cm")
+  filename <- pastef(folders$plots$scenario, "CE_boundary_grid.png")
+  ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
 
   p
 }
@@ -142,17 +142,25 @@ inmb_levelplot <- function(plot_data,
     levels_range <- seq(max_min[1] - 1, max_min[2] + 1, 1)
   }
 
-  # filename <- paste(folders$plots$scenario,
-                    # "inmb_levelplot.png", sep = "/")
+  filename <- pastef(folders$plots$scenario, "inmb_levelplot.png")
 
-  lattice::levelplot(formula,
-                     plot_data,
-                     # subset(plot_data,
-                     #        Start_Treatment_p == start & Complete_Treatment_p == complete),
-                     xlab = "Start (%)", ylab = "Complete (%)",
-                     # at = levels_range,
-                     # main = paste("Start =", start, "& Complete =", complete),
-                     col.regions = COL_REG)#topo.colors(100))
+  png(filename)
+
+  print(
+    lattice::levelplot(formula,
+                       plot_data,
+                       # subset(plot_data,
+                       #        Start_Treatment_p == start & Complete_Treatment_p == complete),
+                       xlab = "Start (%)", ylab = "Complete (%)",
+                       scales = list(x = list(cex = 2), y = list(cex = 2)),
+                       # at = levels_range,
+                       # main = paste("Start =", start, "& Complete =", complete),
+                       col.regions = COL_REG)#topo.colors(100))
+  )
+
+  dev.off()
+
+  return()
 }
 
 
