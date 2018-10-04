@@ -12,7 +12,7 @@
 predict_nmb_wtp <- function(fits_list,
                             newdata = NA) {
 
-  if (is.na(newdata)) {
+  if (any(is.na(newdata))) {
     newdata <- read.csv(here::here("data", "predict_newdata.csv"),
                         stringsAsFactors = TRUE)
   }
@@ -25,7 +25,7 @@ predict_nmb_wtp <- function(fits_list,
                   type = "response")
 
   pred_INMB <- map(pred_wtp,
-                   wide_INMB,
+                   make_wide_INMB,
                    newdata = newdata)
 
   return(pred_INMB)
@@ -36,25 +36,31 @@ predict_nmb_wtp <- function(fits_list,
 rm_redundant_covariates <- function(fits_list,
                                     newdata) {
 
-  lm_names <- dimnames(attr(fits_list[[1]]$terms, "factors"))[[1]]
+  lm_names <- get_covariate_names(fits_list[[1]])
   newdata <- newdata[names(newdata) %in% lm_names]
   newdata[!duplicated(newdata), ]
 }
 
 
-#' Wide INMB array from predictions
+#
+get_covariate_names <- function(fit)
+  dimnames(attr(fit$terms, "factors"))[[1]][-1]
+
+
+#' make wide INMB array from predictions
 #'
 #' reshape
 #'
 #' @param pred
+#' @param newdata
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-wide_INMB <- function(pred,
-                      newdata) {
+make_wide_INMB <- function(pred,
+                           newdata) {
 
   newdata %>%
     cbind(pred = pred) %>%
@@ -114,22 +120,27 @@ create_pred_newdata <- function(grid_min = 0.5,
 
 #' Net monetary benefit regression predictions
 #'
-#' High-level
+#' High-level create desing matrix, fit model & predict.
 #'
 #' @param ce_res from \code{combine_popmod_dectree_res()}
 #' @param folders
+#' @param use_newdata default TRUE
 #'
-#' @return
+#' @return Array of regression predictions.
 #' @export
 #'
 nmb_predictions <- function(ce_res,
-                            folders) {
+                            folders,
+                            use_newdata = TRUE) {
 
   nmb_mat <- nmb_matrix(ce_res$ce1, ce_res$ce0, folders)
 
   fits_list <- nmb_multi_regn(nmb_mat, folders)
 
-  pred_INMB <- predict_nmb_wtp(fits_list)
+  if (use_newdata) newdata <- NA
+  else newdata <- nmb_mat[[1]][nmb_mat[[1]]$runs == 1, ]
+
+  pred_INMB <- predict_nmb_wtp(fits_list, newdata)
 
   return(pred_INMB)
 }

@@ -33,13 +33,6 @@ nmb_multi_regn <- function(nmb_mat,
   }
 
   if (is.na(interactions)) {
-    ##TODO: as.formula returns an error
-    # interactions <-
-    #   paste0("((I(Agree_to_Screen_p - ", centre_p,
-    #          ") + I(Start_Treatment_p - ", centre_p,
-    #          ") + I(Complete_Treatment_p - ", centre_p,
-    #          # ") + I(Effective - ", centre_p,
-    #          "))^2")
 
     # pairs
     interactions <-

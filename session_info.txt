@@ -1,4 +1,4 @@
-- Session info -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Session info ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  setting  value                       
  version  R version 3.4.4 (2018-03-15)
  os       Windows 7 x64 SP 1          
@@ -7,9 +7,9 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-10-03                  
+ date     2018-10-04                  
 
-- Packages -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+- Packages ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
  abind                   1.4-5       2016-07-21 CRAN (R 3.4.1)                         
  arm                   * 1.10-1      2018-04-13 CRAN (R 3.4.4)                         
@@ -116,4 +116,4 @@
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [4546ccd] 2018-10-02: extract tornado plotting into functions for bcea and sim direct and refactor
+Head:     [8705bba] 2018-10-03: debug and refactor heat map plotting

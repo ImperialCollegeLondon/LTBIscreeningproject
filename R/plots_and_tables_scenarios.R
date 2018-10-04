@@ -44,6 +44,10 @@ plots_and_tables_scenarios <- function(cohort,
 
   boxplot_INMB(bcea_incr, folders, oneway = FALSE)
 
+
+  ##TODO: test
+  pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
+
   pred_INMB <- nmb_predictions(ce_res, folders)
   plot_CE_contours(pred_INMB, folders)
 
@@ -51,9 +55,13 @@ plots_and_tables_scenarios <- function(cohort,
   # plot_CE_contours(out_INMB, folders)
 
 
-  ##TODO: update this and extract to function & test
+  ##TODO: test this function...
   # source("scripts/05-bayesglm_predictions.R") ##TODO: this is deprecated by stan code
-  source("scripts/05-stan_predictions.R") ##TODO:
+
+  stan_preds_scenario <- stan_predictions(ce_res, folders, newdata = FALSE) ##TODO:
+
+  stan_preds <- stan_predictions(ce_res, folders) ##TODO:
+  prob_ce_gridplot(stan_preds$`20000`, folders = folders)
 
 
   # source("scripts/05f-tornado_preds_plots.R")

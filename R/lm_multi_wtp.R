@@ -16,7 +16,8 @@ lm_multi_wtp <- function(nmb_formula,
                          f_lm = lm,
                          folders = NA) {
 
-  lm_fit <- map(nmb_mat, bayesglm,
+  lm_fit <- map(nmb_mat,
+                bayesglm,
                 formula = nmb_formula,
                 family = gaussian,
                 prior.mean = 0, prior.df = 1000) #, prior.scale = 1000
