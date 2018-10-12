@@ -33,20 +33,20 @@ ceac_plot_and_save.bcea <- function(bcea,
 
     # filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
     filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
-    png(filename, width = 400, height = 350, res = 45)
-    on.exit(dev.off())
+    # png(filename, width = 400, height = 350, res = 45)
+    # on.exit(dev.off())
   }
 
   # for (i in seq_len(bcea$n.comparators)) {
   try(
     print(
-      BCEA::ceac.plot(bcea,...)))
+      out <-
+        BCEA::ceac.plot(bcea, graph = "ggplot2", ...)))
   # my_ceac.plot(bcea)))#, new_window = TRUE)))
   # }
 
-  ##TODO:
-  # ggplot2::ggsave(file = filename,
-  #        width = 30, height = 20, units = "cm")
+  ggplot2::ggsave(file = filename, plot = out,
+                  width = 30, height = 20, units = "cm")
 
   return()
 }

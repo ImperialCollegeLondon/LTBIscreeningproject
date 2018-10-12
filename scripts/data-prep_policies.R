@@ -37,7 +37,9 @@ endpoints <- c("death", "exit uk")
 #                        c("(250,350]", "(350,1e+05]"))
 # endpoints <- c("death")
 
-LTBI_test <- c("TSPOT")
+# LTBI_test <- c("TSPOT")
+LTBI_test <- c("QFT_plus")
+
 treatment <- c("LTBI_Tx_3mISORIF")
 
 create_and_save_policies(incidence_list,

@@ -3,7 +3,7 @@
 #'
 #' @param ce_res
 #' @param folders
-#' @param newdata
+#' @param use_newdata
 #'
 #' @return
 #' @export
@@ -12,10 +12,9 @@
 #'
 stan_predictions <- function(ce_res,
                              folders,
-                             newdata = TRUE) {
+                             use_newdata = TRUE) {
 
   library(rstanarm)
-
 
   design_mat <-
     pastef(folders$output$parent,
@@ -38,9 +37,10 @@ stan_predictions <- function(ce_res,
                      function(x) rstanarm::stan_lm(formula = nmb_formula,
                                                    data = x,
                                                    prior = R2(location = 0.2),
-                                                   chains = 2))
-  if (newdata) {newdata <- NA
-  } else {newdata <- nmb_mat}
+                                                   chains = 2,
+                                                   iter = 10000))
+  if (use_newdata) {newdata <- NA
+  } else {newdata <- nmb_mat[[1]][nmb_mat[[1]]$runs == 1, ]}
 
   if (is.na(newdata)) {
     newdata <- read.csv(here::here("data", "predict_newdata.csv"),
@@ -58,7 +58,11 @@ stan_predictions <- function(ce_res,
 
   save(stan_preds, file = pastef(folders$output$scenario, "stan_preds.RData"))
 
-  stan_pred
+  cov_names <- names(design_mat)[names(design_mat) != 'scenario']
+  stan_preds_df <- plyr::join_all(stan_preds, by = cov_names, type = 'left')
+  write.csv(stan_preds_df, file = pastef(folders$output$scenario, "stan_preds_df.csv"))
+
+  stan_preds
 }
 
 

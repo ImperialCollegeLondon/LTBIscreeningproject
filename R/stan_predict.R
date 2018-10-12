@@ -38,17 +38,21 @@ stan_predict <- function(stan_fit,
                pc_95 = apply(INMB_sim, 1,
                              function(x) quantile(x, probs = 0.95)))
 
-  # plots -------------------------------------------------------------------
-
-  qplot(x = c(y1_rep - y0_rep), geom = "histogram",
-        xlab = "Estimated average treatment effect")
-
-
-  # df <- data.frame(X = c(y1_rep - y0_rep))
-  # ggplot(df, aes(x = X)) +
-  #   geom_histogram(binwidth = 10, fill = "white", color = "black") +
-  #   geom_histogram(binwidth = 10, data = subset(df, X >= 0),
-  #                  colour = "black", fill = "grey") + theme_bw()
-
   out_sim
 }
+
+
+##TODO:
+# stan_plots <- function(out_sim) {
+#
+#
+#   qplot(x = c(y1_rep - y0_rep), geom = "histogram",
+#         xlab = "Estimated average treatment effect")
+#
+#
+#   # df <- data.frame(X = c(y1_rep - y0_rep))
+#   # ggplot(df, aes(x = X)) +
+#   #   geom_histogram(binwidth = 10, fill = "white", color = "black") +
+#   #   geom_histogram(binwidth = 10, data = subset(df, X >= 0),
+#   #                  colour = "black", fill = "grey") + theme_bw()
+# }

@@ -305,14 +305,23 @@ test_performance <-
                                   pmax = 1.0,
                                   name = "Specificity")
       ),
-    # ref?
+    # Barcellini, L. et al. First independent evaluation of QuantiFERON-TB Plus performance. Eur. Respir. J. 47, 1587–1590 (2016)
+    # QFT_plus =
+    #   test(
+    #     sens = branch_unif_params(pmin = 0.88,
+    #                               pmax = 0.88,
+    #                               name = "Sensitivity"),
+    #     spec = branch_unif_params(pmin = 0.9717,
+    #                               pmax = 0.9717,
+    #                               name = "Specificity")
+    #   ),
     QFT_plus =
       test(
-        sens = branch_unif_params(pmin = 0.88,
-                                  pmax = 0.88,
+        sens = branch_unif_params(pmin = 0.81,
+                                  pmax = 0.93,
                                   name = "Sensitivity"),
-        spec = branch_unif_params(pmin = 0.9717,
-                                  pmax = 0.9717,
+        spec = branch_unif_params(pmin = 0.92,
+                                  pmax = 0.99,
                                   name = "Specificity")
       ),
     # ref?

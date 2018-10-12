@@ -45,7 +45,8 @@ boxplot_INMB.bcea <- function(bcea,
     print(
       out <-
         ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
-        geom_boxplot())
+        geom_boxplot() +
+        ylab("INB") + xlab(""))
 
   }else if (!oneway) {
 
@@ -63,7 +64,8 @@ boxplot_INMB.bcea <- function(bcea,
     print(
       out <-
         ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Start_Treatment_p")) +
-        geom_boxplot())
+        geom_boxplot() +
+        ylab("INB") + xlab(""))
   }
 
   ggplot2::ggsave(file = filename,

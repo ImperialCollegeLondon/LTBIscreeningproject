@@ -42,8 +42,8 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(bcea_incr, folders)
 
-  boxplot_INMB(bcea_incr, folders, oneway = FALSE)
-
+  boxplot_INMB(bcea_incr, folders, oneway = T)
+  histogram_INMB(bcea_incr, folders)
 
   ##TODO: test
   pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
@@ -58,7 +58,7 @@ plots_and_tables_scenarios <- function(cohort,
   ##TODO: test this function...
   # source("scripts/05-bayesglm_predictions.R") ##TODO: this is deprecated by stan code
 
-  stan_preds_scenario <- stan_predictions(ce_res, folders, newdata = FALSE) ##TODO:
+  # stan_preds_scenario <- stan_predictions(ce_res, folders, use_newdata = FALSE) ##TODO:
 
   stan_preds <- stan_predictions(ce_res, folders) ##TODO:
   prob_ce_gridplot(stan_preds$`20000`, folders = folders)
@@ -67,7 +67,9 @@ plots_and_tables_scenarios <- function(cohort,
   # source("scripts/05f-tornado_preds_plots.R")
   # tornado_plot_ICER(bcea_incr, folders)
   # tornado_plot_INMB(bcea_incr, folders)
-  tornado_sim_plot(ce_res, folders)
+
+  ## if tornado scenarios run
+  # tornado_sim_plot(ce_res, folders)
 
   # source("scripts/05-ternary plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")
@@ -76,7 +78,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   # plot_QALY_cost_distns_by_scenario(popmod_res, folders)
   # source("scripts/05e-output-plots_cost-effectiveness_active-TB-cases.R")
-  # source("scripts/05g-INMB_ICER_histograms.R")
+
   #
   # source("scripts/05h-CE_summary_stats.R")
   #
