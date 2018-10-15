@@ -5,6 +5,7 @@ library(dplyr)
 library(purrr)
 library(assertthat)
 library(LTBIscreeningproject)
+library(treeSimR)
 
 
 dectree_res <-
@@ -49,9 +50,18 @@ res <- activetb_qaly_cost(dectree_res,
 #
 
 test_that("i/o format", {
-  expect_equal()
+
+  expect_equal(length(res), 18)
+
+  expect_equal(names(res),
+               c("QALY.statusquo", "QALY.screened", "E_cost_screened", "cost.screened_person", "cost.statusquo_person",
+                 "cost_incur", "cost.statusquo", "cost.screened", "E_QALY_screened", "QALY.screened_person", "QALY.statusquo_person",
+                 "QALYgain", "cost_incur_person", "E_cost_incur", "E_cost_incur_person", "QALYgain_person", "E_QALYgain", "E_QALYgain_person"))
+
+  expect_equivalent(map_int(res, length), rep(2, 18))
+
 })
 
-test_that("boundary", {
-  expect_equal()
-})
+# test_that("boundary", {
+#   expect_equal()
+# })

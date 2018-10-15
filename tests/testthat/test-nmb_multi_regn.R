@@ -1,5 +1,6 @@
 context("test-nb_multi_regn.R")
 
+library(arm)
 
 ce1 <-
   list(

@@ -1,9 +1,9 @@
 
 #' count_comprsk_events
 #'
-#' This replaces a previous rewritten version.
+#' This replaces a (deprecated) previous rewritten version.
 #'
-#' @param event_times List
+#' @param event_times List; tb, exit_uk, death
 #'
 #' @return
 #' @export
