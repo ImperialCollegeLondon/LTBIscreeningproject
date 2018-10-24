@@ -37,8 +37,12 @@ histogram_INMB.bcea <- function(bcea,
     out <-
       ggplot(dat, aes(x = value, color = X2, group = X2)) +
       # geom_histogram(aes(y = ..density..), position = "identity", alpha = 0.5) +
-      geom_density(alpha = 0.1) + theme_bw() +
-      xlab("INB"))
+      geom_density(alpha = 0.1, show.legend = FALSE) +
+      theme_bw() +
+      theme(text = element_text(size = 30)) +
+      xlab("INB") +
+      geom_vline(xintercept = 0, linetype = "dashed")
+    )
 
   ggplot2::ggsave(file = filename,
                   plot = out,

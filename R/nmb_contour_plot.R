@@ -153,6 +153,7 @@ inmb_levelplot <- function(plot_data,
                        #        Start_Treatment_p == start & Complete_Treatment_p == complete),
                        xlab = "Start (%)", ylab = "Complete (%)",
                        scales = list(x = list(cex = 2), y = list(cex = 2)),
+                       cex = 2,
                        # at = levels_range,
                        # main = paste("Start =", start, "& Complete =", complete),
                        col.regions = COL_REG)#topo.colors(100))

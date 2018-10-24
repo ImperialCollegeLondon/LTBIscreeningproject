@@ -32,28 +32,29 @@ subset_pop_dectree <- function(osNode) {
   LTBI_tests    <-
     LTBI_trees %>%
     map_dbl(function(x) x$Get('path_probs',
-                              filterFun = function(x) x$node_names == "Agree to Screen"))
+    # map_dbl(~ x$Get('path_probs',##TODO: test and use throughout
+                              filterFun = function(y) y$node_names == "Agree to Screen"))
 
   LTBI_positive <- map_dbl(LTBI_trees,
                            function(x) x$Get('path_probs',
-                                             filterFun = function(x) x$node_names == "Sensitivity"))
+                                             filterFun = function(y) y$node_names == "Sensitivity"))
   nonLTBI_positive <- map_dbl(nonLTBI_trees,
                               function(x) x$Get('path_probs',
-                                                filterFun = function(x) x$node_names == "1-Specificity"))
+                                                filterFun = function(y) y$node_names == "1-Specificity"))
 
   startTx <- osNode$Get('path_probs',
                         filterFun = function(x) x$node_names == "Start Treatment")
 
   LTBI_startTx <- map_dbl(LTBI_trees,
                           function(x) x$Get('path_probs',
-                                            filterFun = function(x) x$node_names == "Start Treatment"))
+                                            filterFun = function(y) y$node_names == "Start Treatment"))
 
   completeTx <- osNode$Get('path_probs',
                            filterFun = function(x) x$node_names == "Complete Treatment")
 
   LTBI_completeTx <- map_dbl(LTBI_trees,
                              function(x) sum(x$Get('path_probs',
-                                                   filterFun = function(x) x$node_names == "Complete Treatment")))
+                                                   filterFun = function(y) y$node_names == "Complete Treatment")))
 
   cured <- osNode$Get('path_probs',
                       filterFun = function(x) x$node_names == "Effective")

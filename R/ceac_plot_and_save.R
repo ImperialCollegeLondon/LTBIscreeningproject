@@ -41,7 +41,12 @@ ceac_plot_and_save.bcea <- function(bcea,
   try(
     print(
       out <-
-        BCEA::ceac.plot(bcea, graph = "ggplot2", ...)))
+        BCEA::ceac.plot(bcea, graph = "ggplot2", ...) +
+        theme(text = element_text(size = 30)) +
+        theme(legend.position = "none") +
+        ggtitle("")
+
+    ))
   # my_ceac.plot(bcea)))#, new_window = TRUE)))
   # }
 

@@ -44,6 +44,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   boxplot_INMB(bcea_incr, folders, oneway = T)
   histogram_INMB(bcea_incr, folders)
+  ridgeslineplot_INMB(bcea_incr, folders)
 
   ##TODO: test
   pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)

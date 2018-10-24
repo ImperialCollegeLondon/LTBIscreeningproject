@@ -45,8 +45,12 @@ boxplot_INMB.bcea <- function(bcea,
     print(
       out <-
         ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
-        geom_boxplot() +
-        ylab("INB") + xlab(""))
+        geom_boxplot(show.legend = FALSE) +
+        ylab("INB") + xlab("") +
+        theme_bw() +
+        theme(text = element_text(size = 30)) +
+        geom_hline(yintercept = 0, linetype = "dashed")
+      )
 
   }else if (!oneway) {
 
