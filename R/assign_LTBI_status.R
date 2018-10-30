@@ -27,9 +27,8 @@ assign_LTBI_status <- function(IMPUTED_sample,
   IMPUTED_sample <-
     merge(x = IMPUTED_sample,
           y = TB_burden_countries,
-          by.x = c('iso_a3_country', 'year'),#issdt_year'),
-          by.y = c('iso3', 'year'))
-
+          by.x = c('iso_n3_country', 'year'), #issdt_year'),
+          by.y = c('iso_numeric', 'year'))
 
   IMPUTED_sample$who_inc_Pareek2011 <- cut(IMPUTED_sample$e_inc_100k,
                                            breaks = who_level_breaks)

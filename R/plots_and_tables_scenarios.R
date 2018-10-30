@@ -75,6 +75,7 @@ plots_and_tables_scenarios <- function(cohort,
   # source("scripts/05-ternary plots.R")
   # source("scripts/05-partial_correlation_coefficients.R")
   # source("scripts/05-upper_triangle_contour_INMB.R")
+
   # CE_plane_trajectories(design_matrix)
 
   # plot_QALY_cost_distns_by_scenario(popmod_res, folders)

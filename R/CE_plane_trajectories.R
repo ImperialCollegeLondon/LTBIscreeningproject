@@ -1,77 +1,64 @@
 
+##TODO: finish updating, S3
+
 #' CE_plane_trajectories
 #'
-#' @param design_matrix
+#' @param bcea
+#' @param folders
 #'
 #' @return
 #' @export
 #'
 #' @examples
-CE_plane_trajectories <- function(design_matrix,
+CE_plane_trajectories <- function(bcea,
                                   folders) {
+
+  design_mat <-
+    pastef(folders$output$parent,
+           "scenario_params_df.csv") %>%
+    read.csv() %>%
+    design_matrix()
+
   dat <- data.frame(
-    design_matrix,
-    mean_e = colMeans(screen.bcea$delta.e),
-    mean_c = colMeans(screen.bcea$delta.c)
+    design_mat,
+    mean_e = colMeans(bcea$delta.e),
+    mean_c = colMeans(bcea$delta.c)
   )
 
-  Effective_dat <-
-    dat[dat$Start == 60 & dat$Complete == 60 & dat$Agree == 60,]
-  Start_dat <-
-    dat[dat$Effective == 60 & dat$Complete == 60 & dat$Agree == 60,]
-  Agree_dat <-
-    dat[dat$Start == 60 & dat$Complete == 60 & dat$Effective == 60,]
-  Complete_dat <-
-    dat[dat$Start == 60 & dat$Effective == 60 & dat$Agree == 60,]
+dat <- rbind(c(0,0,0,0), dat)
 
   filename <-
     paste(folders$plots$scenario, "ce_plane_trajectories.png", sep = "/")
-  png(filename)
 
   plot(
     NULL,
     xlab = "Health gained (QALYs)",
     ylab = "Cost incurred (£)",
     xlim = c(0, 0.005),
-    ylim = c(0, 50)
+    ylim = c(0, 110)
   )
-  lines(Effective_dat$mean_e,
-        Effective_dat$mean_c,
-        type = 'l',
-        col = "black")
-  lines(Start_dat$mean_e,
-        Start_dat$mean_c,
-        type = 'l',
-        col = "red")
-  lines(Agree_dat$mean_e,
-        Agree_dat$mean_c,
-        type = 'l',
-        col = "green")
-  lines(Complete_dat$mean_e,
-        Complete_dat$mean_c,
-        type = 'l',
-        col = "blue")
 
+  for (i in 2:nrow(dat)) {
+
+  arrows(x0 = dat$mean_e[i - 1],
+         y0 = dat$mean_c[i - 1],
+         x1 = dat$mean_e[i],
+         y1 = dat$mean_c[i],
+         col = "black")
+
+    text(x = dat$mean_e[i] + 0.0001,
+         y = dat$mean_c[i],
+         labels = dat$scenario[i])
+  }
+
+  # wtp
   abline(a = 0, b = 20000, lty = 2)
 
-  text(Effective_dat$mean_e,
-       Effective_dat$mean_c,
-       Effective_dat$Effective)
-  text(Start_dat$mean_e,
-       Start_dat$mean_c,
-       Start_dat$Start)
-  text(Agree_dat$mean_e,
-       Agree_dat$mean_c,
-       Agree_dat$Agree)
-  text(Complete_dat$mean_e,
-       Complete_dat$mean_c,
-       Complete_dat$Complete)
-  legend(
-    "topright",
-    legend = c("Agree", "Start", "Complete", "Effective"),
-    col = c("green", "red", "blue", "black"),
-    lty = 1
-  )
+  # legend(
+  #   "topright",
+  #   legend = c("Agree", "Start", "Complete", "Effective"),
+  #   col = c("green", "red", "blue", "black"),
+  #   lty = 1
+  # )
 
-  dev.off()
 }
