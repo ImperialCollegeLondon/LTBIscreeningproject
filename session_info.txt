@@ -7,7 +7,7 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-10-29                  
+ date     2018-10-30                  
 
 - Packages -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
@@ -81,7 +81,7 @@
  plyr                    1.8.4       2016-06-08 CRAN (R 3.4.1)                         
  proto                   1.0.0       2016-10-29 CRAN (R 3.4.3)                         
  purrr                 * 0.2.5       2018-05-29 CRAN (R 3.4.4)                         
- QALY                  * 0.1.0       2018-08-28 local                                  
+ QALY                  * 0.1.0.9000  2018-10-30 local                                  
  quadprog                1.5-5       2013-04-17 CRAN (R 3.4.1)                         
  R6                      2.2.2       2017-06-17 CRAN (R 3.4.1)                         
  RColorBrewer            1.1-2       2014-12-07 CRAN (R 3.4.1)                         
@@ -116,4 +116,4 @@
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [16b1663] 2018-10-24: refine plots (axis labels etc)
+Head:     [6d92dda] 2018-10-30: add trajectory to ce plane and map

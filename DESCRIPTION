@@ -18,6 +18,7 @@ Imports:
     ggplot2,
     readxl,
     data.tree,
+    data.table,
     treeSimR,
     cmprsk,
     reshape,
