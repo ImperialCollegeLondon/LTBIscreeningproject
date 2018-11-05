@@ -41,10 +41,10 @@ strat_pop_year <-
 head(strat_pop_year)
 
 plot(strat_pop_year$tb, type = 'o',
-     xlab = "Years since migration", ylab = "Cases of TB")#,
-     # xlim = c(0,100), ylim = c(0,400))
+     xlab = "Years since migration", ylab = "Cases of TB",
+     xlim = c(0, 80), ylim = c(0, 1000))
 
 plot(strat_pop_year$incid_rate, type = 'o',
-     xlab = "Years since migration", ylab = "Cases of TB per 100,000 person-years")#,
-     # xlim = c(0,100), ylim = c(0,300))
+     xlab = "Years since migration", ylab = "Cases of TB per 100,000 person-years",
+     xlim = c(0, 100), ylim = c(0, 300))
 

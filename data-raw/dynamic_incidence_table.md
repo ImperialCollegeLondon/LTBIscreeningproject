@@ -3,7 +3,7 @@ title: "LTBI screening model:
 Dynamic incidence table"
 
 author: "N Green"
-date: "2018-09-28"
+date: "2018-10-31"
 output:
   html_document:
     keep_md: TRUE
@@ -65,7 +65,7 @@ lapply(event_times, head, 20)
 
 ```
 ## $tb
-##  [1] Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf   7 Inf Inf Inf Inf Inf
+##  [1] Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf Inf
 ## [18] Inf Inf Inf
 ## 
 ## $exit_uk
@@ -89,45 +89,41 @@ head(strat_pop_year)
 ```
 
 ```
-##   value  tb exit_uk death total_tb total_exit_uk total_death atrisk_end
-## 1     1 112   90562   169      112         90562         169     312302
-## 2     2 320   92252   123      432        182814         292     219607
-## 3     3 353   40823   109      785        223637         401     178322
-## 4     4 366   35049    86     1151        258686         487     142821
-## 5     5 291    6893   106     1442        265579         593     135531
-## 6     6 192    7005    97     1634        272584         690     128237
-##   atrisk_start mean_atrisk incid_rate
-## 1       403145    357723.5    31.3091
-## 2       312302    265954.5   120.3213
-## 3       219607    198964.5   177.4186
-## 4       178322    160571.5   227.9358
-## 5       142821    139176.0   209.0878
-## 6       135531    131884.0   145.5825
+##   year  tb exit_uk death fup total_tb total_exit_uk total_death total_fup
+## 1    1 109       0     0   0      109             0           0         0
+## 2    2 457       0     0   0      566             0           0         0
+## 3    3 834       0     0   0     1400             0           0         0
+## 4    4 832       0     0   0     2232             0           0         0
+## 5    5 877       0     0   0     3109             0           0         0
+## 6    6 670       0     0   0     3779             0           0         0
+##   atrisk_end atrisk_start mean_atrisk incid_rate
+## 1     403036       403145    403090.5   27.04107
+## 2     402579       403036    402807.5  113.45370
+## 3     401745       402579    402162.0  207.37912
+## 4     400913       401745    401329.0  207.31121
+## 5     400036       400913    400474.5  218.99022
+## 6     399366       400036    399701.0  167.62530
 ```
 
 ```r
 plot(strat_pop_year$tb, type = 'o',
-     xlab = "Years since migration", ylab = "Cases of TB")#,
+     xlab = "Years since migration", ylab = "Cases of TB",
+     xlim = c(0, 80), ylim = c(0, 1000))
 ```
 
 ![](dynamic_incidence_table_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
 ```r
-     # xlim = c(0,100), ylim = c(0,400))
-
 plot(strat_pop_year$incid_rate, type = 'o',
-     xlab = "Years since migration", ylab = "Cases of TB per 100,000 person-years")#,
+     xlab = "Years since migration", ylab = "Cases of TB per 100,000 person-years",
+     xlim = c(0, 100), ylim = c(0, 300))
 ```
 
 ![](dynamic_incidence_table_files/figure-html/unnamed-chunk-1-2.png)<!-- -->
-
-```r
-     # xlim = c(0,100), ylim = c(0,300))
-```
 
 
 ---
 title: "dynamic_incidence_table.R"
 author: "ngreen1"
-date: "Fri Sep 28 09:58:02 2018"
+date: "Wed Oct 31 13:32:17 2018"
 ---

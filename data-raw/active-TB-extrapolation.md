@@ -3,7 +3,7 @@ title: "LTBI screening model:
 Extrapolate observed incidence curve"
 
 author: "N Green"
-date: "2018-09-26"
+date: "2018-10-31"
 output:
   html_document:
     keep_md: TRUE
@@ -73,11 +73,11 @@ legend('topright', legend = c("Aldridge", "Sutherland", "Sutherlandx2", "Sutherl
        col = c('black', 'black', 'blue', 'red'), lty = c(1,3,3,3), pch = c('o', NA,NA,NA), lwd = c(2,2,2,2), bty = 'n')
 ```
 
-![](04a_1-active-TB-extrapolation_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
+![](active-TB-extrapolation_files/figure-html/unnamed-chunk-1-1.png)<!-- -->
 
 
 ---
-title: "04a_1-active-TB-extrapolation.R"
+title: "active-TB-extrapolation.R"
 author: "ngreen1"
-date: "Wed Sep 26 10:06:38 2018"
+date: "Wed Oct 31 13:28:46 2018"
 ---
