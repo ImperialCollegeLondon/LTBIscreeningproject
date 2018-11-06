@@ -72,7 +72,8 @@ ceplane_plot_and_save.bcea <- function(bcea,
                  mapping = aes(x = mean_e, y = mean_c, xend = mean_e_shift, yend = mean_c_shift),
                  inherit.aes = FALSE,
                  arrow = arrow(length = unit(0.1, "inches"), type = "closed")) +
-    xlab("QALYs gained/person") + ylab("Cost incurred (£)")
+    xlab("QALYs gained/person") + ylab("Cost incurred/person (£)") +
+    theme(legend.position = "none")
 
   ggplot2::ggsave(file = filename, plot = out,
                   width = 20, height = 20, units = "cm")

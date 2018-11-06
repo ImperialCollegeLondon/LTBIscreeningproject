@@ -1,11 +1,5 @@
 
-
-ceac_plot_and_save <- function(bcea, ...) {
-  UseMethod("ceac_plot_and_save", bcea)
-}
-
-
-#' Cost-effectiveness acceptability curve plot and save
+#' Cost-effectiveness acceptability curve (CEAC) plot and save
 #'
 #' @param bcea
 #' @param folders
@@ -15,6 +9,13 @@ ceac_plot_and_save <- function(bcea, ...) {
 #' @export
 #'
 #' @examples
+#'
+ceac_plot_and_save <- function(bcea, ...) {
+  UseMethod("ceac_plot_and_save", bcea)
+}
+
+
+#' @rdname ceac_plot_and_save
 #'
 ceac_plot_and_save.bcea <- function(bcea,
                                     folders, ...) {
@@ -28,7 +29,6 @@ ceac_plot_and_save.bcea <- function(bcea,
   #   xlim(10000,30000) +
   #   geom_vline(xintercept = 20000)
 
-
   if (!missing(folders)) {
 
     # filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
@@ -41,9 +41,11 @@ ceac_plot_and_save.bcea <- function(bcea,
   try(
     print(
       out <-
-        BCEA::ceac.plot(bcea, graph = "ggplot2", ...) +
+        BCEA::ceac.plot(bcea, graph = "ggplot2") +
         theme(text = element_text(size = 30)) +
         theme(legend.position = "none") +
+        xlab(paste0("Willingness to pay (", intToUtf8(163), " per QALY)")) +
+        geom_vline(xintercept = c(20000, 30000), colour = "grey", cex = 1.2,  lty = "dashed") +
         ggtitle("")
 
     ))

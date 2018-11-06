@@ -151,12 +151,21 @@ inmb_levelplot <- function(plot_data,
                        plot_data,
                        # subset(plot_data,
                        #        Start_Treatment_p == start & Complete_Treatment_p == complete),
-                       xlab = "Start (%)", ylab = "Complete (%)",
+                       xlab = list(cex = 2, label = "Start (%)"),
+                       ylab = list(cex = 2, label = "Complete (%)"),
                        scales = list(x = list(cex = 2), y = list(cex = 2)),
-                       cex = 2,
+                       panel = function(...){
+                         panel.levelplot(...)
+                         grid.text(seq_len(nrow(grid_points)),
+                                   x = (grid_points$Start_Treatment_p - 0.48)*1.9,
+                                   y = (grid_points$Complete_Treatment_p - 0.48)*1.9,
+                                   gp = gpar(cex = 2))
+                         grid.points(0.935, 0.725,
+                                     pch = 19,
+                                     gp = gpar(cex = 2))}, # baseline
                        # at = levels_range,
                        # main = paste("Start =", start, "& Complete =", complete),
-                       col.regions = COL_REG)#topo.colors(100))
+                       col.regions = COL_REG) #topo.colors(100))
   )
 
   dev.off()

@@ -6,6 +6,7 @@
 #'
 #' @param bcea_out Pre-calculated output from BCEA package
 #' @param wtp_threshold Willingness to pay; Default: £20,000
+#' @param ncohort hypothetical cohort size. This scales up small values to something more meaningful.
 #' @param folder text string save location
 #'
 #' @return data.frame with columns:
@@ -39,6 +40,7 @@ table_costeffectiveness <- function(bcea, ...) {
 #'
 table_costeffectiveness.bcea <- function(bcea_out,
                                          wtp_threshold = 20000,
+                                         ncohort = 1000,
                                          folder = NA) {
 
   mean_vals <-
@@ -46,10 +48,10 @@ table_costeffectiveness.bcea <- function(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparators) - 1,
-                   "Cost" = round(colMeans(c), 2),
-                   "QALY" = round(colMeans(e), 5),
-                   "Incremental_cost" = c("", round(colMeans(delta.c), 2)),
-                   "Incremental_QALY" = c("", round(colMeans(delta.e), 5)),
+                   "Cost" = round(colMeans(c), 2)*ncohort,
+                   "QALY" = round(colMeans(e), 5)*ncohort,
+                   "Incremental_cost" = c("", round(colMeans(delta.c), 2)*ncohort),
+                   "Incremental_QALY" = c("", round(colMeans(delta.e), 5)*ncohort),
                    "ICER" = c("", round(ICER, 2)),
                    "INB" = c("", round(eib[k == wtp_threshold], 2)),
                    "ceac_WTP15k" = c("", round(ceac[k == 15000, ], 2)),
@@ -62,10 +64,10 @@ table_costeffectiveness.bcea <- function(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparators) - 1,
-                   "Cost" = round(apply(c, 2, quantile, probs = 0.025), 2),
-                   "QALY" = round(apply(e, 2, quantile, probs = 0.025), 5),
-                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.025), 2)),
-                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.025), 5)),
+                   "Cost" = round(apply(c, 2, quantile, probs = 0.025), 2)*ncohort,
+                   "QALY" = round(apply(e, 2, quantile, probs = 0.025), 5)*ncohort,
+                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.025), 2)*ncohort),
+                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.025), 5)*ncohort),
                    "ICER" = rep("", length(n.comparators)), # how to get this??
                    "INB" = c("", round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.025), 2)),
                    "ceac_WTP15k" = rep("", length(n.comparators)),
@@ -79,10 +81,10 @@ table_costeffectiveness.bcea <- function(bcea_out,
          do.call(data.frame,
                  list(
                    "Scenario" = seq_len(n.comparators) - 1,
-                   "Cost" = round(apply(c, 2, quantile, probs = 0.975), 2),
-                   "QALY" = round(apply(e, 2, quantile, probs = 0.975), 5),
-                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.975), 2)),
-                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.975), 5)),
+                   "Cost" = round(apply(c, 2, quantile, probs = 0.975), 2)*ncohort,
+                   "QALY" = round(apply(e, 2, quantile, probs = 0.975), 5)*ncohort,
+                   "Incremental_cost" = c("", round(apply(delta.c, 2, quantile, probs = 0.975), 2)*ncohort),
+                   "Incremental_QALY" = c("", round(apply(delta.e, 2, quantile, probs = 0.975), 5)*ncohort),
                    "ICER" = rep("", length(n.comparisons)), # how to get this??
                    "INB" = c("", round(apply(ib[k == wtp_threshold, , ], 2, quantile, probs = 0.975), 2)),
                    "ceac_WTP15k" = rep("", length(n.comparators)),
