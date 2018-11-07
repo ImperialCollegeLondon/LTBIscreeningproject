@@ -40,7 +40,7 @@ histogram_INMB.bcea <- function(bcea,
       geom_density(alpha = 0.1, show.legend = FALSE) +
       theme_bw() +
       theme(text = element_text(size = 30)) +
-      xlab("INB") +
+      xlab(paste0("INB (", intToUtf8(163), ")")) +
       geom_vline(xintercept = 0, linetype = "dashed")
     )
 

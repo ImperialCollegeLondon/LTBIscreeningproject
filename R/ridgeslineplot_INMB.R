@@ -42,7 +42,8 @@ ridgeslineplot_INMB.bcea <- function(bcea,
                                     point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +
       theme_bw() +
       theme(text = element_text(size = 30)) +
-      xlab("INB") + ylab("density") +
+      ylab(paste0("INB (", intToUtf8(163), ")")) +
+      ylab("density") +
       geom_vline(xintercept = 0, linetype = "dashed")
   )
 

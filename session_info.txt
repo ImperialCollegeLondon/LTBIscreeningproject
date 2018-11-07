@@ -1,3 +1,4 @@
+- Session info -----------------------------------------------------------------------------
  setting  value                       
  version  R version 3.4.4 (2018-03-15)
  os       Windows 7 x64 SP 1          
@@ -6,332 +7,113 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-11-05                  
+ date     2018-11-07                  
 
- package               ondiskversion loadedversion
- abind                 1.4.5         1.4-5        
- arm                   1.10.1        1.10-1       
- assertr               2.5           2.5          
- assertthat            0.2.0         0.2.0        
- backports             1.1.2         1.1.2        
- bayesm                3.1.0.1       3.1-0.1      
- BCEA                  2.2.6         2.2-6        
- bindr                 0.1.1         0.1.1        
- bindrcpp              0.2.2         0.2.2        
- boot                  1.3.20        1.3-20       
- brew                  1.0.6         1.0-6        
- broom                 0.5.0         0.5.0        
- cellranger            1.1.0         1.1.0        
- clisymbols            1.2.0         1.2.0        
- cmprsk                2.2.7         2.2-7        
- coda                  0.19.1        0.19-1       
- colorspace            1.3.2         1.3-2        
- commonmark            1.5           1.5          
- compositions          1.40.2        1.40-2       
- crayon                1.3.4         1.3.4        
- data.table            1.11.4        1.11.4       
- data.tree             0.7.6         0.7.6        
- denstrip              1.5.4         1.5.4        
- DEoptimR              1.0.8         1.0-8        
- deSolve               1.21          1.21         
- devtools              1.13.6        1.13.6       
- DiagrammeR            1.0.0         1.0.0        
- digest                0.6.17        0.6.17       
- downloader            0.4           0.4          
- dplyr                 0.7.99.9000   0.7.99.9000  
- energy                1.7.5         1.7-5        
- flexsurv              1.1           1.1          
- GGally                1.4.0         1.4.0        
- ggplot2               3.0.0         3.0.0        
- ggtern                3.0.0         3.0.0        
- git2r                 0.23.0        0.23.0       
- glue                  1.3.0         1.3.0        
- gridExtra             2.3           2.3          
- gtable                0.2.0         0.2.0        
- here                  0.1           0.1          
- hms                   0.4.2         0.4.2        
- htmltools             0.3.6         0.3.6        
- htmlwidgets           1.2           1.2          
- igraph                1.2.2         1.2.2        
- influenceR            0.1.0         0.1.0        
- jsonlite              1.5           1.5          
- latex2exp             0.4.0         0.4.0        
- lattice               0.20.35       0.20-35      
- lazyeval              0.2.1         0.2.1        
- lme4                  1.1.18.1      1.1-18-1     
- logging               0.7.103       0.7-103      
- LTBIscreeningproject  0.1.0.9000    0.1.0.9000   
- magrittr              1.5           1.5          
- MASS                  7.3.49        7.3-49       
- Matrix                1.2.14        1.2-14       
- memoise               1.1.0         1.1.0        
- minqa                 1.2.4         1.2.4        
- miscUtilities         0.1.0         0.1.0        
- MLmetrics             1.1.1         1.1.1        
- mstate                0.2.11        0.2.11       
- muhaz                 1.2.6         1.2.6        
- munsell               0.5.0         0.5.0        
- mvtnorm               1.0.8         1.0-8        
- nlme                  3.1.131.1     3.1-131.1    
- nloptr                1.0.4         1.0.4        
- packrat               0.4.9.3       0.4.9-3      
- pillar                1.3.0         1.3.0        
- pkgconfig             2.0.2         2.0.2        
- plotCostEffectiveness 0.1.0         0.1.0        
- plyr                  1.8.4         1.8.4        
- pROC                  1.13.0        1.13.0       
- proto                 1.0.0         1.0.0        
- purrr                 0.2.5         0.2.5        
- QALY                  0.1.0.9000    0.1.0.9000   
- quadprog              1.5.5         1.5-5        
- R6                    2.2.2         2.2.2        
- RColorBrewer          1.1.2         1.1-2        
- Rcpp                  0.12.18       0.12.18      
- readr                 1.1.1         1.1.1        
- readxl                1.1.0         1.1.0        
- reshape               0.8.7         0.8.7        
- reshape2              1.4.3         1.4.3        
- rgexf                 0.15.3        0.15.3       
- rlang                 0.2.2.9000    0.2.2.9000   
- robustbase            0.93.2        0.93-2       
- Rook                  1.1.1         1.1-1        
- roxygen2              6.1.0         6.1.0        
- rprojroot             1.3.2         1.3-2        
- rstudioapi            0.7           0.7          
- scales                1.0.0         1.0.0        
- sessioninfo           1.0.1.9000    1.0.1.9000   
- stringi               1.1.7         1.1.7        
- stringr               1.3.1         1.3.1        
- survival              2.41.3        2.41-3       
- tensorA               0.36.1        0.36.1       
- testthat              2.0.0         2.0.0        
- tibble                1.4.2         1.4.2        
- tidyr                 0.8.1         0.8.1        
- tidyselect            0.2.4         0.2.4        
- treeSimR              0.1.0         0.1.0        
- viridis               0.5.1         0.5.1        
- viridisLite           0.3.0         0.3.0        
- visNetwork            2.0.4         2.0.4        
- withr                 2.1.2         2.1.2        
- XML                   3.98.1.16     3.98-1.16    
- xml2                  1.2.0         1.2.0        
- yardstick             0.0.1         0.0.1        
- path                                                               attached is_base
- C:/Users/ngreen1/Documents/R/win-library/3.4/abind                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/arm                    TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/assertr               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/assertthat             TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/backports             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/bayesm                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/BCEA                   TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/bindr                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/bindrcpp              FALSE    FALSE  
- C:/Program Files/R/R-3.4.4/library/boot                            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/brew                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/broom                  TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/cellranger            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/clisymbols            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/cmprsk                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/coda                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/colorspace            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/commonmark            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/compositions          FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/crayon                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/data.table             TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/data.tree              TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/denstrip               TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/DEoptimR              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/deSolve               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/devtools              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/DiagrammeR            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/digest                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/downloader            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/dplyr                  TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/energy                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/flexsurv               TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/GGally                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/ggplot2                TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/ggtern                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/git2r                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/glue                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/gridExtra             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/gtable                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/here                   TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/hms                   FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/htmltools             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/htmlwidgets           FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/igraph                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/influenceR            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/jsonlite              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/latex2exp             FALSE    FALSE  
- C:/Program Files/R/R-3.4.4/library/lattice                         FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/lazyeval              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/lme4                   TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/logging               FALSE    FALSE  
- C:\\Users\\ngreen1\\Dropbox\\TB\\LTBI\\R\\LTBIscreeningproject      TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/magrittr               TRUE    FALSE  
- C:/Program Files/R/R-3.4.4/library/MASS                             TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/Matrix                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/memoise                TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/minqa                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/miscUtilities          TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/MLmetrics             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/mstate                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/muhaz                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/munsell               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/mvtnorm               FALSE    FALSE  
- C:/Program Files/R/R-3.4.4/library/nlme                            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/nloptr                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/packrat               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/pillar                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/pkgconfig             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/plotCostEffectiveness  TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/plyr                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/pROC                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/proto                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/purrr                  TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/QALY                   TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/quadprog              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/R6                    FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/RColorBrewer          FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/Rcpp                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/readr                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/readxl                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/reshape                TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/reshape2              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/rgexf                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/rlang                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/robustbase            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/Rook                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/roxygen2              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/rprojroot             FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/rstudioapi            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/scales                FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/sessioninfo           FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/stringi               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/stringr               FALSE    FALSE  
- C:/Program Files/R/R-3.4.4/library/survival                         TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/tensorA               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/testthat              FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/tibble                 TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/tidyr                  TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/tidyselect            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/treeSimR               TRUE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/viridis               FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/viridisLite           FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/visNetwork            FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/withr                 FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/XML                   FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/xml2                  FALSE    FALSE  
- C:/Users/ngreen1/Documents/R/win-library/3.4/yardstick              TRUE    FALSE  
- date       source                                 
- 2016-07-21 CRAN (R 3.4.1)                         
- 2018-04-13 CRAN (R 3.4.4)                         
- 2018-02-23 CRAN (R 3.4.3)                         
- 2017-04-11 CRAN (R 3.4.1)                         
- 2017-12-13 CRAN (R 3.4.3)                         
- 2017-07-21 CRAN (R 3.4.3)                         
- 2018-07-11 CRAN (R 3.4.4)                         
- 2018-03-13 CRAN (R 3.4.4)                         
- 2018-03-29 CRAN (R 3.4.4)                         
- 2017-08-06 CRAN (R 3.4.4)                         
- 2011-04-13 CRAN (R 3.4.1)                         
- 2018-07-17 CRAN (R 3.4.4)                         
- 2016-07-27 CRAN (R 3.4.1)                         
- 2018-04-18 Github (gaborcsardi/clisymbols@e49b4f5)
- 2014-06-17 CRAN (R 3.4.1)                         
- 2016-12-08 CRAN (R 3.4.1)                         
- 2016-12-14 CRAN (R 3.4.1)                         
- 2018-04-28 CRAN (R 3.4.4)                         
- 2018-06-14 CRAN (R 3.4.4)                         
- 2017-09-16 CRAN (R 3.4.1)                         
- 2018-05-27 CRAN (R 3.4.4)                         
- 2018-06-16 CRAN (R 3.4.4)                         
- 2018-03-18 CRAN (R 3.4.4)                         
- 2016-11-19 CRAN (R 3.4.1)                         
- 2018-05-09 CRAN (R 3.4.4)                         
- 2018-06-27 CRAN (R 3.4.4)                         
- 2018-03-01 CRAN (R 3.4.3)                         
- 2018-09-12 CRAN (R 3.4.4)                         
- 2015-07-09 CRAN (R 3.4.1)                         
- 2018-08-30 Github (tidyverse/dplyr@dbbb918)       
- 2018-08-11 CRAN (R 3.4.4)                         
- 2017-03-27 CRAN (R 3.4.3)                         
- 2018-05-17 CRAN (R 3.4.4)                         
- 2018-07-03 CRAN (R 3.4.4)                         
- 2018-08-22 CRAN (R 3.4.4)                         
- 2018-07-17 CRAN (R 3.4.4)                         
- 2018-07-17 CRAN (R 3.4.4)                         
- 2017-09-09 CRAN (R 3.4.1)                         
- 2016-02-26 CRAN (R 3.4.1)                         
- 2017-05-28 CRAN (R 3.4.1)                         
- 2018-03-10 CRAN (R 3.4.3)                         
- 2017-04-28 CRAN (R 3.4.1)                         
- 2018-04-19 CRAN (R 3.4.4)                         
- 2018-07-27 CRAN (R 3.4.4)                         
- 2015-09-03 CRAN (R 3.4.1)                         
- 2017-06-01 CRAN (R 3.4.1)                         
- 2015-11-30 CRAN (R 3.4.3)                         
- 2017-03-25 CRAN (R 3.4.4)                         
- 2017-10-29 CRAN (R 3.4.2)                         
- 2018-08-17 CRAN (R 3.4.4)                         
- 2013-04-12 CRAN (R 3.4.1)                         
- <NA>       local                                  
- 2014-11-22 CRAN (R 3.4.1)                         
- 2018-02-23 CRAN (R 3.4.4)                         
- 2018-04-09 CRAN (R 3.4.4)                         
- 2017-04-21 CRAN (R 3.4.4)                         
- 2014-10-09 CRAN (R 3.4.1)                         
- 2018-04-18 local                                  
- 2016-05-13 CRAN (R 3.4.4)                         
- 2018-04-09 CRAN (R 3.4.4)                         
- 2014-08-09 CRAN (R 3.4.1)                         
- 2018-06-12 CRAN (R 3.4.4)                         
- 2018-05-31 CRAN (R 3.4.4)                         
- 2018-02-16 CRAN (R 3.4.4)                         
- 2014-08-04 CRAN (R 3.4.1)                         
- 2018-06-01 CRAN (R 3.4.4)                         
- 2018-07-14 CRAN (R 3.4.4)                         
- 2018-08-16 CRAN (R 3.4.4)                         
- 2018-08-08 local                                  
- 2016-06-08 CRAN (R 3.4.1)                         
- 2018-09-24 CRAN (R 3.4.4)                         
- 2016-10-29 CRAN (R 3.4.3)                         
- 2018-05-29 CRAN (R 3.4.4)                         
- 2018-11-01 local                                  
- 2013-04-17 CRAN (R 3.4.1)                         
- 2017-06-17 CRAN (R 3.4.1)                         
- 2014-12-07 CRAN (R 3.4.1)                         
- 2018-07-23 CRAN (R 3.4.4)                         
- 2017-05-16 CRAN (R 3.4.1)                         
- 2018-04-20 CRAN (R 3.4.4)                         
- 2017-08-06 CRAN (R 3.4.1)                         
- 2017-12-11 CRAN (R 3.4.3)                         
- 2015-03-24 CRAN (R 3.4.1)                         
- 2018-08-30 Github (r-lib/rlang@58819d6)           
- 2018-07-27 CRAN (R 3.4.4)                         
- 2014-10-20 CRAN (R 3.4.1)                         
- 2018-07-27 CRAN (R 3.4.4)                         
- 2018-01-03 CRAN (R 3.4.3)                         
- 2017-09-07 CRAN (R 3.4.1)                         
- 2018-08-09 CRAN (R 3.4.4)                         
- 2018-04-18 Github (r-lib/sessioninfo@c871d01)     
- 2018-03-12 CRAN (R 3.4.4)                         
- 2018-05-10 CRAN (R 3.4.4)                         
- 2017-04-04 CRAN (R 3.4.4)                         
- 2018-07-29 CRAN (R 3.4.4)                         
- 2017-12-13 CRAN (R 3.4.3)                         
- 2018-01-22 CRAN (R 3.4.3)                         
- 2018-05-18 CRAN (R 3.4.4)                         
- 2018-02-26 CRAN (R 3.4.3)                         
- 2018-07-24 local                                  
- 2018-03-29 CRAN (R 3.4.4)                         
- 2018-02-01 CRAN (R 3.4.3)                         
- 2018-06-14 CRAN (R 3.4.4)                         
- 2018-03-15 CRAN (R 3.4.1)                         
- 2018-08-19 CRAN (R 3.4.4)                         
- 2018-01-24 CRAN (R 3.4.3)                         
- 2017-11-12 CRAN (R 3.4.4)                         
+- Packages ---------------------------------------------------------------------------------
+ package               * version     date       source                                 
+ abind                   1.4-5       2016-07-21 CRAN (R 3.4.1)                         
+ arm                   * 1.10-1      2018-04-13 CRAN (R 3.4.4)                         
+ assertr                 2.5         2018-02-23 CRAN (R 3.4.3)                         
+ assertthat            * 0.2.0       2017-04-11 CRAN (R 3.4.1)                         
+ backports               1.1.2       2017-12-13 CRAN (R 3.4.3)                         
+ bayesm                  3.1-0.1     2017-07-21 CRAN (R 3.4.3)                         
+ BCEA                  * 2.2-6       2018-07-11 CRAN (R 3.4.4)                         
+ bindr                   0.1.1       2018-03-13 CRAN (R 3.4.4)                         
+ bindrcpp                0.2.2       2018-03-29 CRAN (R 3.4.4)                         
+ boot                    1.3-20      2017-08-06 CRAN (R 3.4.4)                         
+ brew                    1.0-6       2011-04-13 CRAN (R 3.4.1)                         
+ cellranger              1.1.0       2016-07-27 CRAN (R 3.4.1)                         
+ clisymbols              1.2.0       2018-04-18 Github (gaborcsardi/clisymbols@e49b4f5)
+ cmprsk                * 2.2-7       2014-06-17 CRAN (R 3.4.1)                         
+ coda                    0.19-1      2016-12-08 CRAN (R 3.4.1)                         
+ colorspace              1.3-2       2016-12-14 CRAN (R 3.4.1)                         
+ commonmark              1.5         2018-04-28 CRAN (R 3.4.4)                         
+ compositions            1.40-2      2018-06-14 CRAN (R 3.4.4)                         
+ crayon                * 1.3.4       2017-09-16 CRAN (R 3.4.1)                         
+ data.table            * 1.11.4      2018-05-27 CRAN (R 3.4.4)                         
+ data.tree             * 0.7.6       2018-06-16 CRAN (R 3.4.4)                         
+ denstrip              * 1.5.4       2018-03-18 CRAN (R 3.4.4)                         
+ DEoptimR                1.0-8       2016-11-19 CRAN (R 3.4.1)                         
+ deSolve                 1.21        2018-05-09 CRAN (R 3.4.4)                         
+ devtools                1.13.6      2018-06-27 CRAN (R 3.4.4)                         
+ DiagrammeR              1.0.0       2018-03-01 CRAN (R 3.4.3)                         
+ digest                  0.6.17      2018-09-12 CRAN (R 3.4.4)                         
+ downloader              0.4         2015-07-09 CRAN (R 3.4.1)                         
+ dplyr                 * 0.7.99.9000 2018-08-30 Github (tidyverse/dplyr@dbbb918)       
+ energy                  1.7-5       2018-08-11 CRAN (R 3.4.4)                         
+ flexsurv              * 1.1         2017-03-27 CRAN (R 3.4.3)                         
+ GGally                  1.4.0       2018-05-17 CRAN (R 3.4.4)                         
+ ggplot2               * 3.0.0       2018-07-03 CRAN (R 3.4.4)                         
+ ggtern                  3.0.0       2018-08-22 CRAN (R 3.4.4)                         
+ git2r                   0.23.0      2018-07-17 CRAN (R 3.4.4)                         
+ glue                    1.3.0       2018-07-17 CRAN (R 3.4.4)                         
+ gridExtra               2.3         2017-09-09 CRAN (R 3.4.1)                         
+ gtable                  0.2.0       2016-02-26 CRAN (R 3.4.1)                         
+ here                  * 0.1         2017-05-28 CRAN (R 3.4.1)                         
+ hms                     0.4.2       2018-03-10 CRAN (R 3.4.3)                         
+ htmltools               0.3.6       2017-04-28 CRAN (R 3.4.1)                         
+ htmlwidgets             1.2         2018-04-19 CRAN (R 3.4.4)                         
+ igraph                  1.2.2       2018-07-27 CRAN (R 3.4.4)                         
+ influenceR              0.1.0       2015-09-03 CRAN (R 3.4.1)                         
+ jsonlite                1.5         2017-06-01 CRAN (R 3.4.1)                         
+ latex2exp               0.4.0       2015-11-30 CRAN (R 3.4.3)                         
+ lattice                 0.20-35     2017-03-25 CRAN (R 3.4.4)                         
+ lazyeval                0.2.1       2017-10-29 CRAN (R 3.4.2)                         
+ lme4                  * 1.1-18-1    2018-08-17 CRAN (R 3.4.4)                         
+ logging                 0.7-103     2013-04-12 CRAN (R 3.4.1)                         
+ LTBIscreeningproject  * 0.1.0.9000  <NA>       local                                  
+ magrittr              * 1.5         2014-11-22 CRAN (R 3.4.1)                         
+ MASS                  * 7.3-49      2018-02-23 CRAN (R 3.4.4)                         
+ Matrix                * 1.2-14      2018-04-09 CRAN (R 3.4.4)                         
+ memoise               * 1.1.0       2017-04-21 CRAN (R 3.4.4)                         
+ minqa                   1.2.4       2014-10-09 CRAN (R 3.4.1)                         
+ miscUtilities         * 0.1.0       2018-04-18 local                                  
+ mstate                * 0.2.11      2018-04-09 CRAN (R 3.4.4)                         
+ muhaz                   1.2.6       2014-08-09 CRAN (R 3.4.1)                         
+ munsell                 0.5.0       2018-06-12 CRAN (R 3.4.4)                         
+ mvtnorm                 1.0-8       2018-05-31 CRAN (R 3.4.4)                         
+ nlme                    3.1-131.1   2018-02-16 CRAN (R 3.4.4)                         
+ nloptr                  1.0.4       2014-08-04 CRAN (R 3.4.1)                         
+ packrat                 0.4.9-3     2018-06-01 CRAN (R 3.4.4)                         
+ pillar                  1.3.0       2018-07-14 CRAN (R 3.4.4)                         
+ pkgconfig               2.0.2       2018-08-16 CRAN (R 3.4.4)                         
+ plotCostEffectiveness * 0.1.0       2018-08-08 local                                  
+ plyr                    1.8.4       2016-06-08 CRAN (R 3.4.1)                         
+ proto                   1.0.0       2016-10-29 CRAN (R 3.4.3)                         
+ purrr                 * 0.2.5       2018-05-29 CRAN (R 3.4.4)                         
+ QALY                  * 0.1.0.9000  2018-11-01 local                                  
+ quadprog                1.5-5       2013-04-17 CRAN (R 3.4.1)                         
+ R6                      2.2.2       2017-06-17 CRAN (R 3.4.1)                         
+ RColorBrewer            1.1-2       2014-12-07 CRAN (R 3.4.1)                         
+ Rcpp                    0.12.18     2018-07-23 CRAN (R 3.4.4)                         
+ readr                   1.1.1       2017-05-16 CRAN (R 3.4.1)                         
+ readxl                * 1.1.0       2018-04-20 CRAN (R 3.4.4)                         
+ reshape               * 0.8.7       2017-08-06 CRAN (R 3.4.1)                         
+ reshape2                1.4.3       2017-12-11 CRAN (R 3.4.3)                         
+ rgexf                   0.15.3      2015-03-24 CRAN (R 3.4.1)                         
+ rlang                   0.2.2.9000  2018-08-30 Github (r-lib/rlang@58819d6)           
+ robustbase              0.93-2      2018-07-27 CRAN (R 3.4.4)                         
+ Rook                    1.1-1       2014-10-20 CRAN (R 3.4.1)                         
+ roxygen2                6.1.0       2018-07-27 CRAN (R 3.4.4)                         
+ rprojroot               1.3-2       2018-01-03 CRAN (R 3.4.3)                         
+ rstudioapi              0.7         2017-09-07 CRAN (R 3.4.1)                         
+ scales                  1.0.0       2018-08-09 CRAN (R 3.4.4)                         
+ sessioninfo             1.0.1.9000  2018-04-18 Github (r-lib/sessioninfo@c871d01)     
+ stringi                 1.1.7       2018-03-12 CRAN (R 3.4.4)                         
+ stringr                 1.3.1       2018-05-10 CRAN (R 3.4.4)                         
+ survival              * 2.41-3      2017-04-04 CRAN (R 3.4.4)                         
+ tensorA                 0.36.1      2018-07-29 CRAN (R 3.4.4)                         
+ testthat                2.0.0       2017-12-13 CRAN (R 3.4.3)                         
+ tibble                * 1.4.2       2018-01-22 CRAN (R 3.4.3)                         
+ tidyr                 * 0.8.1       2018-05-18 CRAN (R 3.4.4)                         
+ tidyselect              0.2.4       2018-02-26 CRAN (R 3.4.3)                         
+ treeSimR              * 0.1.0       2018-07-24 local                                  
+ viridis                 0.5.1       2018-03-29 CRAN (R 3.4.4)                         
+ viridisLite             0.3.0       2018-02-01 CRAN (R 3.4.3)                         
+ visNetwork              2.0.4       2018-06-14 CRAN (R 3.4.4)                         
+ withr                   2.1.2       2018-03-15 CRAN (R 3.4.1)                         
+ XML                     3.98-1.16   2018-08-19 CRAN (R 3.4.4)                         
+ xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [570c8aa] 2018-11-05: update incidence data EDA plotting
+Head:     [4d3cc44] 2018-11-06: imoprove plots and add scenario points to grids

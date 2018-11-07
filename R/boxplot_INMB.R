@@ -62,14 +62,19 @@ boxplot_INMB.bcea <- function(bcea,
       cbind.data.frame(design_mat, .) %>%
       melt.data.frame(id.vars = names(design_mat)) %>%
       dplyr::rename(INB = value) %>%
-      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost)) %>%
-      dplyr::mutate(Start_Treatment_p = factor(Start_Treatment_p))
+      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
+
+    dat2[ ,other_variable] <- factor(dat2[ ,other_variable])
 
     print(
       out <-
-        ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Start_Treatment_p")) +
+        ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Agree_to_Screen_cost")) +
         geom_boxplot() +
-        ylab("INB") + xlab(""))
+        theme_bw() +
+        guides(fill = FALSE) +
+        theme(text = element_text(size = 30)) +
+        ylab(paste0("INB (", intToUtf8(163), ")")) +
+        xlab(""))
   }
 
   ggplot2::ggsave(file = filename,

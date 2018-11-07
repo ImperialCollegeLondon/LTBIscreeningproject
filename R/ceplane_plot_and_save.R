@@ -75,6 +75,14 @@ ceplane_plot_and_save.bcea <- function(bcea,
     xlab("QALYs gained/person") + ylab("Cost incurred/person (£)") +
     theme(legend.position = "none")
 
+  # wtp thresholds
+  out <- out +
+    geom_ribbon(data = data.frame(x = c(0,0.02), y = c(0, 0.02),
+                                  ymin = c(0, 20000*0.02), ymax = c(0, 30000*0.02)),
+                aes(x = x, ymin = ymin, ymax = ymax),
+                inherit.aes = FALSE,
+                fill = "grey", alpha = 0.5)
+  Warning
   ggplot2::ggsave(file = filename, plot = out,
                   width = 20, height = 20, units = "cm")
 
