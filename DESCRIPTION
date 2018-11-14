@@ -54,5 +54,8 @@ Suggests:
     directlabels,
     cowplot,
     gridExtra,
-    covr
+    covr,
+    ggridges,
+    lattice,
+    grid
 VignetteBuilder: knitr

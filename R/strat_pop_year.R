@@ -22,7 +22,6 @@ append_scenario_num <- function(dat,
 
 #' strat_pop_year
 #'
-#' ##TODO:
 #'
 #' @param cohort
 #' @param dectree_res

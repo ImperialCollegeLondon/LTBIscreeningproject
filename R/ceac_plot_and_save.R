@@ -55,6 +55,6 @@ ceac_plot_and_save.bcea <- function(bcea,
   ggplot2::ggsave(file = filename, plot = out,
                   width = 30, height = 20, units = "cm")
 
-  return()
+  invisible(out)
 }
 

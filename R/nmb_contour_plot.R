@@ -1,8 +1,13 @@
 
 #' nmb_contour_plot
 #'
+#' Single or multiple contour plot.
+#'
+#' @param folders List
+#' @param x_var string
+#' @param y_var string
+#' @param facet_vars
 #' @param plot_data
-#' @param plots_folder
 #'
 #' @return
 #' @export
@@ -18,14 +23,24 @@ nmb_contour_plot <- function(plot_data,
     ggplot(plot_data, aes_string(x = x_var,
                                  y = y_var,
                                  z = "INMB")) +
-    # facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
-    # facet_wrap(facet_vars,
-    #            labeller = label_both) +
-    scale_fill_gradient(limits = range(plot_data$INMB),
-                        high = 'white',
-                        low = 'red') +
-    geom_contour(aes(colour = ..level..), size = 1.2) #+
+    theme_bw() +
+    xlab(gsub(x = x_var, "_|[_p]$", " ")) +
+    ylab(gsub(x = y_var, "_|[_p]$", " ")) +
+    theme(text = element_text(size = 20)) +
+    xlim(min(plot_data[ ,x_var]), 1) +
+    ylim(min(plot_data[ ,y_var]), 1) +
+    # geom_contour(aes(colour = ..level..), size = 1.2) #+  # multiple contours
+    geom_contour(mapping = aes_string(x = x_var,       # single contour at breaks
+                                      y = y_var,
+                                      z = "INMB"),
+                 breaks = 0) #+
 
+  # facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
+  # facet_wrap(facet_vars,
+  #            labeller = label_both) +
+  # scale_fill_gradient(limits = range(plot_data$INMB),
+  #                     high = 'white',
+  #                     low = 'red') +
   # stat_contour(geom = "polygon", aes(fill = ..level..)) +
   # coord_cartesian(xlim = c(min(plot_data$Agree), max(plot_data$Agree)),
   #                 ylim = c(min(plot_data$Effective), max(plot_data$Effective))) +
@@ -47,22 +62,69 @@ nmb_contour_plot <- function(plot_data,
 }
 
 
-#' ce_boundary_plot
+#' ce_boundary_line_plot
 #'
+#' @param folders
+#' @param x_var
+#' @param y_var
 #' @param plot_data
 #'
 #' @return
 #' @export
 #'
 #' @examples
-ce_boundary_plot <- function(plot_data,
-                             folders) {
+ce_boundary_line_plot <- function(plot_data,
+                                  folders = NA,
+                                  x_var = "Start_Treatment_p",
+                                  y_var = "Complete_Treatment_p") {
+
+  INMB_names <- grep(pattern = "INMB",
+                     names(plot_data),
+                     value = TRUE)
 
   p <-
-    ggplot(plot_data, aes(x = Agree_to_Screen_p,
-                          y = Effective_p)) +
-    facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
-               labeller = label_both) +
+    ggplot(plot_data, aes_string(x = x_var,
+                                 y = y_var,
+                                 z = "INMB")) +
+    theme_bw() +
+    xlab(gsub(x = x_var, "_|[_p]$", " ")) +
+    ylab(gsub(x = y_var, "_|[_p]$", " ")) +
+    theme(text = element_text(size = 20)) +
+    xlim(min(plot_data[ ,x_var]), 1) +
+    ylim(min(plot_data[ ,y_var]), 1)
+
+  for (i in INMB_names) {
+
+    p <- p + geom_contour(mapping = aes_string(x = x_var,
+                                               y = y_var,
+                                               z = i),
+                          breaks = 0)
+  }
+
+  # filename <- pastef(folders$plots$scenario, "ce_boundary_line_plot.png")
+  # ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
+
+  invisible(p)
+}
+
+
+#' ce_boundary_points_plot
+#'
+#' @param plot_data
+#' @param folders
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ce_boundary_points_plot <- function(plot_data,
+                                    folders) {
+
+  p <-
+    ggplot(plot_data, aes(x = Start_Treatment_p,
+                          y = Complete_Treatment_p)) +
+    # facet_wrap(Start_Treatment_p ~ Complete_Treatment_p,
+    #            labeller = label_both) +
     geom_point(aes(colour = factor(CE)), size = 2, shape = 15) +
     # geom_polygon(aes(fill = CE)) + ##TODO:
     theme(legend.position = "none") +
@@ -71,7 +133,7 @@ ce_boundary_plot <- function(plot_data,
   filename <- pastef(folders$plots$scenario, "CE_boundary_grid.png")
   ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
 
-  p
+  invisible(p)
 }
 
 
@@ -141,6 +203,17 @@ inmb_levelplot <- function(plot_data,
     max_min <- range(plot_data$INMB)
     levels_range <- seq(max_min[1] - 1, max_min[2] + 1, 1)
   }
+
+  design <-
+    pastef(folders$output$parent,
+           "scenario_params_df.csv") %>%
+    read.csv() %>%
+    design_matrix()
+
+  grid_points <-
+    design %>%
+    dplyr::filter(Complete_Treatment_p %in% c(0.5,0.75,0.9),
+                  Start_Treatment_p %in% c(0.5,0.75,0.9))
 
   filename <- pastef(folders$plots$scenario, "inmb_levelplot.png")
 

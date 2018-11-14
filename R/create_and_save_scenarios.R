@@ -1,6 +1,8 @@
 
 #' Create and save scenarios
 #'
+#' Long flat array
+#'
 #' @param file_tag Trailing part of the Excel file name
 #'
 #' @return none (save to project data folder)

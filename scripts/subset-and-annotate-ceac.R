@@ -25,12 +25,15 @@ scenario_keep <-
   grid_points %>%
   transmute(scenario) %>% unlist(use.names = F)
 
+ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
+ce_res0 <- ce_res
+
 ce_res$ce_incr$e <- ce_res$ce_incr$e[ ,colnames(ce_res$ce_incr$e) %in% c(0,scenario_keep)]
 ce_res$ce_incr$c <- ce_res$ce_incr$c[ ,colnames(ce_res$ce_incr$e) %in% c(0,scenario_keep)]
 
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
 
-ceac_plot_and_save(bcea_incr, folders)
+out <- ceac_plot_and_save(bcea_incr, folders)
 
 coords <-
   out$data %>%
@@ -38,8 +41,30 @@ coords <-
   group_by(comparison) %>%
   slice(which.min(ceac))
 
-out + annotate("text",
-               x = coords$k - 500,
-               y = coords$ceac,
-               label = coords$comparison,
-               cex = 5)
+# number each curve by scenario number
+# two different methods
+# out <-
+#   out + annotate("text",
+#                  x = coords$k - 500,
+#                  y = coords$ceac,
+#                  label = coords$comparison,
+#                  cex = 5)
+
+label_data <- out$data[out$data$k == 40000, ]
+
+out <-
+  out + geom_text(data = label_data,
+                  aes(label = comparison, x = k, y = ceac, hjust = 1, vjust = -0.01), inherit.aes = F)
+
+# include baseline
+baseline <- design[design$Start_Treatment_p == 0.95 &
+                   design$Complete_Treatment_p  == 0.75, 'scenario']
+
+ce_res$ce_incr$e <- ce_res0$ce_incr$e[ ,colnames(ce_res0$ce_incr$e) %in% c(0, baseline)]
+ce_res$ce_incr$c <- ce_res0$ce_incr$c[ ,colnames(ce_res0$ce_incr$e) %in% c(0, baseline)]
+
+bcea_incr <- bcea_incremental(ce_res$ce_incr)
+
+out + geom_line(data = data.frame(x = bcea_incr$k, y = bcea_incr$ceac), aes(x = x, y = y),
+                inherit.aes = FALSE,
+                colour = 'red', lwd = 1.5)

@@ -12,21 +12,21 @@
 plot_CE_contours <- function(dat_INMB,
                              folders) {
 
-  fldr <- folders$plots$scenario
+  fldr <- folders
 
   for (i in names(dat_INMB)) {
 
     plot_data <- dat_INMB[[i]]
 
-    folders$plots$scenario <- pastef(fldr, i)
-    dir.create(folders$plots$scenario, showWarnings = FALSE)
+    fldr$plots$scenario <- pastef(folders$plot$scenario, i)
+    dir.create(fldr$plots$scenario, showWarnings = FALSE)
 
-    nmb_contour_plot(plot_data, folders)
+    nmb_contour_plot(plot_data, fldr)
 
     #TODO: fix and tidy
     # ce_boundary_plot(plot_data, folders)
     # base_filled_contour_grid(plot_data, folders)
 
-    inmb_levelplot(plot_data, folders = folders)
+    inmb_levelplot(plot_data, folder = fldr)
   }
 }

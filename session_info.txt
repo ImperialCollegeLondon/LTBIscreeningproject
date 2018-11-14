@@ -1,4 +1,4 @@
-- Session info -----------------------------------------------------------------------------
+- Session info ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  setting  value                       
  version  R version 3.4.4 (2018-03-15)
  os       Windows 7 x64 SP 1          
@@ -7,9 +7,9 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-11-07                  
+ date     2018-11-12                  
 
-- Packages ---------------------------------------------------------------------------------
+- Packages ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
  package               * version     date       source                                 
  abind                   1.4-5       2016-07-21 CRAN (R 3.4.1)                         
  arm                   * 1.10-1      2018-04-13 CRAN (R 3.4.4)                         
@@ -19,9 +19,10 @@
  bayesm                  3.1-0.1     2017-07-21 CRAN (R 3.4.3)                         
  BCEA                  * 2.2-6       2018-07-11 CRAN (R 3.4.4)                         
  bindr                   0.1.1       2018-03-13 CRAN (R 3.4.4)                         
- bindrcpp                0.2.2       2018-03-29 CRAN (R 3.4.4)                         
+ bindrcpp              * 0.2.2       2018-03-29 CRAN (R 3.4.4)                         
  boot                    1.3-20      2017-08-06 CRAN (R 3.4.4)                         
  brew                    1.0-6       2011-04-13 CRAN (R 3.4.1)                         
+ broom                   0.5.0       2018-07-17 CRAN (R 3.4.4)                         
  cellranger              1.1.0       2016-07-27 CRAN (R 3.4.1)                         
  clisymbols              1.2.0       2018-04-18 Github (gaborcsardi/clisymbols@e49b4f5)
  cmprsk                * 2.2-7       2014-06-17 CRAN (R 3.4.1)                         
@@ -56,6 +57,7 @@
  igraph                  1.2.2       2018-07-27 CRAN (R 3.4.4)                         
  influenceR              0.1.0       2015-09-03 CRAN (R 3.4.1)                         
  jsonlite                1.5         2017-06-01 CRAN (R 3.4.1)                         
+ labeling                0.3         2014-08-23 CRAN (R 3.4.1)                         
  latex2exp               0.4.0       2015-11-30 CRAN (R 3.4.3)                         
  lattice                 0.20-35     2017-03-25 CRAN (R 3.4.4)                         
  lazyeval                0.2.1       2017-10-29 CRAN (R 3.4.2)                         
@@ -116,4 +118,4 @@
  xml2                    1.2.0       2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [4d3cc44] 2018-11-06: imoprove plots and add scenario points to grids
+Head:     [7d83b46] 2018-11-07: fix boxplot axes labeling

@@ -5,6 +5,7 @@
 #' because the alternative way of running is on the DIDE cluster
 #' so all of the results are in the same place
 #'
+#' Based on code here:
 #' \url{https://www.r-bloggers.com/how-to-go-parallel-in-r-basics-tips/}
 #'
 #' @param scenario_params list of dataframes

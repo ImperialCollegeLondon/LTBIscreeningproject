@@ -29,6 +29,7 @@ plots_and_tables_scenarios <- function(cohort,
   ceplane_plot_and_save(bcea_incr, folders)
   # ce_plane_with_annotations()
 
+  ##TODO: check this works and write tests
   source("scripts/05j-strat_pop_year.R", local = TRUE)
 
   table_costeffectiveness(bcea_default, wtp_threshold, ncohort = 1000, folders$output$scenario)
@@ -42,7 +43,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   ceac_plot_and_save(bcea_incr, folders)
 
-  boxplot_INMB(bcea_incr, folders, oneway = T)
+  boxplot_INMB(bcea_incr, folders, oneway = TRUE)
   histogram_INMB(bcea_incr, folders)
   ridgeslineplot_INMB(bcea_incr, folders)
 

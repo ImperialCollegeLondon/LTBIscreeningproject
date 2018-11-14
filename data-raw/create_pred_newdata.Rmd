@@ -9,25 +9,18 @@ output:
 #' CE boundary plot for a range of effectiveness"
 #'
 #' author: "N Green"
-#' date: "2018-11-12"
+#' date: "`r format(Sys.Date())`"
 #' output:
 #'   html_document:
 #'     keep_md: TRUE
 #' ---
 
 
-
-```r
+```{r}
 library(LTBIscreeningproject)
 ```
 
-```
-## Warning: replacing previous import 'crayon::reset' by 'git2r::reset' when
-## loading 'LTBIscreeningproject'
-```
-
-
-```r
+```{r}
 dat <-
   create_pred_newdata(
   # sens = 0.9,

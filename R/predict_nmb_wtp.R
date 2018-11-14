@@ -70,54 +70,6 @@ make_wide_INMB <- function(pred,
 }
 
 
-#' Create prediction input data
-#'
-#' This can be a super set of values because the prediction
-#' function just picks the ones that are in the fitted model.
-#'
-#' @param grid_min,grid_max
-#' @param step_size
-#' @param agree,start,complete,effective,cost
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' create_pred_newdata(sens = 0.9,
-#'                   spec = 0.85,
-#'                   #start = c(0.5, 1),
-#'                   #complete = c(0.5, 1),
-#'                   cost = 50)
-#'
-create_pred_newdata <- function(grid_min = 0.5,
-                                grid_max = 1,
-                                step_size = 0.01,
-                                agree = NA,
-                                sens = NA,
-                                spec = NA,
-                                start = NA,
-                                complete = NA,
-                                effective = NA,
-                                cost = NA) {
-
-  p_grid_vals <- seq(grid_min, grid_max, by = step_size)
-
-  newdata <-
-    expand.grid("Agree_to_Screen_p" = if (any(is.na(agree))) p_grid_vals else agree,
-                "Sensitivity_p" = if (any(is.na(sens))) p_grid_vals else sens,
-                "Specificity_p" = if (any(is.na(spec))) p_grid_vals else spec,
-                "Start_Treatment_p" = if (any(is.na(start))) p_grid_vals else start,
-                "Complete_Treatment_p" = if (any(is.na(complete))) p_grid_vals else complete,
-                "Effective_p" = if (any(is.na(effective))) p_grid_vals else effective,
-                "Agree_to_Screen_cost" = if (any(is.na(cost))) 50 else cost,
-                "type" = c("screened", "statusquo"))
-
-  write.csv(newdata, here::here("data", "predict_newdata.csv"))
-
-  return()
-}
-
-
 #' Net monetary benefit regression predictions
 #'
 #' High-level create desing matrix, fit model & predict.

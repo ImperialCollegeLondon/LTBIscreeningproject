@@ -1,7 +1,7 @@
 
 #' ---
 #' title: "LTBI screening model:
-#' Dynamic incidence table"
+#' Dynamic incidence table plot"
 #'
 #' author: "N Green"
 #' date: "`r format(Sys.Date())`"
