@@ -3,6 +3,7 @@
 #'
 #' Counts competing risk events over time.
 #' Replaces a (deprecated) previous rewritten version.
+#' Tied times are prioritised according to their named order.
 #'
 #' @param event_times List; tb, (fup), exit_uk, death
 #'
@@ -18,18 +19,9 @@ count_comprsk_events <- function(event_times) {
     lapply(event_times, ceiling) %>%
     data.frame()
 
-  times_dat <- fncols(times_dat, 'fup')
+  times_dat <- add_missing_cols(times_dat, 'fup')
 
-  # make sure that tb is always counted as priority
-  times_dat <-
-    times_dat %>%
-    mutate(
-      fup = ifelse(!is.na(tb), NA, fup),
-      exit_uk = ifelse(!is.na(tb), NA, exit_uk),
-      death = ifelse(!is.na(tb), NA, death)) %>%
-    mutate(
-      exit_uk = ifelse(!is.na(fup), NA, exit_uk),
-      death = ifelse(!is.na(fup), NA, death))
+  times_dat <- prioritise_events(times_dat)
 
   times_dat$id <- seq_len(nrow(times_dat))
 
@@ -61,15 +53,16 @@ count_comprsk_events <- function(event_times) {
     data.table()
 
   # rearrange to events as columns
-  res <-
+  events_cols <-
     dcast.data.table(count_times, value ~ variable,
                      value.var = "count") %>%
-    dplyr::rename(year = value)
+    dplyr::rename(year = value) %>%
+    as.data.frame()
 
-  res[is.na(res)] <- 0
+  events_cols[is.na(events_cols)] <- 0
+  events_cols <- add_missing_cols(events_cols, 'fup')
 
-
-  mutate(res,
+  mutate(events_cols,
          total_tb = cumsum(tb),
          total_exit_uk = cumsum(exit_uk),
          total_death = cumsum(death),
@@ -82,12 +75,30 @@ count_comprsk_events <- function(event_times) {
 }
 
 
-# add missing columns
-fncols <- function(data,
-                   cname) {
+#
+add_missing_cols <- function(data,
+                             colname) {
 
-  add <- cname[!cname %in% names(data)]
+  add <- colname[!colname %in% names(data)]
 
   if (length(add) != 0) data[add] <- NA
   data
+}
+
+
+# replace same-year events with NA
+# make sure that tb is always counted as priority
+prioritise_events <- function(times_dat) {
+
+  times_dat %>%
+  mutate(
+    tb = ifelse(is.infinite(tb), NA, tb),
+    exit_uk = ifelse(is.infinite(exit_uk), NA, exit_uk),
+    fup = ifelse(!is.na(tb), NA, fup),
+    exit_uk = ifelse(!is.na(tb), NA, exit_uk),
+    death = ifelse(!is.na(tb), NA, death),
+
+    exit_uk = ifelse(!is.na(fup), NA, exit_uk),
+    death = ifelse(!is.na(fup), NA, death),
+    death = ifelse(!is.na(exit_uk), NA, death))
 }

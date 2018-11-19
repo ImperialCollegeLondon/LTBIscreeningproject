@@ -25,7 +25,7 @@ screen <- c(screen, rep(0, 100 - length(screen)))
 res <- data.frame(year = 1:100,
                   discount = discount(t_limit = 100))
 
-n.scenarios <-  length(dectree_res)
+n.scenarios <- length(dectree_res)
 
 for (i in seq_len(n.scenarios)) {
 

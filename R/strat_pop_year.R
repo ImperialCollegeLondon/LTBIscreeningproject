@@ -37,13 +37,12 @@ strat_pop_year <- function(cohort,
                            prop_avoid,
                            folders) {
 
+  # avoided cases tb at time Inf
   id_avoid <- cohort$id_avoided_tb
-  who_avoided <- rows_first_n_ids(id_avoid,
-                                  prop_avoid)
-
+  who_avoided <-
+    rows_first_n_ids(id_avoid, prop_avoid)
   cohort_screen <- cohort
   cohort_screen$notif_issdt.years[who_avoided] <- Inf
-
   event_times$tb = cohort_screen$notif_issdt.years
 
   strat_pop_year <- count_comprsk_events(event_times)

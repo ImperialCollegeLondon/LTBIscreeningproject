@@ -47,8 +47,11 @@ plots_and_tables_scenarios <- function(cohort,
   histogram_INMB(bcea_incr, folders)
   ridgeslineplot_INMB(bcea_incr, folders)
 
+  sim_INMB <- bcea_to_plotdata(bcea_incr, folders)
+  plot_CE_contours(list('20000' = sim_INMB), folders)
+
   ##TODO: test
-  pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
+  # pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
 
   pred_INMB <- nmb_predictions(ce_res, folders)
   plot_CE_contours(dat_INMB = pred_INMB, folders)
