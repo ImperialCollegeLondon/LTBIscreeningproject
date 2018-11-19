@@ -19,18 +19,11 @@ count_comprsk_events <- function(event_times) {
     lapply(event_times, ceiling) %>%
     data.frame()
 
-  times_dat <- add_missing_cols(times_dat, 'fup')
+  times_dat <- add_missing_cols(times_dat, c('exit_uk', 'death', 'fup'))
 
   times_dat <- prioritise_events(times_dat)
 
   times_dat$id <- seq_len(nrow(times_dat))
-
-  # find first event for each id
-  ## dplyr
-  # first_times <-
-  #   melt(times_dat, id.vars = "id") %>%
-  #   group_by(id) %>%
-  #   slice(which.min(value))
 
   DT <-
     times_dat %>%
@@ -60,7 +53,7 @@ count_comprsk_events <- function(event_times) {
     as.data.frame()
 
   events_cols[is.na(events_cols)] <- 0
-  events_cols <- add_missing_cols(events_cols, 'fup')
+  events_cols <- add_missing_cols(events_cols, c('exit_uk', 'death', 'fup'))
 
   mutate(events_cols,
          total_tb = cumsum(tb),
@@ -86,19 +79,26 @@ add_missing_cols <- function(data,
 }
 
 
-# replace same-year events with NA
-# make sure that tb is always counted as priority
+#' prioritise_events
+#'
+#' Replace same-year events with NA
+#' make sure that tb is always counted as priority
+#'
+#' @param times_dat
+#'
+#' @return
+#' @export
 prioritise_events <- function(times_dat) {
 
   times_dat %>%
-  mutate(
-    tb = ifelse(is.infinite(tb), NA, tb),
-    exit_uk = ifelse(is.infinite(exit_uk), NA, exit_uk),
-    fup = ifelse(!is.na(tb), NA, fup),
-    exit_uk = ifelse(!is.na(tb), NA, exit_uk),
-    death = ifelse(!is.na(tb), NA, death),
-
-    exit_uk = ifelse(!is.na(fup), NA, exit_uk),
-    death = ifelse(!is.na(fup), NA, death),
-    death = ifelse(!is.na(exit_uk), NA, death))
+    mutate(
+      tb = ifelse(is.infinite(tb), NA, tb),
+      exit_uk = ifelse(is.infinite(exit_uk), NA, exit_uk)) %>%
+    assertr::verify(is.na(tb) | tb <= death) %>%
+    mutate(fup = ifelse(!is.na(tb), NA, fup),
+           exit_uk = ifelse(!is.na(tb), NA, exit_uk),
+           death = ifelse(!is.na(tb), NA, death),
+           exit_uk = ifelse(!is.na(fup), NA, exit_uk),
+           death = ifelse(!is.na(fup), NA, death),
+           death = ifelse(!is.na(exit_uk), NA, death))
 }

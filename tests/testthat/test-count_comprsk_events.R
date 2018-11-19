@@ -4,14 +4,25 @@ library(dplyr)
 library(reshape2)
 library(data.table)
 
+
 event_times <- list(tb = c(1,4,Inf),
                     exit_uk = c(2,3,4),
                     death = c(1,2,5))
 
+test_that("error", {
+
+  # can't have tb after death
+  expect_error(count_comprsk_events(event_times), "assertr stopped execution")
+
+})
+
+
+event_times <- list(tb = c(1,NA,Inf),
+                    exit_uk = c(2,Inf,4),
+                    death = c(1,2,5))
 dat <-
   event_times %>%
   count_comprsk_events()
-
 
 test_that("return consistency", {
 
@@ -41,6 +52,7 @@ test_that("order events", {
 
 })
 
+
 test_that("misc", {
 
   expect_equal(count_comprsk_events(list(tb = 1,
@@ -57,7 +69,7 @@ test_that("misc", {
                               death = 1))
 
   expect_true(all(dat2$total_tb == 1))
-  expect_true(all(dat2$total_exit_uk == 0))
-  expect_true(all(dat2$total_death == 0))
+  expect_true(all(is.na(dat2$total_exit_uk)))
+  expect_true(all(is.na(dat2$total_death)))
 
 })

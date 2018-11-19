@@ -32,6 +32,8 @@ set_branch_uniform_params.default <- function(vals,
 set_branch_uniform_params.branch_unif_params <- function(vals,
                                                          osNode) {
 
+  stopifnot(assert_names_in_tree(osNode, vals$names))
+
   osNode$Set(pmin = vals$pmin,
              pmax = vals$pmax,
              filterFun = function(x) x$name == vals$name)

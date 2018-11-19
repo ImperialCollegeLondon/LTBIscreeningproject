@@ -11,6 +11,10 @@
 #'
 test <- function(sens,
                  spec) {
+
+  stopifnot(inherits(sens, "branch_unif_params"))
+  stopifnot(inherits(spec, "branch_unif_params"))
+
   res <-
     list(sens = sens,
          spec = spec)
@@ -34,6 +38,9 @@ test <- function(sens,
 branch_unif_params <- function(pmin,
                                pmax,
                                name) {
+
+  stopifnot(pmin >= 0, pmax <= 1)
+
   res <-
     list(pmin = pmin,
          pmax = pmax,
