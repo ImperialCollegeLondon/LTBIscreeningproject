@@ -31,11 +31,15 @@ lapply(file_names, load, .GlobalEnv)
 ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
 
+sim_INMB <- vector("list")
+plot_data <- vector("list")
+
 # simulation output
-sim_INMB <- bcea_to_plotdata(bcea_incr, folders)
+sim_INMB[[1]] <- bcea_to_plotdata(bcea_incr, folders)
 # meta-regression
 pred_INMB <- nmb_predictions(ce_res, folders)
-plot_data <- pred_INMB[[wtp]]
+
+plot_data[[1]] <- pred_INMB[[wtp]]
 
 fldr <- here::here("ext-data", "runs_2_effic80", "18_to_35_in_2009", "policy_003")
 file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
@@ -43,9 +47,9 @@ lapply(file_names, load, .GlobalEnv)
 
 ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
-sim_INMB2 <- bcea_to_plotdata(bcea_incr, folders)
+sim_INMB[[2]] <- bcea_to_plotdata(bcea_incr, folders)
 pred_INMB <- nmb_predictions(ce_res, folders)
-plot_data2 <- pred_INMB[[wtp]]
+plot_data[[2]] <- pred_INMB[[wtp]]
 
 fldr <- here::here("ext-data", "runs_2_effic100", "18_to_35_in_2009", "policy_003")
 file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
@@ -53,15 +57,13 @@ lapply(file_names, load, .GlobalEnv)
 
 ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
-sim_INMB3 <- bcea_to_plotdata(bcea_incr, folders)
+sim_INMB[[3]] <- bcea_to_plotdata(bcea_incr, folders)
 pred_INMB <- nmb_predictions(ce_res, folders)
-plot_data3 <- pred_INMB[[wtp]]
+plot_data[[3]] <- pred_INMB[[wtp]]
 
-merged_data <- merge(plot_data, plot_data2, by = c("Start_Treatment_p", "Complete_Treatment_p"))
-merged_data <- merge(merged_data, plot_data3, by = c("Start_Treatment_p", "Complete_Treatment_p"))
+merged_data <- plyr::join_all(plot_data, by = c("Start_Treatment_p", "Complete_Treatment_p"))
+merged_sim <- plyr::join_all(sim_INMB, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 
-merged_sim <- merge(sim_INMB, sim_INMB2, by = c("Start_Treatment_p", "Complete_Treatment_p"))
-merged_sim <- merge(merged_sim, sim_INMB3, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 
 p <- ce_boundary_line_plot(merged_data,
                            folders = NA)

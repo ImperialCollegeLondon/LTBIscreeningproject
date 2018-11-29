@@ -81,6 +81,11 @@ ce_boundary_line_plot <- function(plot_data,
   INMB_names <- grep(pattern = "INMB",
                      names(plot_data),
                      value = TRUE)
+  # in case duplicate names
+  INMB_names_new <- paste0(INMB_names, seq_along(INMB_names))
+  names(plot_data)[names(plot_data) %in% INMB_names] <- INMB_names_new
+
+  plot_data <- plot_data[ , c(x_var, y_var, INMB_names_new)]
 
   p <-
     ggplot(plot_data, aes_string(x = x_var,
@@ -93,7 +98,7 @@ ce_boundary_line_plot <- function(plot_data,
     xlim(min(plot_data[ ,x_var]), 1) +
     ylim(min(plot_data[ ,y_var]), 1)
 
-  for (i in INMB_names) {
+  for (i in INMB_names_new) {
 
     p <- p + geom_contour(mapping = aes_string(x = x_var,
                                                y = y_var,

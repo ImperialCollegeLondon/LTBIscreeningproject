@@ -6,7 +6,7 @@
  language (EN)                        
  collate  English_United Kingdom.1252 
  tz       Europe/London               
- date     2018-11-14                  
+ date     2018-11-28                  
 
  package               ondiskversion loadedversion path                                                               attached is_base date       source                                 
  abind                 1.4.5         1.4-5         C:/Users/ngreen1/Documents/R/win-library/3.4/abind                 FALSE    FALSE   2016-07-21 CRAN (R 3.4.1)                         
@@ -114,4 +114,4 @@
  xml2                  1.2.0         1.2.0         C:/Users/ngreen1/Documents/R/win-library/3.4/xml2                  FALSE    FALSE   2018-01-24 CRAN (R 3.4.3)                         
 Local:    scenario_cost C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [c8f211d] 2018-11-14: basic tidying and graph extensions
+Head:     [0668cc1] 2018-11-19: add tests for tree leaf name mismatch

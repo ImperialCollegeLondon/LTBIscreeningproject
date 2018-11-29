@@ -11,7 +11,7 @@
 #'   html_document:
 #'     keep_md: TRUE
 #' ---
-t
+
 
 rm(list = ls())
 devtools::load_all(".")
