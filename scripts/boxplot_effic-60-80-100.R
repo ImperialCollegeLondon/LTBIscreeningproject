@@ -49,6 +49,9 @@ ce_res$ce_incr$c <- cbind(ce_res1$ce_incr$c[ ,c(1, 25, 50, 75, 100, 121)],
 
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
 
-boxplot_INMB(bcea_incr, folders, oneway = TRUE)
+p <- boxplot_INMB(bcea_incr, folders, oneway = TRUE)
 
+p + scale_x_discrete(breaks = 1:15,
+                     labels = apply(expand.grid(c("0.6,0.6","0.75,0.7","0.9,0.8","0.5,0.95","1,1"), c("0.6","0.8","1")), 1, paste, collapse = ",")) +
+  theme(axis.text.x = element_text(angle = 45))
 

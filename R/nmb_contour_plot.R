@@ -103,7 +103,9 @@ ce_boundary_line_plot <- function(plot_data,
     p <- p + geom_contour(mapping = aes_string(x = x_var,
                                                y = y_var,
                                                z = i),
-                          breaks = 0)
+                          breaks = 0) #+
+      # geom_dl(aes_string(label = i), method = "bottom.pieces",
+      #         stat = "contour", breaks = 0)
   }
 
   # filename <- pastef(folders$plots$scenario, "ce_boundary_line_plot.png")

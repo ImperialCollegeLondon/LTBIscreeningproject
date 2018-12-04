@@ -22,48 +22,34 @@ library(arm)
 
 
 wtp <- '20000'
-# wtp <- 30000
+# wtp <- '30000'
 
-fldr <- here::here("ext-data", "runs_2_effic60", "18_to_35_in_2009", "policy_003")
-file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
-lapply(file_names, load, .GlobalEnv)
-
-ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
-bcea_incr <- bcea_incremental(ce_res$ce_incr)
+run_names <- c("runs_2_effic60","runs_2_effic65","runs_2_effic70","runs_2_effic75",
+               "runs_2_effic80","runs_2_effic85","runs_2_effic90","runs_2_effic95","runs_2_effic100")
 
 sim_INMB <- vector("list")
 plot_data <- vector("list")
 
-# simulation output
-sim_INMB[[1]] <- bcea_to_plotdata(bcea_incr, folders)
-# meta-regression
-pred_INMB <- nmb_predictions(ce_res, folders)
+for (i in seq_along(run_names)) {
 
-plot_data[[1]] <- pred_INMB[[wtp]]
 
-fldr <- here::here("ext-data", "runs_2_effic80", "18_to_35_in_2009", "policy_003")
-file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
-lapply(file_names, load, .GlobalEnv)
+  fldr <- here::here("ext-data", run_names[i], "18_to_35_in_2009", "policy_003")
+  file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
+  lapply(file_names, load, .GlobalEnv)
 
-ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
-bcea_incr <- bcea_incremental(ce_res$ce_incr)
-sim_INMB[[2]] <- bcea_to_plotdata(bcea_incr, folders)
-pred_INMB <- nmb_predictions(ce_res, folders)
-plot_data[[2]] <- pred_INMB[[wtp]]
+  ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
+  bcea_incr <- bcea_incremental(ce_res$ce_incr)
 
-fldr <- here::here("ext-data", "runs_2_effic100", "18_to_35_in_2009", "policy_003")
-file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
-lapply(file_names, load, .GlobalEnv)
+  # simulation output
+  sim_INMB[[run_names[i]]] <- bcea_to_plotdata(bcea_incr, folders, wtp_threshold = wtp)
+  # meta-regression
+  pred_INMB <- nmb_predictions(ce_res, folders)
 
-ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
-bcea_incr <- bcea_incremental(ce_res$ce_incr)
-sim_INMB[[3]] <- bcea_to_plotdata(bcea_incr, folders)
-pred_INMB <- nmb_predictions(ce_res, folders)
-plot_data[[3]] <- pred_INMB[[wtp]]
+  plot_data[[run_names[i]]] <- pred_INMB[[wtp]]
+}
 
 merged_data <- plyr::join_all(plot_data, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 merged_sim <- plyr::join_all(sim_INMB, by = c("Start_Treatment_p", "Complete_Treatment_p"))
-
 
 p <- ce_boundary_line_plot(merged_data,
                            folders = NA)

@@ -13,7 +13,7 @@
 #' @examples
 bcea_to_plotdata <- function(bcea,
                              folders,
-                             wtp_threshold = 20000) {
+                             wtp_threshold = "20000") {
 
   design_mat <-
     pastef(folders$output$parent,
@@ -23,7 +23,7 @@ bcea_to_plotdata <- function(bcea,
 
   out <-
     data.frame(
-    INMB = bcea_incr$eib[bcea_incr$k == "20000", ],
+    INMB = bcea_incr$eib[bcea_incr$k == wtp_threshold, ],
     design_mat)
 
   return(out)
