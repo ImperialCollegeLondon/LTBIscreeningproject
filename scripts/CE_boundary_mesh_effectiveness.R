@@ -51,7 +51,7 @@ for (i in seq_along(run_names)) {
 merged_data <- plyr::join_all(plot_data, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 merged_sim <- plyr::join_all(sim_INMB, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 
-p <- ce_boundary_line_plot(merged_data,
+p <- ce_boundary_line_plot(plot_data = merged_data,
                            folders = NA)
 p
 

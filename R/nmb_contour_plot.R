@@ -87,32 +87,43 @@ ce_boundary_line_plot <- function(plot_data,
 
   plot_data <- plot_data[ , c(x_var, y_var, INMB_names_new)]
 
+  ##TODO: hard-coded
+  plot_data <-
+    plot_data %>%
+    reshape::rename(c(INMB1 = "60%",
+                      INMB2 = "65%",
+                      INMB3 = "70%",
+                      INMB4 = "75%",
+                      INMB5 = "80%",
+                      INMB6 = "85%",
+                      INMB7 = "90%",
+                      INMB8 = "95%",
+                      INMB9 = "100%"))
+
+  plot_data_melt <- melt(plot_data,
+                         id.vars = c("Start_Treatment_p", "Complete_Treatment_p"))
+  value <- "value"
   p <-
-    ggplot(plot_data, aes_string(x = x_var,
-                                 y = y_var,
-                                 z = "INMB")) +
+    ggplot(plot_data_melt, aes_string(x = x_var,
+                                      y = y_var,
+                                      z = value)) +
     theme_bw() +
     xlab(gsub(x = x_var, "_|[_p]$", " ")) +
     ylab(gsub(x = y_var, "_|[_p]$", " ")) +
     theme(text = element_text(size = 20)) +
     xlim(min(plot_data[ ,x_var]), 1) +
-    ylim(min(plot_data[ ,y_var]), 1)
+    ylim(min(plot_data[ ,y_var]), 1) +
+    geom_contour(aes(col = variable), breaks = 0)
 
-  for (i in INMB_names_new) {
-
-    p <- p + geom_contour(mapping = aes_string(x = x_var,
-                                               y = y_var,
-                                               z = i),
-                          breaks = 0) #+
-      # geom_dl(aes_string(label = i), method = "bottom.pieces",
-      #         stat = "contour", breaks = 0)
-  }
+  direct.label(p, list("last.points", colour = 'black'))
 
   # filename <- pastef(folders$plots$scenario, "ce_boundary_line_plot.png")
   # ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
 
   invisible(p)
 }
+
+
 
 
 #' ce_boundary_points_plot
@@ -202,6 +213,7 @@ inmb_levelplot <- function(plot_data,
                            start = NA,
                            complete = NA,
                            levels_range = NA,
+                           levels_range = seq(-30, 120, by = 5),
                            folders = NA) {
 
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
@@ -243,7 +255,7 @@ inmb_levelplot <- function(plot_data,
                          grid.points(0.935, 0.725,
                                      pch = 19,
                                      gp = gpar(cex = 2))}, # baseline
-                       # at = levels_range,
+                       at = levels_range,
                        # main = paste("Start =", start, "& Complete =", complete),
                        col.regions = COL_REG) #topo.colors(100))
   )
