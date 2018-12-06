@@ -1,5 +1,5 @@
 
-#' ridgeslineplot_INMB
+#' ridges line plot INMB
 #'
 #' @param bcea
 #' @param ...
@@ -18,12 +18,18 @@ ridgeslineplot_INMB <- function(bcea, ...) {
 #' @rdname histogram_INMB
 #'
 ridgeslineplot_INMB.bcea <- function(bcea,
-                                folders = NA,
-                                wtp_threshold = 20000) {
+                                     folders = NA,
+                                     wtp_threshold = 20000) {
 
   ##TODO: oneway/twoway conditions
 
   if (!all(is.na(folders))) {
+
+    design_mat <-
+      pastef(folders$output$parent,
+             "scenario_params_df.csv") %>%
+      read.csv() %>%
+      design_matrix()
 
     filename <- pastef(folders$plots$scenario, "ridgeslineplot_INMB.png")
   }
@@ -31,19 +37,21 @@ ridgeslineplot_INMB.bcea <- function(bcea,
   dat <-
     bcea$ib[bcea$k == wtp_threshold, , ] %>%
     melt() %>%
-    mutate(X2 = factor(X2))
+    merge(design_mat, by.x = "X2", by.y = "scenario") %>%
+    mutate(X2 = factor(X2),
+           Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
   print(
     out <-
-      ggplot(dat, aes(x = value, y = X2, fill = X2)) +
+      ggplot(dat, aes(x = value, y = Agree_to_Screen_cost, fill = X2)) +
       ggridges::geom_density_ridges(show.legend = FALSE, quantile_lines = TRUE,
                                     jittered_points = TRUE,
-                                    position = position_points_jitter(width = 0.05, height = 0),
+                                    position = ggridges::position_points_jitter(width = 0.05, height = 0),
                                     point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +
       theme_bw() +
       theme(text = element_text(size = 30)) +
-      ylab(paste0("INB (", intToUtf8(163), ")")) +
-      ylab("density") +
+      xlab(paste0("INB (", intToUtf8(163), ")")) +
+      ylab(paste0("Density/unit test cost (", intToUtf8(163), ")")) +
       geom_vline(xintercept = 0, linetype = "dashed")
   )
 

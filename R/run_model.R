@@ -1,6 +1,8 @@
 
 #' Run model
 #'
+#' @param cohort_data
+#' @param make_plots
 #' @param sink_out output to file? Default: FALSE
 #'
 #' @return
@@ -9,7 +11,9 @@
 #'
 #' @examples
 #'
-run_model <- function(sink_out = FALSE) {
+run_model <- function(cohort_data = NA,
+                      make_plots = TRUE,
+                      sink_out = FALSE) {
 
   data("policies_ls")
   policies <- seq_along(policies_ls)
@@ -31,7 +35,8 @@ run_model <- function(sink_out = FALSE) {
 
     try_out <-
       try(
-        run_policy()
+        run_policy(cohort_data,
+                   make_plot)
       )
 
     handle_try_error(try_out)
@@ -40,6 +45,7 @@ run_model <- function(sink_out = FALSE) {
                          !inherits(try_out, "try-error"))
   }
 
-  plots_and_tables_policies()
+  if (make_plots) plots_and_tables_policies()
+
   run_final_message(run)
 }

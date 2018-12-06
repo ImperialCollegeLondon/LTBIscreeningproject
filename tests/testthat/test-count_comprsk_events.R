@@ -28,18 +28,18 @@ test_that("return consistency", {
 
   n_pop <- dat$atrisk_start[1]
 
-  # pop size equal over time
+  # pop size constant over time
   expect_equal(rowSums(dat[ , paste0("total_", names(event_times))]),
                n_pop - dat[ ,"atrisk_end"])
 
-  # event per year
+  # total event per year equal difference of risk sets
   expect_equal(rowSums(dat[ ,names(event_times)]),
                dat[ ,"atrisk_start"] - dat[ ,"atrisk_end"])
 
 })
 
 
-test_that("order events", {
+test_that("order monotonic events", {
 
   # descending
   expect_true(all(diff(dat[ ,"atrisk_end"]) <= 0))
@@ -55,21 +55,21 @@ test_that("order events", {
 
 test_that("misc", {
 
-  expect_equal(count_comprsk_events(list(tb = 1,
-                                         exit_uk = 1,
-                                         death = 1)),
-               count_comprsk_events(c(tb = 1,
-                                      exit_uk = 1,
-                                      death = 1)))
-
-  # first in list is priority
-  dat2 <-
+  dat_l <-
     count_comprsk_events(list(tb = 1,
                               exit_uk = 1,
                               death = 1))
+  dat_c <-
+    count_comprsk_events(c(tb = 1,
+                           exit_uk = 1,
+                           death = 1))
+  # pass list or c()
+  expect_equal(dat_l, dat_c)
 
-  expect_true(all(dat2$total_tb == 1))
-  expect_true(all(is.na(dat2$total_exit_uk)))
-  expect_true(all(is.na(dat2$total_death)))
+  # event list order is priority
+
+  expect_true(all(dat_l$total_tb == 1))
+  expect_true(all(dat_l$total_exit_uk == 0))
+  expect_true(all(dat_l$total_death == 0))
 
 })

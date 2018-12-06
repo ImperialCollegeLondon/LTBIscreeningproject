@@ -43,10 +43,15 @@ combine_popmod_dectree_res <- function(cohort,
 
   ce_default <- ce_default(ce0, ce1)
 
-  list(ce0 = ce0,
-       ce1 = ce1,
-       ce_default = ce_default,
-       ce_incr = ce_incr)
+  ce_res <- list(
+    ce0 = ce0,
+    ce1 = ce1,
+    ce_default = ce_default,
+    ce_incr = ce_incr)
+
+  save(ce_res, file = pastef(folders$output$scenario, "ce_res.RData"))
+
+  return(ce_res)
 }
 
 

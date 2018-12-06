@@ -40,13 +40,16 @@ boxplot_INMB.bcea <- function(bcea,
     dat <-
       bcea$ib[bcea$k == wtp_threshold, , ] %>%
       melt() %>%
-      mutate(X2 = factor(X2))
+      merge(design_mat, by.x = "X2", by.y = "scenario") %>%
+      mutate(X2 = factor(X2),
+             Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
     print(
       out <-
-        ggplot(dat, aes(x = X2, y = value, color = X2, group = X2)) +
+        ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = X2, group = X2)) +
         geom_boxplot(show.legend = FALSE) +
-        ylab("INB") + xlab("") +
+        ylab(paste0("INB (", intToUtf8(163), ")")) +
+        xlab(paste0("LTBI unit test cost (", intToUtf8(163), ")")) +
         theme_bw() +
         theme(text = element_text(size = 30)) +
         geom_hline(yintercept = 0, linetype = "dashed")
@@ -55,26 +58,30 @@ boxplot_INMB.bcea <- function(bcea,
   }else if (!oneway) {
 
     # other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost")]
-    other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost", "Start_Treatment_p")]
+    other_variable <- names(design_mat)[!names(design_mat) %in% c("scenario", "Agree_to_Screen_cost", "Complete_Treatment_p")]
 
     dat2 <-
       t(bcea$ib[bcea$k == wtp_threshold, , ]) %>%
       cbind.data.frame(design_mat, .) %>%
       melt.data.frame(id.vars = names(design_mat)) %>%
       dplyr::rename(INB = value) %>%
-      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
+      dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost),
+                    Start_Treatment_p = factor(Start_Treatment_p),
+                    Complete_Treatment_p = factor(Complete_Treatment_p))
 
     dat2[ ,other_variable] <- factor(dat2[ ,other_variable])
 
     print(
       out <-
-        ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Agree_to_Screen_cost")) +
+        ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Complete_Treatment_p")) +
         geom_boxplot() +
         theme_bw() +
-        guides(fill = FALSE) +
+        labs(fill = "Complete \nTreatment\n") +
+        # guides(fill = FALSE) +
         theme(text = element_text(size = 30)) +
         ylab(paste0("INB (", intToUtf8(163), ")")) +
-        xlab(""))
+        xlab(gsub(x = other_variable, "_|[_p]$", " ")) +
+        geom_abline(slope = 0, intercept = 0))
   }
 
   ggplot2::ggsave(file = filename,

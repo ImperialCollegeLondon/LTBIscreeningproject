@@ -33,23 +33,17 @@ ceplane_plot_and_save.bcea <- function(bcea,
 
   cbPalette <- colorRampPalette(c("red", "orange", "green", "blue"))(bcea$n.comparisons)
 
-  # suppressMessages(
-  try(
-    print(
-      out <-
-        my_contour2(bcea,
-                    graph = "ggplot2",
-                    wtp = 20000,
-                    CONTOUR_PC = "50%") +
-                    # CONTOUR_PC = "50%", ...) +
-        coord_cartesian(xlim = c(0, 0.01),
-                        ylim = c(-100, 200)) +
-        scale_colour_manual(values = cbPalette) +
-        theme(text = element_text(size = 20)) +
-        ggtitle("")
-    ),
-    silent = TRUE)
-  # )
+  out <-
+    my_contour2(bcea,
+                graph = "ggplot2",
+                wtp = 20000,
+                CONTOUR_PC = "50%") +
+    # CONTOUR_PC = "50%", ...) +
+    coord_cartesian(xlim = c(0, 0.01),
+                    ylim = c(-100, 200)) +
+    scale_colour_manual(values = cbPalette) +
+    theme(text = element_text(size = 20)) +
+    ggtitle("")
 
   design_mat <-
     pastef(folders$output$parent,
@@ -75,14 +69,20 @@ ceplane_plot_and_save.bcea <- function(bcea,
     xlab("QALYs gained/person") + ylab("Cost incurred/person (£)") +
     theme(legend.position = "none")
 
-  # wtp thresholds
-  out <- out +
-    geom_ribbon(data = data.frame(x = c(0,0.02), y = c(0, 0.02),
-                                  ymin = c(0, 20000*0.02), ymax = c(0, 30000*0.02)),
-                aes(x = x, ymin = ymin, ymax = ymax),
-                inherit.aes = FALSE,
-                fill = "grey", alpha = 0.5)
-  Warning
+  # suppressMessages(
+  try(
+    print(
+      # wtp thresholds
+      out <- out +
+        geom_ribbon(data = data.frame(x = c(0,0.02), y = c(0, 0.02),
+                                      ymin = c(0, 20000*0.02), ymax = c(0, 30000*0.02)),
+                    aes(x = x, ymin = ymin, ymax = ymax),
+                    inherit.aes = FALSE,
+                    fill = "grey", alpha = 0.5)
+    ),
+    silent = TRUE)
+  # )
+
   ggplot2::ggsave(file = filename, plot = out,
                   width = 20, height = 20, units = "cm")
 

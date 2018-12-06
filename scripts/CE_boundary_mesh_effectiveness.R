@@ -53,12 +53,12 @@ merged_sim <- plyr::join_all(sim_INMB, by = c("Start_Treatment_p", "Complete_Tre
 
 p <- ce_boundary_line_plot(plot_data = merged_data,
                            folders = NA)
-p
+p + labs(tag = "A")
 
-q <- ce_boundary_line_plot(merged_sim,
-                           folders = NA)
-q
 
+# q <- ce_boundary_line_plot(merged_sim,
+#                            folders = NA)
+# q + labs(tag = "A")
 
 ## plot all together
 # merged_all <- merge(merged_sim, merged_data, by = c("Start_Treatment_p", "Complete_Treatment_p"), all = FALSE)

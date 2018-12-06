@@ -3,11 +3,11 @@
 #'
 #' Single or multiple contour plot.
 #'
+#' @param plot_data
 #' @param folders List
 #' @param x_var string
 #' @param y_var string
-#' @param facet_vars
-#' @param plot_data
+#' @param facet_vars Vector of strings
 #'
 #' @return
 #' @export
@@ -115,7 +115,11 @@ ce_boundary_line_plot <- function(plot_data,
     ylim(min(plot_data[ ,y_var]), 1) +
     geom_contour(aes(col = variable), breaks = 0)
 
-  direct.label(p, list("last.points", colour = 'black'))
+  p <- direct.label(p, list("last.points", colour = 'black'))
+
+  p <- p +
+    geom_point(aes(x = 0.935, y = 0.725, size = 10)) +
+    theme(legend.position = "none")
 
   # filename <- pastef(folders$plots$scenario, "ce_boundary_line_plot.png")
   # ggsave(file = filename, plot = p, width = 30, height = 20, units = "cm")
@@ -212,8 +216,9 @@ inmb_levelplot <- function(plot_data,
                            formula = as.formula(INMB ~ Start_Treatment_p*Complete_Treatment_p),
                            start = NA,
                            complete = NA,
-                           levels_range = NA,
-                           levels_range = seq(-30, 120, by = 5),
+                           # levels_range = NA,
+                           # levels_range = seq(-30, 120, by = 5), #effectiveness
+                           levels_range = seq(-70, 50, by = 5), #unit cost
                            folders = NA) {
 
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)

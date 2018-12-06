@@ -46,6 +46,7 @@ ceac_plot_and_save.bcea <- function(bcea,
         theme(legend.position = "none") +
         xlab(paste0("Willingness to pay (", intToUtf8(163), " per QALY)")) +
         geom_vline(xintercept = c(20000, 30000), colour = "grey", cex = 1.2,  lty = "dashed") +
+        geom_rect(aes(xmin = 20000, xmax = 30000, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.01) +
         ggtitle("")
 
     ))

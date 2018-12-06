@@ -375,8 +375,11 @@ utility$postTx <- 1 #perfectly recovered
 
 # save --------------------------------------------------------------------
 
-save(unit_cost, utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold, p_contact_tracing, treatment_delay,
-     file = "data/cost_effectiveness_params.RData")
+save(unit_cost,
+     file = here::here("data", "unit_costs.RData"))
+
+save(utility, effectiveness, test_performance, means, pLatentTB.who, wtp_threshold, p_contact_tracing, treatment_delay,
+     file = here::here("data", "cost_effectiveness_params.RData"))
 
 save(cfr_age_lookup, cfr_age_breaks, NUM_SECONDARY_INF, NUM_CONTACTS,
-     file = "data/synthetic_cohort_params.RData")
+     file = here::here("data", "synthetic_cohort_params.RData"))

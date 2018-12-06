@@ -18,23 +18,23 @@ policy_cohort <- function(cohort_in,
 
   # single year cohort only
   cohort <- dplyr::filter(cohort_in,
-                          issdt_year %in% interv$year_cohort)
+                          .data$issdt_year %in% interv$year_cohort)
 
   # uk stay long enough
   cohort <- dplyr::filter(cohort,
-                          date_exit_uk1_issdt.years >= interv$min_screen_length_of_stay)
+                          .data$date_exit_uk1_issdt.years >= interv$min_screen_length_of_stay)
 
   if (interv$screen_with_delay) {
     cohort <- dplyr::filter(cohort,
-                            screen == 1)}
+                            .data$screen == 1)}
 
   if (interv$no_students) {
     cohort <- dplyr::filter(cohort,
-                            visatype2 != "Students")}
+                            .data$visatype2 != "Students")}
 
   # remove individuals from 'lower' incidence countries
   cohort <- dplyr::filter(cohort,
-                          who_inc_Pareek2011 %in% interv$incidence_grps_screen)
+                          .data$who_inc_Pareek2011 %in% interv$incidence_grps_screen)
 
   # assign each tb case unique id
   cohort <- set_id_avoided_tb(cohort)

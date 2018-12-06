@@ -3,16 +3,21 @@
 #'
 #' A single policy simulation
 #'
+#' @param make_plots
+#' @param cohort_data
+#'
 #' @return
 #' @export
 #'
 #' @examples
 #'
-run_policy <- function() {
+run_policy <- function(cohort = NA,
+                       make_plots = TRUE) {
 
   data("policies"); data("policies_ls")
   data("intervention_constants")
   data("cost_effectiveness_params")
+  data("unit_costs")
   data("scenario_params")
   data("model_input_cohort")
 
@@ -22,8 +27,8 @@ run_policy <- function() {
 
   folders <- setup_folders(policy_name = policies_ls[policy], interv)
 
-  ## use single-migrant-cohort here instead?
-  # cohort <- cohort_single[[4]]
+  ## use (single-migrant) user-defined cohort instead
+  if (!all(is.na(cohort))) IMPUTED_sample <- cohort
 
   source("scripts/data-prep_constants-policy.R", local = TRUE)
   source("scripts/prep-decisiontree.R", local = TRUE)
@@ -36,7 +41,7 @@ run_policy <- function() {
 
   ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
 
-  plots_and_tables_scenarios(cohort, dectree_res, popmod_res, ce_res, folders)
+  if (make_plots) plots_and_tables_scenarios(cohort, dectree_res, popmod_res, ce_res, folders)
 
   return()
 }
