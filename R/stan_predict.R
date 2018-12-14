@@ -31,13 +31,9 @@ stan_predict <- function(stan_fit,
                prob_CE = apply(INMB_sim, 1,
                                function(x) sum(x > 0)/ncol(INMB_sim)),
                EINMB = apply(INMB_sim, 1, mean),
-               pc_5 = apply(INMB_sim, 1,
-                            function(x) quantile(x, probs = 0.05)),
-               pc_50 = apply(INMB_sim, 1,
-                             function(x) quantile(x, probs = 0.5)),
-               pc_95 = apply(INMB_sim, 1,
-                             function(x) quantile(x, probs = 0.95)))
-
+               pc_5 = rowQuantiles(INMB_sim, probs = 0.05),
+               pc_50 = rowQuantiles(INMB_sim, probs = 0.5),
+               pc_95 = rowQuantiles(INMB_sim, probs = 0.95))
   out_sim
 }
 

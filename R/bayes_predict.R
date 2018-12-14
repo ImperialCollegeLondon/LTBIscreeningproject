@@ -48,12 +48,8 @@ bayes_predict <- function(model_fit,
     data.frame(newdata[1:num_scenarios, ],
                prob_CE = apply(pred_inmb, 1,
                                function(x) sum(x > 0)/ncol(pred_inmb)),
-               pc_5 = apply(pred_inmb, 1,
-                            function(x) quantile(x, probs = 0.05)),
-               pc_50 = apply(pred_inmb, 1,
-                             function(x) quantile(x, probs = 0.5)),
-               pc_95 = apply(pred_inmb, 1,
-                             function(x) quantile(x, probs = 0.95)))
-
+               pc_5 = rowQuantiles(pred_inmb, probs = 0.05),
+               pc_50 = rowQuantiles(pred_inmb, probs = 0.5),
+               pc_95 = rowQuantiles(pred_inmb, probs = 0.95))
   out
 }

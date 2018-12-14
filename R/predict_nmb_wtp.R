@@ -12,7 +12,7 @@
 predict_nmb_wtp <- function(fits_list,
                             newdata = NA) {
 
-  if (any(is.na(newdata))) {
+  if (anyNA(newdata)) {
     newdata <- read.csv(here::here("data", "predict_newdata.csv"),
                         stringsAsFactors = TRUE)
   }

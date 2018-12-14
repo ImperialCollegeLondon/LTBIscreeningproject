@@ -23,7 +23,7 @@ lm_multi_wtp <- function(nmb_formula,
                 prior.mean = 0, prior.df = 1000) #, prior.scale = 1000
   # lm_fit <- map(nmb_mat, f_lm, formula = nmb_formula)
 
-  if (!any(is.na(folders))) {
+  if (!anyNA(folders)) {
 
     write.csv(lm_list_to_df(lm_fit),
               file = pastef(folders$output$scenario, "lm_multi_all_table.csv"))

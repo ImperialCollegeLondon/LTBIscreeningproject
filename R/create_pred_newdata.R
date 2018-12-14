@@ -41,12 +41,12 @@ create_pred_newdata <- function(grid_min = NA,
 
   newdata <-
     expand.grid(
-      "Agree_to_Screen_p" = if (any(is.na(agree))) p_grid_vals else agree,
-      "Sensitivity_p" = if (any(is.na(sens))) p_grid_vals else sens,
-      "Specificity_p" = if (any(is.na(spec))) p_grid_vals else spec,
-      "Start_Treatment_p" = if (any(is.na(start))) p_grid_vals else start,
-      "Complete_Treatment_p" = if (any(is.na(complete))) p_grid_vals else complete,
-      "Effective_p" = if (any(is.na(effective))) p_grid_vals else effective,
+      "Agree_to_Screen_p" = if (anyNA(agree)) p_grid_vals else agree,
+      "Sensitivity_p" = if (anyNA(sens)) p_grid_vals else sens,
+      "Specificity_p" = if (anyNA(spec)) p_grid_vals else spec,
+      "Start_Treatment_p" = if (anyNA(start)) p_grid_vals else start,
+      "Complete_Treatment_p" = if (anyNA(complete)) p_grid_vals else complete,
+      "Effective_p" = if (anyNA(effective)) p_grid_vals else effective,
       "Agree_to_Screen_cost" = cost,
       "type" = c("screened", "statusquo"))
 

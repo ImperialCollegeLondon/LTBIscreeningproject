@@ -223,7 +223,7 @@ inmb_levelplot <- function(plot_data,
 
   COL_REG <- rainbow(n = 100, start = 3/6, end = 1/6)
 
-  if (any(is.na(levels_range))) {
+  if (anyNA(levels_range)) {
     max_min <- range(plot_data$INMB)
     levels_range <- seq(max_min[1] - 1, max_min[2] + 1, 1)
   }

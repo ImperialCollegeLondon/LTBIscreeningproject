@@ -12,7 +12,7 @@
 sample_tb <- function(prob,
                       is.tb = NA){
 
-  if (any(is.na(is.tb))) {
+  if (anyNA(is.tb)) {
     is.tb <- rep(TRUE, length(prob))
   }
 
