@@ -65,7 +65,7 @@ plots_and_tables_scenarios <- function(cohort,
 
   # stan_preds_scenario <- stan_predictions(ce_res, folders, use_newdata = FALSE) ##TODO:
 
-  stan_preds <- stan_predictions(ce_res, folders) ##TODO:
+  stan_preds <- stan_predictions(ce_res, folders)
   prob_ce_gridplot(out_sim = stan_preds$`20000`, folders = folders)
 
 

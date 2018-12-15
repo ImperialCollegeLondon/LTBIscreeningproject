@@ -13,7 +13,6 @@ test_that("error", {
 
   # can't have tb after death
   expect_error(count_comprsk_events(event_times), "assertr stopped execution")
-
 })
 
 
@@ -35,7 +34,6 @@ test_that("return consistency", {
   # total event per year equal difference of risk sets
   expect_equal(rowSums(dat[ ,names(event_times)]),
                dat[ ,"atrisk_start"] - dat[ ,"atrisk_end"])
-
 })
 
 
@@ -49,7 +47,6 @@ test_that("order monotonic events", {
   expect_true(all(diff(dat[ ,"total_exit_uk"]) >= 0))
   expect_true(all(diff(dat[ ,"total_death"]) >= 0))
   expect_true(all(diff(dat[ ,"total_tb"]) >= 0))
-
 })
 
 
@@ -67,9 +64,7 @@ test_that("misc", {
   expect_equal(dat_l, dat_c)
 
   # event list order is priority
-
   expect_true(all(dat_l$total_tb == 1))
-  expect_true(all(dat_l$total_exit_uk == 0))
-  expect_true(all(dat_l$total_death == 0))
-
+  expect_true(all(dat_l$total_exit_uk %in% c(NA,0)))
+  expect_true(all(dat_l$total_death %in% c(NA,0)))
 })

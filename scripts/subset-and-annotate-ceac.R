@@ -72,8 +72,15 @@ ce_res$ce_incr$c <- ce_res0$ce_incr$c[ ,cols_baseline]
 
 bcea_incr <- bcea_incremental(ce_res$ce_incr)
 
-out + geom_line(data = data.frame(x = bcea_incr$k, y = bcea_incr$ceac),
-                aes(x = x, y = y),
-                inherit.aes = FALSE,
-                colour = 'red',
-                lwd = 1.2)
+out <-
+  out + geom_line(data = data.frame(x = bcea_incr$k, y = bcea_incr$ceac),
+                  aes(x = x, y = y),
+                  inherit.aes = FALSE,
+                  colour = 'red',
+                  lwd = 1.2)
+out
+
+filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
+ggplot2::ggsave(file = filename, plot = out,
+                width = 20, height = 20, units = "cm")
+save(out, file = paste(folders$plots$scenario, "ceac.RData", sep = "/"))
