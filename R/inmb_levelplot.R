@@ -74,12 +74,18 @@ inmb_levelplot <- function(plot_data,
 
   if (plot_type == "ggplot2") {
 
-    pal <- wesanderson::wes_palette("Zissou1", 100, type = "continuous")
+    plot_breakpoints <- seq(-70, 35, 5)
+    plot_data$INMB_cut <- cut(plot_data$INMB, plot_breakpoints)
+    plot_data$INMB_cut <- factor(plot_data$INMB_cut, levels = rev(levels(plot_data$INMB_cut)))
+
+    # pal_wes <- wesanderson::wes_palette("Zissou1", n = 5, type = "discrete")
+    pal <- colorRampPalette(c("blue", "yellow", "red"))(length(levels(plot_data$INMB_cut)))
 
     inmb_levelplot <-
-      ggplot(plot_data, aes(Start_Treatment_p, Complete_Treatment_p, z = INMB)) +
-      geom_tile(aes(fill = INMB)) +
-      scale_fill_gradientn(colours = pal) +
+      ggplot(plot_data, aes(Start_Treatment_p, Complete_Treatment_p, z = INMB_cut)) +
+      geom_tile(aes(fill = INMB_cut)) +
+      scale_fill_manual(values = setNames(pal, levels(plot_data$INMB_cut))) +
+      # scale_fill_gradientn(colours = pal_wes, limits = c(-70, 35)) + #continuous colours
       coord_equal() +
       theme_bw() +
       xlab("Start (%)") +
@@ -88,7 +94,8 @@ inmb_levelplot <- function(plot_data,
                 aes(x = Start_Treatment_p,
                     y = Complete_Treatment_p,
                     label = lab_num), size = 5, inherit.aes = FALSE) +
-      geom_point(aes(x = 0.935, y = 0.725), size = 5)#,
+      geom_point(aes(x = 0.935, y = 0.725), size = 5) +
+      theme(panel.border = element_blank())
 
     print(inmb_levelplot)
 
@@ -101,3 +108,4 @@ inmb_levelplot <- function(plot_data,
 
   return()
 }
+

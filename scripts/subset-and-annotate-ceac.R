@@ -19,12 +19,13 @@ design <-
 
 grid_points <-
   design %>%
-  dplyr::filter(Complete_Treatment_p %in% c(0.5,0.75,0.9),
-                Start_Treatment_p %in% c(0.5,0.75,0.9))
+  dplyr::filter(Complete_Treatment_p %in% c(0.5, 0.75, 0.9),
+                Start_Treatment_p %in% c(0.5, 0.75, 0.9))
 
 scenario_keep <-
   grid_points %>%
-  transmute(scenario) %>% unlist(use.names = F)
+  transmute(scenario) %>%
+  unlist(use.names = FALSE)
 
 ce_res <- combine_popmod_dectree_res(cohort, interv, popmod_res, dectree_res, folders)
 ce_res0 <- ce_res

@@ -119,7 +119,6 @@
    viridis                 0.5.1      2018-03-29 [1] CRAN (R 3.4.4)
    viridisLite             0.3.0      2018-02-01 [1] CRAN (R 3.4.4)
    visNetwork              2.0.5      2018-12-05 [1] CRAN (R 3.4.4)
-   wesanderson             0.3.6      2018-04-20 [1] CRAN (R 3.4.4)
    withr                   2.1.2      2018-03-15 [1] CRAN (R 3.4.4)
    XML                     3.98-1.16  2018-08-19 [1] CRAN (R 3.4.4)
 
@@ -129,4 +128,4 @@
  R -- Package was removed from disk.
 Local:    scenario_cost C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject
 Remote:   scenario_cost @ origin (https://github.com/n8thangreen/LTBIscreeningproject.git)
-Head:     [fdde441] 2018-12-14: replace any(is.na()) with anyNA; apply() with matrixStat fns
+Head:     [5182196] 2018-12-15: ggplot2 versions of mesh plots functions and grid.arrange

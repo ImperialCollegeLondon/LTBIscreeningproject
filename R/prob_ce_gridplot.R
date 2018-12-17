@@ -59,12 +59,12 @@ prob_ce_gridplot <- function(out_sim,
 
   if (plot_type == "ggplot2") {
 
-    pal <- wesanderson::wes_palette("Zissou1", 100, type = "continuous")
+    pal <- wesanderson::wes_palette("Zissou1", 5, type = "discrete")
 
     prob_ce_gridplot <-
       ggplot(out_sim, aes(Start_Treatment_p, Complete_Treatment_p, z = prob_CE)) +
       geom_tile(aes(fill = prob_CE)) +
-      scale_fill_gradientn(colours = pal) +
+      scale_fill_gradientn(colours = pal, limits = c(0, 1)) +
       coord_equal() +
       theme_bw() +
       xlab("Start (%)") +
@@ -73,7 +73,8 @@ prob_ce_gridplot <- function(out_sim,
                 aes(x = Start_Treatment_p,
                     y = Complete_Treatment_p,
                     label = lab_num), size = 5, inherit.aes = FALSE) +
-      geom_point(aes(x = 0.935, y = 0.725), size = 5)#,
+      geom_point(aes(x = 0.935, y = 0.725), size = 5) +
+      theme(panel.border=element_blank())
 
     print(prob_ce_gridplot)
 
