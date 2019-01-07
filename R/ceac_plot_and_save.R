@@ -40,8 +40,9 @@ ceac_plot_and_save.bcea <- function(bcea,
   # for (i in seq_len(bcea$n.comparators)) {
   try(
     print(
-      out <-
-        BCEA::ceac.plot(bcea, graph = "ggplot2") +
+      ceac <-
+        # BCEA::ceac.plot(bcea, graph = "ggplot2") +
+        my_ceac_plot(bcea, graph = "ggplot2") +
         theme(text = element_text(size = 30)) +
         theme(legend.position = "none") +
         xlab(paste0("Willingness to pay (", intToUtf8(163), " per QALY)")) +
@@ -53,8 +54,11 @@ ceac_plot_and_save.bcea <- function(bcea,
   # my_ceac.plot(bcea)))#, new_window = TRUE)))
   # }
 
-  ggplot2::ggsave(file = filename, plot = out,
+  ggplot2::ggsave(file = filename,
+                  plot = ceac,
                   width = 30, height = 20, units = "cm")
+
+  save(ceac, file = paste(folders$plots$scenario, "ceac.RData", sep = "/"))
 
   invisible(out)
 }

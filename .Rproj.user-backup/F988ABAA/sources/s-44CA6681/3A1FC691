@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544958962795.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3A1FC691",
+    "lastKnownWriteTime" : 1544907035,
+    "last_content_update" : 1544907035,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/R/prob_ce_gridplot.R",
+    "project_path" : "R/prob_ce_gridplot.R",
+    "properties" : {
+        "cursorPosition" : "87,2",
+        "scrollLine" : "43"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

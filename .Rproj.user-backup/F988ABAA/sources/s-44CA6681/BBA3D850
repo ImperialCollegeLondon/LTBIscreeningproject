@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544958700505.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "BBA3D850",
+    "lastKnownWriteTime" : 1544959228,
+    "last_content_update" : 1544959228833,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/gridarrange_ggplot.R",
+    "project_path" : "scripts/gridarrange_ggplot.R",
+    "properties" : {
+        "cursorPosition" : "15,79",
+        "scrollLine" : "2"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

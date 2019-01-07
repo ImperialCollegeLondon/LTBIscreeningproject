@@ -1,0 +1,61 @@
+
+#' Cost-effectiveness acceptability curve (CEAC) plot and save
+#'
+#' @param bcea
+#' @param folders
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+ceac_plot_and_save <- function(bcea, ...) {
+  UseMethod("ceac_plot_and_save", bcea)
+}
+
+
+#' @rdname ceac_plot_and_save
+#'
+ceac_plot_and_save.bcea <- function(bcea,
+                                    folders, ...) {
+
+  ##TODO: save separate files for subsets (possibly single) lines
+
+  # BCEA::ceac.plot(bcea, graph = "ggplot2") +
+  #   theme(legend.position = c(0.2, 0.4)) +
+  #   geom_abline(slope = 0, intercept = 0.5) +
+  #   scale_color_discrete(labels = SCENARIO_LABELS) +
+  #   xlim(10000,30000) +
+  #   geom_vline(xintercept = 20000)
+
+  if (!missing(folders)) {
+
+    # filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
+    filename <- paste(folders$plots$scenario, "ceac.png", sep = "/")
+    # png(filename, width = 400, height = 350, res = 45)
+    # on.exit(dev.off())
+  }
+
+  # for (i in seq_len(bcea$n.comparators)) {
+  try(
+    print(
+      out <-
+        BCEA::ceac.plot(bcea, graph = "ggplot2") +
+        theme(text = element_text(size = 30)) +
+        theme(legend.position = "none") +
+        xlab(paste0("Willingness to pay (", intToUtf8(163), " per QALY)")) +
+        geom_vline(xintercept = c(20000, 30000), colour = "grey", cex = 1.2,  lty = "dashed") +
+        geom_rect(aes(xmin = 20000, xmax = 30000, ymin = -Inf, ymax = Inf), fill = "grey", alpha = 0.01) +
+        ggtitle("")
+
+    ))
+  # my_ceac.plot(bcea)))#, new_window = TRUE)))
+  # }
+
+  ggplot2::ggsave(file = filename, plot = out,
+                  width = 30, height = 20, units = "cm")
+
+  invisible(out)
+}
+

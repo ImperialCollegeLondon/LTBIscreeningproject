@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542360371947.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7BB48E91",
+    "lastKnownWriteTime" : 1542383360,
+    "last_content_update" : 1542649760043,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/000-programme-level-params-scenario-runner.R",
+    "project_path" : "scripts/000-programme-level-params-scenario-runner.R",
+    "properties" : {
+        "cursorPosition" : "29,0",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

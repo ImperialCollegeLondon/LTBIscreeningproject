@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542647974593.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3D7B75E5",
+    "lastKnownWriteTime" : 1535034177,
+    "last_content_update" : 1535034177,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/prep-decisiontree.R",
+    "project_path" : "scripts/prep-decisiontree.R",
+    "properties" : {
+        "cursorPosition" : "98,3",
+        "scrollLine" : "71"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

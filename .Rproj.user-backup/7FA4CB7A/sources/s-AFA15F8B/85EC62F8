@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542649769722.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "85EC62F8",
+    "lastKnownWriteTime" : 1537952889,
+    "last_content_update" : 1537952889,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/create_input_workspace.R",
+    "project_path" : "scripts/create_input_workspace.R",
+    "properties" : {
+        "cursorPosition" : "21,38",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

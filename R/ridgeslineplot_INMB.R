@@ -42,12 +42,12 @@ ridgeslineplot_INMB.bcea <- function(bcea,
            Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
   print(
-    out <-
+    ridgeplot <-
       ggplot(dat, aes(x = value, y = Agree_to_Screen_cost, fill = X2)) +
       ggridges::geom_density_ridges(show.legend = FALSE, quantile_lines = TRUE,
                                     jittered_points = TRUE,
                                     position = ggridges::position_points_jitter(width = 0.05, height = 0),
-                                    point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.7) +
+                                    point_shape = '|', point_size = 3, point_alpha = 1, alpha = 0.2) +
       theme_bw() +
       theme(text = element_text(size = 30)) +
       xlab(paste0("INB (", intToUtf8(163), ")")) +
@@ -56,6 +56,8 @@ ridgeslineplot_INMB.bcea <- function(bcea,
   )
 
   ggplot2::ggsave(file = filename,
-                  plot = out,
+                  plot = ridgeplot,
                   width = 30, height = 20, units = "cm")
+
+  save(ridgeplot, file = paste(folders$plots$scenario, "ridgeplot.RData", sep = "/"))
 }

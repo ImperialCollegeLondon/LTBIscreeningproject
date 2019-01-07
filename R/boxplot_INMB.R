@@ -45,7 +45,7 @@ boxplot_INMB.bcea <- function(bcea,
              Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
     print(
-      out <-
+      INMB_boxplot <-
         ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = X2, group = X2)) +
         geom_boxplot(show.legend = FALSE) +
         ylab(paste0("INB (", intToUtf8(163), ")")) +
@@ -72,7 +72,7 @@ boxplot_INMB.bcea <- function(bcea,
     dat2[ ,other_variable] <- factor(dat2[ ,other_variable])
 
     print(
-      out <-
+      INMB_boxplot <-
         ggplot(dat2, aes_string(x = other_variable, y = "INB", group = "scenario", fill = "Complete_Treatment_p")) +
         geom_boxplot() +
         theme_bw() +
@@ -85,8 +85,11 @@ boxplot_INMB.bcea <- function(bcea,
   }
 
   ggplot2::ggsave(file = filename,
-                  plot = out,
+                  plot = INMB_boxplot,
                   width = 30, height = 20, units = "cm")
+
+  save(INMB_boxplot, file = paste(folders$plots$scenario, "INMB_boxplot.RData", sep = "/"))
+
   invisible(out)
 }
 

@@ -1,0 +1,50 @@
+#' test constructor
+#'
+#' @param sens
+#' @param spec
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#'
+test <- function(sens,
+                 spec) {
+  res <-
+    list(sens = sens,
+         spec = spec)
+
+  class(res) <- c("test", class(res))
+
+  return(res)
+}
+
+
+test_performance <-
+  list(
+    QFT_GIT =
+      test(
+        sens = list(pmin = 0.81, pmax = 0.87, name = "Sensitivity"),
+        spec = list(pmin = 0.98, pmax = 1.0, name = "Specificity")
+      ),
+    QFT_plus =
+      test(
+        sens = list(pmin = 0.88, pmax = 0.88, name = "Sensitivity"),
+        spec = list(pmin = 0.9717, pmax = 0.9717, name = "Specificity")
+      ),
+    TSPOT =
+      test(
+        sens = list(pmin = 0.85, pmax = 0.93, name = "Sensitivity"),
+        spec = list(pmin = 0.86, pmax = 1.0, name = "Specificity")
+      )
+  )
+
+##TODO: where sens, spec used can now use method... eg branch assignment
+
+
+effectiveness <-
+  list(
+    LTBI_Tx_3mISORIF = list(pmin = 0.33, pmax = 0.84, name = "Effective"),
+    LTBI_Tx_6mISO = list(pmin = 0.48, pmax = 0.77, name = "Effective")
+  )
+

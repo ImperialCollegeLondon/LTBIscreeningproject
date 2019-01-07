@@ -1,0 +1,17 @@
+{
+    "path" : "C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/R",
+    "sortOrder" : [
+        {
+            "ascending" : false,
+            "columnIndex" : 1
+        },
+        {
+            "ascending" : false,
+            "columnIndex" : 4
+        },
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

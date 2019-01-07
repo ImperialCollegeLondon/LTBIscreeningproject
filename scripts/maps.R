@@ -3,6 +3,7 @@
 #
 # https://stackoverflow.com/questions/22625119/choropleth-world-map#
 
+
 library(rworldmap)
 
 
@@ -17,12 +18,25 @@ gtdMap <- joinCountryData2Map(TB_burden,
                               nameJoinColumn = "country",
                               joinCode = "NAME")
 
-mapDevice('x11')
-mapCountryData(gtdMap,
-               nameColumnToPlot = 'e_inc_100k',
-               catMethod = 'fixedWidth',
-               numCats = 100, mapTitle = "TB incidence per 100,000")
+png(filename = here::here("output", "incidence_map.png"),
+    width = 40, height = 20, units = "cm", res = 72)
 
+# mapDevice('x11')
+mapParams <-
+  mapCountryData(gtdMap,
+                 nameColumnToPlot = 'e_inc_100k',
+                 catMethod = 'fixedWidth',
+                 # numCats = 100,
+                 mapTitle = ""
+  )
+
+do.call(addMapLegend, c(mapParams,
+                        legendLabels = "all",
+                        # cutVector = 500,
+                        legendWidth = 0.5))
+
+
+# bubbles
 
 load("C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/ext-data/runs_1.1/18_to_35_in_2009/policy_003/cohort.RData")
 UN_iso_country_codes <- read.csv("C:/Users/ngreen1/Dropbox/TB/LTBI/R/LTBIscreeningproject/data/UN_iso_country_codes.csv")
@@ -38,7 +52,46 @@ mapBubbles(cohort_sizes,
            nameZSize = 'Freq',
            nameZColour = 'black',
            fill = FALSE,
-           addLegend = FALSE,
+           addLegend = TRUE,
+           legendVals = c(1000, 5000, 10000),
+           legendPos = "topleft",
+          legendBg = NA,
            add = TRUE,
+          legendTitle = "",
            symbolSize = 1.5,
            lwdSymbols = 3)
+
+dev.off()
+
+
+# ---
+
+
+library(ggplot2)
+library(maps)
+
+mdat <- map_data('world')
+
+
+str(mdat)
+
+dat <- read.table(text="
+ISO3V10   Country   'No of Documents'    Lat  Lon
+ARG     Argentina   41          -64 -34
+AUS     Australia   224         133 -27
+CAN     Canada      426         -95 60
+IRL     Ireland 68           -8 53
+ITA     Italy             583           12.8333 42.8333
+NLD     Netherlands 327          5.75   52.5
+NZL     'New Zealand' 26           174    -41
+ESP     Spain             325            -4  40
+GBR     'United Kingdom'  2849             -2 54
+USA     'United States'   3162            -97 38
+", header=TRUE)
+
+ggplot() +
+  geom_polygon(dat=mdat, aes(long, lat, group=group), fill="grey50") +
+  geom_point(data=dat,
+             aes(x=Lat, y=Lon, map_id=Country, size=`No.of.Documents`), col="red")
+
+

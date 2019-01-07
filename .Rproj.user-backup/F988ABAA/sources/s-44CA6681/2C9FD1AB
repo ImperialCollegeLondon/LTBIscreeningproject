@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544956064846.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "2C9FD1AB",
+    "lastKnownWriteTime" : 1544958412,
+    "last_content_update" : 1544958412257,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/R/inmb_levelplot.R",
+    "project_path" : "R/inmb_levelplot.R",
+    "properties" : {
+        "cursorPosition" : "108,2",
+        "scrollLine" : "65",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

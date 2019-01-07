@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542649774630.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7306CD90",
+    "lastKnownWriteTime" : 1539086230,
+    "last_content_update" : 1539086230,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/01b-data-prep_cost-effectiveness.R",
+    "project_path" : "scripts/01b-data-prep_cost-effectiveness.R",
+    "properties" : {
+        "cursorPosition" : "319,27",
+        "scrollLine" : "295",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

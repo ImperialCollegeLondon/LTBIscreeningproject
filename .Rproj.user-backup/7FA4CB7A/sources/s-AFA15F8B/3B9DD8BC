@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1542382778181.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3B9DD8BC",
+    "lastKnownWriteTime" : 1537863035,
+    "last_content_update" : 1537863035,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/R/run_policy.R",
+    "project_path" : "R/run_policy.R",
+    "properties" : {
+        "cursorPosition" : "28,31",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

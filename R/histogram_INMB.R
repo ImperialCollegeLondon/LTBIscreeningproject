@@ -34,7 +34,7 @@ histogram_INMB.bcea <- function(bcea,
     mutate(X2 = factor(X2))
 
   print(
-    out <-
+    INMB_hist <-
       ggplot(dat, aes(x = value, color = X2, group = X2)) +
       # geom_histogram(aes(y = ..density..), position = "identity", alpha = 0.5) +
       geom_density(alpha = 0.1, show.legend = FALSE) +
@@ -42,9 +42,13 @@ histogram_INMB.bcea <- function(bcea,
       theme(text = element_text(size = 30)) +
       xlab(paste0("INB (", intToUtf8(163), ")")) +
       geom_vline(xintercept = 0, linetype = "dashed")
-    )
+  )
 
   ggplot2::ggsave(file = filename,
-                  plot = out,
+                  plot = INMB_hist,
                   width = 30, height = 20, units = "cm")
+
+  save(INMB_hist, file = paste(folders$plots$scenario, "INMB_hist.RData", sep = "/"))
+
+  invisible(INMB_hist)
 }

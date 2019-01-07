@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544955866734.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3C93BE0E",
+    "lastKnownWriteTime" : 1544905307,
+    "last_content_update" : 1544905307,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/scripts/subset-and-annotate-ceac.R",
+    "project_path" : "scripts/subset-and-annotate-ceac.R",
+    "properties" : {
+        "cursorPosition" : "60,38",
+        "scrollLine" : "41"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

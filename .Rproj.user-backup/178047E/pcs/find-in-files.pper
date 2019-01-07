@@ -1,0 +1,11 @@
+{
+    "dialog-state" : {
+        "caseSensitive" : true,
+        "filePatterns" : [
+        ],
+        "path" : "",
+        "projectRelative" : true,
+        "query" : "ggsave",
+        "regex" : false
+    }
+}

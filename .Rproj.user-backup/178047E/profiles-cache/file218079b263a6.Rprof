@@ -1,0 +1,3 @@
+memory profiling: GC profiling: line profiling: sample.interval=10000
+#File 1: <expr>
+:4731633:327478322:256105920:457:"as.list" "alist" "eval" "eval" "glue_data" "glue" "fmt_cols" "is_null" "glubort" "check_length_val" "<Anonymous>" "evalq" "evalq" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" ".Call" "mutate_impl" "mutate.tbl_df" "mutate" "as.data.frame" "mutate.data.frame" "mutate" "function_list[[k]]" "withVisible" "freduce" "_fseq" "eval" "eval" "withVisible" "%>%" 1#1 "force" "doTryCatch" "tryCatchOne" "tryCatchList" "doTryCatch" "tryCatchOne" "tryCatchList" "tryCatch" "profvis::profvis" 

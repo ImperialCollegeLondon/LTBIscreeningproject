@@ -56,6 +56,7 @@ ceplane_plot_and_save.bcea <- function(bcea,
     mean_e = colMeans(bcea$delta.e),
     mean_c = colMeans(bcea$delta.c)
   )
+
   dat <- rbind(c(0,0,0,0), dat)
   dat$mean_e_shift <- c(dat$mean_e[-1], NA)
   dat$mean_c_shift <- c(dat$mean_c[-1], NA)
@@ -73,18 +74,21 @@ ceplane_plot_and_save.bcea <- function(bcea,
   try(
     print(
       # wtp thresholds
-      out <- out +
+      ceplane <- out +
         geom_ribbon(data = data.frame(x = c(0,0.02), y = c(0, 0.02),
                                       ymin = c(0, 20000*0.02), ymax = c(0, 30000*0.02)),
                     aes(x = x, ymin = ymin, ymax = ymax),
                     inherit.aes = FALSE,
-                    fill = "grey", alpha = 0.5)
+                    fill = "grey", alpha = 0.1)
     ),
     silent = TRUE)
   # )
 
-  ggplot2::ggsave(file = filename, plot = out,
+  ggplot2::ggsave(file = filename,
+                  plot = ceplane,
                   width = 20, height = 20, units = "cm")
+
+  save(ceplane, file = paste(folders$plots$scenario, "CE_plane.RData", sep = "/"))
 
   return()
 }

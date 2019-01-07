@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544955804085.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "9D97942A",
+    "lastKnownWriteTime" : 1544879592,
+    "last_content_update" : 1544879592,
+    "path" : "C:/Users/Nathan/Dropbox/TB/LTBI/R/LTBIscreeningproject/R/plots_and_tables_scenarios.R",
+    "project_path" : "R/plots_and_tables_scenarios.R",
+    "properties" : {
+        "cursorPosition" : "68,17",
+        "scrollLine" : "31"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
