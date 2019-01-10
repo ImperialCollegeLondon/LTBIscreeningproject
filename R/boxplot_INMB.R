@@ -46,7 +46,7 @@ boxplot_INMB.bcea <- function(bcea,
 
     print(
       INMB_boxplot <-
-        ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = X2, group = X2)) +
+        ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = Pop_cost, group = X2)) +
         geom_boxplot(show.legend = FALSE) +
         ylab(paste0("INB (", intToUtf8(163), ")")) +
         xlab(paste0("LTBI unit test cost (", intToUtf8(163), ")")) +

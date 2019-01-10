@@ -20,7 +20,8 @@ design_matrix <- function(params) {
     transmute(scenario,
               name = paste(node, val_type, sep = "_"),
               val = ifelse(val_type == "cost", min, p)) %>%
-    cast(scenario ~ name, value = 'val') %>%
+    reshape::cast(scenario ~ name,
+                  value = 'val') %>%
     setNames(map_chr(names(.),
                      function(x) gsub(x = x, pattern = " ", replacement = "_")))
 }
