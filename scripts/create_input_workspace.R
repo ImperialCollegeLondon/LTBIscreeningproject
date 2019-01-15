@@ -17,7 +17,7 @@ data("051206 - IMPUTED_sample")
 
 source("scripts/data-prep_policies.R")
 
-interv()
+interv_constructor()
 
 source("scripts/01b-data-prep_cost-effectiveness.R", echo = TRUE)
 

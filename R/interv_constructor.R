@@ -1,50 +1,35 @@
 
 #' interv_constructor
 #'
-#' @param N.mc
-#' @param use_discount
+#' @param N.mc Global fixed constant; default 1
+#' @param use_discount Global fixed constant
 #' @param no_students
 #' @param force_everyone_stays
-#' @param screen_with_delay
+#' @param screen_with_delay Rather than screen _everyone_ on entry screen at random 0-5 years from entry
 #' @param MAX_SCREEN_DELAY
-#' @param FUP_MAX_YEAR
+#' @param FUP_MAX_YEAR Time horizon for active TB progression
 #' @param screen_age_range
-#' @param year_cohort
-#' @param incidence_grps_screen
-#' @param min_screen_length_of_stay
-#' @param ENDPOINT_cost
-#' @param ENDPOINT_QALY
+#' @param year_cohort year_cohort = '2012' is most recent complete year; largest cohort, corresponds with Pareek () LTBI risk
+#' @param incidence_grps_screen Modified in the deterministic sensitivity analysis but set default values
+#' @param min_screen_length_of_stay Modified in the deterministic sensitivity analysis but set default values
+#' @param ENDPOINT_cost Modified in the deterministic sensitivity analysis but set default values
+#' @param ENDPOINT_QALY Modified in the deterministic sensitivity analysis but set default values
 #'
 #' @return
 #' @export
 #'
 interv_constructor <- function(N.mc = 1, #100
                                cluster = FALSE,
-
-                               # global fixed constants
                                use_discount = TRUE,
                                no_students = FALSE,
                                force_everyone_stays = FALSE,
-
-                               # rather than screen _everyone_ on entry
-                               # screen at random 0-5 years from entry
                                screen_with_delay = TRUE,
                                MAX_SCREEN_DELAY = 5,
-
-                               # time horizon for active TB progression
                                FUP_MAX_YEAR = 100,
                                screen_age_range = 18:35,
                                # screen_age_range = 18:45
-
-                               # year_cohort = '2012' #most recent complete year
-                               #largest cohort, corresponds with Pareek () LTBI risk
                                year_cohort = '2009',
-
                                # LIFETIME_RISK = 0.10
-
-                               # these parameters will be modified in the
-                               # deterministic sensitivity analysis
-                               # but set default values
                                #"exit uk"
                                incidence_grps_screen = c("(0,50]", "(50,150]", "(150,250]", "(250,350]", "(350,1e+05]"),
                                min_screen_length_of_stay = 0,
@@ -64,7 +49,7 @@ interv_constructor <- function(N.mc = 1, #100
          N.mc = N.mc,
          cluster = cluster,
          no_students = no_students,
-         discount_rate = if_else(use_discount, 0.035, 0))
+         discount_rate = dplyr::if_else(use_discount, 0.035, 0))
 
   save(interv, file = here::here("data", "intervention_constants.RData"))
 
