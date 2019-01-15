@@ -12,7 +12,7 @@ costeff_cohort$uk_tb <- c(TRUE, FALSE)
 costeff_cohort$id_avoided_tb <- 1:nrow(costeff_cohort)
 
 
-test_that("struct", {
+test_that("output structure", {
 
   res <-
     scenario_cost(
@@ -40,7 +40,7 @@ test_that("struct", {
       prop_avoided = 0.5
     )
 
-  expect_is(res, "list")
+  expect_type(res, "list")
   expect_length(res, 2)
   expect_named(res, c("statusquo", "screened"))
 })
@@ -224,19 +224,62 @@ test_that("prop_avoided", {
   expect_equal(res_1$screened, 0)
   expect_equal(res_1$statusquo, res_05$statusquo)
   expect_gt(res_05$screened, res_1$screened)
-
 })
 
 
 test_that("errors and warnings", {
 
-  # expect_error(
-  #   scenario_cost(
-  #     endpoint = "death",
-  #     unit_cost = 1,
-  #     prop_avoided = 0,
-  #     cohort = costeff_cohort),
-  #   regexp = "Distributions not specified in a list."
-  # )
+  expect_error(
+    scenario_cost(
+      endpoint = "death",
+      unit_cost = list(IGRA =
+                         list(distn = "unif",
+                              params = c(min = 1, max = 1)),
+                       aTB_Dx =
+                         list(distn = "unif",
+                              params = c(min = 1, max = 1)),
+                       aTB_Tx =
+                         list(distn = "unif",
+                              params = c(min = 1, max = 1)),
+                       aTB_TxDx =
+                         list(distn = "unif",
+                              params = c(min = 1, max = 1))),
+      probs_contact = c(contact = 1,
+                        aTB_Dx = 0.1 + 0.018,
+                        aTB_Tx = 0.018,
+                        LTBI_DxTx = 0.1),
+      cohort = costeff_cohort,
+      prop_avoided = 1
+    ),
+    regexp = "Distributions not specified in a list."
+
+  )
+
+  expect_error(
+  scenario_cost(
+    endpoint = "death",
+    unit_cost = list(IGRA =
+                       list(distn = "unif",
+                            params = c(min = 1, max = 1)),
+                     aTB_Dx =
+                       list(distn = "unif",
+                            params = c(min = 1, max = 1)),
+                     aTB_Tx =
+                       list(distn = "unif",
+                            params = c(min = 1, max = 1)),
+                     LTBI_DxTx =
+                       list(distn = "unif",
+                            params = c(min = 1, max = 1)),
+                     aTB_TxDx =
+                       list(distn = "unif",
+                            params = c(min = 1, max = 1))),
+    probs_contact = c(contact = 1,
+                      aTB_Dx = 0.1 + 0.018,
+                      aTB_Tx = 0.018,
+                      LTBI_DxTx = 0.1),
+    cohort = costeff_cohort,
+    prop_avoided = -1),
+  regexp = "rgument must be coercible to non-negative integer")
 
 })
+

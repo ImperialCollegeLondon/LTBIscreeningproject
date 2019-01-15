@@ -4,10 +4,11 @@ context("decision tree cluster")
 library(treeSimR)
 library(data.tree)
 library(purrr)
+library(dplyr)
 
 data("scenario_params")
 
-test_that("basic structure", {
+test_that("basic structure: single scenario", {
 
   res <-
     decision_tree_cluster(params = scenario_params[[1]],
@@ -15,7 +16,7 @@ test_that("basic structure", {
                           cost_dectree = "osNode_cost_2009.Rds",
                           health_dectree = "osNode_cost_2009.Rds")
 
-  expect_is(res, "list")
+  expect_type(res, "list")
   expect_is(res$call, "call")
   expect_is(res$subset_pop, "matrix")
   expect_is(res$N.mc, "numeric")
@@ -32,15 +33,13 @@ test_that("basic structure", {
 })
 
 
-
-# res <- lapply(scenario_parameters,
-#               decision_tree_cluster,
-#               N.mc = N.mc)
-#
-# xx <- decision_tree_cluster(params = scenario_parameters[[1]][1:3, ],
-#                             cost_dectree = "osNode_cost_2009_pdistn.Rds",
-#                             health_dectree = "osNode_health_2009_pdistn.Rds")
-
 test_that("", {
+
+  res <- lapply(scenario_params[1:3],
+                decision_tree_cluster,
+                N.mc = 2)
+
+  expect_type(res, "list")
+  expect_length(res, 3)
 
 })
