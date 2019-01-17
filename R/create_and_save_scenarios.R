@@ -1,9 +1,11 @@
 
 #' Create and save scenarios
 #'
-#' Long flat array
+#' Read in an Excel workbook consisting of a cost and probability (p) sheet.
+#' This is converted to a list of dataframes for model inputs
+#' and a long flat array to easily inspect by eye.
 #'
-#' @param file_tag Trailing part of the Excel file name
+#' @param file_tag Trailing part of the Excel file name to identify specific sets of scenarios.
 #'
 #' @return none (save to project data folder)
 #' @export

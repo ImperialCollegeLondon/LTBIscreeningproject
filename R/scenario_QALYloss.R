@@ -1,13 +1,22 @@
+
 #' scenario_QALYloss
 #'
-#' Splits output also into due to
-#' morbidity and mortality.
+#' Splits output also into due to morbidity and mortality.
 #'
-#' @param prop_avoided
-#' @param endpoint
-#' @param cohort
+#' @param prop_avoided proportion LTBI cured via screening
+#' @param endpoint exit uk or death time horizon
+#' @param cohort individual level data
 #'
-#' @return
+#' @return list \itemize{
+#'   \item statusquo_mortality
+#'  \item statusquo_morbidity
+#'  \item screened_mortality
+#'  \item screened_morbidity
+#'  \item statusquo_mort_pp
+#'  \item statusquo_morb_pp
+#'  \item screened_mort_pp
+#'  \item screened_morb_pp
+#'  }
 #' @export
 #'
 #' @examples

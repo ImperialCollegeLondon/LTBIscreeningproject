@@ -1,18 +1,21 @@
 
 #' combine_popmod_dectree_res
 #'
-#' @param cohort
-#' @param interv
-#' @param popmod_res
-#' @param dectree_res
-#' @param folders
+#' Combine cost and QALY outputs from decision tree model and population model
+#' for overall cost-effectiveness samples.
 #'
-#' @return
+#' @param cohort individual level data
+#' @param interv fixed model run inputs
+#' @param popmod_res output of \code{activetb_qaly_cost()}
+#' @param dectree_res output of \code{parallel_decision_tree()}
+#' @param folders list of ouput folder locations
+#'
+#' @return list of cost-effective statistics:
 #' \itemize{
-#'   \item ce0: marginal status-quo
-#'   \item ce1: marginal intervention
-#'   \item ce_default: non_incremental cost-effectiveness
-#'   \item ce_incr: incremental cost-effectivness
+#'   \item ce0: marginal status-quo. Costs and QALYs of each sim.
+#'   \item ce1: marginal intervention. Costs and QALYs of each sim.
+#'   \item ce_default: non-incremental cost-effectiveness i.e. dataframe with first column status-quo.
+#'   \item ce_incr: incremental cost-effectivness i.e. dataframe with first column 0 and other screening cost minus status-quo.
 #'   }
 #' @export
 #'

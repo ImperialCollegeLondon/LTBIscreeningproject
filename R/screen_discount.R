@@ -1,13 +1,13 @@
 
 #' screen_discount
 #'
-#' Discount cost and QALYs in decision tree
-#' due to delayed start of screening from entry
+#' Average discount cost and QALYs in decision tree
+#' due to delayed start of screening from port of entry.
 #'
 #' @param cohort individual level data
-#' @param discount_rate default: 3.5\%
+#' @param discount_rate default: 3.5\% per annum
 #'
-#' @return
+#' @return single numeric proportion between 0 and 1
 #' @export
 #'
 #' @examples

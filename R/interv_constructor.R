@@ -36,6 +36,8 @@ interv_constructor <- function(N.mc = 1, #100
                                ENDPOINT_cost = "death",
                                ENDPOINT_QALY = "death") {
 
+  ##TODO: add asserts
+
   interv <-
     list(force_everyone_stays = force_everyone_stays,
          # ENDPOINT_QALY = ENDPOINT_QALY,

@@ -1,12 +1,15 @@
 
 #' create_and_save_policies
 #'
-#' @param incidence_list
-#' @param endpoints
-#' @param LTBI_test
-#' @param treatment
+#' Given the input argument creates a sort of grid array version of an environment
+#' which behaves like a list object.
 #'
-#' @return
+#' @param incidence_list WHO incidence in country of origin group to target screening
+#' @param endpoints when to stop using costs and QALYs at time of exit or death
+#' @param LTBI_test TSPOT or QFT
+#' @param treatment 6 months or 3 months
+#'
+#' @return list of policies as inputs for the model.
 #' @export
 #'
 #' @examples

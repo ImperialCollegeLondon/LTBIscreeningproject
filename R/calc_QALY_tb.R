@@ -2,9 +2,12 @@
 #' Calculate QALYs for active TB cases
 #'
 #' Calculate the QALYs for each active TB individuals for each of 3 alternatives:
-#'  * diseasefree: to all-cause death
-#'  * fatality: case-fatality 12 months from notification
-#'  * cured: successfully treated
+#'
+#' \itemize{
+#'   \item diseasefree: to all-cause death
+#'   \item fatality: case-fatality 12 months from notification
+#'   \item cured: successfully treated
+#'  }
 #'
 #' Assume that death if it happens is within the first year of active TB.
 #' Assume that active TB cases when treated and survive first year are ~~fully cured~~.

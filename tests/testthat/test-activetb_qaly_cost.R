@@ -46,22 +46,92 @@ res <- activetb_qaly_cost(dectree_res,
                           interv,
                           cohort)
 
-##TODO...
-#
+
+names_output <- c("QALY.statusquo", "QALY.screened", "E_cost_screened", "cost.screened_person", "cost.statusquo_person",
+                  "cost_incur", "cost.statusquo", "cost.screened", "E_QALY_screened", "QALY.screened_person", "QALY.statusquo_person",
+                  "QALYgain", "cost_incur_person", "E_cost_incur", "E_cost_incur_person", "QALYgain_person", "E_QALYgain", "E_QALYgain_person")
+
+expected_names_output <- c("E_cost_screened", "E_QALY_screened", "E_cost_incur",  "E_cost_incur_person", "E_QALYgain", "E_QALYgain_person")
+sim_names_output <- setdiff(names_output, expected_names_output)
+
 
 test_that("i/o format", {
 
-  expect_equal(length(res), 18)
+  expect_length(res, length(names_output))
+  expect_named(res, names_output)
 
-  expect_equal(names(res),
-               c("QALY.statusquo", "QALY.screened", "E_cost_screened", "cost.screened_person", "cost.statusquo_person",
-                 "cost_incur", "cost.statusquo", "cost.screened", "E_QALY_screened", "QALY.screened_person", "QALY.statusquo_person",
-                 "QALYgain", "cost_incur_person", "E_cost_incur", "E_cost_incur_person", "QALYgain_person", "E_QALYgain", "E_QALYgain_person"))
+  # number of scenarios
+  expect_true(all(map_df(res, length) == 2))
 
-  expect_equivalent(map_int(res, length), rep(2, 18))
+  # single values
+  expect_true(all(map_df(map(res[expected_names_output], 1), length) == 1))
+
+  # value per mc sim
+  expect_true(all(map_df(map(res[sim_names_output], 1), length) == 2))
 
 })
 
-# test_that("boundary", {
-#   expect_equal()
-# })
+
+test_that("boundary - zero screening cost", {
+
+  # useless/perfect treatment
+  dectree_res <-
+    list(
+      list(mc_cost = c(0, 0),
+           mc_health = c(2, 1),
+           subset_pop = as.matrix(data.frame(p_LTBI_to_cured = c(0, 1))),
+           N.mc = 2))
+
+  res <- activetb_qaly_cost(dectree_res,
+                            interv,
+                            cohort)
+
+  TB_Tx_cost <- 5410
+
+  expect_equal(unlist(res$cost.statusquo), c(TB_Tx_cost, TB_Tx_cost))
+  expect_equal(res$cost.statusquo_person, res$cost.statusquo)
+
+  expect_equal(unlist(res$cost.screened), c(TB_Tx_cost, 0))
+  expect_equal(res$cost.screened_person, res$cost.screened)
+
+  expect_equal(unlist(res$cost_incur), c(0, -TB_Tx_cost))
+  expect_equal(res$cost_incur_person, res$cost_incur)
+
+  expect_equal(unlist(res$E_cost_screened), TB_Tx_cost/2)
+
+  expect_equal(unlist(res$E_cost_incur), TB_Tx_cost/2 - TB_Tx_cost)
+
+})
+
+
+##TODO:
+test_that("boundary - zero screening QALY loss", {
+
+  # useless/perfect treatment
+  # dectree_res <-
+  #   list(
+  #     list(mc_cost = c(0, 0),
+  #          mc_health = c(2, 1),
+  #          subset_pop = as.matrix(data.frame(p_LTBI_to_cured = c(0, 1))),
+  #          N.mc = 2))
+  #
+  # res <- activetb_qaly_cost(dectree_res,
+  #                           interv,
+  #                           cohort)
+  #
+  # TB_Tx_cost <- 5410
+  #
+  # expect_equal(unlist(res$cost.statusquo), c(TB_Tx_cost, TB_Tx_cost))
+  # expect_equal(res$cost.statusquo_person, res$cost.statusquo)
+  #
+  # expect_equal(unlist(res$cost.screened), c(TB_Tx_cost, 0))
+  # expect_equal(res$cost.screened_person, res$cost.screened)
+  #
+  # expect_equal(unlist(res$cost_incur), c(0, -TB_Tx_cost))
+  # expect_equal(res$cost_incur_person, res$cost_incur)
+  #
+  # expect_equal(unlist(res$E_cost_screened), TB_Tx_cost/2)
+  #
+  # expect_equal(unlist(res$E_cost_incur), TB_Tx_cost/2 - TB_Tx_cost)
+  #
+})

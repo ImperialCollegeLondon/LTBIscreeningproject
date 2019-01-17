@@ -41,7 +41,7 @@ setup_folders <- function(policy_name,
 
 #' Copy input data to output folder
 #'
-#' @param file_names
+#' @param file_names vector of text strings
 #' @param to_dir
 #'
 #' @return
@@ -50,6 +50,7 @@ cp_in_data_to_out_dir <- function(file_names,
                                   to_dir) {
 
   home_dir <- here::here()
+  on.exit(setwd(home_dir))
   setwd(to_dir)
 
   for (i in seq_along(file_names)) {

@@ -4,13 +4,22 @@
 #' Calculate decision tree expected costs and QALY loss
 #' for \code{N} simulations.
 #'
-#' @param params long format array
-#' @param N.mc integer
-#' @param cost_dectree Rds file names (string)
-#' @param health_dectree Rds file names (string)
-#' @param out_datatree Output full datatree object? Default: FALSE
+#' @param params an element of a scenario list with probabilities and costs to substitue into decision tree; long format array
+#' @param N.mc number of simulations; integer
+#' @param cost_dectree data.tree saved as Rds file names (string)
+#' @param health_dectree data.tree saved as Rds file names (string)
+#' @param out_datatree Output full datatree object? This may be large. Default: FALSE
 #'
 #' @return list
+#' \itemize{
+#'   \item mc_cost: each simulation total expected cost
+#'   \item mc_health: each simulation total expected QALy loss
+#'   \item subset_pop: cohort population sizes and probabilities at specific node or groups of nodes. Specifically calculates for individuals with LTBI since these are the subset of particular interest in term of cure; dataframe heading are LTBI_pre, tests, positive, startTx, completeTx, cured, LTBI_post, p_LTBI_to_cured, LTBI_tests, LTBI_positive, LTBI_startTx, LTBI_completeTx
+#'   \item osNode.cost: data.tree object
+#'   \item osNode.health: data.tree object
+#'   \item call: original call with arguments
+#'   \item N.mc: number of mnote-carlo simulations
+#' }
 #' @export
 #'
 #' @examples

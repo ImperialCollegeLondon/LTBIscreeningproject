@@ -221,6 +221,8 @@ aTB_Tx <- list(distn = "gamma",
                           scale = aTB_Tx_mean/8.333))
 
 
+unit_cost$aTB_Tx <- aTB_Tx
+
 ## COMMENT OUT FOR TEST CASES ######
 
 unit_cost$aTB_TxDx <- list(culture = culture,

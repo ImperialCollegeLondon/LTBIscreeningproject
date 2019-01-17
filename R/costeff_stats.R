@@ -1,12 +1,35 @@
 
 #' Cost-effectiveness Statistics
 #'
+#' For a scenario the population model with active TB cases.
+#'
 #' @param scenario_dat list
-#' @param interv_QALY
-#' @param interv_cost
-#' @param pop_year
+#' @param interv_QALY list of \code{scenario_QALY()} output
+#' @param interv_cost list of \code{scenario_cost()} output
+#' @param pop_year integer
 #'
 #' @return list
+#' \itemize{
+#'    \item QALY.statusquo
+#'    \item QALY.screened
+#'    \item E_cost_screened: mean average
+#'    \item cost.screened_person
+#'    \item cost.statusquo_person
+#'    \item cost_incur
+#'    \item cost.statusquo
+#'    \item cost.screened
+#'    \item E_QALY_screened: mean average
+#'    \item QALY.screened_person
+#'    \item QALY.statusquo_person
+#'    \item QALYgain
+#'    \item cost_incur_person
+#'    \item E_cost_incur: mean average
+#'    \item E_cost_incur_person: mean average
+#'    \item QALYgain_person
+#'    \item E_QALYgain: mean average
+#'    \item E_QALYgain_person: mean average
+#' }
+#'
 #' @export
 #'
 #' @examples
