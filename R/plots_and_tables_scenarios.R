@@ -48,12 +48,12 @@ plots_and_tables_scenarios <- function(cohort,
   ridgeslineplot_INMB(bcea_incr, folders)
 
   sim_INMB <- bcea_to_plotdata(bcea_incr, folders)
-  plot_CE_contours(list('20000' = sim_INMB), folders)
+  plot_CE_contours(dat_INMB = list('20000' = sim_INMB), folders)
 
   ##TODO: test
   # pred_INMB_scenario <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
 
-  pred_INMB <- nmb_predictions(ce_res, folders)
+  pred_INMB <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
   plot_CE_contours(dat_INMB = pred_INMB, folders)
 
   # out_INMB <- inmb_from_bcea(bcea_default, folders)

@@ -6,7 +6,7 @@
 #' @param probs_contact Proportions of individuals in subsets
 #' @param cohort individual level dataframe. nrow total number of TB cases in EWNI and after exit
 #' @param prop_avoided p_LTBI_to_cured; single numeric
-#' @param order default TRUE
+#' @param ordered default TRUE
 #'
 #' @return list total cost for \code{statusquo} and \code{screened}; numeric
 #' @export
@@ -18,7 +18,7 @@ scenario_cost <- function(endpoint,
                           probs_contact,
                           cohort,
                           prop_avoided,
-                          order = TRUE) {
+                          ordered = TRUE) {
 
   assert_that(endpoint %in% c("death", "exit uk"))
 
@@ -123,6 +123,5 @@ rcontact_tracing_costs <- function(unit_cost) {
 
   map_dbl(unit_cost[params],
       function(x) sum(sample_distributions(x))) %>%
-    set_names("contact", "aTB_Dx", "aTB_Tx", "LTBI_DxTx", "index")
-
+    purrr::set_names("contact", "aTB_Dx", "aTB_Tx", "LTBI_DxTx", "index")
 }

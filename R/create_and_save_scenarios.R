@@ -7,7 +7,7 @@
 #'
 #' @param file_tag Trailing part of the Excel file name to identify specific sets of scenarios.
 #'
-#' @return none (save to project data folder)
+#' @return empty (save to project data folder)
 #' @export
 #'
 #' @examples
@@ -15,16 +15,21 @@
 create_and_save_scenarios <- function(file_tag) {
 
   params_file <- here("data", sprintf("scenario-parameter-values%s.xlsx", file_tag))
+  tab_names <- readxl::excel_sheets(params_file)
 
-  params_cost <- readxl::read_excel(params_file,
-                                    sheet = "cost", na = c("", NA))#,
-  # col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
+  params <- list()
 
-  params_p <- readxl::read_excel(params_file,
-                                 sheet = "p", na = c("", NA))#,
-  # col_types = c('numeric', 'numeric', 'numeric', 'numeric'))
+  for (i in tab_names) {
 
-  params_cost$val_type <- "cost"
+    params[[i]] <- readxl::read_excel(params_file,
+                                      sheet = i, na = c("", NA))#,
+    # col_types = c('text', 'numeric', 'numeric', 'text', 'numeric'))
+
+    if ("node" %in% names(params_p)) {
+
+      params[[i]]$val_type <- i
+    }
+  }
 
   scenario_params_df <-
     combine_cost_and_p_xlsheets(params_p,
@@ -37,18 +42,4 @@ create_and_save_scenarios <- function(file_tag) {
 
   write.csv(scenario_params_df, file = here("data", "scenario_params_df.csv"))
   save(scenario_params, file = here("data", "scenario_params.RData"))
-}
-
-
-#
-drop_all_na_rows <- function(df) {
-
-  value_cols <-
-    df %>% dplyr::select(-node,
-                         -val_type,
-                         -scenario)
-
-  keep_rows <- apply(value_cols, 1,
-                     function(x) !all(is.na(x)))
-  df[keep_rows, ]
 }

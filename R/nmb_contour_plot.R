@@ -90,15 +90,16 @@ ce_boundary_line_plot <- function(plot_data,
   ##TODO: hard-coded
   plot_data <-
     plot_data %>%
-    reshape::rename(c(INMB1 = "60%",
-                      INMB2 = "65%",
-                      INMB3 = "70%",
-                      INMB4 = "75%",
-                      INMB5 = "80%",
-                      INMB6 = "85%",
-                      INMB7 = "90%",
-                      INMB8 = "95%",
-                      INMB9 = "100%"))
+    reshape::rename(c(INMB1 = "53",
+                      INMB2 = "60",
+                      INMB3 = "65",
+                      INMB4 = "70",
+                      INMB5 = "75",
+                      INMB6 = "80",
+                      INMB7 = "85",
+                      INMB8 = "90",
+                      INMB9 = "95",
+                      INMB10 = "100"))
 
   plot_data_melt <- melt(plot_data,
                          id.vars = c("Start_Treatment_p", "Complete_Treatment_p"))
@@ -108,17 +109,25 @@ ce_boundary_line_plot <- function(plot_data,
                                       y = y_var,
                                       z = value)) +
     theme_bw() +
-    xlab(gsub(x = x_var, "_|[_p]$", " ")) +
-    ylab(gsub(x = y_var, "_|[_p]$", " ")) +
+    xlab(paste(gsub(x = x_var, "_|[_p]$", " "), "(%)")) +
+    ylab(paste(gsub(x = y_var, "_|[_p]$", " "), "(%)")) +
     theme(text = element_text(size = 20)) +
     xlim(min(plot_data[ ,x_var]), 1) +
     ylim(min(plot_data[ ,y_var]), 1) +
-    geom_contour(aes(col = variable), breaks = 0)
+    geom_contour(aes(fill = variable), breaks = 0, colour = "black")
 
-  p <- direct.label(p, list("last.points", colour = 'black'))
+  p <- direct.label(p, list("last.points", colour = 'black', cex = 1.8))
+
+  mid_baseline <- plot_data_melt[plot_data_melt$variable == 53,]
+  CI95_baseline <- plot_data_melt[plot_data_melt$variable %in% c(33, 85),]
 
   p <- p +
-    geom_point(aes(x = 0.935, y = 0.725, size = 10)) +
+    geom_contour(data = mid_baseline, breaks = 0, colour = "black", lwd = 1.5) +
+    geom_contour(data = CI95_baseline, aes(fill = variable),
+                 breaks = 0, colour = "black", lwd = 1.5, lty = 2)
+
+  p <- p +
+    geom_point(aes(x = 0.93, y = 0.725, size = 10), shape = 8, colour = "red", stroke = 2) +
     theme(legend.position = "none")
 
   # filename <- pastef(folders$plots$scenario, "ce_boundary_line_plot.png")

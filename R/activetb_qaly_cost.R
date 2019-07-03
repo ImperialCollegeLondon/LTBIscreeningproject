@@ -91,11 +91,13 @@ activetb_qaly_cost <- function(dectree_res,
                           endpoint = interv$ENDPOINT_cost,
                           unit_cost = unit_cost,
                           probs_contact = p_contact_tracing,
-                          cohort = costeff_cohort)
+                          cohort = costeff_cohort,
+                          ordered = FALSE)
 
   QALY_partial <- partial(scenario_QALY,
                           endpoint = interv$ENDPOINT_QALY,
-                          cohort = costeff_cohort)
+                          cohort = costeff_cohort,
+                          ordered = FALSE)
 
   QALYloss_partial <- partial(scenario_QALYloss,
                               endpoint = interv$ENDPOINT_QALY,
@@ -107,9 +109,9 @@ activetb_qaly_cost <- function(dectree_res,
 
     p_cured <- p_LTBI_to_cured[[ss]]
 
-    interv_cost <- map(p_cured, cost_partial, ordered = FALSE)
+    interv_cost <- map(p_cured, cost_partial)
 
-    interv_QALY <- map(p_cured, QALY_partial, ordered = FALSE)
+    interv_QALY <- map(p_cured, QALY_partial)
 
     interv_QALYloss <- map(p_cured, QALYloss_partial)
 

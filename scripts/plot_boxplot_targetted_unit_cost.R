@@ -4,8 +4,14 @@
 #
 
 
-# from C:\Users\ngreen1\Dropbox\TB\LTBI\R\LTBIscreeningproject\ext-data\runs_5\5.123
+# load(here::here("ext-data", "runs_5", "5.123", "ce_res.RData"))
+load(here::here("ext-data", "runs_5", "5.123", "ce_res_fixed.RData"))
+load(here::here("ext-data", "runs_5", "5.123", "folders.RData"))
+
+bcea_incr <- bcea_incremental(ce_res$ce_incr)
+
 # run boxplot_INMB.R
+# boxplot_INMB(bcea_incr, folders, oneway = TRUE)
 
 dat$Agree_to_Screen_cost <- factor(dat$Agree_to_Screen_cost)
 dat$Pop_cost <- as.factor(dat$Pop_cost)
@@ -18,9 +24,11 @@ levels(dat$Pop_cost)[levels(dat$Pop_cost) == "3"] <- ">250/100,000"
 
 INMB_boxplot <-
   INMB_boxplot +
-  geom_boxplot(show.legend = TRUE) +
+  geom_boxplot(show.legend = TRUE, lwd = 1.3) +
   theme(legend.justification = c(1,0), legend.position = c(0.99, 0.75)) +
-  labs(color = 'Targetted group')
+  labs(color = 'Targetted group') +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_point(position = position_jitterdodge(dodge.width = 0.7), alpha = 1/3)
 
 
 ggplot2::ggsave(file = here::here("output", "plots", "runs_5", "INMB_boxplot_twoway.png"),

@@ -39,16 +39,19 @@ boxplot_INMB.bcea <- function(bcea,
 
     dat <-
       bcea$ib[bcea$k == wtp_threshold, , ] %>%
-      melt() %>%
-      merge(design_mat, by.x = "X2", by.y = "scenario") %>%
-      mutate(X2 = factor(X2),
+      reshape2::melt() %>%
+      # merge(design_mat, by.x = "X2", by.y = "scenario") %>%
+      merge(design_mat, by.x = "Var2", by.y = "scenario") %>%
+      mutate(X2 = factor(Var2),
+      # mutate(X2 = factor(X2),
              Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
     print(
       INMB_boxplot <-
-        ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = Pop_cost, group = X2)) +
+        # ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = Pop_cost, group = X2)) +
+        ggplot(dat, aes(x = Agree_to_Screen_cost, y = value, color = X2, group = X2)) +
         geom_boxplot(show.legend = FALSE) +
-        ylab(paste0("INB (", intToUtf8(163), ")")) +
+        ylab(paste0("INB (", intToUtf8(163), " per person)")) +
         xlab(paste0("LTBI unit test cost (", intToUtf8(163), ")")) +
         theme_bw() +
         theme(text = element_text(size = 30)) +
@@ -63,7 +66,7 @@ boxplot_INMB.bcea <- function(bcea,
     dat2 <-
       t(bcea$ib[bcea$k == wtp_threshold, , ]) %>%
       cbind.data.frame(design_mat, .) %>%
-      melt.data.frame(id.vars = names(design_mat)) %>%
+      reshape::melt.data.frame(id.vars = names(design_mat)) %>%
       dplyr::rename(INB = value) %>%
       dplyr::mutate(Agree_to_Screen_cost = factor(Agree_to_Screen_cost),
                     Start_Treatment_p = factor(Start_Treatment_p),
@@ -94,7 +97,7 @@ boxplot_INMB.bcea <- function(bcea,
 }
 
 
-# # # for start/ complete TX
+# # # for start/ complete Tx
 # dat2 <-
 #   t(bcea$ib[bcea$k == wtp_threshold, , ]) %>%
 #   cbind.data.frame(design_mat, .) %>%

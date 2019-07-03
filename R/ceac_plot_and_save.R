@@ -60,6 +60,6 @@ ceac_plot_and_save.bcea <- function(bcea,
 
   save(ceac, file = paste(folders$plots$scenario, "ceac.RData", sep = "/"))
 
-  invisible(out)
+  invisible(ceac)
 }
 

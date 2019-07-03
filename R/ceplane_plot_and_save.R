@@ -67,7 +67,7 @@ ceplane_plot_and_save.bcea <- function(bcea,
                  mapping = aes(x = mean_e, y = mean_c, xend = mean_e_shift, yend = mean_c_shift),
                  inherit.aes = FALSE,
                  arrow = arrow(length = unit(0.1, "inches"), type = "closed")) +
-    xlab("QALYs gained/person") + ylab("Cost incurred/person (£)") +
+    xlab("QALYs gained/person") + ylab(paste0("Cost incurred/person (", intToUtf8(163), ")")) +
     theme(legend.position = "none")
 
   # suppressMessages(

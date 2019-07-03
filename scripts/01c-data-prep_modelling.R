@@ -15,6 +15,7 @@ set.seed(23456)
 
 IMPUTED_sample <- IMPUTED_IOM_ETS_WHO_merged_15_2_9
 
+load(here::here("data", "intervention_constants.RData"))
 
 # remove duplicate and not needed ---------------------------------
 
@@ -67,7 +68,7 @@ if (interv$force_everyone_stays) {
 # screening delay ---------------------------------------------------------
 
 ##TODO: could use a more realistic distn
-IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*MAX_SCREEN_DELAY
+IMPUTED_sample$screen_year <- runif(n = nrow(IMPUTED_sample))*interv$MAX_SCREEN_DELAY
 
 IMPUTED_sample$age_at_screen <- IMPUTED_sample$age_at_entry + round(IMPUTED_sample$screen_year)
 

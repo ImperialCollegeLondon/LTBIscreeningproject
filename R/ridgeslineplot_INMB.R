@@ -37,9 +37,12 @@ ridgeslineplot_INMB.bcea <- function(bcea,
   dat <-
     bcea$ib[bcea$k == wtp_threshold, , ] %>%
     melt() %>%
-    merge(design_mat, by.x = "X2", by.y = "scenario") %>%
-    mutate(X2 = factor(X2),
-           Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
+    merge(design_mat, by.x = "Var2", by.y = "scenario") %>%
+    # merge(design_mat, by.x = "X2", by.y = "scenario") %>%
+    mutate(
+      # X2 = factor(X2),
+      X2 = factor(Var2),
+      Agree_to_Screen_cost = factor(Agree_to_Screen_cost))
 
   print(
     ridgeplot <-

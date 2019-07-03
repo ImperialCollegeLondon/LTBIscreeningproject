@@ -18,7 +18,7 @@ inmb_levelplot <- function(plot_data,
                            complete = NA,
                            # levels_range = NA,
                            # levels_range = seq(-30, 120, by = 5), #effectiveness
-                           levels_range = seq(-70, 50, by = 5), #unit cost
+                           levels_range = seq(-70, 70, by = 5), #unit cost
                            folders = NA,
                            plot_type = "base") {
 
@@ -74,12 +74,12 @@ inmb_levelplot <- function(plot_data,
 
   if (plot_type == "ggplot2") {
 
-    plot_breakpoints <- seq(-70, 35, 5)
+    plot_breakpoints <- seq(-70, 70, 5)
     plot_data$INMB_cut <- cut(plot_data$INMB, plot_breakpoints)
     plot_data$INMB_cut <- factor(plot_data$INMB_cut, levels = rev(levels(plot_data$INMB_cut)))
 
     # pal_wes <- wesanderson::wes_palette("Zissou1", n = 5, type = "discrete")
-    pal <- colorRampPalette(c("blue", "yellow", "red"))(length(levels(plot_data$INMB_cut)))
+    pal <- colorRampPalette(c("darkgreen", "white", "darkred"))(length(levels(plot_data$INMB_cut)))
 
     inmb_levelplot <-
       ggplot(plot_data, aes(Start_Treatment_p, Complete_Treatment_p, z = INMB_cut)) +

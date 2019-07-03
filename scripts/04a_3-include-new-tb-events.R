@@ -15,6 +15,9 @@
 # individually SIMULATE active TB progression times after exit uk and followup
 
 
+load(here::here("data", "synthetic_cohort_params.RData"))
+
+
 # cohort mean prevalence? incidence atm
 p_LTBI_cohort <- mean(IMPUTED_sample$pLTBI)
 p_tb_given_LTBI_year <- p_incid_year/p_LTBI_cohort

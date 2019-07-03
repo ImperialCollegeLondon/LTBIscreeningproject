@@ -15,6 +15,7 @@ library(gridExtra)
 library(cowplot)
 library(lattice)
 library(grid)
+library(ggthemes)
 
 
 load(here::here("output", "plots", "runs_6_25GBP", "policy_003", "ceac.RData"))
@@ -47,17 +48,23 @@ margin_ceac <- theme(plot.margin = unit(c(0,0.5,0,0.5), "cm"))
 font_size <- theme(axis.text = element_text(size = 10),
                    plot.subtitle = element_text(size = 20))
 
+pal2 <- tableau_div_gradient_pal("Classic Red-White-Green")(seq(0, 1, length = 12))
+
 p <-
-  grid.arrange(inmb_levelplot_100 + labs(subtitle = "A") + font_size + margin + guides(fill = guide_legend("INMB (£)")),
-               inmb_levelplot_50 + labs(subtitle = "D") + font_size + margin + guides(fill = guide_legend("INMB (£)")) + ylab(""),
-               inmb_levelplot_25 + labs(subtitle = "G") + font_size + margin + guides(fill = guide_legend("INMB (£)")) + ylab(""),
-               prob_ce_gridplot_100 + labs(subtitle = "B") + font_size + theme(plot.margin = unit(c(0,1,0,0), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + guides(fill = FALSE),
-               prob_ce_gridplot_50 + labs(subtitle = "E") + font_size + theme(plot.margin = unit(c(0,2,0,-1), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + guides(fill = FALSE) + ylab(""),
-               prob_ce_gridplot_25 + labs(subtitle = "H") + font_size + theme(plot.margin = unit(c(0,0,0,-2), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + ylab(""),
-               out_100 + theme(text = element_text(size = 10)) + labs(subtitle = "C") + font_size + margin_ceac,
-               out_50 + theme(text = element_text(size = 10)) + labs(subtitle = "F") + font_size + margin_ceac + ylab(""),
-               out_25 + theme(text = element_text(size = 10)) + labs(subtitle = "I") + font_size + margin_ceac + ylab(""),
-               nrow = 3)
+  grid.arrange(
+    arrangeGrob(
+      inmb_levelplot_100 + labs(subtitle = "A") + font_size + margin + guides(fill = guide_legend("INMB\n(£/person)")),
+      prob_ce_gridplot_100 + labs(subtitle = "B") + font_size + theme(plot.margin = unit(c(0,1,0,0), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + guides(fill = FALSE) + scale_fill_gradientn(colours = pal2, limits = c(0, 1)),
+      out_100 + theme(text = element_text(size = 10)) + labs(subtitle = "C") + font_size + margin_ceac, top = "£100"),
+    arrangeGrob(
+      inmb_levelplot_50 + labs(subtitle = "D") + font_size + margin + guides(fill = guide_legend("INMB\n(£/person)")) + ylab(""),
+      prob_ce_gridplot_50 + labs(subtitle = "E") + font_size + theme(plot.margin = unit(c(0,2,0,-1), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + guides(fill = FALSE) + ylab("") + scale_fill_gradientn(colours = pal2, limits = c(0, 1)),
+      out_50 + theme(text = element_text(size = 10)) + labs(subtitle = "F") + font_size + margin_ceac + ylab(""), top = "£50"),
+    arrangeGrob(
+      inmb_levelplot_25 + labs(subtitle = "G") + font_size + margin + guides(fill = guide_legend("INMB\n(£/person)")) + ylab(""),
+      prob_ce_gridplot_25 + labs(subtitle = "H") + font_size + theme(plot.margin = unit(c(0,0,0,-2), "cm")) + guides(fill = guide_legend("Probability\ncost-effective")) + ylab("") + scale_fill_gradientn(colours = pal2, limits = c(0, 1)),
+      out_25 + theme(text = element_text(size = 10)) + labs(subtitle = "I") + font_size + margin_ceac + ylab(""), top = "£25"),
+    ncol = 3)
 
 p
 

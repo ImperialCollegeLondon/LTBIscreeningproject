@@ -21,13 +21,27 @@
 unit_cost <- c(25, 50, 100)
 p_accept <- 0.72
 
-load(here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "dectree_res.RData"))
+# load(here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "dectree_res.RData"))
+# load(here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "popmod_res.RData"))
+
+# load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_003", "dectree_res.RData"))
+# load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_003", "popmod_res.RData"))
+
+# load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_006", "dectree_res.RData"))
+# load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_006", "popmod_res.RData"))
+
+load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_009", "dectree_res.RData"))
+load(here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_009", "popmod_res.RData"))
 
 dectree_res$`2` <- dectree_res$`1`
+dectree_res$`3` <- dectree_res$`1`
+
 dectree_res$`2`$mc_cost <- dectree_res$`1`$mc_cost + p_accept*(unit_cost[2] - unit_cost[1])
 dectree_res$`3`$mc_cost <- dectree_res$`2`$mc_cost + p_accept*(unit_cost[3] - unit_cost[2])
 
-load(here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "popmod_res.RData"))
+
+popmod_res$QALYgain_person[[2]] <- popmod_res$QALYgain_person[[1]]
+popmod_res$QALYgain_person[[3]] <- popmod_res$QALYgain_person[[1]]
 
 popmod_res$QALYgain_person[[2]] <- popmod_res$QALYgain_person[[1]]
 popmod_res$QALYgain_person[[3]] <- popmod_res$QALYgain_person[[1]]
@@ -35,7 +49,21 @@ popmod_res$QALYgain_person[[3]] <- popmod_res$QALYgain_person[[1]]
 popmod_res$QALY.screened_person[[2]] <- popmod_res$QALY.screened_person[[1]]
 popmod_res$QALY.screened_person[[3]] <- popmod_res$QALY.screened_person[[1]]
 
+popmod_res$cost.screened_person[[2]] <- popmod_res$cost.screened_person[[1]]
+popmod_res$cost.screened_person[[3]] <- popmod_res$cost.screened_person[[1]]
 
-save(dectree_res, file = here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "dectree_res_fixed.RData"))
-save(popmod_res, file = here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "popmod_res_fixed.RData"))
+popmod_res$cost_incur_person[[2]] <- popmod_res$cost_incur_person[[1]]
+popmod_res$cost_incur_person[[3]] <- popmod_res$cost_incur_person[[1]]
 
+
+# save(dectree_res, file = here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "dectree_res_fixed.RData"))
+# save(popmod_res, file = here::here("ext-data", "runs_1.1", "18_to_35_in_2009", "policy_003", "popmod_res_fixed.RData"))
+
+# save(dectree_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_003", "dectree_res_fixed.RData"))
+# save(popmod_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_003", "popmod_res_fixed.RData"))
+
+# save(dectree_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_006", "dectree_res_fixed.RData"))
+# save(popmod_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_006", "popmod_res_fixed.RData"))
+
+save(dectree_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_009", "dectree_res_fixed.RData"))
+save(popmod_res, file = here::here("ext-data", "runs_5", "18_to_35_in_2009", "policy_009", "popmod_res_fixed.RData"))

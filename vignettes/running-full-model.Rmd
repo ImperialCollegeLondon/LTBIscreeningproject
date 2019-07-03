@@ -37,10 +37,14 @@ Before this can be done though, we need to prepare the input values using `creat
 
 ## Create input workspace
 
-There are 3 terms used to define a model run. They are ordered in terms of if and how they are modified between model runs.
+There are 2 terms used to define a model run. They are ordered in terms of if and how they are modified between model runs.
 
 
-* \color{red}`intervention`\color{black} These are kept fixed.
+* \color{red}`intervention`\color{black}
+These are the higher-level simulation settings.
+Some of these are alway kept fixed and others can be \color{blue}varied\color{black}.
+Any given set of intervention values we say define a `policy`.
+These are discrete options.
   + `N.mc`: Number of Monte Carlo samples; Default 1.
   + `no_students`: TRUE/FALSE; default: FALSE.
   + `force_everyone_stays`: TRUE/FALSE; default: FALSE.
@@ -51,21 +55,19 @@ There are 3 terms used to define a model run. They are ordered in terms of if an
   + `year_cohort`: 2012 is most recent complete year; largest cohort, corresponds with Pareek () LTBI risk.
   + `min_screen_length_of_stay`: Default 0 i.e. everyone included.
   + `discount_rate`: 3.5%
+  + \color{blue}`incidence_list`\color{black}: which incidence by country of origin groups to target for LTBI screening. WHO categories per 100,000 are $[0,50),[50,150),[150,250),[250,350),>350$
+  + \color{blue}`endpoint`\color{black}: calculate QALYs and costs including those that exit EWNI or not i.e. time horizon
+  + \color{blue}`LTBI_test`\color{black}: type of test QFT, QFT-plus, TSPOT.TB
+  + \color{blue}`treatment`\color{black}: 6 months or 3 month LTBI treatment
 
-* \color{red}`policy`\color{black} These are modified but fixed for a set of `scenarios`.
-  + `incidence_list`: which incidence by country of origin groups to target for LTBI screening
-  + `endpoint`: calculate QALYs and costs including those that exit EWNI or not
-  + `LTBI_test`: type of test QFT, TSPOT
-  + `treatment`: 6 months or 3 month LTBI treatment
-
-* \color{red}`scenario`\color{black} These are varied within `policies`.
-  + screening pathway probabilities
-  + screening pathway costs
+* \color{red}`scenario`\color{black} These are varied within `policies`. These can be discrete, deterministic values or defined distibutionally. We don't vary any health state utilities.
+  + `p`: screening pathway branch probabilities
+  + `cost`: screening pathway per individual costs
 
 
 Therefore, the script `create_input_workspace.R`
 
-* Load raw cohort data `051206 - IMPUTED_sample.RData`
+* Load raw cohort data `051206 - IMPUTED_sample.RData`. This is from Aldridge() in Lancet.
 
 * Create and save `policy` data using `data-prep_policies.R`. This is a list of different model run inputs created using `create_and_save_policies()`.
 
@@ -104,7 +106,7 @@ using `policy_interv()` and `policy_cohort()`
   5. The output of `decision_tree_cluster()` includes the probability of an LTBI individual being successfully treated to cured.
 This is used in `activetb_qaly_cost()` which calculates the population QALYs and costs due to active TB.
 
-  6. The costs and QALYs from the decision tree model and the population model are combined with `combine_popmod_dectree_res()`.
+  6. The costs and QALYs from the decision tree model and the population model are combined to give a total cost-effectiveness using `combine_popmod_dectree_res()`.
 
 #### 3.  Post-processing
 

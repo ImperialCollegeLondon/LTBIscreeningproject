@@ -19,19 +19,22 @@ library(miscUtilities)
 library(dplyr)
 library(tibble)
 library(arm)
+library(directlabels)
+library(magrittr)
 
 
 wtp <- '20000'
 # wtp <- '30000'
 
-run_names <- c("runs_2_effic60","runs_2_effic65","runs_2_effic70","runs_2_effic75",
-               "runs_2_effic80","runs_2_effic85","runs_2_effic90","runs_2_effic95","runs_2_effic100")
+run_names <- c(
+  "runs_2_effic53",
+  "runs_2_effic60","runs_2_effic65","runs_2_effic70","runs_2_effic75",
+  "runs_2_effic80","runs_2_effic85","runs_2_effic90","runs_2_effic95","runs_2_effic100")
 
 sim_INMB <- vector("list")
 plot_data <- vector("list")
 
 for (i in seq_along(run_names)) {
-
 
   fldr <- here::here("ext-data", run_names[i], "18_to_35_in_2009", "policy_003")
   file_names <- list.files(fldr, full.names = TRUE, pattern = ".RData")
@@ -43,7 +46,7 @@ for (i in seq_along(run_names)) {
   # simulation output
   sim_INMB[[run_names[i]]] <- bcea_to_plotdata(bcea_incr, folders, wtp_threshold = wtp)
   # meta-regression
-  pred_INMB <- nmb_predictions(ce_res, folders)
+  pred_INMB <- nmb_predictions(ce_res, folders, use_newdata = FALSE)
 
   plot_data[[run_names[i]]] <- pred_INMB[[wtp]]
 }
@@ -51,8 +54,13 @@ for (i in seq_along(run_names)) {
 merged_data <- plyr::join_all(plot_data, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 merged_sim <- plyr::join_all(sim_INMB, by = c("Start_Treatment_p", "Complete_Treatment_p"))
 
-p <- ce_boundary_line_plot(plot_data = merged_data,
-                           folders = NA)
+
+# main
+
+p <-
+  ce_boundary_line_plot(
+    plot_data = merged_data,
+    folders = NA)
 p + labs(tag = "A")
 
 

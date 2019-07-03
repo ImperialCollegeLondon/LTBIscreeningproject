@@ -1,0 +1,118 @@
+---
+title: "Pseudo-code for LTBI screening model"
+author: "Nathan Green"
+date: "`r Sys.Date()`"
+output: pdf_document
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction
+
+Describes a type of microsimulation and cost-effectiveness analysis using a synthetic cohort of recent immigrants to the UK.
+Much of the work is in setting up the cohort.
+
+###	Pre-simulation setup
+	
+* Load in ETS/pre-screening dataset, denote by $X$
+* Define simulation constants
+  + Number of Monte-Carlo iterations, $N$
+  + Age range for screening
+  + Year cohort
+  + Screen delay range, 5 years
+  + Time horizon (default life-time 100 years)
+* Define cost-effectiveness distributions
+  + Willingness to pay
+  + Secondary infections
+  + Costs
+  + QALY
+  + Test performance
+  + Effectiveness
+  + Current year
+* Create `policy`
+* Define which subsets of cohort to target for screening
+  + WHO incidence
+  + All QALY?
+  + All costs?
+  + Treatment regimen
+  + LTBI test
+* Define `scenario`
+  + Screening pathway probability distributions
+  + Cost distributions
+* Sample screening year $~unif[0,5]$ for $X$
+* Remove individuals from $X$ according to
+  + Simulation constants
+  + Screening year
+* Join probability LTBI by incidence in country of origin and year
+  + Sample realisations
+* Calculate time to events from dates
+* Create probability incidence curve
+  + Append Sutherland and Lancet
+* Generate TB progression times for LTBI individuals, consistent with other dates
+* Join CFR for given age
+  + Sample case fatality realisations, $I_{cf}$
+* Calculate QALYs for TB cases from progression date to death for
+  + Disease-free
+  + Cured
+  + Case fatality
+  + Status-quo i.e. either fatality or cured depending on $I_{cf}$
+* Calculate future discounts at
+  + Time of notification
+  + Time of secondary infection (i.e. 1 year afterwards)
+* Define decision tree object structures, denote $d_{health}$ and $d_{cost}$
+
+### Simulation
+
+* Set policy $i = 1$
+* Remove individuals from $X$ according to $f(X, i) = X'$
+* Calculate mean screening delay from entry to screening and associated discount
+* Calculate proportion in each incidence group from $X'$
+* Get treatment regimen from policy, $t = treatment(i)$
+  + Get cost of treatment, $cost(t)$
+  + Get effectiveness of treatment, $eff(t)$
+* Substitute cost and probabilities in to $d$
+  + Incidence groups
+  + LTBI status
+  + $eff(t)$
+  + $cost(t)$
+  + ~~GP incentives~~
+
+#### Screening model
+
+* Set scenario $j = 1$
+* Assign branch value for $j$ to $d_{health}$ and $d_{cost}$
+* For $d_{health}$ and $d_{cost}$ and each iteration $n = 1, \ldots, N$
+* Sample
+  + Branch probabilities
+  + Costs
+  + Utilities/QALYs
+* Calculate
+  + Total expected values for cost $c_1^s$ and QALYs $q_1^s$
+  + Subpopulation probabilities, $P$, including LTBI to cured
+
+#### TB model
+
+* Set scenario $j = 1$
+* For each iteration $n = 1, \ldots, N$
+* Sample TB treatment cost
+* Calculate status-quo, with discounting
+  + Cost, $c_0^{tb}$
+  + QALYs, $q_0^{tb}$
+* Get $p = P(\mbox{LTBI to cured})[n]$
+* Replace first $p$ proportion of TB cases with disease-free individuals
+* Calculate screened outputs, with discounting
+  + Cost, $c_1^{tb}$
+  + QALYs, $q_1^{tb}$
+* Sum screening and TB costs and QALYs
+  + $c_1^s+c_1^{tb}$
+  + $q_1^s+q_1^{tb}$
+

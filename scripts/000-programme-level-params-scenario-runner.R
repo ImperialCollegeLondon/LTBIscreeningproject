@@ -22,9 +22,11 @@ pkgs = c("parallel",
          "crayon",
          "tibble",
          "memoise",
+         "treeSimR",
          "QALY",
          "here",
-         "arm")
+         "arm",
+         "magrittr")
 inst = lapply(pkgs, library, character.only = TRUE)
 
 save_session_info("session_info.txt")

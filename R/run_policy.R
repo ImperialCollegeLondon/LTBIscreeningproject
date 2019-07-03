@@ -28,7 +28,7 @@ run_policy <- function(cohort = NA,
   folders <- setup_folders(policy_name = policies_ls[policy], interv)
 
   ## use (single-migrant) user-defined cohort instead
-  if (!all(is.na(cohort))) IMPUTED_sample <- cohort
+  # if (!all((cohort) | is.na(cohort))) IMPUTED_sample <- cohort
 
   source("scripts/data-prep_constants-policy.R", local = TRUE)
   source("scripts/prep-decisiontree.R", local = TRUE)
